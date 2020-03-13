@@ -10,7 +10,7 @@ Todo el proceso de recolección de tareas y actividades está automatizado, por 
 
 | Nombre | Mail UC |
 | :-: | :-: |
-| {Benjamín Vicente} | {benjavicente@uc.cl} |
+| Benjamín Vicente | benjavicente@uc.cl |
 
 ## Sobre las entregas
 
