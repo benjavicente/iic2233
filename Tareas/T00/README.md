@@ -8,10 +8,13 @@
   - [ ]  Menu de seguidores :thought_balloon:
 - Busqueda de datos
   - [X] Seguidores del usuario :ok_hand:
+  - [X] Seguidos del usuario
   - [ ] Mostrar prograposts de seguidos (**Muro**) :thought_balloon:
   - [ ] Mostrar prograposts propios :thought_balloon:
   - [ ] Ordenar prograposts cronologicamente
 - Edición en los datos
+  - [X] Seguir a usuarios
+  - [ ] Parar de seguir a usuarios :running:
   - [ ] Crear prograposts con su contenido adecuado:thought_balloon: 
   - [ ] Eliminar prograposts propios:thought_balloon:
 

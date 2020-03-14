@@ -1,2 +1,8 @@
-# Archivos de vscode
+# Archivos de vsCode
 .vscode
+
+# Archivos de Windows
+.desktop.ini
+
+# Archivos de prueba
+.test
