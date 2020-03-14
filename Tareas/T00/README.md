@@ -1,15 +1,22 @@
-# Tarea X: Nombre de la tarea :school_satchel:
+# Tarea 00: DDCahuín :eyes:
+
+## Progreso
+
+- Menus e interfaz
+  - [ ]  Menu de inicio de seción :running:
+  - [ ]  Menu de prograposts :thought_balloon:
+  - [ ]  Menu de seguidores :thought_balloon:
+- Busqueda de datos
+  - [X] Seguidores del usuario :ok_hand:
+  - [ ] Mostrar prograposts de seguidos (**Muro**) :thought_balloon:
+  - [ ] Mostrar prograposts propios :thought_balloon:
+  - [ ] Ordenar prograposts cronologicamente
+- Edición en los datos
+  - [ ] Crear prograposts con su contenido adecuado:thought_balloon: 
+  - [ ] Eliminar prograposts propios:thought_balloon:
 
 
-Un buen ```README.md``` puede marcar una gran diferencia en la facilidad con la que corregimos una tarea, y consecuentemente cómo funciona su programa, por lo en general, entre más ordenado y limpio sea éste, mejor será 
-
-Para nuestra suerte, GitHub soporta el formato [MarkDown](https://es.wikipedia.org/wiki/Markdown), el cual permite utilizar una amplia variedad de estilos de texto, tanto para resaltar cosas importantes como para separar ideas o poner código de manera ordenada ([pueden ver casi todas las funcionalidades que incluye aquí](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet))
-
-Un buen ```README.md``` no tiene por que ser muy extenso tampoco, hay que ser **concisos** (a menos que lo consideren necesario) pero **tampoco pueden** faltar cosas. Lo importante es que sea claro y limpio 
-
-**Dejar claro lo que NO pudieron implementar y lo que no funciona a la perfección. Esto puede sonar innecesario pero permite que el ayudante se enfoque en lo que sí podría subir su puntaje.**
-
-## Consideraciones generales :octocat:
+## Consideraciones generales
 
 <Descripción de lo que hace y que **_no_** hace la tarea que entregaron junto
 con detalles de último minuto y consideraciones como por ejemplo cambiar algo
@@ -32,16 +39,18 @@ El módulo principal de la tarea a ejecutar es  ```archivo.py```. Además se deb
 2. ```directorio``` en ```ubicación```
 3. ...
 
-
 ## Librerías :books:
+
 ### Librerías externas utilizadas
+
 La lista de librerías externas que utilicé fue la siguiente:
 
-1. ```librería_1```: ```función() / módulo```
+1. `os`: función `path.join()`
 2. ```librería_2```: ```función() / módulo``` (debe instalarse)
 3. ...
 
 ### Librerías propias
+
 Por otro lado, los módulos que fueron creados fueron los siguientes:
 
 1. ```librería_1```: Contiene a ```ClaseA```, ```ClaseB```, (ser general, tampoco es necesario especificar cada una)...
