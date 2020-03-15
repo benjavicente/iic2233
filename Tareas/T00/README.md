@@ -14,8 +14,8 @@
   - [ ] Ordenar prograposts cronologicamente
 - Edición en los datos
   - [X] Seguir a usuarios
-  - [ ] Parar de seguir a usuarios :running:
-  - [ ] Crear prograposts con su contenido adecuado:thought_balloon: 
+  - [ ] Parar de seguir a usuarios :running: (Falta testear)
+  - [ ] Crear prograposts con su contenido adecuado:thought_balloon:
   - [ ] Eliminar prograposts propios:thought_balloon:
 
 
