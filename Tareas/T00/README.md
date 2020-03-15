@@ -2,21 +2,28 @@
 
 ## Progreso
 
-- Menus e interfaz
-  - [ ]  Menu de inicio de seción :running:
-  - [ ]  Menu de prograposts :thought_balloon:
-  - [ ]  Menu de seguidores :thought_balloon:
-- Busqueda de datos
-  - [X] Seguidores del usuario :ok_hand:
-  - [X] Seguidos del usuario
-  - [ ] Mostrar prograposts de seguidos (**Muro**) :thought_balloon:
-  - [ ] Mostrar prograposts propios :thought_balloon:
-  - [ ] Ordenar prograposts cronologicamente
-- Edición en los datos
-  - [X] Seguir a usuarios
-  - [ ] Parar de seguir a usuarios :running: (Falta testear)
-  - [ ] Crear prograposts con su contenido adecuado:thought_balloon:
-  - [ ] Eliminar prograposts propios:thought_balloon:
+- Menus
+  - [ ] Menu de bienbenida
+  - [ ] Menu de inicio
+    - [ ] Menu para crear cuenta
+    - [ ] Menu para iniciar seción
+  - [ ] Menu principal (**Muro**)
+  - [ ] Menu de perfil (PrograPosts propios)
+  - [ ] Menu de seguidores
+- Usuarios
+  - [ ] Crear usuarios vallidos
+  - [X] Obtener seguidores
+  - [X] Obtener seguidos
+  - [X] Empezar a seguir a un usuario
+  - [X] Parar de seguir a un usuario
+- PrograPost
+  - [ ] Agregar prograposts
+  - [ ] Eliminar progrposts
+  - [X] Mostrar muro (prograposts de seguidos)
+  - [X] Mostrar prograposts propios
+    - [ ] Opción de ordenarlos cronológicamente
+  - [X] Formateo de prograposts
+
 
 
 ## Consideraciones generales
@@ -49,14 +56,14 @@ El módulo principal de la tarea a ejecutar es  ```archivo.py```. Además se deb
 La lista de librerías externas que utilicé fue la siguiente:
 
 1. `os`: función `path.join()`
-2. ```librería_2```: ```función() / módulo``` (debe instalarse)
+2. `operator`: función `attrgetter()`
 3. ...
 
 ### Librerías propias
 
 Por otro lado, los módulos que fueron creados fueron los siguientes:
 
-1. ```librería_1```: Contiene a ```ClaseA```, ```ClaseB```, (ser general, tampoco es necesario especificar cada una)...
+1. ```usermanager```: Contiene la clase `Usuario` y `Post`
 2. ```librería_2```: Hecha para <insertar descripción **breve** de lo que hace o qué contiene>
 3. ...
 
