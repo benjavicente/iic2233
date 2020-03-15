@@ -1,23 +1,132 @@
 """
-Libreria para administrar datos relacionados con el usuario
+Libreria para realizar accioones de usuario
+
 Incluye:
-    class Usuario
-    set usuarios
-    ------------
-    str carpeta_datos
-    str path_usuarios
-    str path_seguidores
+    variables
+        carpeta_datos
+        path_usuarios
+        path_seguidores
+        set_usuarios
+    -----------------------------
+    funciones
+        agregar_usuario
+        se_valido
+        obtener_dict_seguidores
+        modificar_archvivo_usuarios
+    -----------------------------
+    clace Usuario
+        atributos
+            nombre
+        metodos
+            __init__
+            __str__
+            obtener_seguidores
+            empezar_a_seguir
+            dejar_de_seguir
+    -----------------------------
+    clase PrograPost
+        atributos
+            usuario
+            fecha_de_emision
+            mensaje
+        metodos
+            __init__
+            __str__
+            mprint
 """
+# TODO: Eliminar el módulo time
+# TODO: Simplificar el método mprint de la clase Prograpost
+# TODO: Eliminar el testeo
 
-# TODO simplificar la manera en la que leo  y escribo los archivos
-
+import time  
 from os import path
 
-
+# Se obtiene el path de los archivos
 carpeta_datos = "data"
-
 path_usuarios = path.join(carpeta_datos, "usuarios.csv")
 path_seguidores = path.join(carpeta_datos, "seguidores.csv")
+
+# set de usuarios a partir de usuarios.csv
+set_usuarios = set()
+with open(path_usuarios, "r") as archivo:
+    for fila_archivo in archivo.readlines():
+        set_usuarios.add(fila_archivo.strip())
+
+
+def agregar_usuario(nombre_usuario):
+    """
+    Agrega el usuaio a usuarios.csv y set_usuarios
+    retorna un str sobre el resultado
+    Se asume que el usuario es valido
+    """
+    if nombre_usuario in set_usuarios:
+        return "Usuario existente"
+    else:
+        set_usuarios.add(nombre_usuario)
+        # Se agrega el usuario al archivo
+        # Se asume que no tiene orden
+        with open(path_usuarios, "w") as archivo:
+            for usuario in set_usuarios:
+                print(usuario, file=archivo)
+        return "Bienvenido a DDCahuín!"
+
+
+def es_valido(usuario):
+    """
+    El usuario debe contener:
+        1
+        2
+        3
+    """
+    pass
+
+
+def obtener_dict_seguidores():
+    """
+    Retorna un diccionario con los segidores
+        LLaves:
+            (str) Nombres de usuarios
+        Valores
+            (set) Listas de seguidores
+    """
+    dict_seg = dict()
+    with open(path_seguidores, "r") as archivo:
+        for fila_archivo in archivo.readlines():
+            usuario, _, seguidores = fila_archivo.strip().partition(",")
+            # Se transforma los seguidores a set
+            if "," in seguidores:
+                seguidores = set(seguidores.split(","))
+            elif not seguidores:
+                seguidores = set()
+            else:
+                seguidores = {seguidores}
+            # Se crea la entrada en el ciccionario
+            dict_seg[usuario] = seguidores
+        return dict_seg
+
+
+def modificar_archvivo_usuarios(usuario, otro, func):
+    """
+    Modifica el archivo de usuarios, simplifica métodos
+    empezar_a_seguir y dejar_de_seguir de la clase Usuario
+    Argumentos
+        usuario - nombre del usuario que realiza la acción
+        otro - usuario al que se modifica sus seguidores
+        func - acción a realizar, es `set.add` o `set.discard`
+    """
+    if func == set.add or func == set.discard:
+        directorio_seguidores = obtener_dict_seguidores()
+        # remplazando func (método), se añadira o eliminara
+        # el usuario de las lista de seguidores de otro
+        # Se utiliza el sintax método(clase, argumentos)
+        func(directorio_seguidores[otro], usuario)
+        with open(path_seguidores, "w") as archivo:
+            for usuario, seguidores in directorio_seguidores.items():
+                print(usuario, *seguidores, sep=",", file=archivo)
+        if func == set.add:
+            return f"Ahora sigues a @{otro}"
+        elif func == set.discard:
+            return f"Dejaste de seguir a @{otro}"
 
 
 class Usuario:
@@ -25,113 +134,109 @@ class Usuario:
         self.nombre = nombre
 
     def __str__(self):
-        return self.nombre
-
-    def __repr__(self):
-        return str(self)
+        return f"@{self.nombre}"
 
     def obtener_seguidores(self):
-        """
-        Busca sus seguidores
-        Retorna una lista de sus seguidores
-        """
-        # El usuario debe ya estar añadido a el archivo de seguidores
-        # Leo el archivo y lo guardo en una variable
-        with open(path_seguidores, "r") as archivo_seguidores:
-            listado_seguidores = archivo_seguidores.readlines()
-        # Leo la lista de seguidores
-        for fila_seguidores in listado_seguidores:
-            # Uso partition, ya que este no entrega errores al no encontrar
-            # donde dividir en la fila
-            # La variable _ no es usada
-            usuario, _, seguidores = fila_seguidores.strip().partition(",")
-            if usuario == self.nombre:
-                # Ve si tiene segudores (str no vacio)
-                if seguidores:
-                    return seguidores.split(",")
-                return []
+        return obtener_dict_seguidores()[self.nombre]
 
     def obtener_seguidos(self):
-        """
-        Busca a los usuarios que sigue
-        Retorna una lista con el nombre de cada usuario seguido
-        """
-        seguidos = list()
-        # Guardo el archivo en una lista
-        with open(path_seguidores, "r") as archivo_seguidores:
-            listado_seguidores = archivo_seguidores.readlines()
-        # itero por cada fila para buscar los usuarios seguidos
-        for fila_seguidores in listado_seguidores:
-            usuario, _, seguidores = fila_seguidores.strip().partition(",")
-            # Si se encuentra en los seguidos, se añade el usuario de la fila
-            if self.nombre in seguidores:
-                seguidos.append(usuario)
-        return seguidos
+        set_seguidos = set()
+        for usuario, seguidos in obtener_dict_seguidores().items():
+            if self.nombre in seguidos:
+                set_seguidos.add(usuario)
+        return set_seguidos
 
-    def seguir_a_usuario(self, otro):
-        """
-        Añade al usuario (self) a la lista de seguidores de otro
-        otro es un objeto de clase Usuario
-        Retorna un string, el cual es un mensaje
-        que indica si se pudo seguir al usuario,
-        en el caso que no se pudo se retorna el porque
-        """
-        if self.nombre == otro.nombre:
-            return "No puedes seguirte a ti mismo"
-        # Leo el archivo y lo guardo en una variable,
-        # al iguall que en obtener_seguidores()
-        with open(path_seguidores, "r") as archivo_seguidores:
-            listado_seguidores = archivo_seguidores.readlines()
-        for fila_seguidores in listado_seguidores:
-            fila_seguidores.strip()  # Elimino \n de las filas
-            usuario, _, seguidores = fila_seguidores.strip().partition(",")
-            if usuario == otro.nombre:
-                # ahora veo si ya sigue al usuario
-                if self.nombre in seguidores:
-                    return f"Ya sigues a @{otro.nombre}"
-                # Si no es el caso, añado el usuario a los seguidoes
-                ubicación_cambio = listado_seguidores.index(fila_seguidores)
-                original = listado_seguidores[ubicación_cambio].strip()
-                nuevo = original + "," + self.nombre + "\n"
-                listado_seguidores[ubicación_cambio] = nuevo
-                # Ahora, reescribo el archivo original
-                with open(path_seguidores, "w") as archivo_seguidores:
-                    a_guardar = "".join(listado_seguidores)
-                    archivo_seguidores.write(a_guardar)
-                return f"Ahora sigues a @{otro.nombre}"
-        # Si no es encontrado no se edita el archivo de seguidores
-        return f"Usuario @{otro.nombre} no encontrado"
+    def empezar_a_seguir(self, otro):
+        if otro not in set_usuarios:
+            return "El usuario no existe"
+        else:
+            # Mensaje de respuesta integrado en la función
+            return modificar_archvivo_usuarios(self.nombre, otro, set.add)
 
     def dejar_de_seguir(self, otro):
+        if otro not in set_usuarios:
+            return "El usuario no existe"
+        elif otro not in self.obtener_seguidos():
+            return "No sigues al usuario"
+        else:
+            # Mensaje de respuesta integrado en la función
+            return modificar_archvivo_usuarios(self.nombre, otro, set.discard)
+
+    def imprimir_muro(self):
+        muro = list()
+
+
+    def imprimir_publicaciones(self):
+        publicaciones = list()
+
+
+class PrograPost:
+    def __init__(self, usuario, fecha_emision, mensaje):
+        self.usuario = usuario
+        self.fecha_emision = fecha_emision
+        self.mensaje = mensaje
+
+    def mprint(self):
         """
-        Elimina al usuario (self) de la lista de seguidores del otro
-        otro es un objeto de clase Usuario
-        Retorna un string, el cual es un mensaje
-        que indica si se pudo parar de seguir al usuario,
-        en el caso que no se pudo se retorna el porque
+        Método para imprimir la parte del mensaje
+        de un PrograPost en el cuadro establecido en el 
+        método __str__
         """
-        # Primero veo si se sigue al otro usuario
-        if otro.nombre not in self.obtener_seguidos():
-            return f"No sigues a @{otro.nombre}"
-        # Ya que el otro si es seguido, busco su
-        # lista de seguidores y la edito
-        with open(path_seguidores, "r") as archivo_seguidores:
-            listado_seguidores = archivo_seguidores.readlines()
-        for fila_seguidores in listado_seguidores:
-            usuario, _, seguidores = fila_seguidores.strip().partition(",")
-            if usuario == otro.nombre:
-                # Edito el archivo y lo guardo
-                ubicación_cambio = listado_seguidores.index(fila_seguidores)
-                original = listado_seguidores[ubicación_cambio].strip()
-                nuevo = original.replace(f",{self.nombre}") + "\n"
-                listado_seguidores[ubicación_cambio] = nuevo
-                with open(path_seguidores, "w") as archivo_seguidores:
-                    a_guardar = "".join(listado_seguidores)
-                    archivo_seguidores.write(a_guardar)
-                return f"Paraste de seguir a @{otro.nombre}"
+        lista_palabras = self.mensaje.split(" ")
+        # ancho total y ancho restante
+        largo_max = 43
+        largo_restante = largo_max
+        # string inicial reducido a {largo_max} columnas
+        columna = ""
+        for palabra in lista_palabras:
+            if len(palabra) > largo_max:
+                # La palabra es muy larga, se corta
+                columna += " "*largo_restante
+                palabra_cortada = ""
+                cortes_necesarios = (len(palabra)-3)//largo_max
+                for parte in range(cortes_necesarios + 1):
+                    p = palabra[parte*(largo_max-3):(parte+1)*(largo_max-3)]
+                    if parte != cortes_necesarios:
+                        p += "..."  # Se agregan para mostrar que se cortó
+                    else:
+                        largo_restante = largo_max - len(p) - 1
+                    palabra_cortada += "\n" + p
+                palabra = palabra_cortada  # se guardan los cortes
+            elif len(palabra) > largo_restante:
+                # la palabra es muy larga para la sección
+                # restante, se imprime en la siguiente linea
+                columna += " "*largo_restante + "\n"
+                largo_restante = largo_max - len(palabra) - 1
+            else:
+                largo_restante -= len(palabra) + 1
+            # Se agrega la palabra
+            columna += palabra + " "
+        columna = columna.replace('\n', ' |\n| ')
+        return f"| {columna}{' '*largo_restante} |"
+
+    def __str__(self):
+        return (
+            f"_______________________________________________\n"
+            f"|  0  | @{self.usuario.ljust(37)}"           "|\n"
+            f"| /Y\\ | {self.fecha_emision.rjust(37)}"     " |\n"
+            f"|=============================================|\n"
+            f"{self.mprint()}\n"
+            f"|_____________________________________________|\n"
+        )
 
 
+###
+# ZONA DE TESTEO
+# ELIMINAR AL FINALIZAR
+###
 
-# Leo los usuarios en usuarios.csv
-with open(path_usuarios, "r") as archivo_usuarios:
-    usuarios = {Usuario(n.strip()) for n in archivo_usuarios.readlines()}
+mensaje = (
+"hola a todos, este es un post en la nueva "
+"plataforma que cree. Es muy util porque "
+"permite escribir grandes posts "
+"Estaesunapalabramuylargaquepuedecausarunerrorhaaaaaaaa "
+"ya me calmé"
+)
+
+
+print(PrograPost("benjamin", "2002/03/20", mensaje))
