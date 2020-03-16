@@ -87,7 +87,6 @@ def crear_usuario(nombre_usuario):
         return "Bienvenido a DDCahuín!"
 
 
-# TODO
 def usuario_valido(usuario):
     """
     El usuario debe contener:
@@ -165,7 +164,7 @@ def extraer_posts():
     return lista_prograposts
 
 
-def posts_filtrar(*usuarios, recientes=True,):
+def posts_filtrar(*usuarios, rec):
     """
     Extraer_post() se ejecuta para obtener el listado.
     Se filtra por usuario y los ordena por fecha,
@@ -179,7 +178,7 @@ def posts_filtrar(*usuarios, recientes=True,):
     """
     lista = [post for post in extraer_posts() if post.usuario in usuarios]
     orden = ("fecha_emision", "usuario",  "mensaje")
-    lista.sort(key=attrgetter(*orden), reverse=recientes)
+    lista.sort(key=attrgetter(*orden), reverse=rec)
     return lista
 
 
@@ -238,7 +237,7 @@ class Usuario:
         """
         # header
         print(" Tu Muro ".center(47, "-"))
-        lista_posts = posts_filtrar(*self.obtener_seguidos(), recientes)
+        lista_posts = posts_filtrar(*self.obtener_seguidos(), rec=recientes)
         if lista_posts:
             print("".join([str(post) for post in lista_posts]))
         # Si la lista esta vacia, invita al
@@ -255,7 +254,7 @@ class Usuario:
         Se imprime los post del usuario
         """
         print(" Tus publicaciones ".center(47, "-"))
-        lista_posts = posts_filtrar(self.nombre, recientes)
+        lista_posts = posts_filtrar(self.nombre, rec=recientes)
         if lista_posts:
             print("".join([str(post) for post in lista_posts]))
         else:
