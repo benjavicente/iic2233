@@ -4,6 +4,11 @@
 # Archivos de Windows
 .desktop.ini
 
+# Archivos de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
 # Archivos de prueba
 testfiles/
 restaurar_archivos.py
