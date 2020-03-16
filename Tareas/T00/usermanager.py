@@ -1,5 +1,5 @@
 """
-Libreria para realizar accioones de usuario
+Libreria para realizar acciones de usuario
 Objetos marcados con * están destinadas para el uso externo
 
 Incluye:
@@ -19,7 +19,7 @@ Incluye:
         extraer_posts
         posts_filtrar
     -----------------------------
-    *clace Usuario
+    *clase Usuario
         atributos
             nombre
         metodos
@@ -46,7 +46,6 @@ Incluye:
 # TODO: Simplificar el método mprint de la clase Prograpost
 # TODO: Ver la validación del nombre
 
-import time
 from datetime import date
 from os import path
 from operator import attrgetter
@@ -69,43 +68,43 @@ with open(path_usuarios, "r", encoding="utf8") as archivo:
 
 def crear_usuario(nombre_usuario):
     """
-    Agrega el usuaio a usuarios.csv, seguidores y set_usuarios
+    Agrega el usuario a usuarios.csv, seguidores y set_usuarios
     Retorna un str sobre el resultado
     Se asume que el usuario es valido
     """
-    if nombre_usuario in set_usuarios:
-        return "Usuario existente"
-    else:
-        set_usuarios.add(nombre_usuario)
-        # Se agrega el usuario al archivo de usuario y seguidores
-        # NUEVO: en vez de rehacer el archivo, este se usa
-        # la opción `a` append, y se agrega al final
-        with open(path_usuarios, "a", encoding="utf8") as archivo:
-            print("\n" + nombre_usuario, end="", file=archivo)
-        with open(path_seguidores, "a", encoding="utf8") as archivo:
-            print("\n" + nombre_usuario, end="", file=archivo)
-        return "Bienvenido a DDCahuín!"
+    # Se agrega el usuario al archivo de usuario y seguidores
+    # NUEVO: en vez de rehacer el archivo, este se usa
+    # la opción `a` append, y se agrega al final
+    with open(path_usuarios, "a", encoding="utf8") as archivo:
+        print("\n" + nombre_usuario, end="", file=archivo)
+    with open(path_seguidores, "a", encoding="utf8") as archivo:
+        print("\n" + nombre_usuario, end="", file=archivo)
+    return "Bienvenido a DCCahuín!"
 
 
 def usuario_valido(usuario):
     """
-    El usuario debe contener:
-        1 - Un Número
-        3 - Una letra
-        2 - Entre 4 y 32 caractares
+    El usuario debe:
+        1 - Tener un número
+        2 - Tener una letra
+        3 - Ser entre 8 y 32 caractares
+        4 - No contener símbolos (!#Q$%&)
     """
-    if (usuario.isalpha() or usuario.isnumeric()):
-        # Es solo letras o solo números
+    if set(range(0, 10)) in usuario:
         return False
-    elif len(usuario) > 32 or len(usuario) < 4:
-        # No se encuntra en el rango
+    # https://stackoverflow.com/a/47453486
+    if not usuario.upper().isupper():
+        return False
+    if not (8 <= usuario <= 32):
+        return False
+    if usuario.isalnum():
         return False
     return True
 
 
 def obtener_dict_seguidores():
     """
-    Retorna un diccionario con los segidores
+    Retorna un diccionario con los seguidores
         LLaves
             (str) Nombres de usuarios
         Valores
@@ -122,7 +121,7 @@ def obtener_dict_seguidores():
                 seguidores = set()
             else:
                 seguidores = {seguidores}
-            # Se crea la entrada en el ciccionario
+            # Se crea la entrada en el diccionario
             dict_seg[usuario] = seguidores
         return dict_seg
 
@@ -138,7 +137,7 @@ def modificar_archvivo_usuarios(usuario, otro, func):
     """
     if func == set.add or func == set.discard:
         directorio_seguidores = obtener_dict_seguidores()
-        # remplazando func (método), se añadira o eliminara
+        # remplazando func (método), se añadirá o eliminara
         # el usuario de las lista de seguidores de otro
         # Se utiliza el sintax método(clase, argumentos)
         # para los métodos `set.add` y `set.discard`
@@ -172,7 +171,7 @@ def posts_filtrar(*usuarios, rec):
     Se el usuario y la fecha son las mismas, se ordena por mensaje
     Argumento:
         *usuarios - lista de usuarios a mostrar
-        recientes - mostrar ultimos los prograpost primeros
+        recientes - mostrar últimos los PrograPost primeros
     Solución a partír de:
     https://docs.python.org/3/howto/sorting.html#operator-module-functions
     """
@@ -209,9 +208,9 @@ class Usuario:
         Retorna un str confirmando la acción
         """
         if otro == self.nombre:
-            return "No te puedes seguir a ti mismo!"
+            return "    No te puedes seguir a ti mismo!"
         elif otro not in set_usuarios:
-            return f"El usuario @{otro} no existe"
+            return f"    El usuario @{otro} no existe"
         else:
             # Mensaje de respuesta integrado en la función
             return modificar_archvivo_usuarios(self.nombre, otro, set.add)
@@ -240,11 +239,11 @@ class Usuario:
         lista_posts = posts_filtrar(*self.obtener_seguidos(), rec=recientes)
         if lista_posts:
             print("".join([str(post) for post in lista_posts]))
-        # Si la lista esta vacia, invita al
+        # Si la lista esta vaciá, invita al
         # usuario a seguir a más usuarios
         else:
             print()
-            print("Tu Múro está vacio".center(ancho_max))
+            print("Tu Múro está vació".center(ancho_max))
             print()
             print("Trata de seguir a más usuarios!".center(ancho_max))
         print()
@@ -259,9 +258,9 @@ class Usuario:
             print("".join([str(post) for post in lista_posts]))
         else:
             print()
-            print("Tu perfil está vacio".center(ancho_max))
+            print("Tu perfil está vació".center(ancho_max))
             print()
-            print("Crea tu primera pblicación!".center(ancho_max))
+            print("Crea tu primera publicación!".center(ancho_max))
         print()
 
     def publicar(self, mensaje):
@@ -292,7 +291,7 @@ class Usuario:
         lista_posts = extraer_posts()
         posts_propios = posts_filtrar(self.nombre, recientes=False)
         if - len(posts_propios) <= numero_post < len(posts_propios):
-            # Se muetsra el post y se confirma la acción
+            # Se muestra el post y se confirma la acción
             print(posts_propios[numero_post])
             confirmar = input("(Sí) / (No) ----> ").strip().lower()
             if confirmar in {"sí", "si", "s", "y", "yes", "ok"}:
@@ -357,7 +356,7 @@ class PrograPost:
                     else:
                         # se ve el espacio que ocupa la "cola"
                         largo_restante = largo_max - len(p) - 1
-                    # Se añade el cambio de linia y el trozo (p) que ocupa
+                    # Se añade el cambio de linea y el trozo (p) que ocupa
                     # todo el espacio disponible (largo_max - "...")
                     palabra_cortada += "\n" + p
                 # se guardan los cortes

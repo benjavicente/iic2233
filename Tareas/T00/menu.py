@@ -1,5 +1,5 @@
 """
-Código encargado de administrar los menus de DDCahupín
+Código encargado de administrar los menus de DCCahupín
 Usa un sistema de funciones dentro de funciones para
 crear un sistema de menus.
 Logotipo DCCahuín modificado a partir de la fuente Big de TAAG
@@ -11,12 +11,13 @@ import usermanager as um
 # Usuario actual
 usuario_act = None
 
+
 def banner():
     print(
-        R"Bienvenid@ a...                          _____  ",
-        R"                                        / ... \ ",
-        R"  _____   _____ _____      _           / _____/ ",
-        R" |  __ \ / ____/ ____|    | |         /_/       ",
+        R"                                        _____  ",
+        R"    Bienvenid@ a                       / ... \  ",
+        R"  _____   _____ _____      _          / _____/  ",
+        R" |  __ \ / ____/ ____|    | |        /_/        ",
         R" | |  | | |   | |     __ _| |__  _   _ _ _ __   ",
         R" | |  | | |   | |    / _` | '_ \| | | | | '_ \  ",
         R" | |__| | |___| |___| (_| | | | | |_| | | | | | ",
@@ -24,11 +25,12 @@ def banner():
         sep="\n", end="\n"*2
     )
 
+
 def menu_entrada():
     banner()
     while True:
         print(
-            "  Selecione una opción:",
+            "  Seleccione una opción:",
             " "*4 + "[1] Iniciar Seción",
             " "*4 + "[2] Registro de Usuario",
             " "*4 + "[0] Salir",
@@ -55,7 +57,7 @@ def menu_inicio():
         usuario_act = um.Usuario(acc)
         print("Iniciando seción...".center(um.ancho_max), end="\n"*2)
         menu_principal()
-        # Baner se imprime de nuevo al cerrar seción
+        # Banner se imprime de nuevo al cerrar seción
         banner()
     else:
         print(" "*4 + "El usuario ingresado no existe")
@@ -65,9 +67,9 @@ def menu_inicio():
 def menu_registro():
     print(" "*4 + "Ingrese el nombre del usuario:")
     print(" "*4 + "El nombre de usuario debe contener")
-    print(" "*4 + "al menos un numero y debe tener un")
-    print(" "*4 + "largo de entre 4 y 32 caracteres")
-    print()
+    print(" "*4 + "al menos una letra y un número, no")
+    print(" "*4 + "contener simbolos y debe tener un")
+    print(" "*4 + "largo de entre 8 y 32 caracteres")
     usuario = input(" "*6 + "@").strip()
     if (usuario not in um.set_usuarios) and um.usuario_valido(usuario):
         um.crear_usuario(usuario)
@@ -80,12 +82,12 @@ def menu_registro():
 
 def menu_principal():
     global usuario_act
-    print(f"  Hola {usuario_act}, que desea hacer hoy?")
     while True:
+        print(f"  Hola {usuario_act}, que desea hacer hoy?")
         print(
-            " "*4 + "[1] Ver, añadir o eliminar Prograposts",
+            " "*4 + "[1] Ver, crear o eliminar PrograPosts",
             " "*4 + "[2] Ver y editar a quien sigues",
-            " "*4 + "[0] Cerrar seción",
+            " "*4 + "[0] Cerrar sección",
             sep="\n"
             )
         acc = input(" "*4 + "-----> ").strip()
@@ -95,14 +97,14 @@ def menu_principal():
             menu_seguidos()
         elif acc == "0":
             print()
-            print("Cerrendo seción".center(um.ancho_max))
+            print("Cerrando seción".center(um.ancho_max))
             print()
             break
         else:
             print(" "*4 + "Acción no valida")
         print()
-        # `Menu principal` se imprime aqui para que no se imrpima
-        # la primera vez que el usuaio entre a este menu
+        # `Menu principal` se imprime aquí para que no se imprima
+        # la primera vez que el usuario entre a este menu
         print(" Menú Principal ".center(um.ancho_max, "-"))
 
 
@@ -124,7 +126,7 @@ def menu_prograposts():
             print(
                 " "*6 + "[1] De más nuevo a más antiguo",
                 " "*6 + "[2] De más antiguo a más nuevo",
-            sep="\n"
+                sep="\n"
             )
             acc = input(" "*6 + "-----> ")
             if acc == "1":
@@ -135,7 +137,7 @@ def menu_prograposts():
             print(
                 " "*6 + "[1] De más nuevo a más antiguo",
                 " "*6 + "[2] De más antiguo a más nuevo",
-            sep="\n"
+                sep="\n"
             )
             acc = input(" "*6 + "-----> ")
             if acc == "1":
@@ -149,14 +151,17 @@ def menu_prograposts():
             print(" "*4 + "no escribas nada")
             print()
             mensaje = input().strip()
-            if 1 < len(mensaje) < 140:
+            if 1 <= len(mensaje) < 140:
                 print(usuario_act.publicar(mensaje))
+            elif len(mensaje) > 140:
+                print()
+                print(" "*4 + "El tamaño del post es muy largo!")
         elif acc == "4":
             print(" "*4 + "Cual es el post que deseas eliminar?")
             print(" "*4 + "El indice se encuentra entre 0 y uno")
             print(" "*4 + "menos que la cantidad de post propios")
             print(" "*4 + "Para eliminar el más reciente, use \"r\"")
-            print(" "*4 + "Para volver, deje el campo vacio")
+            print(" "*4 + "Para volver, deje el campo vacío")
             print()
             cual = input(" "*4 + "Indice del post a eliminar: ").strip()
             if cual.isdigit() or cual == "r":
@@ -208,8 +213,8 @@ def menu_seguidos():
                     print(usuario_act.dejar_de_seguir(cual))
             else:
                 # No hay usuarios
-                print("No puedes dejar de seguir:")
-                print("No sigues a nadie")
+                print(" "*4 + "No puedes dejar de seguir:")
+                print(" "*4 + "No sigues a nadie")
         elif acc == "3":
             seguidos = usuario_act.obtener_seguidos()
             if seguidos:
