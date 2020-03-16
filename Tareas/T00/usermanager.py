@@ -91,11 +91,17 @@ def crear_usuario(nombre_usuario):
 def usuario_valido(usuario):
     """
     El usuario debe contener:
-        1
-        2
-        3
+        1 - Un Número
+        3 - Una letra
+        2 - Entre 4 y 32 caractares
     """
-    pass
+    if (usuario.isalpha() or usuario.isnumeric()):
+        # Es solo letras o solo números
+        return False
+    elif len(usuario) > 32 or len(usuario) < 4:
+        # No se encuntra en el rango
+        return False
+    return True
 
 
 def obtener_dict_seguidores():
