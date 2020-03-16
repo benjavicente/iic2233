@@ -9,10 +9,11 @@ Incluye:
         path_seguidores
         path_prograposts
         *set_usuarios
+        *ancho_max
     -----------------------------
     funciones
         *agregar_usuario
-        *es_valido
+        *usuario_valido
         obtener_dict_seguidores
         modificar_archvivo_usuarios
         extraer_posts
@@ -43,7 +44,6 @@ Incluye:
             mprint
 """
 # TODO: Simplificar el método mprint de la clase Prograpost
-# TODO: Añadir la opción de crear y eliminar posts
 # TODO: Ver la validación del nombre
 
 import time
@@ -57,6 +57,9 @@ path_usuarios = path.join(carpeta_datos, "usuarios.csv")
 path_seguidores = path.join(carpeta_datos, "seguidores.csv")
 path_prograposts = path.join(carpeta_datos, "posts.csv")
 
+# Ajuste de interfaz
+ancho_max = 48
+
 # set de usuarios a partir de usuarios.csv
 set_usuarios = set()
 with open(path_usuarios, "r", encoding="utf8") as archivo:
@@ -64,7 +67,7 @@ with open(path_usuarios, "r", encoding="utf8") as archivo:
         set_usuarios.add(fila_archivo.strip())
 
 
-def agregar_usuario(nombre_usuario):
+def crear_usuario(nombre_usuario):
     """
     Agrega el usuaio a usuarios.csv, seguidores y set_usuarios
     Retorna un str sobre el resultado
@@ -74,21 +77,18 @@ def agregar_usuario(nombre_usuario):
         return "Usuario existente"
     else:
         set_usuarios.add(nombre_usuario)
-        # Se agrega el usuario al archivo de usuario
-        # Se asume que no tiene orden
-        with open(path_usuarios, "w", encoding="utf8") as archivo:
-            for usuario in set_usuarios:
-                print(usuario, file=archivo)
-        # Se agrega el usuario al archivo de seguidores
-        directorio_seguidores = obtener_dict_seguidores().items()
-        with open(path_seguidores, "w", encoding="utf8") as archivo:
-            for usuario, seguidores in directorio_seguidores:
-                print(usuario, *seguidores, sep=",", file=archivo)
+        # Se agrega el usuario al archivo de usuario y seguidores
+        # NUEVO: en vez de rehacer el archivo, este se usa
+        # la opción `a` append, y se agrega al final
+        with open(path_usuarios, "a", encoding="utf8") as archivo:
+            print(nombre_usuario, file=archivo)
+        with open(path_seguidores, "a", encoding="utf8") as archivo:
+            print(nombre_usuario, file=archivo)
         return "Bienvenido a DDCahuín!"
 
 
 # TODO
-def es_valido(usuario):
+def usuario_valido(usuario):
     """
     El usuario debe contener:
         1
@@ -227,7 +227,16 @@ class Usuario:
         # header
         print(" Tu Muro ".center(47, "-"))
         lista_posts = posts_filtrar(*self.obtener_seguidos(), recientes)
-        print("".join([str(post) for post in lista_posts]))
+        if lista_posts:
+            print("".join([str(post) for post in lista_posts]))
+        # Si la lista esta vacia, invita al
+        # usuario a seguir a más usuarios
+        else:
+            print()
+            print("Tu Múro está vacio".center(ancho_max))
+            print()
+            print("Trata de seguir a más usuarios!".center(ancho_max))
+        print("\n"*3)
 
     def imprimir_publicaciones(self, recientes=True):
         """
@@ -235,7 +244,14 @@ class Usuario:
         """
         print(" Tus publicaciones ".center(47, "-"))
         lista_posts = posts_filtrar(self.nombre, recientes)
-        print("".join([str(post) for post in lista_posts]))
+        if lista_posts:
+            print("".join([str(post) for post in lista_posts]))
+        else:
+            print()
+            print("Tu perfil está vacio".center(ancho_max))
+            print()
+            print("Crea tu primera pblicación!".center(ancho_max))
+        print("\n"*3)
 
     def publicar(self, mensaje):
         """
@@ -276,12 +292,12 @@ class PrograPost:
 
     def __str__(self):
         return (
-            f"_______________________________________________\n"
-            f"|  0  | @{self.usuario.ljust(37)}"           "|\n"
-            f"| /Y\\ | {self.fecha_emision.rjust(37)}"    " |\n"
-            f"|=============================================|\n"
+            f"{'_' * ancho_max}\n"
+            f"|  0  | @{self.usuario.ljust(ancho_max - 10)}" "|\n"
+            f"| /Y\\ | {self.fecha_emision.rjust(ancho_max - 10)}"    " |\n"
+            f"|{'=' * (ancho_max- 2)}|\n"
             f"{self.mprint()}\n"
-            f"|_____________________________________________|\n"
+            f"|{'_' * (ancho_max-2)}|\n"
         )
 
     def mprint(self):
@@ -289,12 +305,11 @@ class PrograPost:
         Método para imprimir la parte "mensaje"
         de un PrograPost en el cuadro establecido en el
         método __str__
-        Limita las palabras por fila de modo que
-        solo existan 43 columnas
+        Limita las palabras por fila
         """
         lista_palabras = self.mensaje.split(" ")
         # ancho total y ancho restante
-        largo_max = 43
+        largo_max = ancho_max - 4
         largo_restante = largo_max
         # string inicial reducido a {largo_max} columnas
         columna = str()
@@ -343,7 +358,7 @@ class PrograPost:
 ###
 
 
-x = Usuario("1gbasly")
-x.imprimir_publicaciones()
-x.eliminar_post(0)
-x.imprimir_publicaciones()
+if __name__ == "__main__":
+    x = Usuario("3ntamburini")
+    x.imprimir_publicaciones()
+    x.imprimir_muro()
