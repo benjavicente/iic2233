@@ -242,7 +242,7 @@ class Usuario:
             print("Tu Múro está vacio".center(ancho_max))
             print()
             print("Trata de seguir a más usuarios!".center(ancho_max))
-        print("\n"*3)
+        print()
 
     def imprimir_publicaciones(self, recientes=True):
         """
@@ -257,11 +257,12 @@ class Usuario:
             print("Tu perfil está vacio".center(ancho_max))
             print()
             print("Crea tu primera pblicación!".center(ancho_max))
-        print("\n"*3)
+        print()
 
     def publicar(self, mensaje):
         """
         Se guarda la publicación del usuario en posts.cvs
+        Retorna el mensaje de confirmación
         """
         # Se limpia
         mensaje = mensaje.strip()
@@ -271,6 +272,11 @@ class Usuario:
             with open(path_prograposts, "a", encoding="utf8") as archivo:
                 fecha = str(date.today()).replace("-", "/")
                 print(self.nombre, fecha, mensaje, sep=",", file=archivo)
+            print(PrograPost(self.nombre, fecha, mensaje))
+            return "Mensaje publicado"
+        elif 140 < len(mensaje):
+            return "Mensaje muy largo para publicar"
+        return ""
 
     def eliminar_post(self, numero_post=-1):
         """
@@ -283,8 +289,8 @@ class Usuario:
         if - len(posts_propios) <= numero_post < len(posts_propios):
             # Se muetsra el post y se confirma la acción
             print(posts_propios[numero_post])
-            confirmar = input("[Sí] / [No]").strip().lower()
-            if confirmar in {"sí", "si", "s", "y"}: 
+            confirmar = input("(Sí) / (No) ----> ").strip().lower()
+            if confirmar in {"sí", "si", "s", "y", "yes", "ok"}:
                 with open(path_prograposts, "w", encoding="utf8") as archivo:
                     # `orden` es el orden en el que los datos se
                     # guardan en el archivo
@@ -293,7 +299,7 @@ class Usuario:
                         if orden(posts_propios[numero_post]) != orden(post):
                             print(*orden(post), sep=",", file=archivo)
                     return "PrograPost eliminado"
-            return "Acción cancelada" 
+            return "Acción cancelada"
         else:
             return f"No existe el post con indice {numero_post}"
 
