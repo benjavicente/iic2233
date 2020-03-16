@@ -81,9 +81,9 @@ def crear_usuario(nombre_usuario):
         # NUEVO: en vez de rehacer el archivo, este se usa
         # la opción `a` append, y se agrega al final
         with open(path_usuarios, "a", encoding="utf8") as archivo:
-            print(nombre_usuario, file=archivo)
+            print("\n" + nombre_usuario, end="", file=archivo)
         with open(path_seguidores, "a", encoding="utf8") as archivo:
-            print(nombre_usuario, file=archivo)
+            print("\n" + nombre_usuario, end="", file=archivo)
         return "Bienvenido a DDCahuín!"
 
 
@@ -199,8 +199,14 @@ class Usuario:
         return set_seguidos
 
     def empezar_a_seguir(self, otro):
-        if otro not in set_usuarios:
-            return "El usuario no existe"
+        """
+        Se empieza a seguir al usuario `otro`
+        Retorna un str confirmando la acción
+        """
+        if otro == self.nombre:
+            return "No te puedes seguir a ti mismo!"
+        elif otro not in set_usuarios:
+            return f"El usuario @{otro} no existe"
         else:
             # Mensaje de respuesta integrado en la función
             return modificar_archvivo_usuarios(self.nombre, otro, set.add)
@@ -266,22 +272,30 @@ class Usuario:
                 fecha = str(date.today()).replace("-", "/")
                 print(self.nombre, fecha, mensaje, sep=",", file=archivo)
 
-    def eliminar_post(self, numero_post=0):
+    def eliminar_post(self, numero_post=-1):
         """
         Elimina la publicación del usuario
         Por defecto se elimina la ultima realizada
+        Retorna un mensaje de confirmación
         """
         lista_posts = extraer_posts()
-        posts_propios = posts_filtrar(self.nombre)
+        posts_propios = posts_filtrar(self.nombre, recientes=False)
         if - len(posts_propios) <= numero_post < len(posts_propios):
-            with open(path_prograposts, "w", encoding="utf8") as archivo:
-                orden = attrgetter("usuario", "fecha_emision",  "mensaje")
-                for post in lista_posts:
-                    if orden(posts_propios[numero_post]) != orden(post):
-                        print(*orden(post), sep=",", file=archivo)
-                    else:
-                        print("\nEliminado:")
-                        print(post)
+            # Se muetsra el post y se confirma la acción
+            print(posts_propios[numero_post])
+            confirmar = input("[Sí] / [No]").strip().lower()
+            if confirmar in {"sí", "si", "s", "y"}: 
+                with open(path_prograposts, "w", encoding="utf8") as archivo:
+                    # `orden` es el orden en el que los datos se
+                    # guardan en el archivo
+                    orden = attrgetter("usuario", "fecha_emision",  "mensaje")
+                    for post in lista_posts:
+                        if orden(posts_propios[numero_post]) != orden(post):
+                            print(*orden(post), sep=",", file=archivo)
+                    return "PrograPost eliminado"
+            return "Acción cancelada" 
+        else:
+            return f"No existe el post con indice {numero_post}"
 
 
 class PrograPost:
@@ -351,14 +365,3 @@ class PrograPost:
             # el largo resante
         columna = columna.replace('\n', ' |\n| ')
         return f"| {columna}{' '*largo_restante} |"
-
-###
-# ZONA DE TESTEO
-# ELIMINAR AL FINALIZAR
-###
-
-
-if __name__ == "__main__":
-    x = Usuario("3ntamburini")
-    x.imprimir_publicaciones()
-    x.imprimir_muro()
