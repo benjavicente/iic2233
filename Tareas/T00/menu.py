@@ -39,7 +39,7 @@ def menu_entrada():
             sep="\n"
         )
         acc = input(" " * 4 + "-----> ").strip()
-        if   acc == "1":
+        if acc == "1":
             menu_inicio()
         elif acc == "2":
             menu_registro()
@@ -71,11 +71,14 @@ def menu_inicio():
 
 
 def menu_registro():
-    print(" " * 4 + "Ingrese el nombre del usuario:")
-    print(" " * 4 + "El nombre de usuario debe contener")
-    print(" " * 4 + "al menos una letra y un número, no")
-    print(" " * 4 + "contener simbolos o espacios y debe tener")
-    print(" " * 4 + "un largo de entre 8 y 32 caracteres")
+    print(
+        " " * 4 + "Ingrese el nombre del usuario:",
+        " " * 4 + "El nombre de usuario debe contener",
+        " " * 4 + "al menos una letra y un número, no",
+        " " * 4 + "contener simbolos o espacios y debe tener",
+        " " * 4 + "un largo de entre 8 y 32 caracteres",
+        sep="\n", end="\n" * 2
+    )
     usuario = input(" " * 6 + "@").strip()
     if usuario in um.set_usuarios:
         # el nombre ingresado ya existe
@@ -104,7 +107,7 @@ def menu_principal():
             sep="\n"
             )
         acc = input(" " * 4 + "-----> ").strip()
-        if   acc == "1":
+        if acc == "1":
             menu_prograposts()
         elif acc == "2":
             menu_seguidos()
@@ -136,7 +139,7 @@ def menu_prograposts():
             sep="\n"
         )
         acc = input(" " * 4 + "-----> ").strip()
-        if   acc == "1":
+        if acc == "1":
             # Muro
             print(
                 " " * 6 + "[1] De más nuevo a más antiguo",
@@ -162,11 +165,13 @@ def menu_prograposts():
                 usuario_act.imprimir_publicaciones(recientes=False)
         elif acc == "3":
             # Crear PrograPost
-            print(" " * 4 + "Cual es el mensaje que deseas publicar?")
-            print(" " * 4 + "Puedes publicar entre 1 a 140 caracteres")
-            print(" " * 4 + "Si quieres cancelar el mensaje,")
-            print(" " * 4 + "no escribas nada")
-            print()
+            print(
+                " " * 4 + "Cual es el mensaje que deseas publicar?",
+                " " * 4 + "Puedes publicar entre 1 a 140 caracteres",
+                " " * 4 + "Si quieres cancelar el mensaje,",
+                " " * 4 + "no escribas nada",
+                sep="\n", end="\n" * 2
+            )
             mensaje = input().strip()
             if 1 <= len(mensaje) < 140:
                 print(usuario_act.publicar(mensaje))
@@ -182,14 +187,17 @@ def menu_prograposts():
                     # Como existe solo un post, se elimina el más reciente
                     cual = "r"
                 else:
-                    print(" " * 4 + "Cual es el post que deseas eliminar?")
-                    print(" " * 4 + f"Elija entre 0 y {cantidad_de_posts - 1},")
-                    print(" " * 4 + "donde 0 es el post más antiguo")
-                    print(" " * 4 + f"y {cantidad_de_posts - 1} es el más nuevo")
-                    print(" " * 4 + "Para eliminar el más reciente, use \"r\"")
-                    print(" " * 4 + "Para volver, deje el campo vacío")
-                    print()
-                    cual = input(" " * 4 + "Indice del post a eliminar: ").strip()
+                    # Se pregunta el post a eliminar
+                    print(
+                        " " * 4 + "Cual es el post que deseas eliminar?",
+                        " " * 4 + f"Elija entre 0 y {cantidad_de_posts - 1}",
+                        " " * 4 + "donde 0 es el post más antiguo",
+                        " " * 4 + f"y {cantidad_de_posts - 1} es el más nuevo",
+                        " " * 4 + "Para eliminar el más reciente, use \"r\"",
+                        " " * 4 + "Para volver, deje el campo vacío",
+                        sep="\n", end="\n" * 2
+                    )
+                    cual = input(" " * 4 + "Post a eliminar: ").strip()
                 if cual.isdigit() or cual == "r":
                     if cual == "r":
                         cual = None
@@ -241,8 +249,11 @@ def menu_seguidos():
                     print(usuario_act.dejar_de_seguir(cual))
             else:
                 # No hay usuarios
-                print(" " * 4 + "No puedes dejar de seguir:")
-                print(" " * 4 + "No sigues a nadie")
+                print(
+                    " " * 4 + "No puedes dejar de seguir:",
+                    " " * 4 + "No sigues a nadie",
+                    sep="\n"
+                )
         elif acc == "3":
             seguidos = usuario_act.obtener_seguidos()
             if seguidos:
