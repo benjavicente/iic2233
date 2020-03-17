@@ -1,51 +1,3 @@
-"""
-Libreria para realizar acciones de usuario
-Objetos marcados con * están destinadas para el uso externo
-
-Incluye:
-    variables
-        carpeta_datos
-        path_usuarios
-        path_seguidores
-        path_prograposts
-        *set_usuarios
-        *ancho_max
-    -----------------------------
-    funciones
-        *agregar_usuario
-        *usuario_valido
-        obtener_dict_seguidores
-        modificar_archvivo_usuarios
-        extraer_posts
-        posts_filtrar
-    -----------------------------
-    *clase Usuario
-        atributos
-            nombre
-        metodos
-            __init__
-            __str__
-            obtener_seguidores
-            empezar_a_seguir
-            dejar_de_seguir
-            imprimir_muro
-            imprimir_publicaciones
-            publicar
-            eliminar_post
-    -----------------------------
-    clase PrograPost
-        atributos
-            usuario
-            fecha_emision
-            mensaje
-        metodos
-            __init__
-            __str__
-            mprint
-"""
-# TODO: Simplificar el método mprint de la clase Prograpost
-# TODO: Ver la validación del nombre
-
 from datetime import date
 from os import path
 from operator import attrgetter
@@ -57,9 +9,11 @@ path_seguidores = path.join(carpeta_datos, "seguidores.csv")
 path_prograposts = path.join(carpeta_datos, "posts.csv")
 
 # Ajuste de interfaz
-ancho_max = 48
+ancho_ui = 48
 
 # set de usuarios a partir de usuarios.csv
+# utilizado para no leer usuarios.csv
+# cada vez que sea necesario
 set_usuarios = set()
 with open(path_usuarios, "r", encoding="utf8") as archivo:
     for fila_archivo in archivo.readlines():
@@ -73,12 +27,13 @@ def crear_usuario(nombre_usuario):
     Se asume que el usuario es valido
     """
     # Se agrega el usuario al archivo de usuario y seguidores
-    # NUEVO: en vez de rehacer el archivo, este se usa
+    # En vez de rehacer el archivo, este se usa
     # la opción `a` append, y se agrega al final
+    set_usuarios.add(nombre_usuario)
     with open(path_usuarios, "a", encoding="utf8") as archivo:
-        print("\n" + nombre_usuario, end="", file=archivo)
+        print(nombre_usuario, file=archivo)
     with open(path_seguidores, "a", encoding="utf8") as archivo:
-        print("\n" + nombre_usuario, end="", file=archivo)
+        print(nombre_usuario, file=archivo)
     return "Bienvenido a DCCahuín!"
 
 
@@ -90,14 +45,17 @@ def usuario_valido(usuario):
         3 - Ser entre 8 y 32 caractares
         4 - No contener símbolos (!#Q$%&)
     """
-    if set(range(0, 10)) in usuario:
+    if not any([str(numero) in usuario for numero in range(10)]):
+        # ve si no hay ningún numero en usuario
         return False
-    # https://stackoverflow.com/a/47453486
     if not usuario.upper().isupper():
+        # https://stackoverflow.com/a/47453486
+        # `isupper()` es falso si no existen
+        # **letras** mayúsculas en un str
         return False
-    if not (8 <= usuario <= 32):
+    if not (8 <= len(usuario) <= 32):
         return False
-    if usuario.isalnum():
+    if not usuario.isalnum():
         return False
     return True
 
@@ -176,7 +134,7 @@ def posts_filtrar(*usuarios, rec):
     https://docs.python.org/3/howto/sorting.html#operator-module-functions
     """
     lista = [post for post in extraer_posts() if post.usuario in usuarios]
-    orden = ("fecha_emision", "usuario",  "mensaje")
+    orden = ("fecha", "usuario",  "mensaje")
     lista.sort(key=attrgetter(*orden), reverse=rec)
     return lista
 
@@ -243,10 +201,19 @@ class Usuario:
         # usuario a seguir a más usuarios
         else:
             print()
-            print("Tu Múro está vació".center(ancho_max))
+            print("Tu Múro está vació".center(ancho_ui))
             print()
-            print("Trata de seguir a más usuarios!".center(ancho_max))
+            print("Trata de seguir a más usuarios!".center(ancho_ui))
         print()
+
+
+    def existen_publicaciones(self, recientes=True):
+        """
+        Verifica si el usuario ha publicado
+        Evita que el usuario borre una publicación
+        Cuando este no posee una
+        """
+        return bool(posts_filtrar(self.nombre, rec=recientes))
 
     def imprimir_publicaciones(self, recientes=True):
         """
@@ -258,9 +225,9 @@ class Usuario:
             print("".join([str(post) for post in lista_posts]))
         else:
             print()
-            print("Tu perfil está vació".center(ancho_max))
+            print("Tu perfil está vació".center(ancho_ui))
             print()
-            print("Crea tu primera publicación!".center(ancho_max))
+            print("Crea tu primera publicación!".center(ancho_ui))
         print()
 
     def publicar(self, mensaje):
@@ -298,7 +265,7 @@ class Usuario:
                 with open(path_prograposts, "w", encoding="utf8") as archivo:
                     # `orden` es el orden en el que los datos se
                     # guardan en el archivo
-                    orden = attrgetter("usuario", "fecha_emision",  "mensaje")
+                    orden = attrgetter("usuario", "fecha",  "mensaje")
                     for post in lista_posts:
                         if orden(posts_propios[numero_post]) != orden(post):
                             print(*orden(post), sep=",", file=archivo)
@@ -309,22 +276,23 @@ class Usuario:
 
 
 class PrograPost:
-    def __init__(self, usuario, fecha_emision, mensaje):
+    def __init__(self, usuario, fecha, mensaje):
         self.usuario = usuario
-        self.fecha_emision = fecha_emision
+        self.fecha = fecha
         self.mensaje = mensaje
 
     def __str__(self):
         return (
-            f"{'_' * ancho_max}\n"
-            f"|  0  | @{self.usuario.ljust(ancho_max - 10)}" "|\n"
-            f"| /Y\\ | {self.fecha_emision.rjust(ancho_max - 10)}"    " |\n"
-            f"|{'=' * (ancho_max- 2)}|\n"
-            f"{self.mprint()}\n"
-            f"|{'_' * (ancho_max-2)}|\n"
+            f"{'_' * ancho_ui}\n"
+            f"|  0  | @{self.usuario.ljust(ancho_ui - 10)}"    "|\n"
+            f"| /Y\\ | {self.fecha.rjust(ancho_ui - 10)}|\n"
+            f"|{'=' * (ancho_ui- 2)}|\n"
+            f"{self.contenedor_de_mensaje()}\n"
+            f"|{'_' * (ancho_ui-2)}|\n"
         )
 
-    def mprint(self):
+    def contenedor_de_mensaje(self):
+        # TODO: Simplificar el método
         """
         Método para imprimir la parte "mensaje"
         de un PrograPost en el cuadro establecido en el
@@ -333,7 +301,7 @@ class PrograPost:
         """
         lista_palabras = self.mensaje.split(" ")
         # ancho total y ancho restante
-        largo_max = ancho_max - 4
+        largo_max = ancho_ui - 4
         largo_restante = largo_max
         # string inicial reducido a {largo_max} columnas
         columna = str()
@@ -364,14 +332,14 @@ class PrograPost:
             elif len(palabra) > largo_restante:
                 # la palabra es muy larga para la sección
                 # restante, se imprime en la siguiente linea
-                columna += " "*largo_restante + "\n"
+                columna += " " * largo_restante + "\n"
                 largo_restante = largo_max - len(palabra) - 1
             else:
                 largo_restante -= len(palabra) + 1
             # Finalmente se agrega la palabra a la columna
-            columna += palabra + " "*(largo_restante != -1)
+            columna += palabra + " " * (largo_restante != -1)
             # " "*(largo_restante != -1)` es usado para evitar que
             # un espacio (" ") sea agregado cuando se sobrepase
             # el largo resante
         columna = columna.replace('\n', ' |\n| ')
-        return f"| {columna}{' '*largo_restante} |"
+        return f"| {columna}{' ' * largo_restante} |"
