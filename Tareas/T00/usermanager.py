@@ -121,7 +121,7 @@ def extraer_posts():
     return lista_prograposts
 
 
-def posts_filtrar(*usuarios, rec):
+def posts_filtrar(*usuarios, rec=True):
     """
     Extraer_post() se ejecuta para obtener el listado.
     Se filtra por usuario y los ordena por fecha,
@@ -129,7 +129,7 @@ def posts_filtrar(*usuarios, rec):
     Se el usuario y la fecha son las mismas, se ordena por mensaje
     Argumento:
         *usuarios - lista de usuarios a mostrar
-        recientes - mostrar últimos los PrograPost primeros
+        recientes - orden, muestra por defecto los post más nuevos primeros
     Solución a partír de:
     https://docs.python.org/3/howto/sorting.html#operator-module-functions
     """
@@ -206,14 +206,12 @@ class Usuario:
             print("Trata de seguir a más usuarios!".center(ancho_ui))
         print()
 
-
-    def existen_publicaciones(self, recientes=True):
+    def cantidad_publicaciones(self):
         """
-        Verifica si el usuario ha publicado
-        Evita que el usuario borre una publicación
-        Cuando este no posee una
+        Retorna la cantidad de publicaciones del usuario
+        Útil para indicar al usuario cuantos post ha publicado
         """
-        return bool(posts_filtrar(self.nombre, rec=recientes))
+        return len(posts_filtrar(self.nombre))
 
     def imprimir_publicaciones(self, recientes=True):
         """
@@ -247,7 +245,7 @@ class Usuario:
             return "Mensaje publicado"
         elif 140 < len(mensaje):
             return "Mensaje muy largo para publicar"
-        return ""
+        return ""  # No se retorna nada, el usuario cancelo la acción
 
     def eliminar_post(self, numero_post=-1):
         """
@@ -256,7 +254,7 @@ class Usuario:
         Retorna un mensaje de confirmación
         """
         lista_posts = extraer_posts()
-        posts_propios = posts_filtrar(self.nombre, recientes=False)
+        posts_propios = posts_filtrar(self.nombre, rec=False)
         if - len(posts_propios) <= numero_post < len(posts_propios):
             # Se muestra el post y se confirma la acción
             print(posts_propios[numero_post])
@@ -282,10 +280,13 @@ class PrograPost:
         self.mensaje = mensaje
 
     def __str__(self):
+        """
+        Retorna un cuadro de post formateado
+        """
         return (
             f"{'_' * ancho_ui}\n"
-            f"|  0  | @{self.usuario.ljust(ancho_ui - 10)}"    "|\n"
-            f"| /Y\\ | {self.fecha.rjust(ancho_ui - 10)}|\n"
+            f"|  0  | @{self.usuario.ljust(ancho_ui - 10)}|\n"
+            f"| /Y\\ | {self.fecha.rjust(ancho_ui - 10)} |\n"
             f"|{'=' * (ancho_ui- 2)}|\n"
             f"{self.contenedor_de_mensaje()}\n"
             f"|{'_' * (ancho_ui-2)}|\n"
