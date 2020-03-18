@@ -1,117 +1,129 @@
-# Tarea 00: DDCahuín :eyes:
+# Tarea 00: DCCahuín :eyes:
 
-## Progreso
+## Consideraciones
 
-- Menus
-  - [ ] Menu de bienbenida
-  - [ ] Menu de inicio
-    - [ ] Menu para crear cuenta
-    - [ ] Menu para iniciar seción
-  - [ ] Menu principal (**Muro**)
-  - [ ] Menu de perfil (PrograPosts propios)
-  - [ ] Menu de seguidores
-- Usuarios
-  - [ ] Crear usuarios vallidos
-  - [X] Obtener seguidores
-  - [X] Obtener seguidos
-  - [X] Empezar a seguir a un usuario
-  - [X] Parar de seguir a un usuario
-- PrograPost
-  - [ ] Agregar prograposts
-  - [ ] Eliminar progrposts
-  - [X] Mostrar muro (prograposts de seguidos)
-  - [X] Mostrar prograposts propios
-    - [ ] Opción de ordenarlos cronológicamente
-  - [X] Formateo de prograposts
-
-
-
-## Consideraciones generales
-
-<Descripción de lo que hace y que **_no_** hace la tarea que entregaron junto
-con detalles de último minuto y consideraciones como por ejemplo cambiar algo
-en cierta línea del código o comentar una función>
-
-### Cosas implementadas y no implementadas :white_check_mark: :x:
-
-* <Nombre item pauta<sub>1</sub>>: Hecha completa
-* <Nombre item pauta<sub>2</sub>>: Me faltó hacer <insertar qué cosa faltó>
-    * <Nombre subitem pauta<sub>2.1</sub>>: Hecha completa 
-    * <Nombre subitem pauta<sub>2.2</sub>>: Me faltó hacer <insertar qué cosa faltó>
-    * ...
-* <Nombre item pauta<sub>3</sub>>: Me faltó hacer <insertar qué cosa faltó>
-* ...
-* <Nombre item pauta<sub>n</sub>>: Me faltó hacer <insertar qué cosa faltó>
+```txt
+                                         _____
+Bienvenid@ a                            / ... \
+  _____   _____ _____      _           / _____/
+ |  __ \ / ____/ ____|    | |         /_/
+ | |  | | |   | |     __ _| |__  _   _ _ _ __
+ | |  | | |   | |    / _` | '_ \| | | | | '_ \
+ | |__| | |___| |___| (_| | | | | |_| | | | | |
+ |_____/ \_____\_____\__,_|_| |_|\__,_|_|_| |_|
+```
 
 ## Ejecución :computer:
-El módulo principal de la tarea a ejecutar es  ```archivo.py```. Además se debe crear los siguientes archivos y directorios adicionales:
-1. ```archivo.ext``` en ```ubicación```
-2. ```directorio``` en ```ubicación```
-3. ...
+
+El módulo principal de la tarea a ejecutar es  `menu.py`.
+
+El módulo `postmanager.py` debe encontrarse en el mismo directorio que `menu.py`.
+
+Si los archivos `posts.csv`, `seguidores.csv` y `usuarios.csv` no son proporcionados en la carpeta `data`, se deben crear estos en dicha carpeta.
+
+---
+
+### Características implementadas
+
+**Todo lo pedido fue implementado**.
+A continuación se encuentra todos los puntos considerados de la pauta y enunciado, además de otras características adicionales que mejoran la experiencia del usuario.
+
+#### Menú de usuarios
+
+* El menú de inicio contiene las opciones:
+  * [X] Iniciar sesión
+  * [X] Registro de Usuario
+  * [X] Salir
+* El menu principal contiene las opciones:
+  * [X] Menú de PrograPosts
+  * [X] Menú de Seguidos y Seguidores
+  * [X] Cerrar sesión
+* Cuando se inicia sesión:
+  * [X] Se verifica que el nombre exista en `usuarios.csv`
+* Cuando se registra un nuevo usuario:
+  * [X] Se verifica que el nombre elegido no esté ocupado, contiene mínimo 8 caracteres, tiene por lo menos una letra y un número, y es alfanumérico
+  * [X] **Adicional**: Se limita el nombre de usuario hasta 32 caracteres
+  * [X] Se crea el usuario en `usuarios.csv` y `seguidores.csv`
+* Cuando se quiere salir del programa:
+  * [X] La opción `0` vuelve al menú anterior hasta llegar a el menú de inicio, donde `0` cierra el programa
+
+#### Menú de Posts
+
+* El menú de PrograPosts contiene las opciones:
+  * [X] Ver tu Muro
+  * [X] Ver tus publicaciones
+  * [X] Crear un PrograPost
+  * [X] Eliminar un PrograPost
+  * [X] Volver
+* Cuando se ven los PrograPosts:
+  * [X] Se muestra el Muro (PrograPosts de usuarios seguidos)
+  * [X] Se muestran los PrograPost propios
+  * [X] Se entrega la opción de ver post ordenados de más nuevo a más antiguo y viceversa
+  * [X] **Adicional**: Los post son mostrados en *contenedores*
+* Cuando se crea un PrograPost:
+  * [X] Si supera los 140 caracteres, se avisa al usuario que el mensaje es muy largo
+  * [X] Se guarda en `posts.csv` con el mensaje elegido, el nombre de usuario y la fecha actual
+  * [X] **Adicional**: Al publicar el PrograPost, se muestra
+  * [X] Se agrega el post a `post.csv`
+* Cuando se elimina un PrograPost:
+  * [X] Se permite elegit el PrograPost a eliminar
+  * [X] **Adicional**: Si el usuario solo tiene un PrograPost, se selecciona este automáticamente
+  * [X] **Adicional**: Luego de elegir cual eliminar, se muestra el PrograPost y se confirma la acción
+  * [X] Se elimina el post en `post.csv`
+* La fecha del PrograPost se encuentra en el formato pedido:
+  * [X] Se muestra la fecha en formato `YYYY/MM/DD` en los PrograPosts
+
+#### Menú de Seguidos y Seguidores
+
+* El menú contiene las opciones:
+  * [X] Seguir a un usuario
+  * [X] Dejar de seguir a un usuario
+  * [X] **Adicional**: Ver usuario seguidos
+  * [X] **Adicional**: Ver seguidores
+  * [X] Volver
+* Cuando se sigue a un usuario:
+  * [X] Se verifica que el usuario a seguir no es sí mismo y se avisa si es el caso
+  * [X] Se verifica que el usuario exista y se avisa si es el caso
+  * [X] Si el usuario existe y no es sí mismo, se sigue y modifica `seguidores.csv`
+* Cuando se deja de seguir a un usuario
+  * [X] Se verifica que el usuario existe, si es el caso, se avisa
+  * [X] Se verifica que el usuario es sí mismo, si es el caso, se avisa
+  * [X] Se deja de seguir al usuario y se modifica el archivo `seguidores`
+
+---
 
 ## Librerías :books:
 
 ### Librerías externas utilizadas
 
-La lista de librerías externas que utilicé fue la siguiente:
+La lista de librerías externas y sus funciones que utilicé fueron las siguientes:
 
-1. `os`: función `path.join()`
-2. `operator`: función `attrgetter()`
-3. ...
+1. **`os`**
+   * Función `path.join()`
+        Une los *paths* relativos de los archivos. Permite compativilidad con multiples sistemas operativos
+2. **`operator`**
+   * Función `attrgetter()`
+        Crea una llave para sortear los PrograPosts por sus atributos
+3. **`datetime`**
+     * Método `today()` de la clase `date`
+        Obtiene la fecha actual para la creación de PrograPosts
 
 ### Librerías propias
 
 Por otro lado, los módulos que fueron creados fueron los siguientes:
 
-1. ```usermanager```: Contiene la clase `Usuario` y `Post`
-2. ```librería_2```: Hecha para <insertar descripción **breve** de lo que hace o qué contiene>
-3. ...
+1. **`usermanager`**
+   * Administra la información los usuarios y los PrograPosts. Puede considerase el *"back-end"* del programa
+
+### Código externo utilizado
+
+*No considero las recomendaciones o documentación, pero donde se utilizo guiás o tips se comentó en el código.*
+
+* `not usuario.upper().isupper()`, que retorna `True` si hay una letra en el string. Es utilizado para verificar que el usuario contiene una letra es su nombre
+  * Obtenido de [stack overflow](https://stackoverflow.com/a/47453486)
 
 ## Supuestos y consideraciones adicionales :thinking:
+
 Los supuestos que realicé durante la tarea son los siguientes:
 
-1. <Descripción/consideración 1 y justificación del por qué es válido/a> 
-2. <Descripción/consideración 2 y justificación del por qué es válido/a>
-3. ...
-
-PD: <una última consideración (de ser necesaria) o comentario hecho anteriormente que se quiera **recalcar**>
-
-
--------
-
-
-
-**EXTRA:** si van a explicar qué hace específicamente un método, no lo coloquen en el README mismo. Pueden hacerlo directamente comentando el método en su archivo. Por ejemplo:
-
-```python
-class Corrector:
-
-    def __init__(self):
-          pass
-
-    # Este método coloca un 6 en las tareas que recibe
-    def corregir(self, tarea):
-        tarea.nota  = 6
-        return tarea
-```
-
-Si quieren ser más formales, pueden usar alguna convención de documentación. Google tiene la suya, Python tiene otra y hay muchas más. La de Python es la [PEP287, conocida como reST](https://www.python.org/dev/peps/pep-0287/). Lo más básico es documentar así:
-
-```python
-def funcion(argumento):
-    """
-    Mi función hace X con el argumento
-    """
-    return argumento_modificado
-```
-Lo importante es que expliquen qué hace la función y que si saben que alguna parte puede quedar complicada de entender o tienen alguna función mágica usen los comentarios/documentación para que el ayudante entienda sus intenciones.
-
-## Referencias de código externo :book:
-
-Para realizar mi tarea saqué código de:
-1. \<link de código>: este hace \<lo que hace> y está implementado en el archivo <nombre.py> en las líneas <número de líneas> y hace <explicación breve de que hace>
-
-
-
-## Descuentos
-La guía de descuentos se encuentra [link](https://github.com/IIC2233/syllabus/blob/master/Tareas/Descuentos.md).
+1. Asumo que los archivos `posts.csv`, `seguidores.csv` y `usuarios.csv` terminan con una linea vacía, es decir, que cada fila esta compuesta por sus campos y el carácter de nueva linea.
