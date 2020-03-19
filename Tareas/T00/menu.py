@@ -16,10 +16,10 @@ usuario_act = None
 
 def banner():
     print(
-        R"                                        _____  ",
-        R"    Bienvenid@ a                       / ... \  ",
-        R"  _____   _____ _____      _          / _____/  ",
-        R" |  __ \ / ____/ ____|    | |        /_/        ",
+        R"                                         _____  ",
+        R"    Bienvenid@ a                        / ... \ ",
+        R"  _____   _____ _____      _           / _____/ ",
+        R" |  __ \ / ____/ ____|    | |         /_/       ",
         R" | |  | | |   | |     __ _| |__  _   _ _ _ __   ",
         R" | |  | | |   | |    / _` | '_ \| | | | | '_ \  ",
         R" | |__| | |___| |___| (_| | | | | |_| | | | | | ",
@@ -33,7 +33,7 @@ def menu_entrada():
     while True:
         print(
             "  Seleccione una opción:",
-            " " * 4 + "[1] Iniciar Seción",
+            " " * 4 + "[1] Iniciar Sesión",
             " " * 4 + "[2] Registro de Usuario",
             " " * 4 + "[0] Salir",
             sep="\n"
@@ -103,7 +103,7 @@ def menu_principal():
         print(
             " " * 4 + "[1] Ver, crear o eliminar PrograPosts",
             " " * 4 + "[2] Ver y editar a quien sigues",
-            " " * 4 + "[0] Cerrar sección",
+            " " * 4 + "[0] Cerrar sesión",
             sep="\n"
             )
         acc = input(" " * 4 + "-----> ").strip()
@@ -128,7 +128,7 @@ def menu_principal():
 def menu_prograposts():
     global usuario_act
     print()
-    print(" Menú PrograPosts ".center(um.ancho_ui, "-"))
+    print(" Menú de PrograPosts ".center(um.ancho_ui, "-"))
     while True:
         print(
             " " * 4 + "[1] Ver tu Muro",
@@ -218,7 +218,7 @@ def menu_prograposts():
 def menu_seguidos():
     global usuario_act
     print()
-    print(" Menú Seguidos y Seguidores ".center(um.ancho_ui, "-"))
+    print(" Menú de Seguidos y Seguidores ".center(um.ancho_ui, "-"))
     print(
         (
             f"Seguidores: {len(usuario_act.obtener_seguidores())}    "
