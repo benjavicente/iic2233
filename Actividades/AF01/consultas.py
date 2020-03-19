@@ -22,7 +22,7 @@ def promedio_rating_genero(animes):
     for ani in animes:
         for genero in ani.Generos:
             if genero not in dict_generos:
-                dict_generos[genero] = {"total": 1, "cant": ani.Rating}
+                dict_generos[genero] = {"total": ani.Rating, "cant": 1}
             else:
                 dict_generos[genero]["total"] += ani.Rating
                 dict_generos[genero]["cant"] += 1
