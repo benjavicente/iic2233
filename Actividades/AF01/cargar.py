@@ -2,6 +2,8 @@ from collections import namedtuple, deque
 
 
 def cargar_animes(path):
+    dict_anime = dict()
+    datos_anime = namedtuple("Datos Anime", ["Rating", "Estudio", "Generos"])
     # Abrimos el archivo de animes
     with open(path, 'r', encoding="utf-8") as file:
         # Leemos las lineas
@@ -10,8 +12,10 @@ def cargar_animes(path):
             anime = line.strip().split(",")
             # Separamos los generos por slash
             anime[3] = anime[3].split("/")
-
-    return
+            # Se guardan en diccionarios
+            datos = datos_anime(int(anime[1]), anime[2], set(anime[3]))
+            dict_anime[anime[0]] = datos
+    return dict_anime
 
 
 def cargar_consultas(path):
