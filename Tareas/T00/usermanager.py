@@ -24,7 +24,7 @@ def crear_usuario(nombre_usuario):
     """
     Agrega el usuario a usuarios.csv, seguidores y set_usuarios
     Retorna un str sobre el resultado
-    Se asume que el usuario es valido
+    Se asume que el usuario ya es valido
     """
     # Se agrega el usuario al archivo de usuario y seguidores
     # En vez de rehacer el archivo, este se usa
@@ -43,7 +43,7 @@ def usuario_valido(usuario):
         1 - Tener un número
         2 - Tener una letra
         3 - Ser entre 8 y 32 caractares
-        4 - No contener símbolos (!#Q$%&)
+        4 - Ser alfanumérico
     """
     if not any([str(numero) in usuario for numero in range(10)]):
         # ve si no hay ningún numero en usuario
@@ -84,9 +84,9 @@ def obtener_dict_seguidores():
         return dict_seg
 
 
-def modificar_archvivo_usuarios(usuario, otro, func):
+def modificar_archvivo_seguidores(usuario, otro, func):
     """
-    Modifica el archivo de usuarios, simplifica métodos
+    Modifica el archivo de seguidores, simplifica métodos
     empezar_a_seguir y dejar_de_seguir de la clase Usuario
     Argumentos
         usuario - nombre del usuario que realiza la acción
@@ -154,57 +154,32 @@ class Usuario:
         return obtener_dict_seguidores()[self.nombre]
 
     def obtener_seguidos(self):
-        set_seguidos = set()
-        for usuario, seguidos in obtener_dict_seguidores().items():
-            if self.nombre in seguidos:
-                set_seguidos.add(usuario)
-        return set_seguidos
+        """
+        Por cada usuario y sus seguidores, se agrega al usuario al set
+        si el usuario es seguido por el usuario actual
+        """
+        items = obtener_dict_seguidores().items()
+        return {usr for usr, seguidos in items if self.nombre in seguidos}
 
     def empezar_a_seguir(self, otro):
         """
         Se empieza a seguir al usuario `otro`
-        Retorna un str confirmando la acción
+        Retorna un str confirmando la accións
         """
         if otro == self.nombre:
-            return "    No te puedes seguir a ti mismo!"
+            return "No te puedes seguir a ti mismo!"
         elif otro not in set_usuarios:
-            return f"    El usuario @{otro} no existe"
-        else:
-            # Mensaje de respuesta integrado en la función
-            return modificar_archvivo_usuarios(self.nombre, otro, set.add)
+            return f"El usuario @{otro} no existe"
+        # Mensaje de respuesta integrado en la función
+        return modificar_archvivo_seguidores(self.nombre, otro, set.add)
 
     def dejar_de_seguir(self, otro):
         if otro not in set_usuarios:
             return "El usuario no existe"
         elif otro not in self.obtener_seguidos():
             return "No sigues al usuario"
-        else:
-            # Mensaje de respuesta integrado en la función
-            return modificar_archvivo_usuarios(self.nombre, otro, set.discard)
-
-    def imprimir_muro(self, recientes=True):
-        """
-        Se imprime el muro del usuario
-        Se asume que:
-            Se necesita imprimir todos los posts
-            No se muestra los post del usuario
-                (en caso de tener que mostrarlos,
-                 agregar el argumento self.user
-                 antes de self.obtener.seguidores())
-        """
-        # header
-        print(" Tu Muro ".center(47, "-"))
-        lista_posts = posts_filtrar(*self.obtener_seguidos(), rec=recientes)
-        if lista_posts:
-            print("".join([str(post) for post in lista_posts]))
-        # Si la lista esta vaciá, invita al
-        # usuario a seguir a más usuarios
-        else:
-            print()
-            print("Tu Múro está vació".center(ancho_ui))
-            print()
-            print("Trata de seguir a más usuarios!".center(ancho_ui))
-        print()
+        # Mensaje de respuesta integrado en la función
+        return modificar_archvivo_seguidores(self.nombre, otro, set.discard)
 
     def cantidad_publicaciones(self):
         """
@@ -220,12 +195,40 @@ class Usuario:
         print(" Tus publicaciones ".center(47, "-"))
         lista_posts = posts_filtrar(self.nombre, rec=recientes)
         if lista_posts:
-            print("".join([str(post) for post in lista_posts]))
+            print(*lista_posts, sep="")
         else:
-            print()
-            print("Tu perfil está vació".center(ancho_ui))
-            print()
-            print("Crea tu primera publicación!".center(ancho_ui))
+            # Se invita al usuario a publicar un PrograPost
+            print(
+                "",
+                "Tu perfil está vació".center(ancho_ui),
+                "Crea tu primera publicación!".center(ancho_ui),
+                sep="\n\n"
+            )
+        print()
+
+    def imprimir_muro(self, recientes=True):
+        """
+        Se imprime el muro del usuario
+        Se asume que:s
+            1- Se necesita imprimir todos los post
+            2- No se muestra los post del usuario
+                En caso de tener que mostrarlos,
+                agregar el argumento self.user
+                antes de *self.obtener.seguidores()
+        """
+        print(" Tu Muro ".center(47, "-"))
+        lista_posts = posts_filtrar(*self.obtener_seguidos(), rec=recientes)
+        if lista_posts:
+            print(*lista_posts, sep="")
+        # Si la lista esta vaciá, invita al
+        # usuario a seguir a más usuarios
+        else:
+            print(
+                "",
+                "Tu Múro está vació".center(ancho_ui),
+                "Trata de seguir a más usuarios!".center(ancho_ui),
+                sep="\n\n"
+                )
         print()
 
     def publicar(self, mensaje):
@@ -241,6 +244,7 @@ class Usuario:
             with open(path_prograposts, "a", encoding="utf8") as archivo:
                 fecha = str(date.today()).replace("-", "/")
                 print(self.nombre, fecha, mensaje, sep=",", file=archivo)
+            # Se muestra el PrograPost
             print(PrograPost(self.nombre, fecha, mensaje))
             return "Mensaje publicado"
         elif 140 < len(mensaje):
@@ -262,7 +266,9 @@ class Usuario:
             if confirmar in {"sí", "si", "s", "y", "yes", "ok"}:
                 with open(path_prograposts, "w", encoding="utf8") as archivo:
                     # `orden` es el orden en el que los datos se
-                    # guardan en el archivo
+                    # guardan en el archivo. Sirve también para eliminar
+                    # el (o los) posts que contienen la misma información
+                    # mostrada en confirmar
                     orden = attrgetter("usuario", "fecha",  "mensaje")
                     for post in lista_posts:
                         if orden(posts_propios[numero_post]) != orden(post):
@@ -293,12 +299,13 @@ class PrograPost:
         )
 
     def contenedor_de_mensaje(self):
-        # TODO: Simplificar el método
+        # TODO: Simplificar este método
         """
         Método para imprimir la parte "mensaje"
         de un PrograPost en el cuadro establecido en el
         método __str__
-        Limita las palabras por fila
+        Limita las palabras por fila, de modo que sea
+        cómodo para su lectura
         """
         lista_palabras = self.mensaje.split(" ")
         # ancho total y ancho restante
