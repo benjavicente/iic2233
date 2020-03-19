@@ -3,7 +3,7 @@ from collections import namedtuple, deque
 
 def cargar_animes(path):
     dict_anime = dict()
-    datos_anime = namedtuple("Datos Anime", ["Rating", "Estudio", "Generos"])
+    datos_anime = namedtuple("datos_anime", ["Rating", "Estudio", "Generos"])
     # Abrimos el archivo de animes
     with open(path, 'r', encoding="utf-8") as file:
         # Leemos las lineas
@@ -19,11 +19,14 @@ def cargar_animes(path):
 
 
 def cargar_consultas(path):
+    cola_consultas = deque()
     # Abrimos el archivo de animes
     with open(path, 'r', encoding="utf-8") as file:
         # Leemos las lineas
         for line in file.readlines():
             # Los separamos por coma
             consulta = line.strip().split(";")
-
-    return
+            numero = int(consulta[0])
+            lista = consulta[1].split("/")
+            cola_consultas.append((numero, lista))
+    return cola_consultas
