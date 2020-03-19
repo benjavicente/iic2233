@@ -126,4 +126,6 @@ Por otro lado, los módulos que fueron creados fueron los siguientes:
 
 Los supuestos que realicé durante la tarea son los siguientes:
 
-1. Asumo que los archivos `posts.csv`, `seguidores.csv` y `usuarios.csv` terminan con una linea vacía, es decir, que cada fila esta compuesta por sus campos y el carácter de nueva linea.
+1. **Asumo que los archivos** `posts.csv` y `usuarios.csv` **terminan con una linea vacía**, es decir, que cada fila esta compuesta por sus campos y el carácter de nueva linea. Si no es correcto esto, el primer dato ingresado en cada archivo no será ingresado correctamente.
+
+2. **Asumo que todos los PrograPosts son distintos**. Se pueden publicar dos o más PrograPost iguales (mismo usuario, fecha y mensaje), pero si se intenta eliminar uno de ellos, se eliminan todos estos.
