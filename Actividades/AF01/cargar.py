@@ -1,10 +1,6 @@
 from collections import namedtuple, deque
 
-# TESTEO
-path_animes = "animes.csv"
-path_consultas = "consultas.csv"
-
-def cargar_animes(path=path_animes):
+def cargar_animes(path):
     dict_anime = dict()
     datos_anime = namedtuple("datos_anime", ["Rating", "Estudio", "Generos"])
     # Abrimos el archivo de animes
@@ -21,7 +17,7 @@ def cargar_animes(path=path_animes):
     return dict_anime
 
 
-def cargar_consultas(path=path_consultas):
+def cargar_consultas(path):
     cola_consultas = deque()
     # Abrimos el archivo de animes
     with open(path, 'r', encoding="utf-8") as file:
@@ -33,17 +29,3 @@ def cargar_consultas(path=path_consultas):
             lista = consulta[1:]
             cola_consultas.append((numero, lista))
     return cola_consultas
-
-
-# TESTEO
-if __name__ == "__main__":
-    a = cargar_animes()
-    print(type(a))
-    for anime, data in a.items():
-        print("key:", anime, "value:", data)
-    b = cargar_consultas()
-    print()
-    print(type(b))
-    for consulta in b:
-        print(consulta)
-
