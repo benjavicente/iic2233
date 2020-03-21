@@ -172,7 +172,10 @@ def menu_prograposts():
                 " " * 4 + "no escribas nada",
                 sep="\n", end="\n" * 2
             )
-            mensaje = input().strip()
+            mensaje = input()
+            # NOTA: En los issues del curso se mencionó que los espacios que
+            # rodean al mensaje deben ser considerados en el post,
+            # por lo que no se usa ´.strip()´ en el ´input()´ anterior
             if 1 <= len(mensaje) < 140:
                 print(usuario_act.publicar(mensaje))
             elif len(mensaje) > 140:
@@ -197,7 +200,10 @@ def menu_prograposts():
                         " " * 4 + "Para volver, deje el campo vacío",
                         sep="\n", end="\n" * 2
                     )
-                    cual = input(" " * 4 + "Post a eliminar: ").strip()
+                    cual = input(" " * 4 + "Post a eliminar: ")
+                    # NOTA: este input no contiene el método strip ya que en
+                    # los issues del syllabus se menciona que un post con un
+                    # mensaje vacío debe ser permitido
                 if cual.isdigit() or cual == "r":
                     if cual == "r":
                         cual = None

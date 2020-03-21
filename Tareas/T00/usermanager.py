@@ -236,8 +236,6 @@ class Usuario:
         Se guarda la publicación del usuario en posts.cvs
         Retorna el mensaje de confirmación
         """
-        # Se limpia
-        mensaje = mensaje.strip()
         if 1 <= len(mensaje) <= 140:
             # Solución para evitar sobreescribir el archivo encontrado aquí:
             # https://stackoverflow.com/a/10640823
