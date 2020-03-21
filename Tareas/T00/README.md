@@ -45,7 +45,7 @@ A continuación se encuentra todos los puntos considerados de la pauta y enuncia
   * [X] **Adicional**: Se limita el nombre de usuario hasta 32 caracteres
   * [X] Se crea el usuario en `usuarios.csv` y `seguidores.csv`
 * Cuando se quiere salir del programa:
-  * [X] La opción `0` vuelve al menú anterior hasta llegar a el menú de inicio, donde `0` cierra el programa
+  * [X] La opción `0` vuelve al menú anterior hasta llegar a el menú de inicio, donde `0` cierra el programa. Si el usuario esta realizando una acción, dejar el campo vacío volverá al menú anterior.
 
 #### Menú de Posts
 

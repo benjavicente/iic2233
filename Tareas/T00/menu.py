@@ -144,6 +144,7 @@ def menu_prograposts():
             print(
                 " " * 6 + "[1] De más nuevo a más antiguo",
                 " " * 6 + "[2] De más antiguo a más nuevo",
+                " " * 6 + "[0] Volver",
                 sep="\n"
             )
             acc = input(" " * 6 + "-----> ")
@@ -156,6 +157,7 @@ def menu_prograposts():
             print(
                 " " * 6 + "[1] De más nuevo a más antiguo",
                 " " * 6 + "[2] De más antiguo a más nuevo",
+                " " * 6 + "[0] Volver",
                 sep="\n"
             )
             acc = input(" " * 6 + "-----> ")
@@ -243,13 +245,21 @@ def menu_seguidos():
         )
         acc = input(" " * 4 + "-----> ")
         if acc == "1":
-            print("Cual usuario desea seguir?")
+            print(
+                "Cual usuario desea seguir?",
+                "Deje el campo vacío para volver",
+                sep="\n"
+            )
             cual = input("  -----> @").strip()
             if cual:
                 print(usuario_act.empezar_a_seguir(cual))
         elif acc == "2":
             if usuario_act.obtener_seguidos():
-                print("Cual usuario desea parar de seguir?")
+                print(
+                    "Cual usuario desea parar de seguir?",
+                    "Deje el campo vacío para volver",
+                    sep="\n"
+                )
                 cual = input("  -----> @").strip()
                 if cual:
                     print(usuario_act.dejar_de_seguir(cual))
