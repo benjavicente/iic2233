@@ -54,7 +54,7 @@ def menu_inicio():
     print(" " * 4 + "Ingrese el nombre de su usuario:")
     acc = input(" " * 6 + "@").strip()
     print()
-    if acc in um.set_usuarios:
+    if acc in um.get_set_usuarios():
         # el usuario existe y se inicia seción
         usuario_act = um.Usuario(acc)
         print("Iniciando seción...".center(48), end="\n" * 2)
@@ -77,7 +77,7 @@ def menu_registro():
         sep="\n", end="\n" * 2
     )
     usuario = input(" " * 6 + "@").strip()
-    if usuario in um.set_usuarios:
+    if usuario in um.get_set_usuarios():
         # el nombre ingresado ya existe
         print(" " * 4 + "El usuario ya existe, intenta otro nombre")
     elif um.usuario_valido(usuario):

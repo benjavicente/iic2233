@@ -5,27 +5,31 @@ from operator import attrgetter
 # set de usuarios a partir de usuarios.csv
 # utilizado para no leer usuarios.csv
 # cada vez que sea necesario
-set_usuarios = set()
-with open(path.join("data", "usuarios.csv"), "r", encoding="utf8") as archivo:
-    for fila_archivo in archivo.readlines():
-        set_usuarios.add(fila_archivo.strip())
+
+
+def get_set_usuarios():
+    set_usuarios = set()
+    path_usuarios = path.join("data", "usuarios.csv")
+    with open(path_usuarios, "r", encoding="utf8") as archivo:
+        for fila_archivo in archivo.readlines():
+            set_usuarios.add(fila_archivo.strip())
+    return set_usuarios
 
 
 def crear_usuario(nombre_usuario):
     """
-    Agrega el usuario a usuarios.csv, seguidores y set_usuarios
+    Agrega el usuario a usuarios.csv, seguidores
     Retorna un str sobre el resultado
     Se asume que el usuario ya es valido
     """
     # Se agrega el usuario al archivo de usuario y seguidores
     # En vez de rehacer el archivo, este se usa
     # la opción `a` append, y se agrega al final
-    set_usuarios.add(nombre_usuario)
-    path = path.join("data", "usuarios.csv")
-    with open(path, "a", encoding="utf8") as archivo:
+    path_usuarios = path.join("data", "usuarios.csv")
+    with open(path_usuarios, "a", encoding="utf8") as archivo:
         print(nombre_usuario, file=archivo)
-    path = path.join("data", "seguidores.csv")
-    with open(path, "a", encoding="utf8") as archivo:
+    path_seguidores = path.join("data", "seguidores.csv")
+    with open(path_seguidores, "a", encoding="utf8") as archivo:
         print(nombre_usuario, file=archivo)
     return "Bienvenido a DCCahuín!"
 
@@ -62,8 +66,8 @@ def obtener_dict_seguidores():
             (set) Listas de seguidores
     """
     dict_seg = dict()
-    path = path.join("data", "seguidores.csv")
-    with open(path, "r", encoding="utf8") as archivo:
+    path_seguidores = path.join("data", "seguidores.csv")
+    with open(path_seguidores, "r", encoding="utf8") as archivo:
         for fila_archivo in archivo.readlines():
             usuario, _, seguidores = fila_archivo.strip().partition(",")
             # Se transforma los seguidores a set
@@ -94,8 +98,8 @@ def modificar_archvivo_seguidores(usuario, otro, func):
         # Se utiliza el sintax método(clase, argumentos)
         # para los métodos `set.add` y `set.discard`
         func(directorio_seguidores[otro], usuario)
-        path = path.join("data", "seguidores.csv")
-        with open(path, "w", encoding="utf8") as archivo:
+        path_seguidores = path.join("data", "seguidores.csv")
+        with open(path_seguidores, "w", encoding="utf8") as archivo:
             for usuario, seguidores in directorio_seguidores.items():
                 print(usuario, *seguidores, sep=",", file=archivo)
         if func == set.add:
@@ -109,7 +113,8 @@ def extraer_posts():
     Retorna una lista de objetos clase PrograPost
     """
     lista_prograposts = list()
-    with open(path.join("data", "posts.csv"), "r", encoding="utf8") as archivo:
+    path_posts = path.join("data", "posts.csv")
+    with open(path_posts, "r", encoding="utf8") as archivo:
         for fila_archivo in archivo.readlines():
             data = fila_archivo.strip().split(",", 2)
             lista_prograposts.append(PrograPost(*data))
@@ -163,13 +168,13 @@ class Usuario:
         """
         if otro == self.nombre:
             return "No te puedes seguir a ti mismo!"
-        elif otro not in set_usuarios:
+        elif otro not in get_set_usuarios():
             return f"El usuario @{otro} no existe"
         # Mensaje de respuesta integrado en la función
         return modificar_archvivo_seguidores(self.nombre, otro, set.add)
 
     def dejar_de_seguir(self, otro):
-        if otro not in set_usuarios:
+        if otro not in get_set_usuarios():
             return "El usuario no existe"
         elif otro not in self.obtener_seguidos():
             return "No sigues al usuario"
@@ -234,8 +239,8 @@ class Usuario:
         if 1 <= len(mensaje) <= 140:
             # Solución para evitar sobreescribir el archivo encontrado aquí:
             # https://stackoverflow.com/a/10640823
-            path = path.join("data", "posts.csv")
-            with open(path, "a", encoding="utf8") as archivo:
+            path_posts = path.join("data", "posts.csv")
+            with open(path_posts, "a", encoding="utf8") as archivo:
                 fecha = str(date.today()).replace("-", "/")
                 print(self.nombre, fecha, mensaje, sep=",", file=archivo)
             # Se muestra el PrograPost
@@ -251,14 +256,16 @@ class Usuario:
         Por defecto se elimina la ultima realizada
         Retorna un mensaje de confirmación
         """
+        # Se extraen las listas
         lista_posts = extraer_posts()
         posts_propios = posts_filtrar(self.nombre, rec=False)
         if - len(posts_propios) <= numero_post < len(posts_propios):
             # Se muestra el post y se confirma la acción
             print(posts_propios[numero_post])
             confirmar = input("(Sí) / (No) ----> ").strip().lower()
-            if confirmar in {"sí", "si", "s", "y", "yes", "ok"}:
-                with open(path.join("data", "posts.csv"), "w", encoding="utf8") as archivo:
+            if confirmar in {"sí", "si", "s"}:
+                path_posts = path.join("data", "posts.csv")
+                with open(path_posts, "w", encoding="utf8") as archivo:
                     # `orden` es el orden en el que los datos se
                     # guardan en el archivo. Sirve también para eliminar
                     # el (o los) posts que contienen la misma información
