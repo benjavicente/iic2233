@@ -4,6 +4,10 @@ from operator import attrgetter
 
 
 def get_set_usuarios():
+    """
+    Retorna el set de usuarios
+    Antes set_usuarios era una variable global
+    """
     set_usuarios = set()
     path_usuarios = path.join("data", "usuarios.csv")
     with open(path_usuarios, "r", encoding="utf8") as archivo:
@@ -91,22 +95,18 @@ def modificar_archvivo_seguidores(usuario, otro, func):
         directorio_seguidores = obtener_dict_seguidores()
         # remplazando func (método), se añadirá o eliminara
         # el usuario de las lista de seguidores de otro
-        # Se utiliza el sintax método(clase, argumentos)
+        # Se utiliza el sintax método(objeto, argumentos)
         # para los métodos `set.add` y `set.discard`
         func(directorio_seguidores[otro], usuario)
         path_seguidores = path.join("data", "seguidores.csv")
         with open(path_seguidores, "w", encoding="utf8") as archivo:
             for usuario, seguidores in directorio_seguidores.items():
                 print(usuario, *seguidores, sep=",", file=archivo)
-        if func == set.add:
-            return f"Ahora sigues a @{otro}"
-        elif func == set.discard:
-            return f"Dejaste de seguir a @{otro}"
 
 
 def extraer_posts():
     """
-    Retorna una lista de objetos clase PrograPost
+    Retorna una lista de objetos de clase PrograPost
     """
     lista_prograposts = list()
     path_posts = path.join("data", "posts.csv")
@@ -124,8 +124,8 @@ def posts_filtrar(*usuarios, rec=True):
     si la fecha es la misma, se ordena por usuario
     Se el usuario y la fecha son las mismas, se ordena por mensaje
     Argumento:
-        *usuarios - lista de usuarios a mostrar
-        recientes - orden, muestra por defecto los post más nuevos primeros
+        *usuarios - usuario(s) a mostrar
+        rec - orden, muestra por defecto los post más nuevos primeros
     Solución a partír de:
     https://docs.python.org/3/howto/sorting.html#operator-module-functions
     """
@@ -137,10 +137,13 @@ def posts_filtrar(*usuarios, rec=True):
 
 class Usuario:
     """
-    El usuario debe ser creado en Crear Usuario, luego
-    se debe crear el objeto Usuario al iniciar seción
+    Usuario - Herramientas para administrar el usuario actual
     """
     def __init__(self, nombre):
+        """
+        El usuario debe ser creado en Crear Usuario, luego
+        se debe crear el objeto Usuario al iniciar seción
+        """
         self.nombre = nombre
 
     def __str__(self):
@@ -166,21 +169,20 @@ class Usuario:
             return "No te puedes seguirte a ti mismo!"
         elif otro not in get_set_usuarios():
             return f"El usuario @{otro} no existe"
-        # Mensaje de respuesta integrado en la función
-        return modificar_archvivo_seguidores(self.nombre, otro, set.add)
+        modificar_archvivo_seguidores(self.nombre, otro, set.add)
+        print f"Ahora sigues a @{otro}"
 
     def dejar_de_seguir(self, otro):
         if otro not in get_set_usuarios():
             return "El usuario no existe"
         elif otro not in self.obtener_seguidos():
             return "No sigues al usuario"
-        # Mensaje de respuesta integrado en la función
-        return modificar_archvivo_seguidores(self.nombre, otro, set.discard)
+        modificar_archvivo_seguidores(self.nombre, otro, set.discard)
+        return f"Dejaste de seguir a @{otro}"
 
     def cantidad_publicaciones(self):
         """
         Retorna la cantidad de publicaciones del usuario
-        Útil para indicar al usuario cuantos post ha publicado
         """
         return len(posts_filtrar(self.nombre))
 
@@ -205,8 +207,8 @@ class Usuario:
     def imprimir_muro(self, recientes=True):
         """
         Se imprime el muro del usuario
-        Se asume que:s
-            1- Se necesita imprimir todos los post
+        Se asume que:
+            1- Se necesita imprimir todos los post inmediatamente
             2- No se muestra los post del usuario
                 En caso de tener que mostrarlos,
                 agregar el argumento self.user
@@ -270,13 +272,15 @@ class Usuario:
                     for post in lista_posts:
                         if orden(posts_propios[numero_post]) != orden(post):
                             print(*orden(post), sep=",", file=archivo)
-                    return "PrograPost eliminado"
+                return "PrograPost eliminado"
             return "Acción cancelada"
-        else:
-            return f"No existe el post con indice {numero_post}"
+        return f"No existe el post con indice {numero_post}"
 
 
 class PrograPost:
+    """
+    PrograPost - Contenedor de PrograPosts
+    """
     def __init__(self, usuario, fecha, mensaje):
         self.usuario = usuario
         self.fecha = fecha
@@ -291,11 +295,11 @@ class PrograPost:
             f"|  0  | @{self.usuario.ljust(38)}|\n"
             f"| /Y\\ | {self.fecha.rjust(38)} |\n"
             f"|{'=' * (46)}|\n"
-            f"{self.contenedor_de_mensaje()}\n"
+            f"{self.cuadro_de_mensaje()}\n"
             f"|{'_' * (46)}|\n"
         )
 
-    def contenedor_de_mensaje(self):
+    def cuadro_de_mensaje(self):
         """
         Método para imprimir la parte "mensaje"
         de un PrograPost en el cuadro establecido en el
