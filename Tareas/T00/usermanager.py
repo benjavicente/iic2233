@@ -2,10 +2,6 @@ from datetime import date
 from os import path
 from operator import attrgetter
 
-# set de usuarios a partir de usuarios.csv
-# utilizado para no leer usuarios.csv
-# cada vez que sea necesario
-
 
 def get_set_usuarios():
     set_usuarios = set()
@@ -167,7 +163,7 @@ class Usuario:
         Retorna un str confirmando la accións
         """
         if otro == self.nombre:
-            return "No te puedes seguir a ti mismo!"
+            return "No te puedes seguirte a ti mismo!"
         elif otro not in get_set_usuarios():
             return f"El usuario @{otro} no existe"
         # Mensaje de respuesta integrado en la función
@@ -300,13 +296,12 @@ class PrograPost:
         )
 
     def contenedor_de_mensaje(self):
-        # TODO: Simplificar este método
         """
         Método para imprimir la parte "mensaje"
         de un PrograPost en el cuadro establecido en el
         método __str__
-        Limita las palabras por fila, de modo que sea
-        cómodo para su lectura
+        Limita las palabras por fila, de modo que leer
+        un post sea cómodo
         """
         lista_palabras = self.mensaje.split(" ")
         # ancho total y ancho restante
