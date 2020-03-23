@@ -22,6 +22,7 @@ Bienvenid@ a                            / ... \
     - [Librerías propias :pencil:](#librer%c3%adas-propias-pencil)
   - [Supuestos y consideraciones :thinking:](#supuestos-y-consideraciones-thinking)
   - [Código externo utilizado :package:](#c%c3%b3digo-externo-utilizado-package)
+  - [Notas adicionales :octocat:](#notas-adicionales-octocat)
 
 ## Ejecución :computer:
 
@@ -123,13 +124,13 @@ La lista de librerías externas y sus funciones que utilicé fueron las siguient
 Por otro lado, los módulos que fueron creados fueron los siguientes:
 
 1. **`usermanager`**
-   - Administra la información los usuarios y los PrograPosts. Puede considerase el *"back-end"- del programa
+   - Administra la información los usuarios y los PrograPosts. Puede considerase el *"back-end"* del programa
 
 ## Supuestos y consideraciones :thinking:
 
 Los supuestos que realicé durante la tarea son los siguientes:
 
-1. **Asumo que los archivos*- `posts.csv` y `usuarios.csv` **terminan con una linea vacía**, es decir, que cada fila esta compuesta por sus campos y el carácter de nueva linea. Si no es correcto esto, el primer dato ingresado en cada archivo no será ingresado correctamente.
+1. **Asumo que los archivos** `posts.csv` y `usuarios.csv` **terminan con una linea vacía**, es decir, que cada fila esta compuesta por sus campos y el carácter de nueva linea. Si no es correcto esto, el primer dato ingresado en cada archivo no será ingresado correctamente.
 
 2. **Asumo que todos los PrograPosts son distintos**. Se pueden publicar dos o más PrograPost iguales (mismo usuario, fecha y mensaje), pero si se intenta eliminar uno de ellos, se eliminan todos estos.
 
@@ -139,3 +140,8 @@ Los supuestos que realicé durante la tarea son los siguientes:
 
 - `not usuario.upper().isupper()`, que retorna `True` si hay una letra en el string. Es utilizado para verificar que el usuario contiene una letra es su nombre
   - Obtenido de [stack overflow](https://stackoverflow.com/a/47453486)
+
+## Notas adicionales :octocat:
+
+- Se omitió el uso de variables globales que (según preferencia personal) permitían adaptar mejor el programa y mejoraban la legibilidad. Esto se debe a que están consideradas como [malas practicas](https://github.com/IIC2233/syllabus/blob/master/Tareas/Descuentos.md#malas-pr%C3%A1cticas-5-d%C3%A9cimas-x). Estas son `ancho_ui`, `usuario_actual` y variables que almacenaban los paths. En el commit `333087be05b5909fe4648d3eddde7ee36ecca877` se pueden ver presentes.
+

@@ -2,20 +2,11 @@ from datetime import date
 from os import path
 from operator import attrgetter
 
-# Se obtiene el path de los archivos
-carpeta_datos = "data"
-path_usuarios = path.join(carpeta_datos, "usuarios.csv")
-path_seguidores = path.join(carpeta_datos, "seguidores.csv")
-path_prograposts = path.join(carpeta_datos, "posts.csv")
-
-# Ajuste de interfaz
-ancho_ui = 48
-
 # set de usuarios a partir de usuarios.csv
 # utilizado para no leer usuarios.csv
 # cada vez que sea necesario
 set_usuarios = set()
-with open(path_usuarios, "r", encoding="utf8") as archivo:
+with open(path.join("data", "usuarios.csv"), "r", encoding="utf8") as archivo:
     for fila_archivo in archivo.readlines():
         set_usuarios.add(fila_archivo.strip())
 
@@ -30,9 +21,9 @@ def crear_usuario(nombre_usuario):
     # En vez de rehacer el archivo, este se usa
     # la opción `a` append, y se agrega al final
     set_usuarios.add(nombre_usuario)
-    with open(path_usuarios, "a", encoding="utf8") as archivo:
+    with open(path.join("data", "usuarios.csv"), "a", encoding="utf8") as archivo:
         print(nombre_usuario, file=archivo)
-    with open(path_seguidores, "a", encoding="utf8") as archivo:
+    with open(path.join("data", "seguidores.csv"), "a", encoding="utf8") as archivo:
         print(nombre_usuario, file=archivo)
     return "Bienvenido a DCCahuín!"
 
@@ -69,7 +60,7 @@ def obtener_dict_seguidores():
             (set) Listas de seguidores
     """
     dict_seg = dict()
-    with open(path_seguidores, "r", encoding="utf8") as archivo:
+    with open(path.join("data", "seguidores.csv"), "r", encoding="utf8") as archivo:
         for fila_archivo in archivo.readlines():
             usuario, _, seguidores = fila_archivo.strip().partition(",")
             # Se transforma los seguidores a set
@@ -100,7 +91,7 @@ def modificar_archvivo_seguidores(usuario, otro, func):
         # Se utiliza el sintax método(clase, argumentos)
         # para los métodos `set.add` y `set.discard`
         func(directorio_seguidores[otro], usuario)
-        with open(path_seguidores, "w", encoding="utf8") as archivo:
+        with open(path.join("data", "seguidores.csv"), "w", encoding="utf8") as archivo:
             for usuario, seguidores in directorio_seguidores.items():
                 print(usuario, *seguidores, sep=",", file=archivo)
         if func == set.add:
@@ -114,7 +105,7 @@ def extraer_posts():
     Retorna una lista de objetos clase PrograPost
     """
     lista_prograposts = list()
-    with open(path_prograposts, "r", encoding="utf8") as archivo:
+    with open(path.join("data", "posts.csv"), "r", encoding="utf8") as archivo:
         for fila_archivo in archivo.readlines():
             data = fila_archivo.strip().split(",", 2)
             lista_prograposts.append(PrograPost(*data))
@@ -200,8 +191,8 @@ class Usuario:
             # Se invita al usuario a publicar un PrograPost
             print(
                 "",
-                "Tu perfil está vació".center(ancho_ui),
-                "Crea tu primera publicación!".center(ancho_ui),
+                "Tu perfil está vació".center(48),
+                "Crea tu primera publicación!".center(48),
                 sep="\n\n"
             )
         print()
@@ -225,8 +216,8 @@ class Usuario:
         else:
             print(
                 "",
-                "Tu Múro está vació".center(ancho_ui),
-                "Trata de seguir a más usuarios!".center(ancho_ui),
+                "Tu Múro está vació".center(48),
+                "Trata de seguir a más usuarios!".center(48),
                 sep="\n\n"
                 )
         print()
@@ -239,7 +230,7 @@ class Usuario:
         if 1 <= len(mensaje) <= 140:
             # Solución para evitar sobreescribir el archivo encontrado aquí:
             # https://stackoverflow.com/a/10640823
-            with open(path_prograposts, "a", encoding="utf8") as archivo:
+            with open(path.join("data", "posts.csv"), "a", encoding="utf8") as archivo:
                 fecha = str(date.today()).replace("-", "/")
                 print(self.nombre, fecha, mensaje, sep=",", file=archivo)
             # Se muestra el PrograPost
@@ -262,7 +253,7 @@ class Usuario:
             print(posts_propios[numero_post])
             confirmar = input("(Sí) / (No) ----> ").strip().lower()
             if confirmar in {"sí", "si", "s", "y", "yes", "ok"}:
-                with open(path_prograposts, "w", encoding="utf8") as archivo:
+                with open(path.join("data", "posts.csv"), "w", encoding="utf8") as archivo:
                     # `orden` es el orden en el que los datos se
                     # guardan en el archivo. Sirve también para eliminar
                     # el (o los) posts que contienen la misma información
@@ -288,12 +279,12 @@ class PrograPost:
         Retorna un cuadro de post formateado
         """
         return (
-            f"{'_' * ancho_ui}\n"
-            f"|  0  | @{self.usuario.ljust(ancho_ui - 10)}|\n"
-            f"| /Y\\ | {self.fecha.rjust(ancho_ui - 10)} |\n"
-            f"|{'=' * (ancho_ui- 2)}|\n"
+            f"{'_' * 48}\n"
+            f"|  0  | @{self.usuario.ljust(38)}|\n"
+            f"| /Y\\ | {self.fecha.rjust(38)} |\n"
+            f"|{'=' * (46)}|\n"
             f"{self.contenedor_de_mensaje()}\n"
-            f"|{'_' * (ancho_ui-2)}|\n"
+            f"|{'_' * (46)}|\n"
         )
 
     def contenedor_de_mensaje(self):
@@ -307,7 +298,7 @@ class PrograPost:
         """
         lista_palabras = self.mensaje.split(" ")
         # ancho total y ancho restante
-        largo_max = ancho_ui - 4
+        largo_max = 44
         largo_restante = largo_max
         # string inicial reducido a {largo_max} columnas
         columna = str()

@@ -10,10 +10,8 @@ Logotipo DCCahuín modificado a partir de la fuente Big de TAAG
 http://www.patorjk.com/software/taag/#f=Big&t=DCCahuin
 """
 
+
 # Usuario actual
-usuario_act = None
-
-
 def banner():
     print(
         R"                                         _____  ",
@@ -44,7 +42,7 @@ def menu_entrada():
         elif acc == "2":
             menu_registro()
         elif acc == "0":
-            print("Saliendo...".center(um.ancho_ui))
+            print("Saliendo...".center(48))
             print()
             break
         else:
@@ -53,16 +51,15 @@ def menu_entrada():
 
 
 def menu_inicio():
-    global usuario_act
     print(" " * 4 + "Ingrese el nombre de su usuario:")
     acc = input(" " * 6 + "@").strip()
     print()
     if acc in um.set_usuarios:
         # el usuario existe y se inicia seción
         usuario_act = um.Usuario(acc)
-        print("Iniciando seción...".center(um.ancho_ui), end="\n" * 2)
+        print("Iniciando seción...".center(48), end="\n" * 2)
         # El usuario entra a el loop del menu principal
-        menu_principal()
+        menu_principal(usuario_act)
         # Banner se imprime nuevamente al cerrar seción
         banner()
     else:
@@ -94,8 +91,7 @@ def menu_registro():
     print()
 
 
-def menu_principal():
-    global usuario_act
+def menu_principal(usuario_act):
     while True:
         # Es importante imprimir el `usuario_act` para
         # recordar el nombre de perfil al usuario
@@ -108,12 +104,12 @@ def menu_principal():
             )
         acc = input(" " * 4 + "-----> ").strip()
         if acc == "1":
-            menu_prograposts()
+            menu_prograposts(usuario_act)
         elif acc == "2":
-            menu_seguidos()
+            menu_seguidos(usuario_act)
         elif acc == "0":
             print()
-            print("Cerrando seción".center(um.ancho_ui))
+            print("Cerrando seción".center(48))
             print()
             # sale del loop y cierra seción
             break
@@ -122,13 +118,12 @@ def menu_principal():
         print()
         # `Menu principal` se imprime aquí para que no se imprima
         # la primera vez que el usuario entre a este menu
-        print(" Menú Principal ".center(um.ancho_ui, "-"))
+        print(" Menú Principal ".center(48, "-"))
 
 
-def menu_prograposts():
-    global usuario_act
+def menu_prograposts(usuario_act):
     print()
-    print(" Menú de PrograPosts ".center(um.ancho_ui, "-"))
+    print(" Menú de PrograPosts ".center(48, "-"))
     while True:
         print(
             " " * 4 + "[1] Ver tu Muro",
@@ -223,15 +218,14 @@ def menu_prograposts():
         print()
 
 
-def menu_seguidos():
-    global usuario_act
+def menu_seguidos(usuario_act):
     print()
-    print(" Menú de Seguidos y Seguidores ".center(um.ancho_ui, "-"))
+    print(" Menú de Seguidos y Seguidores ".center(48, "-"))
     print(
         (
             f"Seguidores: {len(usuario_act.obtener_seguidores())}    "
             f"Seguidos: {len(usuario_act.obtener_seguidos())}"
-        ).center(um.ancho_ui)
+        ).center(48)
     )
     while True:
         print(
