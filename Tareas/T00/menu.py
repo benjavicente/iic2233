@@ -11,7 +11,6 @@ http://www.patorjk.com/software/taag/#f=Big&t=DCCahuin
 """
 
 
-# Usuario actual
 def banner():
     print(
         R"                                         _____  ",

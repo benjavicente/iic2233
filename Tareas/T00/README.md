@@ -30,7 +30,7 @@ El módulo principal de la tarea a ejecutar es  `menu.py`.
 
 El módulo `postmanager.py` debe encontrarse en el mismo directorio que `menu.py`.
 
-Si los archivos `posts.csv`, `seguidores.csv` y `usuarios.csv` no son proporcionados en la carpeta `data`, se deben crear estos en dicha carpeta.
+Los archivos `posts.csv`, `seguidores.csv` y `usuarios.csv` deben encontrarse en una carpeta llamada `data`. Deben terminar con una linea vacía.
 
 ---
 
@@ -111,13 +111,15 @@ La lista de librerías externas y sus funciones que utilicé fueron las siguient
 
 1. **`os`**
    - Función `path.join()`
-        Une los *paths- relativos de los archivos. Permite compativilidad con multiples sistemas operativos
+        Une los *paths- relativos de los archivos. Permite compatibilidad con multiples sistemas operativos
 2. **`operator`**
    - Función `attrgetter()`
         Crea una llave para sortear los PrograPosts por sus atributos
 3. **`datetime`**
      - Método `today()` de la clase `date`
         Obtiene la fecha actual para la creación de PrograPosts
+
+Ninguna de estas debe instalarse.
 
 ### Librerías propias :pencil:
 
@@ -132,7 +134,7 @@ Los supuestos que realicé durante la tarea son los siguientes:
 
 1. **Asumo que los archivos** `posts.csv` y `usuarios.csv` **terminan con una linea vacía**, es decir, que cada fila esta compuesta por sus campos y el carácter de nueva linea. Si no es correcto esto, el primer dato ingresado en cada archivo no será ingresado correctamente.
 
-2. **Asumo que todos los PrograPosts son distintos**. Se pueden publicar dos o más PrograPost iguales (mismo usuario, fecha y mensaje), pero si se intenta eliminar uno de ellos, se eliminan todos estos.
+2. **Asumo que todos los PrograPosts son distintos**. Se pueden publicar dos o más PrograPost iguales (mismo usuario, fecha y mensaje), pero si se intenta eliminar uno de ellos, se eliminan los iguales.
 
 ## Código externo utilizado :package:
 
@@ -143,5 +145,4 @@ Los supuestos que realicé durante la tarea son los siguientes:
 
 ## Notas adicionales :octocat:
 
-- Se omitió el uso de variables globales que (según preferencia personal) permitían adaptar mejor el programa y mejoraban la legibilidad. Esto se debe a que están consideradas como [malas practicas](https://github.com/IIC2233/syllabus/blob/master/Tareas/Descuentos.md#malas-pr%C3%A1cticas-5-d%C3%A9cimas-x). Estas son `ancho_ui`, `usuario_actual` y variables que almacenaban los paths. En el commit `333087be05b5909fe4648d3eddde7ee36ecca877` se pueden ver presentes.
-
+- Se omitió el uso de variables globales que (*según preferencia personal*) permitían adaptar mejor el programa y mejoraban la legibilidad. Esto se debe a que están consideradas como [malas practicas](https://github.com/IIC2233/syllabus/blob/master/Tareas/Descuentos.md#malas-pr%C3%A1cticas-5-d%C3%A9cimas-x). Estas eran `ancho_ui`, `usuario_actual` y variables que almacenaban los *paths*. Hasta el commit `333087be05b5909fe4648d3eddde7ee36ecca877` se pueden ver completamente presentes.
