@@ -21,9 +21,11 @@ def crear_usuario(nombre_usuario):
     # En vez de rehacer el archivo, este se usa
     # la opción `a` append, y se agrega al final
     set_usuarios.add(nombre_usuario)
-    with open(path.join("data", "usuarios.csv"), "a", encoding="utf8") as archivo:
+    path = path.join("data", "usuarios.csv")
+    with open(path, "a", encoding="utf8") as archivo:
         print(nombre_usuario, file=archivo)
-    with open(path.join("data", "seguidores.csv"), "a", encoding="utf8") as archivo:
+    path = path.join("data", "seguidores.csv")
+    with open(path, "a", encoding="utf8") as archivo:
         print(nombre_usuario, file=archivo)
     return "Bienvenido a DCCahuín!"
 
@@ -60,7 +62,8 @@ def obtener_dict_seguidores():
             (set) Listas de seguidores
     """
     dict_seg = dict()
-    with open(path.join("data", "seguidores.csv"), "r", encoding="utf8") as archivo:
+    path = path.join("data", "seguidores.csv")
+    with open(path, "r", encoding="utf8") as archivo:
         for fila_archivo in archivo.readlines():
             usuario, _, seguidores = fila_archivo.strip().partition(",")
             # Se transforma los seguidores a set
@@ -91,7 +94,8 @@ def modificar_archvivo_seguidores(usuario, otro, func):
         # Se utiliza el sintax método(clase, argumentos)
         # para los métodos `set.add` y `set.discard`
         func(directorio_seguidores[otro], usuario)
-        with open(path.join("data", "seguidores.csv"), "w", encoding="utf8") as archivo:
+        path = path.join("data", "seguidores.csv")
+        with open(path, "w", encoding="utf8") as archivo:
             for usuario, seguidores in directorio_seguidores.items():
                 print(usuario, *seguidores, sep=",", file=archivo)
         if func == set.add:
@@ -230,7 +234,8 @@ class Usuario:
         if 1 <= len(mensaje) <= 140:
             # Solución para evitar sobreescribir el archivo encontrado aquí:
             # https://stackoverflow.com/a/10640823
-            with open(path.join("data", "posts.csv"), "a", encoding="utf8") as archivo:
+            path = path.join("data", "posts.csv")
+            with open(path, "a", encoding="utf8") as archivo:
                 fecha = str(date.today()).replace("-", "/")
                 print(self.nombre, fecha, mensaje, sep=",", file=archivo)
             # Se muestra el PrograPost
