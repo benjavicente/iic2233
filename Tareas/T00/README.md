@@ -182,3 +182,5 @@ um.editar_archivo()
 ```
 
 No se si cambiar lineas para añadir esta función mejore o disminuya el puntaje. Por lo que tengo entendido, el mal manejo de `seguidores.csv` puede disminuir 4.82% de la nota, y añadir el código anterior entre 4% y 5%. Si es aplicable el de-descuento al cambio de lineas, preferiría la ultima opción.
+
+Repito que también que existe un error en el ultimo commit entregado antes del plazo. El `print` de la linea 173 de `usermanager.py` debe ser un `return`. El commit anterior `5861c366818259f3d84cf78134335b9a22f4ad74` no contiene ese error, pero el código se encuentra peor documentado.
