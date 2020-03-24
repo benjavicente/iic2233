@@ -1,7 +1,7 @@
 # Tarea 00: DCCahuín :eyes:
 
 ## IMPORTANTE
-El uso del archivo `seguidores.csv` es incorrecto, ya que en la realización de la tarea **se considero como una lista con la información de usuarios y sus _seguidores_, y no usuarios con sus _seguidos_**. En las notas adicionales se encuentra una manera para cambiar el formato del archivo.
+El uso del archivo `seguidores.csv` es incorrecto, ya que en la realización de la tarea **se considero como una lista con la información de usuarios y sus _seguidores_, y no usuarios con sus _seguidos_. En las notas adicionales se encuentra una manera para cambiar el formato del archivo.**
 
 **Hay un error en la linea 173 de `usermanager.py`, donde `print` debería ser `return`** En el commit pasado **`5861c366818259f3d84cf78134335b9a22f4ad74`** no existe este problema y el funcionamiento del programa es el mismo, pero el código está peor documentado. El error fue cometido en el commit `ae01c8656a79abd4901daaa81dac64d6674edf93`.
 
@@ -50,30 +50,30 @@ A continuación se encuentra todos los puntos considerados de la [pauta](https:/
 
 #### Menú de usuarios :bust_in_silhouette:
 
-- El menú de inicio "`menu_entrada()`" contiene las opciones:
-  - [X] Iniciar sesión "`menu_inicio()`"
-  - [X] Registro de Usuario "`menu_registro()`"
+- El menú de inicio "_`menu_entrada()`_" contiene las opciones:
+  - [X] Iniciar sesión "_`menu_inicio()`_"
+  - [X] Registro de Usuario "_`menu_registro()`_"
   - [X] Salir
-- El menu principal "`menu_principal()`" contiene las opciones:
+- El menu principal "_`menu_principal()`_" contiene las opciones:
   - [X] Menú de PrograPosts
   - [X] Menú de Seguidos y Seguidores
   - [X] Cerrar sesión
 - Cuando se inicia sesión:
   - [X] Se verifica que el nombre exista en `usuarios.csv`
 - Cuando se registra un nuevo usuario:
-  - [X] Se verifica que el nombre elegido no esté ocupado, contiene mínimo 8 caracteres, tiene por lo menos una letra y un número, y es alfanumérico "`um.usuario_valido()`"
+  - [X] Se verifica que el nombre elegido no esté ocupado, contiene mínimo 8 caracteres, tiene por lo menos una letra y un número, y es alfanumérico "_`um.usuario_valido()`_"
   - [X] **Adicional**: Se limita el nombre de usuario hasta 32 caracteres
-  - [X] Se crea el usuario en `usuarios.csv` y `seguidores.csv` "`um.crear_usuario()`"
+  - [X] Se crea el usuario en `usuarios.csv` y `seguidores.csv` "_`um.crear_usuario()`_"
 - Cuando se quiere salir del programa:
   - [X] La opción `0` vuelve al menú anterior hasta llegar a el menú de inicio, donde `0` cierra el programa. Si el usuario esta realizando una acción, dejar el campo vacío volverá al menú anterior.
 
 #### Menú de Posts :speech_balloon:
 
-- El menú de PrograPosts "`menu_prograposts()`" contiene las opciones:
-  - [X] Ver tu Muro "`um.Usuario.imprimir_muro()`"
-  - [X] Ver tus publicaciones "`um.Usuario.imprimir_publicaciones()`"
-  - [X] Crear un PrograPost "`um.Usuario.publicar()`"
-  - [X] Eliminar un PrograPost "`um.Usuario.eliminar_post()`"
+- El menú de PrograPosts "_`menu_prograposts()`_" contiene las opciones:
+  - [X] Ver tu Muro "_`um.Usuario.imprimir_muro()`_"
+  - [X] Ver tus publicaciones "_`um.Usuario.imprimir_publicaciones()`_"
+  - [X] Crear un PrograPost "_`um.Usuario.publicar()`_"
+  - [X] Eliminar un PrograPost "_`um.Usuario.eliminar_post()`_"
   - [X] Volver
 - Cuando se ven los PrograPosts:
   - [X] Se muestra el Muro (PrograPosts de usuarios seguidos)
@@ -95,11 +95,11 @@ A continuación se encuentra todos los puntos considerados de la [pauta](https:/
 
 #### Menú de Seguidos y Seguidores :busts_in_silhouette:
 
-- El menú de Seguidos y Seguidores "`menu_seguidos()`" contiene las opciones:
-  - [X] Seguir a un usuario "`um.Usuario.empezar_a_seguir()`"
-  - [X] Dejar de seguir a un usuario "`um.Usuario.dejar_de_seguir()`"
-  - [X] **Adicional**: Ver usuario seguidos "`um.Usuario.obtener_seguidos()`"
-  - [X] **Adicional**: Ver seguidores "`um.Usuario.obtener_seguidores()`"
+- El menú de Seguidos y Seguidores "_`menu_seguidos()`_" contiene las opciones:
+  - [X] Seguir a un usuario "_`um.Usuario.empezar_a_seguir()`_"
+  - [X] Dejar de seguir a un usuario "_`um.Usuario.dejar_de_seguir()`_"
+  - [X] **Adicional**: Ver usuario seguidos "_`um.Usuario.obtener_seguidos()`_"
+  - [X] **Adicional**: Ver seguidores "_`um.Usuario.obtener_seguidores()`_"
   - [X] Volver
 - Cuando se sigue a un usuario:
   - [X] Se verifica que el usuario a seguir no es sí mismo y se avisa si es el caso
@@ -156,7 +156,7 @@ Los supuestos que realicé durante la tarea son los siguientes:
 
 Se omitió el uso de variables globales que (*según preferencia personal*) permitían adaptar mejor el programa y mejoraban la legibilidad. Esto se debe a que están consideradas como [malas practicas](https://github.com/IIC2233/syllabus/blob/master/Tareas/Descuentos.md#malas-pr%C3%A1cticas-5-d%C3%A9cimas-x). Estas eran `ancho_ui`, `usuario_actual` y variables que almacenaban los *paths*. Hasta el commit `333087be05b5909fe4648d3eddde7ee36ecca877` se pueden ver completamente presentes.
 
-No encontré una manera simple de arreglar el error del manejo de `seguidores.csv`. Se puede ejecutar esta función antes de empezar y terminar el programa para cambiar el formato de *usuarios y seguidores* a *usuario y seguidos* y viceversa. (Añadiendo 17 lineas)
+No encontré una manera simple de arreglar el error del manejo de `seguidores.csv`. Se puede ejecutar esta función antes de empezar y terminar el programa para cambiar el formato de *usuarios y seguidores* a *usuario y seguidos* y viceversa (Añadiendo 17 lineas).
 
 *En `postmanager.py`*
 ```python
@@ -176,9 +176,9 @@ def editar_archivo():
                     print("," + lista_usuarios[indice_datos], end="", file=archivo)
             print(file=archivo)
 ```
-*En lineas 12 y 289 de `menu.py`*
+*En lineas 12 y 289 (inicio y final) de `menu.py`*
 ```python
 um.editar_archivo()
 ```
 
-No se si cambiar lineas para añadir esta función mejore o disminuya el puntaje. Por lo que tengo entendido, el mal manejo de `seguidores.csv` puede disminuir 4.82% de la nota, y añadir el código anterior entre 4% y 5%. Si es aplicable el des-descuento al cambio de lineas, preferiría esa opción.
+No se si cambiar lineas para añadir esta función mejore o disminuya el puntaje. Por lo que tengo entendido, el mal manejo de `seguidores.csv` puede disminuir 4.82% de la nota, y añadir el código anterior entre 4% y 5%. Si es aplicable el de-descuento al cambio de lineas, preferiría la ultima opción.
