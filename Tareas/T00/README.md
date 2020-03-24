@@ -1,5 +1,14 @@
 # Tarea 00: DCCahuín :eyes:
 
+## IMPORTANTE
+El uso del archivo `seguidores.csv` es incorrecto, ya que en la realización de la tarea **se considero como una lista con la información de usuarios y sus _seguidores_, y no usuarios con sus _seguidos_**. En las notas adicionales se encuentra una manera para cambiar el formato del archivo.
+
+**Hay un error en la linea 173 de `usermanager.py`, donde `print` debería ser `return`** En el commit pasado **`5861c366818259f3d84cf78134335b9a22f4ad74`** no existe este problema y el funcionamiento del programa es el mismo, pero el código está peor documentado. El error fue cometido en el commit `ae01c8656a79abd4901daaa81dac64d6674edf93`.
+
+Al tratar de seguir a un usuario que ya esta siendo seguido **no se avisa que este ya es seguido**. Se muestra un mensaje señalando que *ahora sigues a @{usuario}*, aunque los datos del archivo no se modifican.
+
+---
+
 ```txt
                                          _____
 Bienvenid@ a                            / ... \
@@ -12,6 +21,7 @@ Bienvenid@ a                            / ... \
 ```
 
 - [Tarea 00: DCCahuín :eyes:](#tarea-00-dccahu%c3%adn-eyes)
+  - [IMPORTANTE](#importante)
   - [Ejecución :computer:](#ejecuci%c3%b3n-computer)
   - [Características implementadas :wrench:](#caracter%c3%adsticas-implementadas-wrench)
       - [Menú de usuarios :bust_in_silhouette:](#men%c3%ba-de-usuarios-bustinsilhouette)
@@ -36,35 +46,34 @@ Los archivos `posts.csv`, `seguidores.csv` y `usuarios.csv` deben encontrarse en
 
 ## Características implementadas :wrench:
 
-**Todo lo pedido fue implementado**.
 A continuación se encuentra todos los puntos considerados de la [pauta](https://docs.google.com/spreadsheets/d/1SgQlv1EL57C-DoC0ldShzXupAgMnnLkaDnUwStjjRd4/edit#gid=0) y [enunciado](https://github.com/IIC2233/syllabus/blob/master/Tareas/T00/Enunciado.pdf), además de otras características adicionales que mejoran la experiencia del usuario.
 
 #### Menú de usuarios :bust_in_silhouette:
 
-- El menú de inicio contiene las opciones:
-  - [X] Iniciar sesión
-  - [X] Registro de Usuario
+- El menú de inicio "`menu_entrada()`" contiene las opciones:
+  - [X] Iniciar sesión "`menu_inicio()`"
+  - [X] Registro de Usuario "`menu_registro()`"
   - [X] Salir
-- El menu principal contiene las opciones:
+- El menu principal "`menu_principal()`" contiene las opciones:
   - [X] Menú de PrograPosts
   - [X] Menú de Seguidos y Seguidores
   - [X] Cerrar sesión
 - Cuando se inicia sesión:
   - [X] Se verifica que el nombre exista en `usuarios.csv`
 - Cuando se registra un nuevo usuario:
-  - [X] Se verifica que el nombre elegido no esté ocupado, contiene mínimo 8 caracteres, tiene por lo menos una letra y un número, y es alfanumérico
+  - [X] Se verifica que el nombre elegido no esté ocupado, contiene mínimo 8 caracteres, tiene por lo menos una letra y un número, y es alfanumérico "`um.usuario_valido()`"
   - [X] **Adicional**: Se limita el nombre de usuario hasta 32 caracteres
-  - [X] Se crea el usuario en `usuarios.csv` y `seguidores.csv`
+  - [X] Se crea el usuario en `usuarios.csv` y `seguidores.csv` "`um.crear_usuario()`"
 - Cuando se quiere salir del programa:
   - [X] La opción `0` vuelve al menú anterior hasta llegar a el menú de inicio, donde `0` cierra el programa. Si el usuario esta realizando una acción, dejar el campo vacío volverá al menú anterior.
 
 #### Menú de Posts :speech_balloon:
 
-- El menú de PrograPosts contiene las opciones:
-  - [X] Ver tu Muro
-  - [X] Ver tus publicaciones
-  - [X] Crear un PrograPost
-  - [X] Eliminar un PrograPost
+- El menú de PrograPosts "`menu_prograposts()`" contiene las opciones:
+  - [X] Ver tu Muro "`um.Usuario.imprimir_muro()`"
+  - [X] Ver tus publicaciones "`um.Usuario.imprimir_publicaciones()`"
+  - [X] Crear un PrograPost "`um.Usuario.publicar()`"
+  - [X] Eliminar un PrograPost "`um.Usuario.eliminar_post()`"
   - [X] Volver
 - Cuando se ven los PrograPosts:
   - [X] Se muestra el Muro (PrograPosts de usuarios seguidos)
@@ -86,11 +95,11 @@ A continuación se encuentra todos los puntos considerados de la [pauta](https:/
 
 #### Menú de Seguidos y Seguidores :busts_in_silhouette:
 
-- El menú contiene las opciones:
-  - [X] Seguir a un usuario
-  - [X] Dejar de seguir a un usuario
-  - [X] **Adicional**: Ver usuario seguidos
-  - [X] **Adicional**: Ver seguidores
+- El menú de Seguidos y Seguidores "`menu_seguidos()`" contiene las opciones:
+  - [X] Seguir a un usuario "`um.Usuario.empezar_a_seguir()`"
+  - [X] Dejar de seguir a un usuario "`um.Usuario.dejar_de_seguir()`"
+  - [X] **Adicional**: Ver usuario seguidos "`um.Usuario.obtener_seguidos()`"
+  - [X] **Adicional**: Ver seguidores "`um.Usuario.obtener_seguidores()`"
   - [X] Volver
 - Cuando se sigue a un usuario:
   - [X] Se verifica que el usuario a seguir no es sí mismo y se avisa si es el caso
@@ -99,7 +108,7 @@ A continuación se encuentra todos los puntos considerados de la [pauta](https:/
 - Cuando se deja de seguir a un usuario
   - [X] Se verifica que el usuario existe, si es el caso, se avisa
   - [X] Se verifica que el usuario es sí mismo, si es el caso, se avisa
-  - [X] Se deja de seguir al usuario y se modifica el archivo `seguidores`
+  - [X] Se deja de seguir al usuario y se modifica el archivo `seguidores.csv`
 
 ---
 
@@ -126,7 +135,7 @@ Ninguna de estas debe instalarse.
 Por otro lado, los módulos que fueron creados fueron los siguientes:
 
 1. **`usermanager`**
-   - Administra la información los usuarios y los PrograPosts. Puede considerase el *"back-end"* del programa
+   - Administra la información los usuarios y los PrograPosts. Puede considerase el **_"back-end"_ del programa**
 
 ## Supuestos y consideraciones :thinking:
 
@@ -145,4 +154,31 @@ Los supuestos que realicé durante la tarea son los siguientes:
 
 ## Notas adicionales :octocat:
 
-- Se omitió el uso de variables globales que (*según preferencia personal*) permitían adaptar mejor el programa y mejoraban la legibilidad. Esto se debe a que están consideradas como [malas practicas](https://github.com/IIC2233/syllabus/blob/master/Tareas/Descuentos.md#malas-pr%C3%A1cticas-5-d%C3%A9cimas-x). Estas eran `ancho_ui`, `usuario_actual` y variables que almacenaban los *paths*. Hasta el commit `333087be05b5909fe4648d3eddde7ee36ecca877` se pueden ver completamente presentes.
+Se omitió el uso de variables globales que (*según preferencia personal*) permitían adaptar mejor el programa y mejoraban la legibilidad. Esto se debe a que están consideradas como [malas practicas](https://github.com/IIC2233/syllabus/blob/master/Tareas/Descuentos.md#malas-pr%C3%A1cticas-5-d%C3%A9cimas-x). Estas eran `ancho_ui`, `usuario_actual` y variables que almacenaban los *paths*. Hasta el commit `333087be05b5909fe4648d3eddde7ee36ecca877` se pueden ver completamente presentes.
+
+No encontré una manera simple de arreglar el error del manejo de `seguidores.csv`. Se puede ejecutar esta función antes de empezar y terminar el programa para cambiar el formato de *usuarios y seguidores* a *usuario y seguidos* y viceversa. (Añadiendo 17 lineas)
+
+*En `postmanager.py`*
+```python
+def editar_archivo():
+    lista_usuarios = list()
+    lista_datos = list()
+    with open(path.join("data", "seguidores.csv"), "r", encoding="utf8") as archivo:
+        for linea in archivo.readlines():
+            usuario, _, dato = linea.strip().partition(",")
+            lista_usuarios.append(usuario)
+            lista_datos.append(dato.split(","))
+    with open(path.join("data", "seguidores.csv"), "w", encoding="utf8") as archivo:
+        for indice_usuarios in range(len(lista_usuarios)):
+            print(lista_usuarios[indice_usuarios], end="", file=archivo)
+            for indice_datos in range(len(lista_datos)):
+                if lista_usuarios[indice_usuarios] in lista_datos[indice_datos]:
+                    print("," + lista_usuarios[indice_datos], end="", file=archivo)
+            print(file=archivo)
+```
+*En lineas 12 y 289 de `menu.py`*
+```python
+um.editar_archivo()
+```
+
+No se si cambiar lineas para añadir esta función mejore o disminuya el puntaje. Por lo que tengo entendido, el mal manejo de `seguidores.csv` puede disminuir 4.82% de la nota, y añadir el código anterior entre 4% y 5%. Si es aplicable el des-descuento al cambio de lineas, preferiría esa opción.
