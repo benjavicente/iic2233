@@ -25,8 +25,9 @@ class Estudiante:
         elif nueva_felicidad > self.rango_felicidad[1]:
             # El valor es mayor al permitido
             self._felicidad = self.rango_felicidad[1]
-        # Valor en el rango
-        self._felicidad = nueva_felicidad
+        else:
+            # Valor en el rango
+            self._felicidad = nueva_felicidad
 
     # Debes rellenar las property estres
     @property
@@ -41,8 +42,9 @@ class Estudiante:
         elif nuevo_estres > self.rango_estres[1]:
             # El valor es mayor al permitido
             self._estres = self.rango_estres[1]
-        # Valor en el rango
-        self._estres = nuevo_estres
+        else:
+            # Valor en el rango
+            self._estres = nuevo_estres
 
 
 ######## REVISAR LOS PARAMETROS
@@ -60,8 +62,8 @@ class Alumno(Estudiante):
     def realizar_actividad(self, actividad):
         print(f"Realizando {actividad}")
         # Debes rellenar esto, para que se ajusten los niveles de felicidad y estres
-        self._felicidad += actividad.felicidad * 1.5
-        self._estres += actividad.estres
+        self.felicidad += actividad.felicidad * 1.5
+        self.estres += actividad.estres
         # Hasta acá
         print(f"El nivel de estres del estudiante es {self.estres}"
               f" y el de felicidad {self.felicidad}")
@@ -80,10 +82,11 @@ class Ayudante(Estudiante):
         self._estres = 75
 
     def realizar_actividad(self, actividad):
-        print(f"Realizando {actividad}")
+        print(f"$Realizando {actividad}")
         # Debes rellenar esto, para que se ajusten los niveles de felicidad y estres
-        self._felicidad += actividad.felicidad
-        self._estres += actividad.estres * 2
+        self.felicidad += actividad.felicidad
+        self.estres += actividad.estres * 2
         # Hasta acá
         print(f"El nivel de estres del ayudante es {self.estres}"
               f" y el de felicidad {self.felicidad}")
+
