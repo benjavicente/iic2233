@@ -19,8 +19,10 @@ def cargar_estudiantes(ruta_archivo_estudiantes):
             Además, debes guardarlos en el defaultdict estudiantes,
             con el formato username:instancia
             """
-
-
+            if tipo == "alumno":
+                estudiantes[username] = Alumno(username, hobbies, deberes)
+            elif tipo == "ayudante":
+                estudiantes[username] = Ayudante(username, hobbies, deberes)
         return estudiantes
 
 def cargar_actividades(ruta_archivo_actividades):
@@ -38,8 +40,10 @@ def cargar_actividades(ruta_archivo_actividades):
             Además, debes guardarlas en el dict actividades,
             en el formato nombre:instancia
             """
-
-        
+            if tipo == "hobby":
+                actividades[nombre] = Hobby(nombre, felicidad, estres)
+            elif tipo == "deber":
+                actividades[nombre] = Deber(nombre, felicidad, estres)
         return actividades
 
 
