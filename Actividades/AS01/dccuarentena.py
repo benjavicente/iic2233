@@ -14,19 +14,21 @@ class DCCuarentena:
             username = input("Ingresa tu nombre de usuario: ")
             if username in self.estudiantes:
                 print(f"¡Hola {username}! Bienvenido a DCCuarentena.\
-                	 Recuerda lavarte las manos y no salir de casa.\n")
+                     Recuerda lavarte las manos y no salir de casa.\n")
                 self.usuario_actual = self.estudiantes[username]
                 login = False
             else:
                 print("Intenta nuevamente. \n")
 
     def sugerir_actividad(self):
-        # Acá debes rellenar con un código que sugiera una actividad
-        # según el nivel de estres y felicidad.
-        # Además, recuerda que el usuario debe realizar la actividad.
+        if (not self.usuario_actual.deberes or
+                (self.usuario_actual.hobbies and
+                (self.usuario_actual.felicidad < 50 or self.usuario_actual.estres > 50))):
+            return f"Realiza la actividad {self.usuario_actual.hobbies.pop(0)}"
+        elif self.usuario_actual.deberes:
+            return f"Realiza el deber {self.usuario_actual.deberes.pop(0)}"
+        return "¡No te puedo sugerir más actividades! Es hora de descansar :)"
 
-
-        pass
 
     def opcion(self):
         """
