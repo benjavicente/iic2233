@@ -21,14 +21,16 @@ class DCCuarentena:
                 print("Intenta nuevamente. \n")
 
     def sugerir_actividad(self):
-        if (not self.usuario_actual.deberes or
-                (self.usuario_actual.hobbies and
-                (self.usuario_actual.felicidad < 50 or self.usuario_actual.estres > 50))):
-            return f"Realiza la actividad {self.usuario_actual.hobbies.pop(0)}"
+        if (self.usuario_actual.hobbies and
+                (not self.usuario_actual.deberes or
+                    (self.usuario_actual.felicidad < 50 or self.usuario_actual.estres > 50))):
+            actividad = self.usuario_actual.hobbies.pop(0)
+            self.usuario_actual.realizar_actividad(self.actividades[actividad])
         elif self.usuario_actual.deberes:
-            return f"Realiza el deber {self.usuario_actual.deberes.pop(0)}"
-        return "¡No te puedo sugerir más actividades! Es hora de descansar :)"
-
+            actividad = self.usuario_actual.deberes.pop(0)
+            self.usuario_actual.realizar_actividad(self.actividades[actividad])
+        else:
+            print("¡No te puedo sugerir más actividades! Es hora de descansar :)")
 
     def opcion(self):
         """
