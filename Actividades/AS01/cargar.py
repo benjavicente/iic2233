@@ -25,6 +25,7 @@ def cargar_estudiantes(ruta_archivo_estudiantes):
                 estudiantes[username] = Ayudante(username, hobbies, deberes)
         return estudiantes
 
+
 def cargar_actividades(ruta_archivo_actividades):
     """ No modificar esta parte """
     actividades = dict()

@@ -1,4 +1,6 @@
 from random import randrange
+
+
 class DCCuarentena:
     def __init__(self, estudiantes, actividades):
         self.estudiantes = estudiantes
@@ -23,7 +25,8 @@ class DCCuarentena:
     def sugerir_actividad(self):
         if (self.usuario_actual.hobbies and
                 (not self.usuario_actual.deberes or
-                    (self.usuario_actual.felicidad < 50 or self.usuario_actual.estres > 50))):
+                 self.usuario_actual.felicidad < 50 or
+                 self.usuario_actual.estres > 50)):
             actividad = self.usuario_actual.hobbies.pop(0)
             self.usuario_actual.realizar_actividad(self.actividades[actividad])
         elif self.usuario_actual.deberes:

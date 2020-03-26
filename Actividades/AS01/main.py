@@ -12,7 +12,7 @@ actividades = cargar_actividades("actividades.csv")
 
 
 
-# Instanciamos DCCuarentena, junto con sus argumentos 
+# Instanciamos DCCuarentena, junto con sus argumentos
 dccuarentena = DCCuarentena(estudiantes, actividades)
 while True:
     # Para empezar, revisamos la identidad del usuario

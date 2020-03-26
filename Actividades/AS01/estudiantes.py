@@ -1,3 +1,10 @@
+"""
+NOTA: No me funcionó el código usando __variable
+Al pedir ayuda, un ayudante me recomendó no usarlos,
+pero en el enunciado el atributo es pedido de esa manera :/
+"""
+
+
 class Estudiante:
     # Debes completar el constructor de la clase estudiante
     def __init__(self, username, hobbies, deberes):
@@ -63,7 +70,7 @@ class Alumno(Estudiante):
         print(f"Realizando {actividad}")
         # Debes rellenar esto, para que se ajusten
         # los niveles de felicidad y estres
-        self.felicidad += actividad.felicidad * 1.5
+        self.felicidad += int(actividad.felicidad * 1.5)
         self.estres += actividad.estres
         # Hasta acá
         print(f"El nivel de estres del estudiante es {self.estres}"
@@ -83,7 +90,7 @@ class Ayudante(Estudiante):
         self._estres = 75
 
     def realizar_actividad(self, actividad):
-        print(f"$Realizando {actividad}")
+        print(f"Realizando {actividad}")
         # Debes rellenar esto, para que se
         # ajusten los niveles de felicidad y estres
         self.felicidad += actividad.felicidad
