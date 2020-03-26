@@ -38,7 +38,7 @@ Bienvenid@ a                            / ... \
 
 El módulo principal de la tarea a ejecutar es  `menu.py`.
 
-El módulo `postmanager.py` debe encontrarse en el mismo directorio que `menu.py`.
+El módulo `usermanager.py` debe encontrarse en el mismo directorio que `menu.py`.
 
 Los archivos `posts.csv`, `seguidores.csv` y `usuarios.csv` deben encontrarse en una carpeta llamada `data`. Deben terminar con una linea vacía.
 
@@ -158,7 +158,7 @@ Se omitió el uso de variables globales que (*según preferencia personal*) perm
 
 No encontré una manera simple de arreglar el error del manejo de `seguidores.csv`. Se puede ejecutar esta función antes de empezar y terminar el programa para cambiar el formato de *usuarios y seguidores* a *usuario y seguidos* y viceversa (Añadiendo 17 lineas).
 
-*En `postmanager.py`*
+*En `usermanager.py`*
 ```python
 def editar_archivo():
     lista_usuarios = list()
