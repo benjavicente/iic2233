@@ -61,7 +61,8 @@ class Alumno(Estudiante):
 
     def realizar_actividad(self, actividad):
         print(f"Realizando {actividad}")
-        # Debes rellenar esto, para que se ajusten los niveles de felicidad y estres
+        # Debes rellenar esto, para que se ajusten
+        # los niveles de felicidad y estres
         self.felicidad += actividad.felicidad * 1.5
         self.estres += actividad.estres
         # Hasta acá
@@ -69,7 +70,7 @@ class Alumno(Estudiante):
               f" y el de felicidad {self.felicidad}")
 
 
-######## REVISAR LOS PARAMETROS
+# REVISAR LOS PARAMETROS
 class Ayudante(Estudiante):
     def __init__(self, username, hobbies, deberes):
         # Recuerda iniciar la clase, de manera que herede de Estudiante
@@ -83,10 +84,10 @@ class Ayudante(Estudiante):
 
     def realizar_actividad(self, actividad):
         print(f"$Realizando {actividad}")
-        # Debes rellenar esto, para que se ajusten los niveles de felicidad y estres
+        # Debes rellenar esto, para que se
+        # ajusten los niveles de felicidad y estres
         self.felicidad += actividad.felicidad
         self.estres += actividad.estres * 2
         # Hasta acá
         print(f"El nivel de estres del ayudante es {self.estres}"
               f" y el de felicidad {self.felicidad}")
-

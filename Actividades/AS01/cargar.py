@@ -47,10 +47,7 @@ def cargar_actividades(ruta_archivo_actividades):
         return actividades
 
 
-
-#################### NO MODIFICAR ############################
-
-
+# NO MODIFICAR
 def revisar_progreso(tipo_de_avance, dict):
     if tipo_de_avance == "solo_formato":
         key, value = random.choice(list(dict.items()))
