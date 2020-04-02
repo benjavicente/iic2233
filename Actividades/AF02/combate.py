@@ -1,4 +1,5 @@
-import random 
+import random
+
 
 # La siguiente función elige aleatoriamente a un competidor del equipo que
 # sea de la especialidad pedida.

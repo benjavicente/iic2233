@@ -3,7 +3,7 @@ from combate import jugar, anunciar_ganadores
 
 if __name__ == '__main__':
 
-    # La siguiente función se encuentra en cargado.py y 
+    # La siguiente función se encuentra en cargado.py y
     # carga e instancia tanto a los ayudantes como a los alumnos(as) que van a competir.
     alumnos, ayudantes = cargar_jugadores()
 

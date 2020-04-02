@@ -33,6 +33,8 @@ class Jugador(ABC):
     @abstractmethod
     def enfrentar(self, tipo_de_juego, enemigo):
         pass
+        # print(f"{self}: ¡Desafió a {enemigo} a un juego de {juego}!")
+        # return self.jugar_{juego}
 
 
 class JugadorMesa(Jugador):
