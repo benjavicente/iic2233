@@ -9,6 +9,8 @@ class Jugador(ABC):
         self.especialidad = especialidad
         self.energia = int(energia)
 
+        # Como en todos los casos el valor _base_ de las siguientes
+        # características son ´3´, se definen aquí
         self.audacia = 3
         self.inteligencia = 3
         self.nerviosismo = 3
@@ -30,7 +32,7 @@ class Jugador(ABC):
 
     @abstractmethod
     def enfrentar(self, tipo_de_juego, enemigo):
-        print(f"{self}: ¡Desafió a {enemigo} a un {tipo_de_juego}!")
+        pass
 
 
 class JugadorMesa(Jugador):
@@ -43,6 +45,10 @@ class JugadorMesa(Jugador):
             return True
         return False
 
+    def enfrentar(self, tipo_de_juego, enemigo):
+        print(f"{self}: ¡Desafió a {enemigo} a un juego de mesa!")
+        return self.jugar_mesa(enemigo)
+
 
 class JugadorCartas(Jugador):
     def __init__(self, nombre, equipo, especialidad, energia):
@@ -53,6 +59,10 @@ class JugadorCartas(Jugador):
         if self.inteligencia > enemigo.inteligencia:
             return True
         return False
+
+    def enfrentar(self, tipo_de_juego, enemigo):
+        print(f"{self}: ¡Desafió a {enemigo} a un juego de cartas!")
+        return self.jugar_cartas(enemigo)
 
 
 class JugadorCombate(Jugador):
@@ -65,6 +75,10 @@ class JugadorCombate(Jugador):
             return True
         return False
 
+    def enfrentar(self, tipo_de_juego, enemigo):
+        print(f"{self}: ¡Desafió a {enemigo} a un juego de combate!")
+        return self.jugar_combate(enemigo)
+
 
 class JugadorCarreras(Jugador):
     def __init__(self, nombre, equipo, especialidad, energia):
@@ -75,6 +89,10 @@ class JugadorCarreras(Jugador):
         if self.trampa > enemigo.trampa:
             return True
         return False
+
+    def enfrentar(self, tipo_de_juego, enemigo):
+        print(f"{self}: ¡Desafió a {enemigo} a un juego de carreras!")
+        return self.jugar_carrera(enemigo)
 
 
 class JugadorInteligente(JugadorMesa, JugadorCartas):
