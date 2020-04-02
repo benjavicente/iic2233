@@ -3,16 +3,22 @@ import random
 
 
 class Jugador(ABC):
-
     def __init__(self, nombre, equipo, especialidad, energia):
-        # Completar
-        pass
+        self.nombre = nombre
+        self.equipo = equipo
+        self.especialidad = especialidad
+        self.energia = int(energia)
+
+        self.audacia = 3
+        self.inteligencia = 3
+        self.nerviosismo = 3
+        self.trampa = 3
 
     def __str__(self):
         if self.equipo == 'ayudante':
             return f'Ayudante {self.nombre} ({self.especialidad})'
         return f'Alumno(a) {self.nombre} ({self.especialidad})'
-    
+
     def __repr__(self):
         return (f'({type(self).__name__}) {self.nombre}: '
                 f'equipo={self.equipo}|'
@@ -24,96 +30,58 @@ class Jugador(ABC):
 
     @abstractmethod
     def enfrentar(self, tipo_de_juego, enemigo):
-        # Completar
-        pass
+        print(f"{self}: ¡Desafió a {enemigo} a un {tipo_de_juego}!")
 
 
-# Completar la siguiente clase.
-# Puedes agregarle herencia.
-# Puedes agregar métodos incluso.
-class JugadorMesa:
-
+class JugadorMesa(Jugador):
     def __init__(self, nombre, equipo, especialidad, energia):
-        # Completar 
-        # ¡Aprovecha herencia!
-        pass
+        super().__init__(nombre, equipo, especialidad, energia)
+        self.nerviosismo = min(self.energia, random.randint(0, 3))
 
     def jugar_mesa(self, enemigo):
-        # Completar
-        pass
+        if self.nerviosismo < enemigo.nerviosismo:
+            return True
+        return False
 
 
-
-
-# Completar la siguiente clase.
-# Puedes agregarle herencia.
-# Puedes agregar métodos incluso.
-class JugadorCartas:
-
+class JugadorCartas(Jugador):
     def __init__(self, nombre, equipo, especialidad, energia):
-        # Completar 
-        # ¡Aprovecha herencia!
-        pass
-
+        super().__init__(nombre, equipo, especialidad, energia)
+        self.inteligencia = self.energia * 2.5
 
     def jugar_cartas(self, enemigo):
-        # Completar
-        pass
+        if self.inteligencia > enemigo.inteligencia:
+            return True
+        return False
 
 
-
-# Completar la siguiente clase.
-# Puedes agregarle herencia.
-# Puedes agregar métodos incluso.
-class JugadorCombate:
-
+class JugadorCombate(Jugador):
     def __init__(self, nombre, equipo, especialidad, energia):
-        # Completar 
-        # ¡Aprovecha herencia!
-        pass
-
+        super().__init__(nombre, equipo, especialidad, energia)
+        self.audacia = max(self.energia, random.randint(3, 5))
 
     def jugar_combate(self, enemigo):
-        # Completar
-        pass
+        if self.audacia > enemigo.audacia:
+            return True
+        return False
 
 
-
-# Completar la siguiente clase.
-# Puedes agregarle herencia.
-# Puedes agregar métodos incluso.
-class JugadorCarreras:
-
+class JugadorCarreras(Jugador):
     def __init__(self, nombre, equipo, especialidad, energia):
-        # Completar 
-        # ¡Aprovecha herencia!
-        pass
-
+        super().__init__(nombre, equipo, especialidad, energia)
+        self.trampa = self.energia * 3
 
     def jugar_carrera(self, enemigo):
-        # Completar
-        pass
+        if self.trampa > enemigo.trampa:
+            return True
+        return False
 
 
-
-# Completar la siguiente clase.
-# Puedes agregarle herencia.
-# Puedes agregar métodos incluso.
-class JugadorInteligente:
-
+class JugadorInteligente(JugadorMesa, JugadorCartas):
     def __init__(self, nombre, equipo, especialidad, energia):
-        # Completar 
-        # ¡Aprovecha herencia!
-        pass
+        super().__init__(nombre, equipo, especialidad, energia)
 
 
-
-# Completar la siguiente clase.
-# Puedes agregarle herencia.
-# Puedes agregar métodos incluso.
-class JugadorIntrepido:
-
+class JugadorIntrepido(JugadorCarreras, JugadorCombate):
     def __init__(self, nombre, equipo, especialidad, energia):
-        # Completar 
-        # ¡Aprovecha herencia!
-        pass
+        super().__init__(nombre, equipo, especialidad, energia)
