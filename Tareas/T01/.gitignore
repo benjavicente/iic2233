@@ -1,0 +1,19 @@
+### VSCode:
+# Añade al diccionario las palabras de la tarea
+.vscode/
+
+### Python
+__pychache__/
+*.py[cod]
+*$py.class
+
+### Workspace
+ejemploREADME.md
+test.py
+
+### Tarea
+# Esto es pedido por el ununciado
+Enunciado.pdf
+data/
+magizoologos.csv
+criaturas.csv
