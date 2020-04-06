@@ -7,11 +7,31 @@ Parametros del Programa Zoológico Mágico
 from os import path
 
 # ============================================ #
-# Parámetros relacionados con los PATH         #
+# Parámetros relacionados con los Archivos     #
 # ============================================ #
+
+# --------- #
+#  PATH     #
+# --------- #
+
 PATH_CARPETA = "data"
 PATH_CRIATURAS = path.join(PATH_CARPETA, "criaturas.csv")
 PATH_MAGIZOOLOGOS = path.join(PATH_CARPETA, "magizoologos.csv")
+
+# --------- #
+#  Formato  #
+# --------- #
+FORMATO_CRIATURAS = ("nombre", "tipo", "nivel_magico", "prob_escaparse",
+                     "prob_enfermarse", "enferma", "escapado",
+                     "vida_max", "vida_actual", "nivel_hambre",
+                     "agresividad", "dias_sin_comer",
+                     "tiempo_satisfecha", "nivel_cleptomania")
+
+FORMATO_MAGIZOOLOGOS = ("nombre", "tipo", "sickles", "criaturas",
+                        "alimentos", "licencia", "nivel_magico",
+                        "destreza", "energia_total", "responsabilidad",
+                        "puede_usar_habilidad", "energia_actual",
+                        "nivel_aprobacion")
 
 
 # ============================================ #
@@ -24,6 +44,9 @@ UI_ANCHO = 20
 # Parámetros relacionados con los Magizoólogos #
 # ============================================ #
 MAGIZOOLOGOS_SICKLES_INICIALES = 500
+MAGIZOOLOGOS_LICENCIA_INICIAL = "True"
+MAGIZOOLOGOS_HABILIDADES = "True"
+MAGIZOOLOGOS_APROBACION_INICIAL = 60
 
 # ---------------------- #
 #  Magizoólogos Docencio #
@@ -53,6 +76,9 @@ HIBRIDO_RANGO_RESPONSABILIDAD = (15, 25)
 # ============================================ #
 # Parámetros relacionados con las criaturas    #
 # ============================================ #
+ALIMENTARSE_EFECTO_HAMBRE = {"satisfecha": 0, "hambrienta": 15}
+ALIMENTARSE_EFECTO_AGRESIVIDAD = {"inofensiva": 0, "arica": 20, "peligrosa":40}
+ESCAPARSE_EFECTO_HAMBRE = {"satisfecha": 0, "hambrienta": 20}
 
 # ---------------- #
 #  Augurey         #
@@ -73,6 +99,7 @@ NIFFLER_PROP_ENFERMARSE = 0.2
 NIFFLER_RANGO_VIDA_MAXIMA = (20, 30)
 NIFFLER_TIEMPO_SATISFECHA = 2
 NIFFLER_NIVEL_AGRESIVIDAD = "arisca"
+NIFFLER_RANGO_CLEPTOMANIA = (5, 10)
 
 # ---------------- #
 #  Erkling         #
@@ -82,5 +109,4 @@ ERKLING_PROB_ESCAPARSE = 0.5
 ERKLING_PROP_ENFERMARSE = 0.3
 ERKLING_RANGO_VIDA_MAXIMA = (50, 60)
 ERKLING_TIEMPO_SATISFECHA = 2
-ERKLING_NIVEL_AGRESIVIDAD = "arisca"
-ERKLING_RANGO_CLEPTOMANIA = (5, 10)
+ERKLING_NIVEL_AGRESIVIDAD = "peligrosa"
