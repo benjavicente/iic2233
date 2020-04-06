@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import random
+import parametros as PMT
 
 
 class Magizoologo(ABC):
@@ -73,22 +74,62 @@ class Magizoologo(ABC):
         `sanar_dccriatura()`
         `habilidad_especial()`
     """
-    def __init__(self):
+    def __init__(self,
+                 nombre,
+                 sickles=None,
+                 criaturas=None,
+                 alimentos=None,
+                 licencia=None,
+                 nivel_magico=None,
+                 destreza=None,
+                 energia_total=None,
+                 responsabilidad=None,
+                 puede_usar_habilidad=None,
+                 nivel_aprobacion=None,
+                 **kwargs):
+        # -------------- #
+        # Valores únicos #
+        # -------------- #
         self.nombre = str()
-        self.sickles = int()
-        self.criaturas = list()
-        self.alimentos = list()
-        self.licencia = bool()
-        self.nivel_magico = int()
-        self.destreza = int()
-        self.energia_total = int()
-        self.responsabilidad = int()
-        self.puede_usar_habilidad = bool()
-        self.energia_actual = int()
-        self.nivel_aprobacion = int()
+        # Tipo --> type(self).__name__
+        # --------------------- #
+        # Valores al entregados #
+        # --------------------- #
+        self.criaturas = criaturas
+        self.alimentos = alimentos
+        # ------------------------------------------------- #
+        # Valores predeterminados en todos los Magizoólogos #
+        # ------------------------------------------------- #
+        if sickles is None:
+            sickles = PMT.MAGIZOOLOGOS_SICKLES_INICIALES
+        if licencia is None:
+            licencia = PMT.MAGIZOOLOGOS_LICENCIA_INICIAL
+        if puede_usar_habilidad is None:
+            puede_usar_habilidad = PMT.MAGIZOOLOGOS_HABILIDADES
+        if nivel_aprobacion is None:
+            nivel_aprobacion = PMT.MAGIZOOLOGOS_APROBACION_INICIAL
+        # Transformación de valores
+        self.sickles = int(sickles)
+        self.licencia = licencia == "True"
+        self.puede_usar_habilidad = puede_usar_habilidad == "True"
+        self.nivel_aprobacion = int(nivel_aprobacion)
+        # ------------------------------------------------- #
+        # Valores predeterminados en distintos Magizoólogos #
+        # ------------------------------------------------- #
+        self.nivel_magico = int(nivel_magico)
+        self.destreza = int(destreza)
+        self.energia_total = int(energia_total)
+        self.responsabilidad = int(responsabilidad)
+        # -------------------- #
+        # Valores dependientes #
+        # -------------------- #
+        self.energia_actual = energia_total
 
     def __str__(self):
         return self.nombre
+
+    def __eq__(self, value):
+        return value
 
     def __repr__(self):
         return f"{type(self).__name__} {self.nombre}: Sicklets={self.sickles}"
@@ -176,8 +217,8 @@ class MagizoologoDocencio(Magizoologo):
     - Su energía total estará entre 40 y 50.
     - Su responsabilidad variaría entre 15 y 20.
     """
-    def __init__(self):
-        super.__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         pass
 
     def alimentar_dccriatura(self):
@@ -218,8 +259,8 @@ class MagizoologoTareo(Magizoologo):
     - Su energía total estará entre 35 y 45.
     - Por último, su responsabilidad variará entre 10 y 25.
     """
-    def __init__(self):
-        super.__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         pass
 
     def alimentar_dccriatura(self):
@@ -258,8 +299,8 @@ class MagizoologoHibrido(Magizoologo):
     - Su energía total estará entre 50 y 55.
     - Su responsabilidad variará entre 15 y 25
     """
-    def __init__(self):
-        super.__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         pass
 
     def alimentar_dccriatura(self):
@@ -291,8 +332,8 @@ class MagizoologoSuper(MagizoologoTareo, MagizoologoHibrido, MagizoologoDocencio
     - Puede volver a utilizar la habilidad especial
     - En el archibo para a llamarse "super"
     """
-    def __init__(self):
-        super.__init__()
+    def __init__(self, **kwargs):
+        super.__init__(**kwargs)
         pass
 
     """
