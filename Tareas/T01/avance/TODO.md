@@ -2,34 +2,18 @@
 
 Mezcla de "Resumen" del enunciado y notas.
 
-**TODO**: todo
-
-- Modelar los diagramas (diagrams.net) (listo?)
-- Ver como guardar y cargar las los datos de las clases, y como utilizar valores predeterminados
-- Crear un esquema para los menús
-
-Tengo que ver como puedo organizar los menús de manera que no tenga que repetir código. Se me ocurrió usar diccionarios de la siguiente forma:
-
-```py
-menu = {
-    "menu de inicio": ("Crear Magizoólogo", "Cargar Magizoólogo")
-    ...
-}
-actual = "menu de inicio"
-for n, opc in enumerate(menu[actual]):
-    print(f"[{n}] {opc}")
-print(f"[{n+1}] Volver")
-print(f"[{n+2}] Salir")
-```
-
-Pero con esto tengo hasta ahora dos problemas:
-
-1. Tengo que encontrar una manera de ejecutar funciones. Por ejemplo, si el usuario se encuentra en el menu de crear Magizoólogo, debe existir una función que tome el nombre del Magizoólogo y lo cree si es valido.
-2. Tengo que encontrar una manera evitar casos bordes. Por ejemplo, como saltar del menú volver a intentarlo a el menu de inicio.
-
+- [ ] Falta añadir nuevos métodos y atributos al diagrama de clases (la estructura está bien)
+- [X] Ver los parámetros
+- [ ] Ver como guardar y cargar las los datos de las clases, y como utilizar **valores predeterminados**
+- [X] Crear un esquema para los menús
+- [ ] Hacer [README](../README.md)
+- [ ] Crear los procesos en [ZoologicoMagico](../ZoologicoMagico.py)
+- [ ] Completar DCC
+- [ ] Completar DCCriaturas
+- [ ] Ver los nombres de los archivos, variables y métodos
 
 **Notas generales**:
-Puede ser mejor cambiar el nombre de _puntos de salud_ a _puntos de vida_ para evitar la confusión con _estado de salud_.
+Cambie el nombre de _puntos de salud_ a _puntos de vida_ para evitar la confusión con _estado de salud_.
 
 - [TODO](#todo)
   - [Menús](#men%c3%bas)
@@ -71,21 +55,6 @@ Puede ser mejor cambiar el nombre de _puntos de salud_ a _puntos de vida_ para e
     - [Bonus README?](#bonus-readme)
 
 ## Menús
-
-**Notas:** Se puede crear una clase `InterfazDeUsuario` que administre el menú del usuario. Como atributos puede tener:
-
-- `lista_menus_anteriores`:
-  - Lista que almacene los menús anteriores.
-- `menu_anterior`:
-  - String que retorne el menu anterior.
-- `menú_actual`:
-  - String que almacene el menu actual.
-- `opciones`:
-  - Diccionario que almacene las opciones exclusivas de cada menú.
-- `mostrar_opciones()`:
-  - Método encargado de printear las opciones al usuario.
-- `elegir(menu)`:
-  - Método que se encargue de entrar al nuevo menú. Recibe un string.
 
 ### General
 
