@@ -102,7 +102,7 @@ class DCCriaturas(ABC):
                  nivel_hambre=None,
                  agresividad=None,
                  dias_sin_comer=None,
-                 tiempo_satisfecha=None,
+                 nivel_cleptomania=None,
                  **kwargs):
         # -------------- #
         # Valores únicos #
@@ -134,17 +134,18 @@ class DCCriaturas(ABC):
         # Valores predeterminados en distintas DCCriaturas #
         # ------------------------------------------------ #
         self.nivel_magico = int(nivel_magico)
-        self.prob_escape = float(prob_escaparse)
+        self.prob_escaparse = float(prob_escaparse)
         self.prob_enfermarse = float(prob_enfermarse)
         self.vida_max = int(vida_max)
-        self.tiempo_satisfecha = int(tiempo_satisfecha)
         self.agresividad = str(agresividad)
+        # Atributos especiales #
+        self.nivel_cleptomania = int(nivel_cleptomania)
 
     def __str__(self):
         return self.nombre
 
     def __eq__(self, value):
-        return value
+        return self.nombre == value
 
     def __repr__(self):
         return "|".join([
@@ -174,7 +175,7 @@ class DCCriaturas(ABC):
         # Formulas en TODO
         efecto_hambre = PMT.ESCAPARSE_EFECTO_HAMBRE
         valor = (efecto_hambre[self.nivel_hambre] - resp_magizoologo)/100
-        prob = min(1, self.prob_escape + max(0, valor))
+        prob = min(1, self.prob_escapese + max(0, valor))
         if prob >= random.random():
             # Se escapa
             self.escapado = True
@@ -247,6 +248,7 @@ class Niffler(DCCriaturas):
     """
     def __init__(self, nombre, **kwargs):
         # Predeterminados #
+        self.tiempo_satisfecha = PMT.NIFFLER_TIEMPO_SATISFECHA
         if "nivel_magico" not in kwargs:
             kwargs["nivel_magico"] = random.randint(*PMT.NIFFLER_RANGO_NIVEL_MAGICO)
         if "prob_escaparse" not in kwargs:
@@ -255,15 +257,13 @@ class Niffler(DCCriaturas):
             kwargs["prob_enfermarse"] = PMT.NIFFLER_PROP_ENFERMARSE
         if "vida_max" not in kwargs:
             kwargs["vida_max"] = random.randint(*PMT.NIFFLER_RANGO_VIDA_MAXIMA)
-        if "tiempo_satisfecha" not in kwargs:
-            kwargs["tiempo_satisfecha"] = PMT.NIFFLER_TIEMPO_SATISFECHA
         if "agresividad" not in kwargs:
             kwargs["agresividad"] = PMT.NIFFLER_NIVEL_AGRESIVIDAD
         # Atributo único
         if "nivel_cleptomania" not in kwargs:
-            self.nivel_cleptomania = random.randint(*PMT.NIFFLER_RANGO_CLEPTOMANIA)
+            kwargs["nivel_cleptomania"] = random.randint(*PMT.NIFFLER_RANGO_CLEPTOMANIA)
         else:
-            self.nivel_cleptomania = int(kwargs["nivel_cleptomania"])
+            kwargs["nivel_cleptomania"] = int(kwargs["nivel_cleptomania"])
         # Inicia la clase
         super().__init__(nombre, **kwargs)
 

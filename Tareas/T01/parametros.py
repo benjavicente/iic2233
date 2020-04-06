@@ -24,14 +24,12 @@ PATH_MAGIZOOLOGOS = path.join(PATH_CARPETA, "magizoologos.csv")
 FORMATO_CRIATURAS = ("nombre", "tipo", "nivel_magico", "prob_escaparse",
                      "prob_enfermarse", "enferma", "escapado",
                      "vida_max", "vida_actual", "nivel_hambre",
-                     "agresividad", "dias_sin_comer",
-                     "tiempo_satisfecha", "nivel_cleptomania")
+                     "agresividad", "dias_sin_comer", "nivel_cleptomania")
 
 FORMATO_MAGIZOOLOGOS = ("nombre", "tipo", "sickles", "criaturas",
                         "alimentos", "licencia", "nivel_magico",
                         "destreza", "energia_total", "responsabilidad",
-                        "puede_usar_habilidad", "energia_actual",
-                        "nivel_aprobacion")
+                        "puede_usar_habilidad")
 
 
 # ============================================ #

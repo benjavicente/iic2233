@@ -90,8 +90,8 @@ class Magizoologo(ABC):
         # -------------- #
         # Valores únicos #
         # -------------- #
-        self.nombre = str()
-        # Tipo --> type(self).__name__
+        self.nombre = str(nombre)
+        self.tipo = type(self).__name__.replace("Magizoologo", "")
         # --------------------- #
         # Valores al entregados #
         # --------------------- #
