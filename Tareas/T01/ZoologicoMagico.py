@@ -18,11 +18,13 @@ utilizando un sistema de procesos.
 
 
 from os import system
+import operator as op
+
 import parametros as PMT
 import magizoologos as mzg
-import dcc
 import dccriaturas as ctr
 import alimentos as ams
+import dcc
 
 
 class ZoologicoMagico:
@@ -123,6 +125,7 @@ class ZoologicoMagico:
             elegida = input("--> ").strip()
             if elegida == "0":
                 # Sale del programa
+                self._actualizar_archivos()
                 break
             elif elegida == str(numero + 2):
                 # Vuelve atrás
@@ -138,40 +141,6 @@ class ZoologicoMagico:
                     # Se empieza un proceso
                     self._menus[self.__actual][elegida][1]()
 
-    def _volver_a_intentarlo(self, valor_invalido, *razones_invalido):
-        """
-        ==========================
-        Submenú de Proceso Fallido
-        ==========================
-
-        Encargado de mostrarle al usuario
-        porque el valor ingresado no es valido.
-        Entrega las opciones de volver a intentarlo,
-        volver al menú anterior y salir.
-        """
-        # Imprime el input del usuario no valido
-        print(f"\n'{valor_invalido}' no es valido porque:")
-        # Lista las razones de porque no es valido
-        for numero, razon in enumerate(razones_invalido):
-            print(f"{numero + 1}.- {razon}")
-        # Inicia el loop del sub-menú
-        while True:
-            print(
-                "[1] - Volver a intentarlo",
-                "[2] - Volver al menú",
-                "[0] - Salir",
-                sep="\n"
-            )
-            elegida = input("--> ").strip()
-            if elegida == "1":
-                return True
-            elif elegida == "0" or elegida == "2":
-                if elegida == "0":
-                    self.__loop = False
-                return False
-            print(f"Opción '{elegida}' no valida")
-
-    # TODO
     def _leer_archivos(self):
         # ----------------------- #
         # Archivo de DCCriaturas  #
@@ -232,14 +201,28 @@ class ZoologicoMagico:
             parametros_magizoologo["alimentos"] = lista_alimentos_magizoologo
             # Se agregan sus criaturas
             nombre_criaturas = parametros_magizoologo["criaturas"].split(";")
-            lista_criaturas = list(filter(lambda criatura: criatura == nombre_criaturas,
-                                     self.lista_criaturas))
+            lista_criaturas = list(filter(lambda criatura: criatura in nombre_criaturas,
+                                   self.lista_criaturas))
             parametros_magizoologo["criaturas"] = lista_criaturas
             # Se crea el Magizoólogo
             self.lista_magizoologos.append(clase_magizoologo(**parametros_magizoologo))
 
     def _actualizar_archivos(self):
-        pass
+        with open(PMT.PATH_MAGIZOOLOGOS, "w", encoding="UTF-8") as archivo_magizoologos:
+            for magizoologo in self.lista_magizoologos:
+                extractor_atributos = op.attrgetter(*PMT.FORMATO_MAGIZOOLOGOS)
+                atributos_magizoologo = list(extractor_atributos(magizoologo))
+                for indice in range(len(atributos_magizoologo)):
+                    if type(atributos_magizoologo[indice]) is list:
+                        atributos_magizoologo[indice] = \
+                            ";".join([str(v) for v in atributos_magizoologo[indice]])
+                print(*atributos_magizoologo, sep=",", file=archivo_magizoologos)
+
+        with open(PMT.PATH_CRIATURAS, "w", encoding="UTF-8") as archivo_criaturas:
+            for criatura in self.lista_criaturas:
+                extractor_atributos = op.attrgetter(*PMT.FORMATO_CRIATURAS)
+                atributos_criatura = list(extractor_atributos(criatura))
+                print(*atributos_criatura, sep=",", file=archivo_criaturas)
 
     """
     Inicio de Métodos de Procesos
