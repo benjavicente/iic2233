@@ -18,9 +18,11 @@ utilizando un sistema de procesos.
 
 
 from os import system
-import parametros as PT
+import parametros as PMT
 import magizoologos as mzg
 import dcc
+import dccriaturas as ctr
+import alimentos as ams
 
 
 class ZoologicoMagico:
@@ -89,7 +91,9 @@ class ZoologicoMagico:
             ),
         }
         self._dcc = dcc.DCC()
-        self._magizoologo_actual = None
+        self._magizoologo_actual = None  # mzg.Magizoólogo() # TODO REMOVER
+        self.lista_criaturas = list()
+        self.lista_magizoologos = list()
 
     def main_loop(self):
         """
@@ -102,10 +106,11 @@ class ZoologicoMagico:
         Entrega la posibilidad de volver atrás (si es posible)
         y la opción de salir del programa.
         """
+        self._leer_archivos()
         while self.__loop:
             numero = -1
             # Se imprime el menú actual
-            print("\n" + f" {self.__actual} ".center(PT.UI_ANCHO, "-"))
+            print("\n" + f" {self.__actual} ".center(PMT.UI_ANCHO, "-"))
             # Se imprimen las opciones
             for numero, opcion in enumerate(self._menus[self.__actual]):
                 if type(opcion) is tuple:
@@ -123,8 +128,8 @@ class ZoologicoMagico:
                 # Vuelve atrás
                 self.__actual = self.__anteriores.pop()
             elif elegida.isdecimal() and 0 < int(elegida) < numero + 2:
-                valor = self._menus[self.__actual][elegida]
                 elegida = int(elegida) - 1
+                valor = self._menus[self.__actual][elegida]
                 if type(valor) is str:
                     # Se cambia de menú
                     self.__anteriores.append(self.__actual)
@@ -168,17 +173,70 @@ class ZoologicoMagico:
 
     # TODO
     def _leer_archivos(self):
-        # Archivo de DCCriaturas
-        #criaturas = list()
-        with open(PT.PATH_CRIATURAS, "r", encoding="UTF-8") as archivo_criaturas:
+        # ----------------------- #
+        # Archivo de DCCriaturas  #
+        # ----------------------- #
+        with open(PMT.PATH_CRIATURAS, "r", encoding="UTF-8") as archivo_criaturas:
             datos_archivo_criaturas = archivo_criaturas.readlines()
         for fila_criatura in datos_archivo_criaturas:
-            print(*fila_criatura.split(","), sep=" | ")
-        # Archivo de Magizoólogos
-        with open(PT.PATH_MAGIZOOLOGOS, "r", encoding="UTF-8") as archivo_magizoologos:
+            # Separo las filas en valores
+            fila_criatura = fila_criatura.strip().split(",")
+            # Creo un diccionario con los valores
+            parametros_criatura = {key: value for key, value
+                                   in zip(PMT.FORMATO_CRIATURAS, fila_criatura)}
+            # Se define el tipo
+            if parametros_criatura["tipo"] == "Augurey":
+                clase_criatura = ctr.Augurey
+            elif parametros_criatura["tipo"] == "Erkling":
+                clase_criatura = ctr.Erkling
+            elif parametros_criatura["tipo"] == "Niffler":
+                clase_criatura = ctr.Niffler
+            else:
+                continue
+            # Se crea la DCCriatura
+            self.lista_criaturas.append(clase_criatura(**parametros_criatura))
+        # ----------------------- #
+        # Archivo de Magizoólogos #
+        # ----------------------- #
+        with open(PMT.PATH_MAGIZOOLOGOS, "r", encoding="UTF-8") as archivo_magizoologos:
             datos_archivo_magizoologos = archivo_magizoologos.readlines()
         for fila_magizoologo in datos_archivo_magizoologos:
-            print(*fila_magizoologo.split(","), sep="|")
+            # Separo la fila en los valores
+            fila_magizoologo = fila_magizoologo.strip().split(",")
+            # Creo un diccionario con los valores
+            parametros_magizoologo = {key: value for key, value
+                                      in zip(PMT.FORMATO_MAGIZOOLOGOS, fila_magizoologo)}
+            # Se define el tipo
+            if parametros_magizoologo["tipo"] == "Docecio":
+                clase_magizoologo = mzg.MagizoologoDocencio
+            elif parametros_magizoologo["tipo"] == "Tareo":
+                clase_magizoologo = mzg.MagizoologoTareo
+            elif parametros_magizoologo["tipo"] == "Híbrido":
+                clase_magizoologo = mzg.MagizoologoHibrido
+            elif parametros_magizoologo["tipo"] == "Super":
+                clase_magizoologo = mzg.MagizoologoSuper
+            else:
+                continue
+            # Se agregan sus alimentos
+            lista_alimentos_magizoologo = list()
+            for nombre_alimento in parametros_magizoologo["alimentos"].split(";"):
+                if nombre_alimento == "Buñuelo de Gusarajo":
+                    tipo_alimento = ams.BunueloGusarajo
+                elif nombre_alimento == "Hígado de Dragón":
+                    tipo_alimento = ams.HigadoDragon
+                elif nombre_alimento == "Tarta de Melaza":
+                    tipo_alimento = ams.TartaMaleza
+                else:
+                    continue
+                lista_alimentos_magizoologo.append(tipo_alimento())
+            parametros_magizoologo["alimentos"] = lista_alimentos_magizoologo
+            # Se agregan sus criaturas
+            nombre_criaturas = parametros_magizoologo["criaturas"].split(";")
+            lista_criaturas = list(filter(lambda criatura: criatura == nombre_criaturas,
+                                     self.lista_criaturas))
+            parametros_magizoologo["criaturas"] = lista_criaturas
+            # Se crea el Magizoólogo
+            self.lista_magizoologos.append(clase_magizoologo(**parametros_magizoologo))
 
     def _actualizar_archivos(self):
         pass
@@ -188,39 +246,49 @@ class ZoologicoMagico:
     """
 
     def __crear_magizoologo(self):
+        # Propio
         pass
 
     def __cargar_magizoologo(self):
+        # Propio
         pass
 
-    def __pasar_de_dia(self):
+    def __pasar_de_dia(self, _dcc):
+        # Propio + DCC
         pass
 
     def __alimentar_criatura(self):
+        # Magizoólogo
         pass
 
     def __recuperar_criatura(self):
+        # Magizoólogo
         pass
 
     def __sanar_criatura(self):
+        # Magizoólogo
         pass
 
     def __habilidad_especial(self):
+        # Magizoólogo
         pass
 
     def __empezar_pelea(self):
+        # Magizoólogo?
         pass
 
     def __adoptar_criatura(self):
+        # Magizoólogo + DCC
         pass
 
     def __comprar_alimentos(self):
+        # Magizoólogo + DCC
         pass
 
     def __ver_estado(self):
+        # Magizoólogo + DDC
         pass
 
 
 if __name__ == "__main__":
-    ZoologicoMagico()._leer_archivos()
-    # ZoologicoMagico().main_loop()
+    ZoologicoMagico().main_loop()
