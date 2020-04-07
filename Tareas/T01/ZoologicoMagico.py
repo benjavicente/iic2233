@@ -25,6 +25,7 @@ import magizoologos as mzg
 import dccriaturas as ctr
 import alimentos as ams
 import dcc
+import procesos as pc
 
 
 class ZoologicoMagico:
@@ -137,9 +138,11 @@ class ZoologicoMagico:
                     # Se cambia de menú
                     self.__anteriores.append(self.__actual)
                     self.__actual = valor
-                elif type(valor) is str:
+                elif type(valor) is tuple:
                     # Se empieza un proceso
+                    self._leer_archivos()
                     self._menus[self.__actual][elegida][1]()
+                    self._actualizar_archivos()
 
     def _leer_archivos(self):
         # ----------------------- #
@@ -176,7 +179,7 @@ class ZoologicoMagico:
             parametros_magizoologo = {key: value for key, value
                                       in zip(PMT.FORMATO_MAGIZOOLOGOS, fila_magizoologo)}
             # Se define el tipo
-            if parametros_magizoologo["tipo"] == "Docecio":
+            if parametros_magizoologo["tipo"] == "Docencio":
                 clase_magizoologo = mzg.MagizoologoDocencio
             elif parametros_magizoologo["tipo"] == "Tareo":
                 clase_magizoologo = mzg.MagizoologoTareo
@@ -229,8 +232,37 @@ class ZoologicoMagico:
     """
 
     def __crear_magizoologo(self):
-        # Propio
-        pass
+        valores = pc.proceso_multipaso([
+            (
+                "Elige un nombre único y alfanumérico",
+                (
+                    ("Es alfanumérico", str.isalnum),
+                    ("Es único", lambda x: x not in self.lista_magizoologos),
+                ),
+            ),
+            (
+                "Elige el tipo de Magizoólogo que desea ser",
+                (
+                    ("Es Docencio, Tareo o Hibrido",
+                     lambda x: x.lower() in {"docencio", "tareo", "Hibrido"}),
+                ),
+            ),
+            (
+                "Elige tu primera DCCriatura!",
+                (
+                    ("Es Augurey, Niffler o Erkling",
+                     lambda x: x.lower() in {"augurey", "niffler", "erkling"}),
+                ),
+            ),
+            (
+                "Elige un nombre único y alfanumérico para tu DCCriatura",
+                (
+                    ("Es alfanumérico", str.isalnum),
+                    ("Es único", lambda x: x not in self.lista_magizoologos),
+                ),
+            ),
+        ])
+        print(valores)
 
     def __cargar_magizoologo(self):
         # Propio
