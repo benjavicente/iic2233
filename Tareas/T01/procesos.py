@@ -1,7 +1,85 @@
-import collections
+"""
+=================
+Procesos de menús
+=================
+Contiene las funciones:
+-----------------------
+    loop_menus
+    volver_a_intentarlo
+    proceso_multipaso
+Depende de:
+-----------
+    parametros
+"""
+
+import parametros as PMT
 
 
-def volver_a_intentarlo(valor_invalido, *razones_invalido):
+def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
+    """
+    ==========
+    Loop Menus
+    ==========
+
+    Función para crear un menú a partir de un diccionario.
+
+    Argumentos
+    ----------
+     - menus: dict
+    Diccionario con los menús. Tiene que tener la siguiente estructura:
+
+    `key: str` Nombre del menú
+
+    `value: str or tuple` Acción a realizar
+
+    La acción `value` es un `str` cuando esta es ir al menu llamado `value`.
+
+    La acción `value` es un `tuple` cuando la acción es una función.
+    Esta tupla tiene que poseer la estructura (nombre, función).
+
+    - menu_inicial: str
+    Menú inicial
+
+    - inc_prc: func
+    Función a realizar antes de iniciar un proceso.
+    Útil para cuando se necesitan respaldar datos.
+
+    - fin_prc: func
+    Función a realizar luego de terminar un proceso.
+    Útil para cuando se necesitan respaldar datos.
+    """
+    menu_actual = menu_inicial
+    menus_anteriores = list()
+    while True:
+        numero = -1
+        print("\n" + f" {menu_actual} ".center(PMT.UI_ANCHO, "-"))
+        for numero, opcion in enumerate(menus[menu_actual]):
+            if type(opcion) is tuple:
+                opcion = opcion[0]
+            print(f"[{numero + 1}] - {opcion}")
+        if menus_anteriores:
+            print(f"[{numero + 2}] - Volver al {menus_anteriores[-1]}")
+        print("[0] - Salir\n")
+        elegida = input("--> ").strip()
+        if elegida == "0":
+            return
+        elif menus_anteriores and elegida == str(numero + 2):
+            menu_actual = menus_anteriores.pop()
+        elif elegida.isdecimal() and 0 < int(elegida) < numero + 2:
+            elegida = int(elegida) - 1
+            valor = menus[menu_actual][elegida]
+            if type(valor) is str:
+                menus_anteriores.append(menu_actual)
+                menu_actual = valor
+            elif type(valor) is tuple:
+                if inc_prc:
+                    inc_prc()
+                menus[menu_actual][elegida][1]()
+                if fin_prc:
+                    fin_prc()
+
+
+def volver_a_intentarlo(valor_invalido: str, *razones_invalido: object) -> bool:
     """
     ==========================
     Submenú de Proceso Fallido
@@ -12,8 +90,16 @@ def volver_a_intentarlo(valor_invalido, *razones_invalido):
     Entrega las opciones de volver a intentarlo,
     volver al menú anterior y salir.
     Si se elige la opción 1 o 2 se retornará un Bool
-    indicando si se quiere volver a intentarlo
-    Si se elige la opción 0, se termina el programa
+    indicando si se quiere volver a intentarlo.
+    Si se elige la opción 0, se termina el programa.
+
+    Argumentos
+    ----------
+     - valor_invalido: str
+    El valor invalido.
+
+     - razones_invalido: iterable
+    Las razones de porque es invalido.
     """
     print(f"\n'{valor_invalido}' no es valido porque no se cumplió que:")
     for numero, razon in enumerate(razones_invalido):
@@ -33,7 +119,7 @@ def volver_a_intentarlo(valor_invalido, *razones_invalido):
         print(f"Opción '{elegida}' no valida")
 
 
-def proceso_multipaso(iterable, valores=[]):
+def proceso_multipaso(*iterable: tuple, valores=[]):
     """
     =====================
     Submenú de un Proceso
@@ -41,27 +127,27 @@ def proceso_multipaso(iterable, valores=[]):
 
     Encargado de los procesos en los que
     se requieren realizar multiples validaciones.
-    El iterable tiene que tener la siguiente estructura:
-
-    `[0]: str` Input que se le pide al usuario
-
-    `[1]: tuple -> (str, func)` Condiciones que debe cumplir el input
-
-    Las funciones/métodos serán evaluarán de la forma:
-
-    `if x(input)`
 
     Si no se cumplen las condiciones, se llama a
     `volver_a_intentarlo`para preguntarle al usuario
     si desea volver intentarlo, volver atrás o salir.
 
-    `valores` es la lista donde se almacenan
-    los valores que se retornarán.
+    Argumentos
+    ----------
+     - iterable: tuple
+    Sub-procesos a realizar. La tupla tiene que tener la estructura:
+
+    `[0]: str` Input que se le pide al usuario
+
+    `[1]: tuple -> (str, func)` Condiciones que debe cumplir el input,
+    donde `str` es el nombre de esta y `func` le función para evaluarla.
+
+    Las funciones/métodos son evaluados con la forma if x(input)`.
+
+     - valores: ist
+    Lista donde se almacenan los valores que se retornarán.
     """
-    # Valores preterminados
-    if type(iterable) is not collections.deque:
-        iterable = collections.deque(iterable)
-    menu, condiciones = iterable.popleft()
+    menu, condiciones = iterable[0]
     while True:
         print(menu)
         elegida = input("--> ").strip()
@@ -72,38 +158,11 @@ def proceso_multipaso(iterable, valores=[]):
             if not volver_a_intentarlo(elegida, *no_cumplidas):
                 return False
         else:
-            if not iterable:
+            if len(iterable) == 1:
                 valores.append(elegida)
                 return True
-            seguir = proceso_multipaso(iterable.copy(), valores)
+            seguir = proceso_multipaso(*iterable[1:], valores=valores)
             if seguir:
-                """
-                Seguir puede ser dos opciones:
-                `True` si se repite el ciclo y llega al punto donde el
-                iterable se acaba (`return valores`)
-                `False` si el usuario desea volver en `volver_a_intentarlo`
-                """
                 valores.append(elegida)
                 break
     return valores[::-1]
-
-
-if __name__ == "__main__":
-    # Ejemplo de proceso
-    proceso = [
-        (
-            "Elija un nombre alfanumérico y único",
-            (
-                ("Es alfanumérico", str.isalnum),
-                ("Es único", lambda x: x not in {"benjamín", "vicente"}),
-            ),
-        ),
-        (
-            "Elija el tipo que más le guste entre azul y rojo",
-            (
-                ("Es Rojo o Azul", lambda x: x.lower() in {"azul", "rojo"}),
-            ),
-        ),
-    ]
-    v = proceso_multipaso(proceso)
-    print(v)
