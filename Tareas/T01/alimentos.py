@@ -7,17 +7,14 @@ class Alimentos(ABC):
     y producen distintos efectos al ser consumidos.
     """
     def __init__(self):
-        self.__nombre = None
+        self._nombre = None
         self.pnt_vida = None
 
     def __str__(self):
-        return self.__nombre
+        return self._nombre
 
     def __repr__(self):
-        return self.__nombre
-
-    def __eq__(self, value):
-        return self.__nombre == value
+        return self._nombre
 
 
 class TartaMaleza(Alimentos):
@@ -29,7 +26,7 @@ class TartaMaleza(Alimentos):
       en que la agresividad pase de arisca a inofensiva de manera permanente
     """
     def __init__(self):
-        self.__nombre = "Tarta de Maleza"
+        self._nombre = "Tarta de Maleza"
         self.pnt_vida = 15
 
 
@@ -40,7 +37,7 @@ class HigadoDragon(Alimentos):
     - Si la DCCriatura está enferma, se sanará
     """
     def __init__(self):
-        self.__nombre = "Hígado de Dragón"
+        self._nombre = "Hígado de Dragón"
         self.pnt_vida = 10
 
 
@@ -52,5 +49,5 @@ class BunueloGusarajo(Alimentos):
       alimento y este se pierda.
     """
     def __init__(self):
-        self.__nombre = "Buñuelo de Gusarajo"
+        self._nombre = "Buñuelo de Gusarajo"
         self.pnt_vida = 5
