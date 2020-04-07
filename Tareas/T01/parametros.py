@@ -28,7 +28,7 @@ FORMATO_CRIATURAS = ("nombre", "tipo", "nivel_magico", "prob_escaparse",
 
 FORMATO_MAGIZOOLOGOS = ("nombre", "tipo", "sickles", "criaturas",
                         "alimentos", "licencia", "nivel_magico",
-                        "destreza", "energia_total", "responsabilidad",
+                        "destreza", "energia_max", "responsabilidad",
                         "puede_usar_habilidad")
 
 
@@ -75,7 +75,7 @@ HIBRIDO_RANGO_RESPONSABILIDAD = (15, 25)
 # Parámetros relacionados con las criaturas    #
 # ============================================ #
 ALIMENTARSE_EFECTO_HAMBRE = {"satisfecha": 0, "hambrienta": 15}
-ALIMENTARSE_EFECTO_AGRESIVIDAD = {"inofensiva": 0, "arica": 20, "peligrosa":40}
+ALIMENTARSE_EFECTO_AGRESIVIDAD = {"inofensiva": 0, "arica": 20, "peligrosa": 40}
 ESCAPARSE_EFECTO_HAMBRE = {"satisfecha": 0, "hambrienta": 20}
 
 # ---------------- #

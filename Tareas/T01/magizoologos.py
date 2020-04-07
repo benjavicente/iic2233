@@ -1,7 +1,25 @@
+"""
+======================
+Clases de Magizoologos
+======================
+Contiene las clases:
+--------------------
+    Magizoologo
+    MagizoologoDocencio
+    MagizoologoTareo
+    MagizoologoHibrido
+    MagizoologoSuper
+Depende de:
+-----------
+    parametros
+    alimentos
+"""
+
 from abc import ABC, abstractmethod
 import random
 import parametros as PMT
 import alimentos as alm
+
 
 class Magizoologo(ABC):
     """
@@ -99,8 +117,8 @@ class Magizoologo(ABC):
             criaturas = list()
         if alimentos is None:
             alimento = random.choice((alm.BunueloGusarajo,
-                                           alm.HigadoDragon,
-                                           alm.BunueloGusarajo))
+                                      alm.HigadoDragon,
+                                      alm.BunueloGusarajo))
             alimentos = [alimento()]
         self.criaturas = criaturas
         self.alimentos = alimentos
@@ -116,10 +134,10 @@ class Magizoologo(ABC):
         if nivel_aprobacion is None:
             nivel_aprobacion = PMT.MAGIZOOLOGOS_APROBACION_INICIAL
         # Transformación de valores
-        self._sickles = int(sickles)
+        self.__sickles = int(sickles)
         self.licencia = licencia == "True"
         self.puede_usar_habilidad = puede_usar_habilidad == "True"
-        self._nivel_aprobacion = int(nivel_aprobacion)
+        self.__nivel_aprobacion = int(nivel_aprobacion)
         # ------------------------------------------------- #
         # Valores predeterminados en distintos Magizoólogos #
         # ------------------------------------------------- #
@@ -145,15 +163,15 @@ class Magizoologo(ABC):
 
     @property
     def nivel_aprobacion(self):
-        return self._nivel_aprobacion
+        return self.__nivel_aprobacion
 
     @nivel_aprobacion.setter
     def nivel_aprobacion(self, value):
         if value >= 100:
-            self._nivel_aprobacion = 100
+            self.__nivel_aprobacion = 100
             pass  # Hacer Super Magizoólogo
         elif value < 0:
-            self._nivel_aprobacion = 0
+            self.__nivel_aprobacion = 0
         if (not self.licencia) and value >= 60:
             self.licencia = True
         elif self.licencia and value < 60:
@@ -161,14 +179,14 @@ class Magizoologo(ABC):
 
     @property
     def sickles(self):
-        return self._sickles
+        return self.__sickles
 
     @sickles.setter
     def sickles(self, value):
         if value >= 0:
-            self._sickles = 0
+            self.__sickles = 0
         else:
-            self._sickles = value
+            self.__sickles = value
 
     def adoptar_dccriatura(self, criatura=None):
         if criatura:

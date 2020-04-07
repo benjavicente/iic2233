@@ -1,14 +1,26 @@
+"""
+=====================
+Clases de DCCriaturas
+=====================
+Contiene las Clases:
+--------------------
+    DCCriaturas
+    Augurey
+    Niffler
+    Erkling
+Depende de:
+-----------
+    parametros
+"""
+
 from abc import ABC, abstractmethod
 import random
 import parametros as PMT
 
-"""
-TODO:
-- Tengo que ver como utilizar valores predeterminados en
-cada una de las clases.
-- Revisar parámetors
-"""
-
+# TODO:
+# Revisar parámetros
+# Completar alimentarse
+# Completar característica única
 
 class DCCriaturas(ABC):
     """
@@ -305,12 +317,3 @@ class Erkling(DCCriaturas):
 
     def caracteristica_unica(self):
         pass
-
-
-if __name__ == "__main__":
-    x = Erkling("augerrrrey")
-    y = Niffler("augerrrrey")
-    z = Augurey("augerrrrey")
-    print(x.__repr__())
-    print(y.__repr__())
-    print(z.__repr__())

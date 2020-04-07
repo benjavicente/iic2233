@@ -1,3 +1,14 @@
+"""
+=========
+Alimentos
+=========
+Contiene las Clases:
+--------------------
+    Alimentos
+    TartaMaleza
+    HigadoDragon
+    BunueloGusarajo
+"""
 from abc import ABC
 
 

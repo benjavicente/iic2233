@@ -1,3 +1,21 @@
+"""
+=========
+Clase DDC
+=========
+Contiene la clase:
+------------------
+    DCC
+Depende de:
+-----------
+    parametros
+"""
+# TODO:
+# Completar calcular aprobación
+# Completar fiscalizar magizoólogo
+# Completar vender criaturas
+# Completar vender alimentos
+# Completar pagar magizoólogo
+
 import random
 import parametros as PMT
 from operator import attrgetter
@@ -29,6 +47,7 @@ class DCC:
         """
         Calcula la aprobación del Magizoólogo al finalizar el día.
         """
+
         pass
 
     def pagar_magizoologo(self, magizoologo):
@@ -119,4 +138,3 @@ class DCC:
                 print(f"   - {datos[0]} {nombre}: +{datos[1]}hp")
         else:
             print(" - Sin alimentos")
-

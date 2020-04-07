@@ -2,20 +2,26 @@
 =============================
 Módulo principal del programa
 =============================
-
-Encargado del _front-end_ utilizando los
-métodos `main_loop()` y `_volver_a_intentarlo()`
-de la clase `ZoologicoMagico`.
-
-Entrega instrucciones a los demás módulos
-utilizando un sistema de procesos.
+Contiene la clase:
+------------------
+    ZoologicoMagico
+Depende de:
+-----------
+    parametros
+    magizoologos
+    dccriaturas
+    alimentos
+    dcc
+    procesos
 """
 
-# TODO: agrera método que actualize los archivos
-# TODO: agregar atributo que almacene el Magizoólogo
-# TODO: completar los procesos del programa
-# TODO: revizar si hay párametros en este archivo
-
+# TODO:
+# Completar los procesos del programa
+# Revizar si hay párametros en este archivo
+# Documentar lo que ya está hecho}
+# Mostrar en README los que es funcional
+# Completar pasar día
+# Completar pelea
 
 from os import system
 import operator as op
@@ -37,17 +43,14 @@ class ZoologicoMagico:
     Encargado de los menús del programa y
     realizar los procesos pedidos por el usuario
 
-    Contiene los 5 métodos y 6 atributos encargados
-    del funcionamiento del programa. Estos son:
+    Los métodos y atributos encargados
+    del funcionamiento del módulo son:
       - _menus
       - __anteriores
-      - __actual
-      - __loop
       - _dcc
       - _magizoologo_actual
       - __init__()
       - main_loop()
-      - _volver_a_intentarlo()
       - _leer_archivos()
       - _actualizar_archivos()
 
@@ -235,7 +238,6 @@ class ZoologicoMagico:
                 ),),
         )
         if nombre:
-            print(nombre)
             index = self.lista_magizoologos.index(*nombre)
             self._magizoologo_actual = self.lista_magizoologos[index]
             return True
@@ -246,32 +248,26 @@ class ZoologicoMagico:
         pass
 
     def __alimentar_criatura(self):
-        # Magizoólogo
-        pass
+        self._magizoologo_actual.alimentar_dccriatura()
 
     def __recuperar_criatura(self):
-        # Magizoólogo
-        pass
+        self._magizoologo_actual.recuperar_dccriatura()
 
     def __sanar_criatura(self):
-        # Magizoólogo
-        pass
+        self._magizoologo_actual.sanar_dccriatura()
 
     def __habilidad_especial(self):
-        # Magizoólogo
-        pass
+        self._magizoologo_actual.habilidad_especial()
 
     def __empezar_pelea(self):
         # Magizoólogo?
         pass
 
     def __adoptar_criatura(self):
-        # Magizoólogo
-        # self._magizoologo_actual.adoptar_dccriatura()
+        self._dcc.vernder_criaturas(self._magizoologo_actual)
 
     def __comprar_alimentos(self):
-        # Magizoólogo + DCC
-        pass
+        self._dcc.vernder_alimentos(self._magizoologo_actual)
 
     def __ver_estado(self):
         self._dcc.mostrar_estado(self._magizoologo_actual)
