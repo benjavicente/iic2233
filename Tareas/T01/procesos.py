@@ -132,7 +132,7 @@ def volver_a_intentarlo(valor_invalido: str, *razones_invalido: object) -> bool:
         print(f"Opción '{elegida}' no valida")
 
 
-def proceso_multipaso(*iterable: tuple, v=[]):
+def proceso_multipaso(*iterable):
     """
     =====================
     Submenú de un Proceso
@@ -160,9 +160,6 @@ def proceso_multipaso(*iterable: tuple, v=[]):
      - v: ist
     Lista donde se almacenan los valores que se retornarán.
     """
-    valores = v.copy()
-    if not len(iterable):
-        return True
     menu, condiciones = iterable[0]
     while True:
         print(menu)
@@ -174,8 +171,8 @@ def proceso_multipaso(*iterable: tuple, v=[]):
             if not volver_a_intentarlo(elegida, *no_cumplidas):
                 return False
         else:
-            seguir = proceso_multipaso(*iterable[1:], v=valores)
+            if len(iterable) == 1:
+                return [elegida]
+            seguir = proceso_multipaso(*iterable[1:])
             if seguir:
-                valores.append(elegida)
-                break
-    return valores[::-1]
+                return [elegida] + seguir
