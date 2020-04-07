@@ -139,13 +139,16 @@ class DCCriaturas(ABC):
         self.vida_max = int(vida_max)
         self.agresividad = str(agresividad)
         # Atributos especiales #
-        self.nivel_cleptomania = int(nivel_cleptomania)
+        self.nivel_cleptomania = 0
 
     def __str__(self):
         return self.nombre
 
     def __eq__(self, value):
-        return self.nombre == value
+        # No se considera la diferencia entre mayúsculas y minúsculas
+        if type(value) is str:
+            value = value.lower()
+        return self.nombre.lower() == value
 
     def __repr__(self):
         return "|".join([
@@ -259,13 +262,13 @@ class Niffler(DCCriaturas):
             kwargs["vida_max"] = random.randint(*PMT.NIFFLER_RANGO_VIDA_MAXIMA)
         if "agresividad" not in kwargs:
             kwargs["agresividad"] = PMT.NIFFLER_NIVEL_AGRESIVIDAD
-        # Atributo único
-        if "nivel_cleptomania" not in kwargs:
-            kwargs["nivel_cleptomania"] = random.randint(*PMT.NIFFLER_RANGO_CLEPTOMANIA)
-        else:
-            kwargs["nivel_cleptomania"] = int(kwargs["nivel_cleptomania"])
         # Inicia la clase
         super().__init__(nombre, **kwargs)
+        # Atributo único
+        if "nivel_cleptomania" not in kwargs:
+            self.nivel_cleptomania = random.randint(*PMT.NIFFLER_RANGO_CLEPTOMANIA)
+        else:
+            self.nivel_cleptomania = int(kwargs["nivel_cleptomania"])
 
     def alimentarse(self):
         pass

@@ -136,6 +136,8 @@ class Magizoologo(ABC):
         return self.nombre
 
     def __eq__(self, value):
+        if type(value) is str:
+            value = value.lower()
         return self.nombre == value
 
     def __repr__(self):
