@@ -216,9 +216,6 @@ class ZoologicoMagico:
                 tipo_magizoologo = mzg.MagizoologoTareo
             elif tipo_magizoologo.lower() == "hibrido":
                 tipo_magizoologo = mzg.MagizoologoHibrido
-            self._magizoologo_actual = tipo_magizoologo(nombre_magizoologo)
-            self.lista_magizoologos.append(self._magizoologo_actual)
-
             if tipo_criatura.lower() == "augurey":
                 tipo_criatura = ctr.Augurey
             elif tipo_criatura.lower() == "erkling":
@@ -227,7 +224,9 @@ class ZoologicoMagico:
                 tipo_criatura = ctr.Niffler
             nueva_criatura = tipo_criatura(nombre_criatura)
             self.lista_criaturas.append(nueva_criatura)
-            self._magizoologo_actual.adoptar_dccriatura(nueva_criatura)
+            self._magizoologo_actual = tipo_magizoologo(nombre_magizoologo,
+                                                        criaturas=[nueva_criatura])
+            self.lista_magizoologos.append(self._magizoologo_actual)
             return True
         return False
 
