@@ -160,6 +160,8 @@ def proceso_multipaso(*iterable: tuple, valores=[]):
      - valores: ist
     Lista donde se almacenan los valores que se retornarán.
     """
+    if not len(iterable):
+        return True
     menu, condiciones = iterable[0]
     while True:
         print(menu)
@@ -171,9 +173,6 @@ def proceso_multipaso(*iterable: tuple, valores=[]):
             if not volver_a_intentarlo(elegida, *no_cumplidas):
                 return False
         else:
-            if len(iterable) == 1:
-                valores.append(elegida)
-                return True
             seguir = proceso_multipaso(*iterable[1:], valores=valores)
             if seguir:
                 valores.append(elegida)
