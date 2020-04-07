@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import random
 import parametros as PMT
-
+import alimentos as alm
 
 class Magizoologo(ABC):
     """
@@ -56,7 +56,7 @@ class Magizoologo(ABC):
         Cuando una de tus DCCriaturas huye,
         el nivel de destreza influirá en las
         posibilidades de recuperarla.
-    `energia_total` : `int`
+    `energia_max` : `int`
         El nivel de energía inicial y máxima que determina
         la cantidad de acciones que un Magizoólogo puede
         hacer por día. Cada vez que comienza un día nuevo,
@@ -82,7 +82,7 @@ class Magizoologo(ABC):
                  licencia=None,
                  nivel_magico=None,
                  destreza=None,
-                 energia_total=None,
+                 energia_max=None,
                  responsabilidad=None,
                  puede_usar_habilidad=None,
                  nivel_aprobacion=None,
@@ -92,9 +92,16 @@ class Magizoologo(ABC):
         # -------------- #
         self.nombre = str(nombre)
         self.tipo = type(self).__name__.replace("Magizoologo", "")
-        # --------------------- #
-        # Valores al entregados #
-        # --------------------- #
+        # ---------------------------- #
+        # Valores de listad de objetos #
+        # ---------------------------- #
+        if criaturas is None:
+            criaturas = list()
+        if alimentos is None:
+            alimento = random.choice((alm.BunueloGusarajo,
+                                           alm.HigadoDragon,
+                                           alm.BunueloGusarajo))
+            alimentos = [alimento()]
         self.criaturas = criaturas
         self.alimentos = alimentos
         # ------------------------------------------------- #
@@ -118,12 +125,12 @@ class Magizoologo(ABC):
         # ------------------------------------------------- #
         self.nivel_magico = int(nivel_magico)
         self.destreza = int(destreza)
-        self.energia_total = int(energia_total)
+        self.energia_max = int(energia_max)
         self.responsabilidad = int(responsabilidad)
         # -------------------- #
         # Valores dependientes #
         # -------------------- #
-        self.energia_actual = energia_total
+        self.energia_actual = energia_max
 
     def __str__(self):
         return self.nombre
@@ -161,20 +168,23 @@ class Magizoologo(ABC):
         else:
             self._sickles = value
 
-    def adoptar_dccriatura(self, dcc):
-        if not self.licencia:
-            print("No puedes adoptar, no tienes licencia")
-            return
-        # TODO
-        dcc.vender_criarura()
-        """
-        El Magizoólogo puede adoptar nuevas DCCriaturas al DCC,
-        solo si posee actualmente su licencia. Además, esta acción está
-        limitada por la capacidad monetaria del usuario que queda
-        sujeta al precio de cada criatura.
-        """
-
-        pass
+    def adoptar_dccriatura(self, criatura=None):
+        if criatura:
+            # Ya eligió una criatura
+            self.criaturas.append(criatura)
+        else:
+            # Tiene que elegir una criatura
+            if not self.licencia:
+                print("No puedes adoptar, no tienes licencia")
+                return
+            # TODO
+            # dcc.vender_criarura()
+            """
+            El Magizoólogo puede adoptar nuevas DCCriaturas al DCC,
+            solo si posee actualmente su licencia. Además, esta acción está
+            limitada por la capacidad monetaria del usuario que queda
+            sujeta al precio de cada criatura.
+            """
 
     def comprar_alimentos(self):
         """
@@ -250,9 +260,16 @@ class MagizoologoDocencio(Magizoologo):
     - Su energía total estará entre 40 y 50.
     - Su responsabilidad variaría entre 15 y 20.
     """
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        pass
+    def __init__(self, nombre, **kwargs):
+        if "nivel_magico" not in kwargs:
+            kwargs["nivel_magico"] = random.randint(*PMT.DOCENCIO_RANGO_NIVEL_MAGICO)
+        if "destreza" not in kwargs:
+            kwargs["destreza"] = random.randint(*PMT.DOCENCIO_RANGO_DESTREZA)
+        if "energia_max" not in kwargs:
+            kwargs["energia_max"] = random.randint(*PMT.DOCENCIO_RANGO_ENERGIA_MAX)
+        if "responsabilidad" not in kwargs:
+            kwargs["responsabilidad"] = random.randint(*PMT.DOCENCIO_RANGO_RESPONSABILIDAD)
+        super().__init__(nombre, **kwargs)
 
     def alimentar_dccriatura(self):
         pass
@@ -292,9 +309,16 @@ class MagizoologoTareo(Magizoologo):
     - Su energía total estará entre 35 y 45.
     - Por último, su responsabilidad variará entre 10 y 25.
     """
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        pass
+    def __init__(self, nombre, **kwargs):
+        if "nivel_magico" not in kwargs:
+            kwargs["nivel_magico"] = random.randint(*PMT.TAREO_RANGO_NIVEL_MAGICO)
+        if "destreza" not in kwargs:
+            kwargs["destreza"] = random.randint(*PMT.TAREO_RANGO_DESTREZA)
+        if "energia_max" not in kwargs:
+            kwargs["energia_max"] = random.randint(*PMT.TAREO_RANGO_ENERGIA_MAX)
+        if "responsabilidad" not in kwargs:
+            kwargs["responsabilidad"] = random.randint(*PMT.TAREO_RANGO_RESPONSABILIDAD)
+        super().__init__(nombre, **kwargs)
 
     def alimentar_dccriatura(self):
         pass
@@ -332,9 +356,16 @@ class MagizoologoHibrido(Magizoologo):
     - Su energía total estará entre 50 y 55.
     - Su responsabilidad variará entre 15 y 25
     """
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        pass
+    def __init__(self, nombre, **kwargs):
+        if "nivel_magico" not in kwargs:
+            kwargs["nivel_magico"] = random.randint(*PMT.HIBRIDO_RANGO_NIVEL_MAGICO)
+        if "destreza" not in kwargs:
+            kwargs["destreza"] = random.randint(*PMT.HIBRIDO_RANGO_DESTREZA)
+        if "energia_max" not in kwargs:
+            kwargs["energia_max"] = random.randint(*PMT.HIBRIDO_RANGO_ENERGIA_MAX)
+        if "responsabilidad" not in kwargs:
+            kwargs["responsabilidad"] = random.randint(*PMT.HIBRIDO_RANGO_RESPONSABILIDAD)
+        super().__init__(nombre, **kwargs)
 
     def alimentar_dccriatura(self):
         pass
