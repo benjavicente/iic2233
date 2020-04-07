@@ -66,14 +66,10 @@ class ZoologicoMagico:
       - __ver_estado()
     """
     def __init__(self):
-        menu_inicial = "Menú de Inicio"
-        self.__anteriores = list()
-        self.__actual = menu_inicial
-        self.__loop = True
         self._menus = {
-            menu_inicial: (
-                ("Crear Magizoólogo", self.__crear_magizoologo),
-                ("Cargar Magizoólogo", self.__cargar_magizoologo),
+            "Menú de Inicio": (
+                ("Crear Magizoólogo", self.__crear_magizoologo, "Menú de Acciones"),
+                ("Cargar Magizoólogo", self.__cargar_magizoologo, "Menú de Acciones"),
             ),
             "Menú de Acciones": (
                 "Menú cuidar DCCriaturas",
@@ -94,60 +90,18 @@ class ZoologicoMagico:
             ),
         }
         self._dcc = dcc.DCC()
-        self._magizoologo_actual = None  # mzg.Magizoólogo() # TODO REMOVER
-        self.lista_criaturas = list()
-        self.lista_magizoologos = list()
+        self._magizoologo_actual = None
+        self._leer_archivos()
 
     def main_loop(self):
-        """
-        ===========================
-        Loop principal del Programa
-        ===========================
-
-        Imprime las opciones disponibles en cada menú y
-        las realiza la elegida del usuario.
-        Entrega la posibilidad de volver atrás (si es posible)
-        y la opción de salir del programa.
-        """
-        self._leer_archivos()
-        while self.__loop:
-            numero = -1
-            # Se imprime el menú actual
-            print("\n" + f" {self.__actual} ".center(PMT.UI_ANCHO, "-"))
-            # Se imprimen las opciones
-            for numero, opcion in enumerate(self._menus[self.__actual]):
-                if type(opcion) is tuple:
-                    opcion = opcion[0]
-                print(f"[{numero + 1}] - {opcion}")
-            if self.__anteriores:
-                print(f"[{numero + 2}] - Volver al {self.__anteriores[-1]}")
-            print("[0] - Salir\n")
-            # Se pide el input
-            elegida = input("--> ").strip()
-            if elegida == "0":
-                # Sale del programa
-                self._actualizar_archivos()
-                break
-            elif elegida == str(numero + 2):
-                # Vuelve atrás
-                self.__actual = self.__anteriores.pop()
-            elif elegida.isdecimal() and 0 < int(elegida) < numero + 2:
-                elegida = int(elegida) - 1
-                valor = self._menus[self.__actual][elegida]
-                if type(valor) is str:
-                    # Se cambia de menú
-                    self.__anteriores.append(self.__actual)
-                    self.__actual = valor
-                elif type(valor) is tuple:
-                    # Se empieza un proceso
-                    self._leer_archivos()
-                    self._menus[self.__actual][elegida][1]()
-                    self._actualizar_archivos()
+        pc.loop_menus(self._menus, "Menú de Inicio",
+                      self._leer_archivos, self._actualizar_archivos)
 
     def _leer_archivos(self):
         # ----------------------- #
         # Archivo de DCCriaturas  #
         # ----------------------- #
+        self.lista_criaturas = list()
         with open(PMT.PATH_CRIATURAS, "r", encoding="UTF-8") as archivo_criaturas:
             datos_archivo_criaturas = archivo_criaturas.readlines()
         for fila_criatura in datos_archivo_criaturas:
@@ -170,6 +124,7 @@ class ZoologicoMagico:
         # ----------------------- #
         # Archivo de Magizoólogos #
         # ----------------------- #
+        self.lista_magizoologos = list()
         with open(PMT.PATH_MAGIZOOLOGOS, "r", encoding="UTF-8") as archivo_magizoologos:
             datos_archivo_magizoologos = archivo_magizoologos.readlines()
         for fila_magizoologo in datos_archivo_magizoologos:
@@ -232,37 +187,46 @@ class ZoologicoMagico:
     """
 
     def __crear_magizoologo(self):
-        valores = pc.proceso_multipaso([
-            (
-                "Elige un nombre único y alfanumérico",
-                (
-                    ("Es alfanumérico", str.isalnum),
-                    ("Es único", lambda x: x not in self.lista_magizoologos),
-                ),
-            ),
-            (
-                "Elige el tipo de Magizoólogo que desea ser",
-                (
-                    ("Es Docencio, Tareo o Hibrido",
-                     lambda x: x.lower() in {"docencio", "tareo", "Hibrido"}),
-                ),
-            ),
-            (
-                "Elige tu primera DCCriatura!",
-                (
-                    ("Es Augurey, Niffler o Erkling",
-                     lambda x: x.lower() in {"augurey", "niffler", "erkling"}),
-                ),
-            ),
-            (
-                "Elige un nombre único y alfanumérico para tu DCCriatura",
-                (
-                    ("Es alfanumérico", str.isalnum),
-                    ("Es único", lambda x: x not in self.lista_magizoologos),
-                ),
-            ),
-        ])
-        print(valores)
+        valores = pc.proceso_multipaso(
+            ("Elige un nombre único y alfanumérico", (
+                ("Es alfanumérico", str.isalnum),
+                ("Es único", lambda x: x not in self.lista_magizoologos),
+                ),),
+            ("Elige el tipo de Magizoólogo que desea ser", (
+                ("Es Docencio, Tareo o Hibrido",
+                 lambda x: x.lower() in {"docencio", "tareo", "Hibrido"}),
+                ),),
+            ("Elige tu primera DCCriatura!", (
+                ("Es Augurey, Niffler o Erkling",
+                 lambda x: x.lower() in {"augurey", "niffler", "erkling"}),
+                ),),
+            ("Elige un nombre único y alfanumérico para tu DCCriatura", (
+                ("Es alfanumérico", str.isalnum),
+                ("Es único", lambda x: x not in self.lista_magizoologos),
+                ),),
+        )
+        if valores:
+            nombre_magizoologo, tipo_magizoologo, tipo_criatura, nombre_criatura = valores
+            if tipo_magizoologo.lower() == "docencio":
+                tipo_magizoologo = mzg.MagizoologoDocencio
+            elif tipo_magizoologo.lower() == "tareo":
+                tipo_magizoologo = mzg.MagizoologoTareo
+            elif tipo_magizoologo.lower() == "hibrido":
+                tipo_magizoologo = mzg.MagizoologoHibrido
+            self._magizoologo_actual = tipo_magizoologo(nombre_magizoologo)
+            self.lista_magizoologos.append(self._magizoologo_actual)
+
+            if tipo_criatura.lower() == "augurey":
+                tipo_criatura = ctr.Augurey
+            elif tipo_criatura.lower() == "erkling":
+                tipo_criatura = ctr.Erkling
+            elif tipo_criatura.lower() == "niffler":
+                tipo_criatura = ctr.Niffler
+            nueva_criatura = tipo_criatura(nombre_criatura)
+            self.lista_criaturas.append(nueva_criatura)
+            self._magizoologo_actual.adoptar_dccriatura(nueva_criatura)
+            return True
+        return False
 
     def __cargar_magizoologo(self):
         # Propio
