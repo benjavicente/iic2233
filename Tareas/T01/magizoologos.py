@@ -109,10 +109,10 @@ class Magizoologo(ABC):
         if nivel_aprobacion is None:
             nivel_aprobacion = PMT.MAGIZOOLOGOS_APROBACION_INICIAL
         # Transformación de valores
-        self.sickles = int(sickles)
+        self._sickles = int(sickles)
         self.licencia = licencia == "True"
         self.puede_usar_habilidad = puede_usar_habilidad == "True"
-        self.nivel_aprobacion = int(nivel_aprobacion)
+        self._nivel_aprobacion = int(nivel_aprobacion)
         # ------------------------------------------------- #
         # Valores predeterminados en distintos Magizoólogos #
         # ------------------------------------------------- #
@@ -129,18 +129,51 @@ class Magizoologo(ABC):
         return self.nombre
 
     def __eq__(self, value):
-        return value
+        return self.nombre == value
 
     def __repr__(self):
         return f"{type(self).__name__} {self.nombre}: Sicklets={self.sickles}"
 
-    def adoptar_dccriatura(self):
+    @property
+    def nivel_aprobacion(self):
+        return self._nivel_aprobacion
+
+    @nivel_aprobacion.setter
+    def nivel_aprobacion(self, value):
+        if value >= 100:
+            self._nivel_aprobacion = 100
+            pass  # Hacer Super Magizoólogo
+        elif value < 0:
+            self._nivel_aprobacion = 0
+        if (not self.licencia) and value >= 60:
+            self.licencia = True
+        elif self.licencia and value < 60:
+            self.licencia = False
+
+    @property
+    def sickles(self):
+        return self._sickles
+
+    @sickles.setter
+    def sickles(self, value):
+        if value >= 0:
+            self._sickles = 0
+        else:
+            self._sickles = value
+
+    def adoptar_dccriatura(self, dcc):
+        if not self.licencia:
+            print("No puedes adoptar, no tienes licencia")
+            return
+        # TODO
+        dcc.vender_criarura()
         """
         El Magizoólogo puede adoptar nuevas DCCriaturas al DCC,
         solo si posee actualmente su licencia. Además, esta acción está
         limitada por la capacidad monetaria del usuario que queda
         sujeta al precio de cada criatura.
         """
+
         pass
 
     def comprar_alimentos(self):
