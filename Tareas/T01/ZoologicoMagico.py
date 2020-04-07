@@ -229,8 +229,17 @@ class ZoologicoMagico:
         return False
 
     def __cargar_magizoologo(self):
-        # Propio
-        pass
+        nombre = pc.proceso_multipaso(
+            ("Ingresa tu nombre", (
+                ("El Magizoólogo existe", lambda x: x in self.lista_magizoologos),
+                ),),
+        )
+        if nombre:
+            print(nombre)
+            index = self.lista_magizoologos.index(*nombre)
+            self._magizoologo_actual = self.lista_magizoologos[index]
+            return True
+        return False
 
     def __pasar_de_dia(self, _dcc):
         # Propio + DCC
@@ -257,16 +266,15 @@ class ZoologicoMagico:
         pass
 
     def __adoptar_criatura(self):
-        # Magizoólogo + DCC
-        pass
+        # Magizoólogo
+        # self._magizoologo_actual.adoptar_dccriatura()
 
     def __comprar_alimentos(self):
         # Magizoólogo + DCC
         pass
 
     def __ver_estado(self):
-        # Magizoólogo + DDC
-        pass
+        self._dcc.mostrar_estado(self._magizoologo_actual)
 
 
 if __name__ == "__main__":
