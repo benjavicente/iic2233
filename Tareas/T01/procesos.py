@@ -35,7 +35,14 @@ def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
     La acción `value` es un `str` cuando esta es ir al menu llamado `value`.
 
     La acción `value` es un `tuple` cuando la acción es una función.
-    Esta tupla tiene que poseer la estructura (nombre, función).
+    Esta tupla tiene que poseer la estructura (nombre, función, menu), donde:
+
+    `nombre: str` es el nombre de la acción
+
+    `función: func` es la acción a realiar
+
+    `menu: str` es el menu siguiente, se mantiene en el mismo menú si es omitido.
+    Solo se dirige al nuevo menú si el valor retornado por la funcione es `True`.
 
     - menu_inicial: str
     Menú inicial
@@ -47,6 +54,8 @@ def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
     - fin_prc: func
     Función a realizar luego de terminar un proceso.
     Útil para cuando se necesitan respaldar datos.
+    Solo se ejecuta cuando el valor retornado por
+    la función del menú es `True`
     """
     menu_actual = menu_inicial
     menus_anteriores = list()
@@ -74,9 +83,13 @@ def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
             elif type(valor) is tuple:
                 if inc_prc:
                     inc_prc()
-                menus[menu_actual][elegida][1]()
-                if fin_prc:
-                    fin_prc()
+                out = valor[1]()
+                if out:
+                    if len(valor) == 3:
+                        menus_anteriores.append(menu_actual)
+                        menu_actual = valor[2]
+                    if fin_prc:
+                        fin_prc()
 
 
 def volver_a_intentarlo(valor_invalido: str, *razones_invalido: object) -> bool:
