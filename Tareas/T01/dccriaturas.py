@@ -22,6 +22,7 @@ import parametros as PMT
 # Completar alimentarse
 # Completar característica única
 
+
 class DCCriaturas(ABC):
     """
     ===========
@@ -190,7 +191,7 @@ class DCCriaturas(ABC):
         # Formulas en TODO
         efecto_hambre = PMT.ESCAPARSE_EFECTO_HAMBRE
         valor = (efecto_hambre[self.nivel_hambre] - resp_magizoologo)/100
-        prob = min(1, self.prob_escapese + max(0, valor))
+        prob = min(1, self.prob_escaparse + max(0, valor))
         if prob >= random.random():
             # Se escapa
             self.escapado = True

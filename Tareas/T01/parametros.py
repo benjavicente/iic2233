@@ -41,8 +41,8 @@ UI_ANCHO = 20
 # Parámetros relacionados con el DCC           #
 # ============================================ #
 DCC_PRECIO_CRIATURAS = {"augurrey": 75, "niffler": 100, "erkling": 125}
-DCC_PRECIO_ALIMENTOS = {"tarta de maleza": 10, "higado de dragon": 15, "buñuelo de gusarajo": 3}
-DCC_FISCALIZADO = {"escape": (50, 0.5), "enfermedad": (70, 0.7), "vida": (150, 1)}
+DCC_PRECIO_ALIMENTOS = {"tarta de maleza": 10, "higado de dragón": 15, "buñuelo de gusarajo": 3}
+DCC_FISCALIZADO = {"escapes": (50, 0.5), "enfermedad": (70, 0.7), "vida critica": (150, 1)}
 DCC_PESO_PAGO = {"aprobacion": 4, "alimento": 15, "magico": 3}
 DCC_APROBACION = 60
 
@@ -125,7 +125,7 @@ ERKLING_NIVEL_AGRESIVIDAD = "peligrosa"
 # ============================================ #
 # Parámetros relacionados con los alimentos    #
 # ============================================ #
-ALIMENTOS_TIPOS = {"tarta de maleza", "higado de dragón", "bunuelo de gusarajo"}
+ALIMENTOS_TIPOS = {"tarta de maleza", "higado de dragón", "buñuelo de gusarajo"}
 ALIMENTOS_TARTA_MALEZA_PNT = 15
 ALIMENTOS_HIGADO_DRAGON_PNT = 10
 ALIMENTOS_BUNUELO_GUSARAJO = 5
