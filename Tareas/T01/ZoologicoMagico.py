@@ -137,27 +137,11 @@ class ZoologicoMagico:
             parametros_magizoologo = {key: value for key, value
                                       in zip(PMT.FORMATO_MAGIZOOLOGOS, fila_magizoologo)}
             # Se define el tipo
-            if parametros_magizoologo["tipo"] == "Docencio":
-                clase_magizoologo = mzg.MagizoologoDocencio
-            elif parametros_magizoologo["tipo"] == "Tareo":
-                clase_magizoologo = mzg.MagizoologoTareo
-            elif parametros_magizoologo["tipo"] == "Híbrido":
-                clase_magizoologo = mzg.MagizoologoHibrido
-            elif parametros_magizoologo["tipo"] == "Super":
-                clase_magizoologo = mzg.MagizoologoSuper
-            else:
-                continue
+            clase_magizoologo = pc.retornar_clase_magizoologo(parametros_magizoologo["tipo"])
             # Se agregan sus alimentos
             lista_alimentos_magizoologo = list()
             for nombre_alimento in parametros_magizoologo["alimentos"].split(";"):
-                if nombre_alimento == "Buñuelo de Gusarajo":
-                    tipo_alimento = ams.BunueloGusarajo
-                elif nombre_alimento == "Hígado de Dragón":
-                    tipo_alimento = ams.HigadoDragon
-                elif nombre_alimento == "Tarta de Melaza":
-                    tipo_alimento = ams.TartaMaleza
-                else:
-                    continue
+                tipo_alimento = pc.retornar_clase_alimento(nombre_alimento)
                 lista_alimentos_magizoologo.append(tipo_alimento())
             parametros_magizoologo["alimentos"] = lista_alimentos_magizoologo
             # Se agregan sus criaturas
@@ -210,18 +194,8 @@ class ZoologicoMagico:
         )
         if valores:
             nombre_magizoologo, tipo_magizoologo, tipo_criatura, nombre_criatura = valores
-            if tipo_magizoologo.lower() == "docencio":
-                tipo_magizoologo = mzg.MagizoologoDocencio
-            elif tipo_magizoologo.lower() == "tareo":
-                tipo_magizoologo = mzg.MagizoologoTareo
-            elif tipo_magizoologo.lower() == "hibrido":
-                tipo_magizoologo = mzg.MagizoologoHibrido
-            if tipo_criatura.lower() == "augurey":
-                tipo_criatura = ctr.Augurey
-            elif tipo_criatura.lower() == "erkling":
-                tipo_criatura = ctr.Erkling
-            elif tipo_criatura.lower() == "niffler":
-                tipo_criatura = ctr.Niffler
+            tipo_magizoologo = pc.retornar_clase_magizoologo(tipo_magizoologo)
+            tipo_criatura = pc.retornar_clase_criatura(tipo_criatura)
             nueva_criatura = tipo_criatura(nombre_criatura)
             self.lista_criaturas.append(nueva_criatura)
             self._magizoologo_actual = tipo_magizoologo(nombre_magizoologo,
