@@ -12,6 +12,7 @@ Depende de:
 -----------
     parametros
 """
+
 from abc import ABC
 import parametros as PMT
 

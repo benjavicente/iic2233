@@ -1,5 +1,11 @@
 # La idea del menú
 
+**Nota**: Todo esto se encuentra desactualizado.
+
+Todas las funciones creadas para el manejo de los menus se encuentran modificadas y documentadas en el archivo [`procesos.py`](../procesos.py). Además, funciones como proceso_multipaso fueron agregadas.
+
+Mantengo este archivo por si no se entiende como realize los menús, pero como no es pedido los voy a eliminar en la entrega ¯\\\_(ツ)_/¯.
+
 ## Antecedentes
 
 En la tarea anterior, realize un sistema de menus por funciones, en donde cada función se encargaba independientemente de imprimir y administrar las elecciones del usuario. Este tenia la siguiente estructura:

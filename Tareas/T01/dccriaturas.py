@@ -11,11 +11,13 @@ Contiene las Clases:
 Depende de:
 -----------
     parametros
+    alimentos
 """
 
 from abc import ABC, abstractmethod
 import random
 import parametros as PMT
+import alimentos as alm
 
 # TODO:
 # Revisar parámetros
@@ -153,7 +155,7 @@ class DCCriaturas(ABC):
         if dias_sin_comer is None:
             dias_sin_comer = "0"
         # Transformación de valores
-        self.vida_actual = int(vida_actual)
+        self.__vida_actual = int(vida_actual)
         self.escapado = escapado == "True"
         self.enferma = enferma == "True"
         self.nivel_hambre = str(nivel_hambre)
@@ -187,16 +189,43 @@ class DCCriaturas(ABC):
                 f"nivel hambre={self.nivel_hambre}",
                 ])
 
-    def alimentarse(self, magizoologo):
+    @property
+    def vida_actual(self):
+        return self.__vida_actual
+
+    @vida_actual.setter
+    def vida_actual(self, value):
+        if value > self.vida_max:
+            self.__vida_actual = self.vida_max
+        elif value < 1:
+            self.__vida_actual = 1
+        else:
+            self.__vida_actual = value
+
+    def alimentarse(self, alimento, magizoologo):
         """
         Magizoólogo alimenta a la criatura.
         """
+        # Inicio ataque
         valor = (PMT.ALIMENTARSE_EFECTO_HAMBRE[self.nivel_hambre]
                  + PMT.ALIMENTARSE_EFECTO_AGRESIVIDAD[self.agresividad])
         probabilidad_atacar = min(1, valor/100)
         if probabilidad_atacar >= random.random():
             daño = max(0, magizoologo.nivel_magico - self.nivel_magico)
             magizoologo.energia_actual -= daño
+        # Inicio propiedades alimentos
+        if type(alimento) is alm.TartaMaleza:
+            if type(self) is Niffler:
+                if 0.15 > random.random():
+                    self.agresividad = "inofensiva"
+        elif type(alimento) is alm.HigadoDragon:
+            self.enferma = False
+        elif type(alimento) is alm.BunueloGusarajo:
+            if 0.35 > random.random():
+                print("La criatura ha rechazado el alimento!")
+                return False
+        self.vida_actual += alimento.pnt_vida
+        return True
 
     def escaparse(self, resp_magizoologo):
         """

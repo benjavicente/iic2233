@@ -2,97 +2,59 @@
 
 Mezcla de "Resumen" del enunciado y notas.
 
-- [ ] Falta añadir nuevos métodos y atributos al diagrama de clases (la estructura está bien)
+- [X] Falta añadir nuevos métodos y atributos al diagrama de clases (la estructura está bien)
 - [X] Ver los parámetros
-- [ ] Ver como guardar y cargar las los datos de las clases, y como utilizar **valores predeterminados**
+- [X] Ver como guardar y cargar las los datos de las clases, y como utilizar **valores predeterminados**
 - [X] Crear un esquema para los menús
 - [ ] Hacer [README](../README.md)
-- [ ] Crear los procesos en [ZoologicoMagico](../ZoologicoMagico.py)
-- [ ] Completar DCC
+- [X] Crear los procesos en [ZoologicoMagico](../ZoologicoMagico.py)
+- [X] Completar DCC
 - [ ] Completar DCCriaturas
 - [ ] Ver los nombres de los archivos, variables y métodos
+- [ ] Testear
 
 **Notas generales**:
 Cambie el nombre de _puntos de salud_ a _puntos de vida_ para evitar la confusión con _estado de salud_.
-
-- [TODO](#todo)
-  - [Menús](#men%c3%bas)
-    - [General](#general)
-    - [Menús de inicio](#men%c3%bas-de-inicio)
-    - [Menú de acciones](#men%c3%ba-de-acciones)
-    - [Menú cuidar DCCriaturas](#men%c3%ba-cuidar-dccriaturas)
-    - [Menú DCC](#men%c3%ba-dcc)
-    - [Pasar al día siguiente](#pasar-al-d%c3%ada-siguiente)
-  - [Entidades](#entidades)
-    - [Magizoólogos](#magizo%c3%b3logos)
-      - [Atributos Magizoólogos](#atributos-magizo%c3%b3logos)
-      - [Métodos Magizoólogos](#m%c3%a9todos-magizo%c3%b3logos)
-      - [Magizoólogo Docencio](#magizo%c3%b3logo-docencio)
-      - [Magizoólogo Tareo](#magizo%c3%b3logo-tareo)
-      - [Magizoólogo Híbrido](#magizo%c3%b3logo-h%c3%adbrido)
-    - [DCCriaturas](#dccriaturas)
-      - [Atributos DCCriaturas](#atributos-dccriaturas)
-      - [Métodos DCCriaturas](#m%c3%a9todos-dccriaturas)
-      - [DCCriatura Augurey](#dccriatura-augurey)
-      - [DCCriatura Niffler](#dccriatura-niffler)
-      - [DCCriatura Erkling](#dccriatura-erkling)
-    - [Alimentos](#alimentos)
-      - [Atributo Alimentos](#atributo-alimentos)
-      - [Alimento Tarta de Maleza](#alimento-tarta-de-maleza)
-      - [Alimento Hígado de Dragon](#alimento-h%c3%adgado-de-dragon)
-      - [Alimento Buñuelo de Gusarajo](#alimento-bu%c3%b1uelo-de-gusarajo)
-    - [DCC](#dcc)
-      - [Métodos DCC](#m%c3%a9todos-dcc)
-  - [Archivos](#archivos)
-    - [`magizoologos.csv`](#magizoologoscsv)
-    - [`criaturas.csv`](#criaturascsv)
-    - [`parametros.py`](#parametrospy)
-  - [_Bonus_ del programa :tada:](#bonus-del-programa-tada)
-    - [Super Mágizoólogo DocencioTareaHíbrido (3 décimas)](#super-m%c3%a1gizo%c3%b3logo-docenciotareah%c3%adbrido-3-d%c3%a9cimas)
-    - [Peleas entre DCCriaturas (5 décimas)](#peleas-entre-dccriaturas-5-d%c3%a9cimas)
-  - [_Bonus_ de la entrega](#bonus-de-la-entrega)
-    - [Bonus avance (2 décimas)](#bonus-avance-2-d%c3%a9cimas)
-    - [Bonus README?](#bonus-readme)
 
 ## Menús
 
 ### General
 
-- [ ] A prueba de errores de usuario
-- [ ] Opción de volver atrás
-- [ ] Opción de salir
+- [X] A prueba de errores de usuario
+- [X] Opción de volver atrás
+- [X] Opción de salir
 
 ### Menús de inicio
 
 Menú de entrada al programa
 
-- [ ] Crear Magizoólogo
-  - [ ] Nombres alfanuméricos
-  - [ ] Nombres únicos (no importa las mayúsculas, Al == al)
-  - [ ] Al ser no válido:
-    - [ ] Se indica el error
-    - [ ] Volver a intentarlo
-    - [ ] Volver atrás
-    - [ ] Salir
-  - [ ] Al ser válido:
-    - [ ] Elegir entre Docencio, Tarea o Híbrido
-    - [ ] Desplegar una lista de especies de DCCriaturas
-    - [ ] Elegir DCCriatura con nombre único alfanumérico
-    - [ ] Volver a intentarlo
-    - [ ] Volver atrás
-    - [ ] Salir
-- [ ] Cargar Magizoólogo
-- [ ] Salir
+- [X] Crear Magizoólogo
+  - [X] Nombres alfanuméricos
+  - [X] Nombres únicos (no importa las mayúsculas, Al == al)
+  - [X] Al ser no válido:
+    - [X] Se indica el error
+    - [X] Volver a intentarlo
+    - [X] Volver atrás
+    - [X] Salir
+  - [X] Al ser válido:
+    - [X] Elegir entre Docencio, Tarea o Híbrido
+    - [X] Desplegar una lista de especies de DCCriaturas
+    - [X] Elegir DCCriatura con nombre único alfanumérico
+    - [X] Volver a intentarlo
+    - [X] Volver atrás
+    - [X] Salir
+- [X] Cargar Magizoólogo
+- [X] Salir
 
 ### Menú de acciones
 
 Menu principal, donde se accede iniciar sesión o crear un nuevo Magizoólogo
 
-- [ ] Menú cuidar DCCriaturas
-- [ ] Menú DCC
-- [ ] Pasar al día siguiente
-- [ ] Volver atrás
-- [ ] Salir
+- [X] Menú cuidar DCCriaturas
+- [X] Menú DCC
+- [X] Pasar al día siguiente
+- [X] Volver atrás
+- [X] Salir
 
 ### Menú cuidar DCCriaturas
 
@@ -109,23 +71,23 @@ Todas las acciones poseen un costo de energía. Si el usuario no posee energía 
   - [ ] Seleccionar criatura
 - [ ] Usar habilidad especial
   - [ ] Habilidad única
-- [ ] Volver atrás
-- [ ] Salir
+- [X] Volver atrás
+- [X] Salir
 
 ### Menú DCC
 
 Las acciones Adoptar y Comprar tienen un costo monetario. Si no se posee fondos, se avisa.
 
-- [ ] Adoptar DCCriaturas
-  - [ ] Opción de adoptar una criatura por Sickles.
-- [ ] Comprar alimentos
-  - [ ] Opción de comprar alimentos por Sickles.
-- [ ] Ver estado de Magizoólogo
-  - [ ] Imprime los datos del Magizoólogo
-- [ ] DCCriaturas
-  - [ ] Imprime los datos de las DCCriaturas
-- [ ] Volver atrás
-- [ ] Salir
+- [X] Adoptar DCCriaturas
+  - [X] Opción de adoptar una criatura por Sickles.
+- [X] Comprar alimentos
+  - [X] Opción de comprar alimentos por Sickles.
+- [X] Ver estado de Magizoólogo
+  - [X] Imprime los datos del Magizoólogo
+- [X] DCCriaturas
+  - [X] Imprime los datos de las DCCriaturas
+- [X] Volver atrás
+- [X] Salir
 
 ### Pasar al día siguiente
 
@@ -153,22 +115,22 @@ Los datos de las entidades deben almacenarse en los archivos.
 
 #### Atributos Magizoólogos
 
-- [ ] **Nombre** `str`: nombre elegido y único.
-- [ ] **Sickles** `int`: inicialmente 500, no puede ser negativo.
-- [ ] **Criaturas** `list`: inicialmente una criatura elegida.
-- [ ] **Alimentos** `list`: inicialmente 1 alimento aleatorio.
-- [ ] **Licencia** `bool`: inicialmente True.
-- [ ] **Nivel mágico** `int`.
-- [ ] **Destreza** `int`.
-- [ ] **Energía total** `int`.
-- [ ] **Responsabilidad** `int`.
-- [ ] **Energía actual** `int`: Entre 0 y un valor máximo. Su valor inicial y máximo dependen del tipo de Magizoólogo.
-- [ ] **Nivel de aprobación** `int`: entre 0 y 100, si es menor que 60 se pierde la licencia.
+- [X] **Nombre** `str`: nombre elegido y único.
+- [X] **Sickles** `int`: inicialmente 500, no puede ser negativo.
+- [X] **Criaturas** `list`: inicialmente una criatura elegida.
+- [X] **Alimentos** `list`: inicialmente 1 alimento aleatorio.
+- [X] **Licencia** `bool`: inicialmente True.
+- [X] **Nivel mágico** `int`.
+- [X] **Destreza** `int`.
+- [X] **Energía total** `int`.
+- [X] **Responsabilidad** `int`.
+- [X] **Energía actual** `int`: Entre 0 y un valor máximo. Su valor inicial y máximo dependen del tipo de Magizoólogo.
+- [X] **Nivel de aprobación** `int`: entre 0 y 100, si es menor que 60 se pierde la licencia.
 
 #### Métodos Magizoólogos
 
-- [ ] **Adoptar DCCriaturas al DCC**: Se adopta una criatura si se posee licencia y dinero suficiente.
-- [ ] **Comprar alimentos al DCC**: Se compra alimentos si posee suficiente dinero.
+- [X] **Adoptar DCCriaturas al DCC**: Se adopta una criatura si se posee licencia y dinero suficiente.
+- [X] **Comprar alimentos al DCC**: Se compra alimentos si posee suficiente dinero.
 - [ ] **Alimentar DCCriatura**: Alimenta a una criatura si posee alimentos, la criatura puede atacar a su dueño, el costo energético es de 5 puntos.
 - [ ] **Recuperar DCCriatura**: El costo energético es de 5 puntos, la probabilidad de éxito es:
 
@@ -216,16 +178,16 @@ $$
 
 #### Atributos DCCriaturas
 
-- [ ] **Nombre** `str`: identificador de cada criatura.
-- [ ] **Nivel mágico** `int`.
-- [ ] **Puntos de salud total** `int`.
-- [ ] **Puntos de salud actual** `int`: mínimo 1.
-- [ ] **Probabilidad de escape** `float`: entre 0 y 1.
-- [ ] **Probabilidad de enfermarse** `float`: entre 0 y 1.
-- [ ] **Estado de salud** `bool`: si es false, pierde 7 de salud.
-- [ ] **Nivel de hambre** `str`: es `"satisfecha"` o `"hambrienta"`, si esta hambrienta, pierde 3 de salud.
-- [ ] **Días sin comer** `int`.
-- [ ] **Nivel de agresividad** `str`: es `"inofensiva"`, `"arisca"`  o `"peligrosa"`
+- [X] **Nombre** `str`: identificador de cada criatura.
+- [X] **Nivel mágico** `int`.
+- [X] **Puntos de salud total** `int`.
+- [X] **Puntos de salud actual** `int`: mínimo 1.
+- [X] **Probabilidad de escape** `float`: entre 0 y 1.
+- [X] **Probabilidad de enfermarse** `float`: entre 0 y 1.
+- [X] **Estado de salud** `bool`: si es false, pierde 7 de salud.
+- [X] **Nivel de hambre** `str`: es `"satisfecha"` o `"hambrienta"`, si esta hambrienta, pierde 3 de salud.
+- [X] **Días sin comer** `int`.
+- [X] **Nivel de agresividad** `str`: es `"inofensiva"`, `"arisca"`  o `"peligrosa"`
 
 #### Métodos DCCriaturas
 
@@ -362,7 +324,7 @@ Si no se posee dinero, no se cobrará la multa pero el Magizoólogo perderá la 
   - Hígado de Dragón: 15 Sickles
   - Buñuelos de Gusarajo: Sickles
 
-- [ ] **Mostrar estado de Magizoólogo y DCCriaturas**: se muestra en la pantalla todos los valores de atributos relevantes del usuario Magizoólogo. Debe mostrar:
+- [X] **Mostrar estado de Magizoólogo y DCCriaturas**: se muestra en la pantalla todos los valores de atributos relevantes del usuario Magizoólogo. Debe mostrar:
   - Nombre
   - Sickles
   - Energía actual

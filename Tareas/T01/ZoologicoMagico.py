@@ -23,7 +23,6 @@ Depende de:
 # Completar pasar día
 # Completar pelea
 
-from os import system
 import operator as op
 
 import parametros as PMT

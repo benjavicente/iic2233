@@ -17,9 +17,27 @@ Depende de:
 
 from abc import ABC, abstractmethod
 import random
+
 import parametros as PMT
 import alimentos as alm
 import procesos as pc
+
+
+def retornar_clase_magizoologo(tipo_magizoologo: str):
+    """
+    Retorna la clase de el magizoólogo
+    """
+    tipo_magizoologo = tipo_magizoologo.lower()
+    for a, b in zip("áéíúóñ", "aeioun"):
+        tipo_magizoologo = tipo_magizoologo.replace(a, b)
+    tipos = {
+        "docencio": MagizoologoDocencio,
+        "tareo": MagizoologoTareo,
+        "hibrido": MagizoologoHibrido,
+        "super": MagizoologoSuper,
+    }
+    if tipo_magizoologo in tipos:
+        return tipos[tipo_magizoologo]
 
 
 class Magizoologo(ABC):
@@ -169,7 +187,7 @@ class Magizoologo(ABC):
     @energia_actual.setter
     def energia_actual(self, value):
         if value > self.energia_max:
-            self.__energia_actual = value
+            self.__energia_actual = self.energia_max
         elif value < 0:
             self.__energia_actual = 0
         else:
@@ -221,6 +239,9 @@ class Magizoologo(ABC):
         if not self.alimentos:
             print("No tienes alimentos!")
             return False
+        if self.energia_actual < 5:
+            print("No suficiente tienes energía")
+            return False
         while True:
             print("Elige una criatura que quieres alimentar")
             criatura = input("--> ").strip()
@@ -231,14 +252,16 @@ class Magizoologo(ABC):
                     return False
             while True:
                 print("Elige un alimento")
-                alimento = input("--> ").strip()
-                for a in self.alimentos:
-                    if str(a) == alimento:
+                alimento_elegido = input("--> ").strip()
+                for alimento in self.alimentos:
+                    if str(alimento) == alimento_elegido:
                         # Alimenar
                         c = self.criaturas[self.criaturas.index(criatura)]
-                        c.alimentarse(self, a)
+                        c.alimentarse(alimento, self)
+                        self.alimentos.remove(alimento)
+                        # Se dirige al método en la clase DCCriatura
                         return True
-                if not pc.volver_a_intentarlo(alimento, "Posees ese alimento"):
+                if not pc.volver_a_intentarlo(alimento_elegido, "Posees el alimento"):
                     return False
 
     @abstractmethod
@@ -247,7 +270,10 @@ class Magizoologo(ABC):
         Cuando un Magizoólogo intenta recuperar una de sus DCCriaturas.
         El coste energético de intentar recuperar una criatura es de 10 puntos.
         """
+        if self.energia_actual < 10:
+            print("No suficiente tienes energía")
         # FORMULA EN TODO
+
         pass
 
     def sanar_dccriatura(self):
@@ -255,6 +281,8 @@ class Magizoologo(ABC):
         Cuando un Magizoólogo intenta sanar a alguna de sus DCCriaturas.
         Su coste energético es de 8 puntos.
         """
+        if self.energia_actual < 8:
+            print("No suficiente tienes energía")
         # FORMULA EN TODO
         pass
 

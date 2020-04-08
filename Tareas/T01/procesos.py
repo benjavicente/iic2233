@@ -10,15 +10,9 @@ Contiene las funciones:
 Depende de:
 -----------
     parametros
-    dccriaturas
-    magizoologos
-    alimentos
 """
 
 import parametros as PMT
-import dccriaturas
-import magizoologos
-import alimentos
 
 
 def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
@@ -98,7 +92,7 @@ def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
                         fin_prc()
 
 
-def volver_a_intentarlo(valor_invalido: str, *razones_invalido: object) -> bool:
+def volver_a_intentarlo(valor_invalido: str, *razones_invalido):
     """
     ==========================
     Submenú de Proceso Fallido
@@ -182,5 +176,3 @@ def proceso_multipaso(*iterable):
             seguir = proceso_multipaso(*iterable[1:])
             if seguir:
                 return [elegida] + seguir
-
-
