@@ -19,6 +19,7 @@ from abc import ABC, abstractmethod
 import random
 import parametros as PMT
 import alimentos as alm
+import procesos as pc
 
 
 class Magizoologo(ABC):
@@ -148,7 +149,7 @@ class Magizoologo(ABC):
         # -------------------- #
         # Valores dependientes #
         # -------------------- #
-        self.energia_actual = energia_max
+        self.__energia_actual = energia_max
 
     def __str__(self):
         return self.nombre
@@ -162,6 +163,19 @@ class Magizoologo(ABC):
         return f"{type(self).__name__} {self.nombre}: Sicklets={self.sickles}"
 
     @property
+    def energia_actual(self):
+        return self.__energia_actual
+
+    @energia_actual.setter
+    def energia_actual(self, value):
+        if value > self.energia_max:
+            self.__energia_actual = value
+        elif value < 0:
+            self.__energia_actual = 0
+        else:
+            self.__energia_actual = value
+
+    @property
     def nivel_aprobacion(self):
         return self.__nivel_aprobacion
 
@@ -172,10 +186,10 @@ class Magizoologo(ABC):
             pass  # Hacer Super Magizoólogo
         elif value < 0:
             self.__nivel_aprobacion = 0
-        if (not self.licencia) and value >= 60:
-            self.licencia = True
-        elif self.licencia and value < 60:
+        if self.__nivel_aprobacion < PMT.DCC_APROBACION:
             self.licencia = False
+        else:
+            self.licencia = True
 
     @property
     def sickles(self):
@@ -183,36 +197,18 @@ class Magizoologo(ABC):
 
     @sickles.setter
     def sickles(self, value):
-        if value >= 0:
+        if value <= 0:
             self.__sickles = 0
         else:
             self.__sickles = value
 
-    def adoptar_dccriatura(self, criatura=None):
-        if criatura:
-            # Ya eligió una criatura
-            self.criaturas.append(criatura)
-        else:
-            # Tiene que elegir una criatura
-            if not self.licencia:
-                print("No puedes adoptar, no tienes licencia")
-                return
-            # TODO
-            # dcc.vender_criarura()
-            """
-            El Magizoólogo puede adoptar nuevas DCCriaturas al DCC,
-            solo si posee actualmente su licencia. Además, esta acción está
-            limitada por la capacidad monetaria del usuario que queda
-            sujeta al precio de cada criatura.
-            """
+    def adoptar_dccriatura(self, criatura):
+        # Método llamado en dcc.vernder_criaturas
+        self.criaturas.append(criatura)
 
-    def comprar_alimentos(self):
-        """
-        El Magizoólogo puede comprar alimentos al DCC.
-        Esta acción solo está limitada por la capacidad
-        monetaria del usuario que la ja el precio del alimento.
-        """
-        pass
+    def comprar_alimentos(self, alimento):
+        # Método llamado en dcc.vernder_alimentos
+        self.alimentos.append(alimento)
 
     @abstractmethod
     def alimentar_dccriatura(self):
@@ -222,7 +218,28 @@ class Magizoologo(ABC):
         En respuesta a esto, la DCCriatura puede atacar a su dueño.
         El costo energético de alimentar es de 5 puntos.
         """
-        pass
+        if not self.alimentos:
+            print("No tienes alimentos!")
+            return False
+        while True:
+            print("Elige una criatura que quieres alimentar")
+            criatura = input("--> ").strip()
+            if criatura not in self.criaturas:
+                if pc.volver_a_intentarlo(criatura, "Posees esa criatura"):
+                    continue
+                else:
+                    return False
+            while True:
+                print("Elige un alimento")
+                alimento = input("--> ").strip()
+                for a in self.alimentos:
+                    if str(a) == alimento:
+                        # Alimenar
+                        c = self.criaturas[self.criaturas.index(criatura)]
+                        c.alimentarse(self, a)
+                        return True
+                if not pc.volver_a_intentarlo(alimento, "Posees ese alimento"):
+                    return False
 
     @abstractmethod
     def recuperar_dccriatura(self):
