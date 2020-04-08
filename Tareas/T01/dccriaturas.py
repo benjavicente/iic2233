@@ -23,6 +23,22 @@ import parametros as PMT
 # Completar característica única
 
 
+def retornar_clase_criatura(tipo_criatura: str):
+    """
+    Retorna la clase de la criatura
+    """
+    tipo_criatura = tipo_criatura.lower()
+    for a, b in zip("áéíúóñ", "aeioun"):
+        tipo_criatura = tipo_criatura.replace(a, b)
+    tipos = {
+        "augurey": Augurey,
+        "erkling": Erkling,
+        "niffler": Niffler,
+    }
+    if tipo_criatura in tipos:
+        return tipos[tipo_criatura]
+
+
 class DCCriaturas(ABC):
     """
     ===========

@@ -15,6 +15,23 @@ Depende de:
 from abc import ABC
 import parametros as PMT
 
+
+def retornar_clase_alimento(tipo_alimento: str):
+    """
+    Retorna la clase de el alimento
+    """
+    tipo_alimento = tipo_alimento.lower()
+    for a, b in zip("áéíóúñ", "aeioun"):
+        tipo_alimento = tipo_alimento.replace(a, b)
+    tipos = {
+        "tarta de maleza": TartaMaleza,
+        "higado de dragon": HigadoDragon,
+        "bunuelo de gusarajo": BunueloGusarajo,
+    }
+    if tipo_alimento in tipos:
+        return tipos[tipo_alimento]
+
+
 class Alimentos(ABC):
     """
     Son utilizados para mantener a las criaturas en buen estado

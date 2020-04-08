@@ -20,6 +20,7 @@ import dccriaturas
 import magizoologos
 import alimentos
 
+
 def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
     """
     ==========
@@ -183,50 +184,3 @@ def proceso_multipaso(*iterable):
                 return [elegida] + seguir
 
 
-def retornar_clase_criatura(tipo_criatura: str):
-    """
-    Retorna la clase de la criatura
-    """
-    tipo_criatura = tipo_criatura.lower()
-    for a, b in zip("áéíúóñ", "aeioun"):
-        tipo_criatura = tipo_criatura.replace(a, b)
-    tipos = {
-        "augurey": dccriaturas.Augurey,
-        "erkling": dccriaturas.Erkling,
-        "niffler": dccriaturas.Niffler,
-    }
-    if tipo_criatura in tipos:
-        return tipos[tipo_criatura]
-
-
-def retornar_clase_magizoologo(tipo_magizoologo: str):
-    """
-    Retorna la clase de el magizoólogo
-    """
-    tipo_magizoologo = tipo_magizoologo.lower()
-    for a, b in zip("áéíúóñ", "aeioun"):
-        tipo_magizoologo = tipo_magizoologo.replace(a, b)
-    tipos = {
-        "docencio": magizoologos.MagizoologoDocencio,
-        "tareo": magizoologos.MagizoologoTareo,
-        "hibrido": magizoologos.MagizoologoHibrido,
-        "super": magizoologos.MagizoologoSuper,
-    }
-    if tipo_magizoologo in tipos:
-        return tipos[tipo_magizoologo]
-
-
-def retornar_clase_alimento(tipo_alimento: str):
-    """
-    Retorna la clase de el alimento
-    """
-    tipo_alimento = tipo_alimento.lower()
-    for a, b in zip("áéíúóñ", "aeioun"):
-        tipo_alimento = tipo_alimento.replace(a, b)
-    tipos = {
-        "tarta de maleza": alimentos.TartaMaleza,
-        "higado de dragon": alimentos.HigadoDragon,
-        "bunuelo de gusarajo": alimentos.BunueloGusarajo,
-    }
-    if tipo_alimento in tipos:
-        return tipos[tipo_alimento]

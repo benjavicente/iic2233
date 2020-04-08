@@ -9,6 +9,8 @@ Depende de:
 -----------
     parametros
     procesos
+    alimentos
+    dccriaturas
 """
 
 # TODO:
@@ -23,6 +25,8 @@ import random
 import parametros as PMT
 from operator import attrgetter
 import procesos as pc
+import alimentos as ams
+import dccriaturas as ctr
 
 
 class DCC:
@@ -112,7 +116,7 @@ class DCC:
                 print("Genial! Cual será el nombre de tu criatura?")
                 nombre = input("-->").strip()
                 if nombre not in lista_criaturas:
-                    c = pc.retornar_clase_criatura(criatura)
+                    c = ctr.retornar_clase_criatura(criatura)
                     magizoologo.adoptar_dccriatura(c(nombre))
                     return True
                 else:
@@ -135,8 +139,8 @@ class DCC:
                     continue
                 else:
                     break
-            pc.retornar_clase_alimento(alimento)
-            magizoologo.comprar_alimentos(alimento)
+            clase_alimento = ams.retornar_clase_alimento(alimento)
+            magizoologo.comprar_alimentos(clase_alimento())
             return True
 
     def mostrar_estado(self, magizoologo):

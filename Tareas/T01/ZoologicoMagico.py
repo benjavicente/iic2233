@@ -137,11 +137,11 @@ class ZoologicoMagico:
             parametros_magizoologo = {key: value for key, value
                                       in zip(PMT.FORMATO_MAGIZOOLOGOS, fila_magizoologo)}
             # Se define el tipo
-            clase_magizoologo = pc.retornar_clase_magizoologo(parametros_magizoologo["tipo"])
+            clase_magizoologo = mzg.retornar_clase_magizoologo(parametros_magizoologo["tipo"])
             # Se agregan sus alimentos
             lista_alimentos_magizoologo = list()
             for nombre_alimento in parametros_magizoologo["alimentos"].split(";"):
-                tipo_alimento = pc.retornar_clase_alimento(nombre_alimento)
+                tipo_alimento = ams.retornar_clase_alimento(nombre_alimento)
                 lista_alimentos_magizoologo.append(tipo_alimento())
             parametros_magizoologo["alimentos"] = lista_alimentos_magizoologo
             # Se agregan sus criaturas
@@ -194,13 +194,14 @@ class ZoologicoMagico:
         )
         if valores:
             nombre_magizoologo, tipo_magizoologo, tipo_criatura, nombre_criatura = valores
-            tipo_magizoologo = pc.retornar_clase_magizoologo(tipo_magizoologo)
-            tipo_criatura = pc.retornar_clase_criatura(tipo_criatura)
+            tipo_magizoologo = mzg.retornar_clase_magizoologo(tipo_magizoologo)
+            tipo_criatura = ctr.retornar_clase_criatura(tipo_criatura)
             nueva_criatura = tipo_criatura(nombre_criatura)
             self.lista_criaturas.append(nueva_criatura)
             self._magizoologo_actual = tipo_magizoologo(nombre_magizoologo,
                                                         criaturas=[nueva_criatura])
             self.lista_magizoologos.append(self._magizoologo_actual)
+            print("Magizoólogo creado!")
             return True
         return False
 
@@ -213,12 +214,30 @@ class ZoologicoMagico:
         if nombre:
             index = self.lista_magizoologos.index(*nombre)
             self._magizoologo_actual = self.lista_magizoologos[index]
+            print("Accediendo...!")
             return True
         return False
 
-    def __pasar_de_dia(self, _dcc):
-        # Propio + DCC
-        pass
+    def __pasar_de_dia(self):
+        print("Has pasado al día siguiente!")
+        # Criaturas enfermadas
+        for criaturas in self._magizoologo_actual.criaturas:
+            pass
+        # Criaturas que se escaparon
+        for criaturas in self._magizoologo_actual.criaturas:
+            pass
+        # Chequeo de salud
+        for criaturas in self._magizoologo_actual.criaturas:
+            pass
+        # Chequeo de hambre
+        for criaturas in self._magizoologo_actual.criaturas:
+            pass
+        # Nivel de aprobación
+        self._dcc.calcular_aprobación(self._magizoologo_actual)
+        # Pagos
+        self._dcc.pagar_magizoologo(self._magizoologo_actual)
+        # Multas
+        self._dcc.fiscalizar_magizoologo(self._magizoologo_actual)
 
     def __alimentar_criatura(self):
         self._magizoologo_actual.alimentar_dccriatura()
@@ -237,7 +256,7 @@ class ZoologicoMagico:
         pass
 
     def __adoptar_criatura(self):
-        self._dcc.vernder_criaturas(self._magizoologo_actual)
+        self._dcc.vernder_criaturas(self._magizoologo_actual, self.lista_criaturas)
 
     def __comprar_alimentos(self):
         self._dcc.vernder_alimentos(self._magizoologo_actual)
