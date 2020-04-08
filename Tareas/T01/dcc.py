@@ -8,17 +8,21 @@ Contiene la clase:
 Depende de:
 -----------
     parametros
+    procesos
 """
+
 # TODO:
-# Completar calcular aprobación
-# Completar fiscalizar magizoólogo
-# Completar vender criaturas
-# Completar vender alimentos
-# Completar pagar magizoólogo
+# Testear
+
+# IMPORTANTE:
+# Puede ser que me convenga unir la clase DCC con Magizoológico,
+# ya que atributos de la clase Magizoológico son esenciales
+# en los métodos de DCC
 
 import random
 import parametros as PMT
 from operator import attrgetter
+import procesos as pc
 
 
 class DCC:
@@ -29,54 +33,111 @@ class DCC:
     nivel de aprobación de los Magizoólogo, pudiendo quitarles
     su licencia.
     """
-
-    """TODO:
-    Tengo la duda es si se necesita crear un objeto DCC
-    Talvez se pueda usar la clase DCC directamente?
-    Por ejemplo:
-    ````
-    DCC.calcular_aprobación(magizoologo)
-    ```
-    y no tener que usar
-    ```
-    dcc = DCC()
-    dcc.calcular_aprobación(magizoologo)
-    ```
-    """
     def calcular_aprobación(self, magizoologo):
         """
         Calcula la aprobación del Magizoólogo al finalizar el día.
         """
-
-        pass
+        sanas = 0
+        retenidas = 0
+        total = 0
+        for criaturas in magizoologo:
+            sanas += not criaturas.enferma
+            retenidas += not criaturas.escapado
+            total += 1
+        aprobacion = min(100, max(0, (sanas + retenidas)//(2 * total) * 100))
+        magizoologo.nivel_aprobacion = aprobacion
+        return aprobacion
 
     def pagar_magizoologo(self, magizoologo):
         """
         Paga Sicklets al Magizoólogo al finalizar el día.
         """
-        pass
+        pago = (PMT.DCC_PESO_PAGO["aprobacion"] * magizoologo.nivel_aprobacion
+                + PMT.DCC_PESO_PAGO["alimento"] * len(magizoologo.alimentos)
+                + PMT.DCC_PESO_PAGO["magico"] * magizoologo.nivel_magico)
+        magizoologo.sickles += pago
+        return pago
 
     def fiscalizar_magizoologo(self, magizoologo):
         """
         Fiscaliza al Magizoólogo al finalizar el día, multandolo si es
         necesario. Puede que al DCC se le olvide multar en algunos casos.
         """
-        pass
+        multas = {
+            "escapes": 0,
+            "enfermedad": 0,
+            "vida crítica": 0,
+        }
+        for criatura in magizoologo.criaturas:
+            if criatura.escapado:
+                multas["escapes"] +=\
+                    PMT.DCC_FISCALIZADO["escapes"][0] >= random.random()
+            if criatura.enferma:
+                multas["enfermedad"] +=\
+                    PMT.DCC_FISCALIZADO["enfermedad"][0] >= random.random()
+            if criatura.vida_actual == 1:
+                multas["salud crítica"] +=\
+                    PMT.DCC_FISCALIZADO["salud crítica"][0] >= random.random()
+        print("Estas multado por:")
+        for nombre, multas in multas.items():
+            print(f" - {multas} casos de {nombre}")
+        for nombre, multas in multas.items():
+            for n in range(multas):
+                if magizoologo.sickles < PMT.DCC_FISCALIZADO[nombre][1]:
+                    print("No puedes pagar las multas, te quitaron la licencia!")
+                    magizoologo.licencia = False
+                    return False
+                magizoologo.sickles -= PMT.DCC_FISCALIZADO[nombre][1]
+        return True
 
-    def vernder_criaturas(self, magizoologo):
-        """
-        Un Magizoólogo puede adquirir nuevas DCCriaturas a través
-        del DCC siempre y cuando este posea su licencia. El costo
-        de cada criatura es de 75 Sickles para un Augurey, 100
-        Sickles para un Nier y 125 Sickles para un Erkling.
-        """
-        pass
+    def vernder_criaturas(self, magizoologo, lista_criaturas):
+        if not magizoologo.licencia:
+            print("No puedes adoptar, no tienes licencia")
+        while True:
+            print("Elige una criatura! Los costos son...")
+            criatura = input("-->").strip().lower()
+            if criatura in PMT.CRIATURAS_TIPOS:
+                if PMT.DCC_PRECIO_CRIATURAS[criatura] <= magizoologo.sickles:
+                    razon = None
+                else:
+                    razon = "Contiene sickles suficientes"
+            else:
+                razon = "La criatura es válida"
+            if razon:
+                if pc.volver_a_intentarlo(criatura, razon):
+                    continue
+                else:
+                    break
+            while True:
+                print("Genial! Cual será el nombre de tu criatura?")
+                nombre = input("-->").strip()
+                if nombre not in lista_criaturas:
+                    c = pc.retornar_clase_criatura(criatura)
+                    magizoologo.adoptar_dccriatura(c(nombre))
+                    return True
+                else:
+                    if not pc.volver_a_intentarlo(nombre, "Nombre único"):
+                        break
 
     def vernder_alimentos(self, magizoologo):
-        """
-        Vende alimentos al Magizoólogo.
-        """
-        pass
+        while True:
+            print("Elige un alimento...")
+            alimento = input("-->").strip().lower()
+            if alimento in PMT.ALIMENTOS_TIPOS:
+                if PMT.DCC_PRECIO_ALIMENTOS[alimento] <= magizoologo.sickles:
+                    razon = None
+                else:
+                    razon = "Contiene sickles suficientes"
+            else:
+                razon = "El alimento es valido"
+            if razon:
+                if pc.volver_a_intentarlo(alimento, razon):
+                    continue
+                else:
+                    break
+            pc.retornar_clase_alimento(alimento)
+            magizoologo.comprar_alimentos(alimento)
+            return True
 
     def mostrar_estado(self, magizoologo):
         """
