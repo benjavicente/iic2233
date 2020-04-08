@@ -53,6 +53,7 @@ MAGIZOOLOGOS_SICKLES_INICIALES = 500
 MAGIZOOLOGOS_LICENCIA_INICIAL = "True"
 MAGIZOOLOGOS_HABILIDADES = "True"
 MAGIZOOLOGOS_APROBACION_INICIAL = 60
+MAGIZOOLOGOS_TIPOS = {"docencio", "tareo", "hibrido"}
 
 # ---------------------- #
 #  Magizoólogos Docencio #
@@ -85,6 +86,8 @@ HIBRIDO_RANGO_RESPONSABILIDAD = (15, 25)
 ALIMENTARSE_EFECTO_HAMBRE = {"satisfecha": 0, "hambrienta": 15}
 ALIMENTARSE_EFECTO_AGRESIVIDAD = {"inofensiva": 0, "arica": 20, "peligrosa": 40}
 ESCAPARSE_EFECTO_HAMBRE = {"satisfecha": 0, "hambrienta": 20}
+CRIATURAS_TIPOS = {"augurrey", "niffler", "erkling"}
+
 
 # ---------------- #
 #  Augurey         #
@@ -117,3 +120,12 @@ ERKLING_PROP_ENFERMARSE = 0.3
 ERKLING_RANGO_VIDA_MAXIMA = (50, 60)
 ERKLING_TIEMPO_SATISFECHA = 2
 ERKLING_NIVEL_AGRESIVIDAD = "peligrosa"
+
+
+# ============================================ #
+# Parámetros relacionados con los alimentos    #
+# ============================================ #
+ALIMENTOS_TIPOS = {"tarta de maleza", "higado de dragón", "bunuelo de gusarajo"}
+ALIMENTOS_TARTA_MALEZA_PNT = 15
+ALIMENTOS_HIGADO_DRAGON_PNT = 10
+ALIMENTOS_BUNUELO_GUSARAJO = 5

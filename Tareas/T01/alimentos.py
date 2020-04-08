@@ -8,9 +8,12 @@ Contiene las Clases:
     TartaMaleza
     HigadoDragon
     BunueloGusarajo
+Depende de:
+-----------
+    parametros
 """
 from abc import ABC
-
+import parametros as PMT
 
 class Alimentos(ABC):
     """
@@ -38,7 +41,7 @@ class TartaMaleza(Alimentos):
     """
     def __init__(self):
         self._nombre = "Tarta de Maleza"
-        self.pnt_vida = 15
+        self.pnt_vida = PMT.ALIMENTOS_TARTA_MALEZA_PNT
 
 
 class HigadoDragon(Alimentos):
@@ -49,7 +52,7 @@ class HigadoDragon(Alimentos):
     """
     def __init__(self):
         self._nombre = "Hígado de Dragón"
-        self.pnt_vida = 10
+        self.pnt_vida = PMT.ALIMENTOS_HIGADO_DRAGON_PNT
 
 
 class BunueloGusarajo(Alimentos):
@@ -61,4 +64,4 @@ class BunueloGusarajo(Alimentos):
     """
     def __init__(self):
         self._nombre = "Buñuelo de Gusarajo"
-        self.pnt_vida = 5
+        self.pnt_vida = PMT.ALIMENTOS_BUNUELO_GUSARAJO

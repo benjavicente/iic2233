@@ -225,8 +225,8 @@ def retornar_clase_alimento(tipo_alimento: str):
         tipo_alimento = tipo_alimento.replace(a, b)
     tipos = {
         "tarta de maleza": alimentos.TartaMaleza,
-        "higado de dragón": alimentos.HigadoDragon,
-        "buñuelo de gusarajo": alimentos.BunueloGusarajo,
+        "higado de dragon": alimentos.HigadoDragon,
+        "bunuelo de gusarajo": alimentos.BunueloGusarajo,
     }
     if tipo_alimento in tipos:
         return tipos[tipo_alimento]
