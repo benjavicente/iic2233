@@ -37,6 +37,14 @@ FORMATO_MAGIZOOLOGOS = ("nombre", "tipo", "sickles", "criaturas",
 # ============================================ #
 UI_ANCHO = 20
 
+# ============================================ #
+# Parámetros relacionados con el DCC           #
+# ============================================ #
+DCC_PRECIO_CRIATURAS = {"augurrey": 75, "niffler": 100, "erkling": 125}
+DCC_PRECIO_ALIMENTOS = {"tarta de maleza": 10, "higado de dragon": 15, "buñuelo de gusarajo": 3}
+DCC_FISCALIZADO = {"escape": (50, 0.5), "enfermedad": (70, 0.7), "vida": (150, 1)}
+DCC_PESO_PAGO = {"aprobacion": 4, "alimento": 15, "magico": 3}
+DCC_APROBACION = 60
 
 # ============================================ #
 # Parámetros relacionados con los Magizoólogos #
@@ -98,6 +106,7 @@ NIFFLER_RANGO_VIDA_MAXIMA = (20, 30)
 NIFFLER_TIEMPO_SATISFECHA = 2
 NIFFLER_NIVEL_AGRESIVIDAD = "arisca"
 NIFFLER_RANGO_CLEPTOMANIA = (5, 10)
+NIFFLER_PESO_SICKLES_ROBADOS = 2
 
 # ---------------- #
 #  Erkling         #
