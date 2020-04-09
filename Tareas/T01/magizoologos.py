@@ -167,7 +167,7 @@ class Magizoologo(ABC):
         # -------------------- #
         # Valores dependientes #
         # -------------------- #
-        self.__energia_actual = energia_max
+        self.__energia_actual = self.energia_max
 
     def __str__(self):
         return self.nombre
@@ -178,7 +178,7 @@ class Magizoologo(ABC):
         return self.nombre == value
 
     def __repr__(self):
-        return f"{type(self).__name__} {self.nombre}: Sicklets={self.sickles}"
+        return f"{self.nombre} {id(self)}"
 
     @property
     def energia_actual(self):
@@ -204,9 +204,11 @@ class Magizoologo(ABC):
             pass  # Hacer Super Magizoólogo
         elif value < 0:
             self.__nivel_aprobacion = 0
-        if self.__nivel_aprobacion < PMT.DCC_APROBACION:
+        if self.__nivel_aprobacion < PMT.DCC_APROBACION and self.licencia:
+            print("Perdiste tu licencia :(")
             self.licencia = False
-        else:
+        elif self.__nivel_aprobacion >= PMT.DCC_APROBACION and not self.licencia:
+            print("Recuperaste tu licencia :)")
             self.licencia = True
 
     @property

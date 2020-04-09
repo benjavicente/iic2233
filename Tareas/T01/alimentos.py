@@ -5,7 +5,7 @@ Alimentos
 Contiene las Clases:
 --------------------
     Alimentos
-    TartaMaleza
+    TartaMelaza
     HigadoDragon
     BunueloGusarajo
 Depende de:
@@ -25,7 +25,7 @@ def retornar_clase_alimento(tipo_alimento: str):
     for a, b in zip("áéíóúñ", "aeioun"):
         tipo_alimento = tipo_alimento.replace(a, b)
     tipos = {
-        "tarta de maleza": TartaMaleza,
+        "tarta de melaza": TartaMelaza,
         "higado de dragon": HigadoDragon,
         "bunuelo de gusarajo": BunueloGusarajo,
     }
@@ -49,7 +49,7 @@ class Alimentos(ABC):
         return self._nombre
 
 
-class TartaMaleza(Alimentos):
+class TartaMelaza(Alimentos):
     """
     Alimento muy apetecido por los Magizoólogos para dárselos a las DCCriaturas,
     pues posee buenas propiedades respecto al resto de los alimentos.
@@ -58,7 +58,7 @@ class TartaMaleza(Alimentos):
       en que la agresividad pase de arisca a inofensiva de manera permanente
     """
     def __init__(self):
-        self._nombre = "Tarta de Maleza"
+        self._nombre = "Tarta de Melaza"
         self.pnt_vida = PMT.ALIMENTOS_TARTA_MALEZA_PNT
 
 

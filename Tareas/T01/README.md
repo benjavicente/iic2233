@@ -19,7 +19,6 @@
 
 Hay strings incompletos, por lo que en la consola existen menús pocos descriptivos.
 
-
 ## Ejecución :computer:
 
 El programa a ejecutar _(por ahora)_ es **`ZoologicoMagico.py`**
@@ -34,6 +33,9 @@ Los módulos `dcc`, `dccriaturas`, `magizoologos`, `alimentos` y `procesos` debe
 
 Asumo que se debe eliminar los caracteres de espacios en el input del usuario (uso siempre `input().strip()`).
 
+Asumo que las licencias se pagan por separado. Es decir, que las multas se van pagando hasta que el Magizoólogo no tenga Sickles o halla pagado todas las multas.
+
+Considero que la DCCriatura Augurey puede entregar un alimento a su dueño si esta se escapó.
 
 ## Diagrama de clases :bookmark_tabs:
 
@@ -113,7 +115,7 @@ Asumo que se debe eliminar los caracteres de espacios en el input del usuario (u
   - Menú DCC
     - [X] **2pts** El menú contiene las opciones mínimas pedidas.
   - Pasar al día siguiente
-    - [ ] **3pts** Visualiza los resumenes de todos los eventos del día que se mencionan en el enunciado.
+    - [ ] **3pts** Visualiza los resúmenes de todos los eventos del día que se mencionan en el enunciado.
   - Robustez
     - [X] **4pts** Todos los menús son a prueba de errores.
 
@@ -142,8 +144,9 @@ Asumo que se debe eliminar los caracteres de espacios en el input del usuario (u
   - `ABC`: Genera clases abstractas.
   - `abstractmethod`: Genera métodos abstractos.
 - **`random`**
-  - `random`: Obtiene un número entre 0 y 1.
-  - `randint`: Obtiene un número entero en un rango dado.
+  - `random`: Obtiene un número entre 0 y 1 al azar.
+  - `randint`: Obtiene un número entero en un rango dado  al azar.
+  - `choice`: Obtiene un elemento de un conjunto al azar.
 - **`operator`**
   - `attrgetter`: Obtiene atributos de los objetos.
 - **`os`**

@@ -35,13 +35,13 @@ FORMATO_MAGIZOOLOGOS = ("nombre", "tipo", "sickles", "criaturas",
 # ============================================ #
 # Parámetros relacionados con el UI            #
 # ============================================ #
-UI_ANCHO = 20
+UI_ANCHO = 30
 
 # ============================================ #
 # Parámetros relacionados con el DCC           #
 # ============================================ #
 DCC_PRECIO_CRIATURAS = {"augurrey": 75, "niffler": 100, "erkling": 125}
-DCC_PRECIO_ALIMENTOS = {"tarta de maleza": 10, "higado de dragón": 15, "buñuelo de gusarajo": 3}
+DCC_PRECIO_ALIMENTOS = {"tarta de melaza": 10, "higado de dragón": 15, "buñuelo de gusarajo": 3}
 DCC_FISCALIZADO = {"escapes": (50, 0.5), "enfermedad": (70, 0.7), "vida critica": (150, 1)}
 DCC_PESO_PAGO = {"aprobacion": 4, "alimento": 15, "magico": 3}
 DCC_APROBACION = 60
@@ -100,6 +100,8 @@ ALIMENTARSE_EFECTO_AGRESIVIDAD = {"inofensiva": 0, "arica": 20, "peligrosa": 40}
 ALIMENTARSE_MAXIMO_ATAQUE = 10
 ESCAPARSE_EFECTO_HAMBRE = {"satisfecha": 0, "hambrienta": 20}
 CRIATURAS_TIPOS = {"augurrey", "niffler", "erkling"}
+CRIATURAS_PENALISACION_VIDA_ENFERMEDAD = 7
+CRIATURAS_PENALISACION_VIDA_HAMBRIENTA = 3
 
 
 # ---------------- #
@@ -138,7 +140,7 @@ ERKLING_NIVEL_AGRESIVIDAD = "peligrosa"
 # ============================================ #
 # Parámetros relacionados con los alimentos    #
 # ============================================ #
-ALIMENTOS_TIPOS = {"tarta de maleza", "higado de dragón", "buñuelo de gusarajo"}
+ALIMENTOS_TIPOS = {"tarta de melaza", "higado de dragón", "buñuelo de gusarajo"}
 ALIMENTOS_TARTA_MALEZA_PNT = 15
 ALIMENTOS_TARTA_PROB_PACIFICAR_NIFFLER = 0.15
 ALIMENTOS_HIGADO_DRAGON_PNT = 10

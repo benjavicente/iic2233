@@ -61,6 +61,7 @@ def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
     menus_anteriores = list()
     while True:
         numero = -1
+        # Se imprimen las opciones
         print("\n" + f" {menu_actual} ".center(PMT.UI_ANCHO, "-"))
         for numero, opcion in enumerate(menus[menu_actual]):
             if type(opcion) is tuple:
@@ -69,18 +70,24 @@ def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
         if menus_anteriores:
             print(f"[{numero + 2}] - Volver al {menus_anteriores[-1]}")
         print("[0] - Salir\n")
+        # Se pide el input
         elegida = input("--> ").strip()
         if elegida == "0":
+            # Sale del loop
             return
         elif menus_anteriores and elegida == str(numero + 2):
+            # Vuelve al menú anterior
             menu_actual = menus_anteriores.pop()
         elif elegida.isdecimal() and 0 < int(elegida) < numero + 2:
+            # Realiza la acción
             elegida = int(elegida) - 1
             valor = menus[menu_actual][elegida]
             if type(valor) is str:
+                # Ir a menú
                 menus_anteriores.append(menu_actual)
                 menu_actual = valor
             elif type(valor) is tuple:
+                # Realizar acción
                 if inc_prc:
                     inc_prc()
                 out = valor[1]()
@@ -120,7 +127,7 @@ def volver_a_intentarlo(valor_invalido: str, *razones_invalido):
     while True:
         print(
             "[1] - Volver a intentarlo",
-            "[2] - Volver al menú",
+            "[2] - Volver atrás",
             "[0] - Salir",
             sep="\n"
         )

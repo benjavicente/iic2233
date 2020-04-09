@@ -41,31 +41,6 @@ class ZoologicoMagico:
 
     Encargado de los menús del programa y
     realizar los procesos pedidos por el usuario
-
-    Los métodos y atributos encargados
-    del funcionamiento del módulo son:
-      - _menus
-      - __anteriores
-      - _dcc
-      - _magizoologo_actual
-      - __init__()
-      - main_loop()
-      - _leer_archivos()
-      - _actualizar_archivos()
-
-    El resto de los métodos corresponden a los procesos
-    que el usuario puede realizar. Estos son:
-      - __crear_magizoologo()
-      - __cargar_magizoologo()
-      - __pasar_de_dia()
-      - __alimentar_criatura()
-      - __recuperar_criatura()
-      - __sanar_criatura()
-      - __habilidad_especial()
-      - __empezar_pelea()
-      - __adoptar_criatura()
-      - __comprar_alimentos()
-      - __ver_estado()
     """
     def __init__(self):
         self._menus = {
@@ -92,8 +67,14 @@ class ZoologicoMagico:
             ),
         }
         self._dcc = dcc.DCC()
-        self._magizoologo_actual = None
+        self._indice_magizoologo_actual = None
+        self.lista_criaturas = None
+        self.lista_magizoologos = None
         self._leer_archivos()
+
+    @property
+    def magizoologo_actual(self):
+        return self.lista_magizoologos[self._indice_magizoologo_actual]
 
     def main_loop(self):
         pc.loop_menus(self._menus, "Menú de Inicio",
@@ -152,21 +133,26 @@ class ZoologicoMagico:
             self.lista_magizoologos.append(clase_magizoologo(**parametros_magizoologo))
 
     def _actualizar_archivos(self):
-        with open(PMT.PATH_MAGIZOOLOGOS, "w", encoding="UTF-8") as archivo_magizoologos:
+        # Encontré esto en la documentación
+        # https://docs.python.org/3/reference/compound_stmts.html#with
+        with open(PMT.PATH_MAGIZOOLOGOS, "w", encoding="UTF-8") as archivo_magizoologos,\
+             open(PMT.PATH_CRIATURAS, "w", encoding="UTF-8") as archivo_criaturas:
             for magizoologo in self.lista_magizoologos:
+                # Atributos magizoólogo
                 extractor_atributos = op.attrgetter(*PMT.FORMATO_MAGIZOOLOGOS)
                 atributos_magizoologo = list(extractor_atributos(magizoologo))
                 for indice in range(len(atributos_magizoologo)):
+                    # Si es uha lista se unen los elementos con ";"
                     if type(atributos_magizoologo[indice]) is list:
                         atributos_magizoologo[indice] = \
                             ";".join([str(v) for v in atributos_magizoologo[indice]])
+                # Guarda los atributos del magizoólogo
                 print(*atributos_magizoologo, sep=",", file=archivo_magizoologos)
-
-        with open(PMT.PATH_CRIATURAS, "w", encoding="UTF-8") as archivo_criaturas:
-            for criatura in self.lista_criaturas:
-                extractor_atributos = op.attrgetter(*PMT.FORMATO_CRIATURAS)
-                atributos_criatura = list(extractor_atributos(criatura))
-                print(*atributos_criatura, sep=",", file=archivo_criaturas)
+                # Guarda sus criaturas en el archivo de criaturas
+                for criatura in magizoologo.criaturas:
+                    extractor_atributos = op.attrgetter(*PMT.FORMATO_CRIATURAS)
+                    atributos_criatura = list(extractor_atributos(criatura))
+                    print(*atributos_criatura, sep=",", file=archivo_criaturas)
 
     """
     Inicio de Métodos de Procesos
@@ -197,9 +183,9 @@ class ZoologicoMagico:
             tipo_criatura = ctr.retornar_clase_criatura(tipo_criatura)
             nueva_criatura = tipo_criatura(nombre_criatura)
             self.lista_criaturas.append(nueva_criatura)
-            self._magizoologo_actual = tipo_magizoologo(nombre_magizoologo,
-                                                        criaturas=[nueva_criatura])
-            self.lista_magizoologos.append(self._magizoologo_actual)
+            self.lista_magizoologos.append(tipo_magizoologo(nombre_magizoologo,
+                                                            criaturas=[nueva_criatura]))
+            self._indice_magizoologo_actual = len(self.lista_magizoologos) - 1
             print("Magizoólogo creado!")
             return True
         return False
@@ -211,57 +197,85 @@ class ZoologicoMagico:
                 ),),
         )
         if nombre:
-            index = self.lista_magizoologos.index(*nombre)
-            self._magizoologo_actual = self.lista_magizoologos[index]
+            self._indice_magizoologo_actual = self.lista_magizoologos.index(*nombre)
             print("Accediendo...!")
             return True
         return False
 
     def __pasar_de_dia(self):
-        print("Has pasado al día siguiente!")
-        # Criaturas enfermadas
-        for criaturas in self._magizoologo_actual.criaturas:
-            pass
-        # Criaturas que se escaparon
-        for criaturas in self._magizoologo_actual.criaturas:
-            pass
-        # Chequeo de salud
-        for criaturas in self._magizoologo_actual.criaturas:
-            pass
-        # Chequeo de hambre
-        for criaturas in self._magizoologo_actual.criaturas:
-            pass
+        print("*" * PMT.UI_ANCHO)
+        print(" Has pasado al día siguiente! ".center(PMT.UI_ANCHO, "*"))
+        print("*" * PMT.UI_ANCHO)
+        print("Resumen de los eventos de hoy...")
+        escapados = list()
+        enfermas = list()
+        for criatura in self.magizoologo_actual.criaturas:
+            # Habilidades especial
+            criatura.caracteristica_unica(self.magizoologo_actual)
+            # Perder salud por enfermedad
+            if criatura.enferma:
+                criatura.vida_actual -= PMT.CRIATURAS_PENALISACION_VIDA_ENFERMEDAD
+                print(f"{criatura} ha perdido salud por estar enferma! "
+                      f"Su salud actual es {criatura.vida_actual}")
+            # Perder salud por hambre
+            if criatura.nivel_hambre == "hambrienta":
+                criatura.vida_actual -= PMT.CRIATURAS_PENALISACION_VIDA_HAMBRIENTA
+                print(f"{criatura} ha perdido salud por estar hambrienta! "
+                      f"Su salud actual es {criatura.vida_actual}")
+            # Enfermarse
+            if criatura.enfermarse(self.magizoologo_actual.responsabilidad):
+                print(f"{criatura} se ha enfermado :(")
+            # Escaparse
+            if criatura.escaparse(self.magizoologo_actual.responsabilidad):
+                print(f"{criatura} se ha escapado!")
+            # Días sin comer, se actualiza el nivel de hambre en la property
+            criatura.dias_sin_comer += 1
+            # Listas de datos de enfermados y escapados
+            if criatura.enferma:
+                enfermas.append(str(criatura))
+            if criatura.escapado:
+                escapados.append(str(criatura))
+        if escapados:
+            print("Criatura{0} escapada{0}:".format("s" * (len(escapados) > 1)),
+                  ", ".join(escapados))
+        if enfermas:
+            print("Criatura{0} enferma{0}:".format("s" * (len(enfermas) > 1)),
+                  ", ".join(enfermas))
+        print("*" * PMT.UI_ANCHO)
+        print("El DCC...")
         # Nivel de aprobación
-        self._dcc.calcular_aprobación(self._magizoologo_actual)
+        self._dcc.calcular_aprobación(self.magizoologo_actual)
         # Pagos
-        self._dcc.pagar_magizoologo(self._magizoologo_actual)
+        self._dcc.pagar_magizoologo(self.magizoologo_actual)
         # Multas
-        self._dcc.fiscalizar_magizoologo(self._magizoologo_actual)
+        self._dcc.fiscalizar_magizoologo(self.magizoologo_actual)
+        # Al retornar true se actualiza el archivo
+        return True
 
     def __alimentar_criatura(self):
-        self._magizoologo_actual.alimentar_dccriatura()
+        self.magizoologo_actual.alimentar_dccriatura()
 
     def __recuperar_criatura(self):
-        self._magizoologo_actual.recuperar_dccriatura()
+        self.magizoologo_actual.recuperar_dccriatura()
 
     def __sanar_criatura(self):
-        self._magizoologo_actual.sanar_dccriatura()
+        self.magizoologo_actual.sanar_dccriatura()
 
     def __habilidad_especial(self):
-        self._magizoologo_actual.habilidad_especial()
+        self.magizoologo_actual.habilidad_especial()
 
     def __empezar_pelea(self):
         # Magizoólogo?
         pass
 
     def __adoptar_criatura(self):
-        self._dcc.vernder_criaturas(self._magizoologo_actual, self.lista_criaturas)
+        self._dcc.vernder_criaturas(self.magizoologo_actual, self.lista_criaturas)
 
     def __comprar_alimentos(self):
-        self._dcc.vernder_alimentos(self._magizoologo_actual)
+        self._dcc.vernder_alimentos(self.magizoologo_actual)
 
     def __ver_estado(self):
-        self._dcc.mostrar_estado(self._magizoologo_actual)
+        self._dcc.mostrar_estado(self.magizoologo_actual)
 
 
 if __name__ == "__main__":

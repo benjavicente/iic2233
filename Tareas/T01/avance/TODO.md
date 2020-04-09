@@ -267,7 +267,7 @@ Las criaturas más peligrosas de todas. Con un parecido a los elfos, suelen pare
 
 - [ ] **Efecto de salud** `int` cantidad de puntos que aumentará la salud de la DDCriatura al consumirla
 
-#### Alimento Tarta de Maleza
+#### Alimento Tarta de Melaza
 
 Alimento muy apetecido por los Magizoólogos para dárselos a las DCCriaturas, pues posee buenas propiedades respecto al resto de los alimentos.
 

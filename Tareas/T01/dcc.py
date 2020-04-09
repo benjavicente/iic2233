@@ -44,13 +44,14 @@ class DCC:
         sanas = 0
         retenidas = 0
         total = 0
-        for criaturas in magizoologo:
-            sanas += not criaturas.enferma
-            retenidas += not criaturas.escapado
+        for criaturas in magizoologo.criaturas:
+            sanas += criaturas.enferma
+            retenidas += criaturas.escapado
             total += 1
         aprobacion = min(100, max(0, (sanas + retenidas)//(2 * total) * 100))
+        print(f"Tu nuevo nivel de aprobación es: {aprobacion}")
         magizoologo.nivel_aprobacion = aprobacion
-        return aprobacion
+        return True
 
     def pagar_magizoologo(self, magizoologo):
         """
@@ -59,39 +60,46 @@ class DCC:
         pago = (PMT.DCC_PESO_PAGO["aprobacion"] * magizoologo.nivel_aprobacion
                 + PMT.DCC_PESO_PAGO["alimento"] * len(magizoologo.alimentos)
                 + PMT.DCC_PESO_PAGO["magico"] * magizoologo.nivel_magico)
-        magizoologo.sickles += pago
-        return pago
+        magizoologo.sickles += pago//1
+        return True
 
     def fiscalizar_magizoologo(self, magizoologo):
         """
         Fiscaliza al Magizoólogo al finalizar el día, multandolo si es
         necesario. Puede que al DCC se le olvide multar en algunos casos.
         """
-        multas = {
+        dict_multas = {
             "escapes": 0,
             "enfermedad": 0,
-            "vida crítica": 0,
+            "vida critica": 0,
         }
         for criatura in magizoologo.criaturas:
             if criatura.escapado:
-                multas["escapes"] +=\
-                    PMT.DCC_FISCALIZADO["escapes"][0] >= random.random()
+                dict_multas["escapes"] +=\
+                    PMT.DCC_FISCALIZADO["escapes"][1] >= random.random()
             if criatura.enferma:
-                multas["enfermedad"] +=\
-                    PMT.DCC_FISCALIZADO["enfermedad"][0] >= random.random()
+                dict_multas["enfermedad"] +=\
+                    PMT.DCC_FISCALIZADO["enfermedad"][1] >= random.random()
             if criatura.vida_actual == 1:
-                multas["salud crítica"] +=\
-                    PMT.DCC_FISCALIZADO["salud crítica"][0] >= random.random()
-        print("Estas multado por:")
-        for nombre, multas in multas.items():
-            print(f" - {multas} casos de {nombre}")
-        for nombre, multas in multas.items():
-            for n in range(multas):
-                if magizoologo.sickles < PMT.DCC_FISCALIZADO[nombre][1]:
-                    print("No puedes pagar las multas, te quitaron la licencia!")
-                    magizoologo.licencia = False
-                    return False
-                magizoologo.sickles -= PMT.DCC_FISCALIZADO[nombre][1]
+                dict_multas["vida critica"] +=\
+                    PMT.DCC_FISCALIZADO["vida critica"][1] >= random.random()
+        if sum(dict_multas.values()):
+            print("Estas multado por:")
+            # Mostrar multas
+            for nombre, multas in dict_multas.items():
+                if multas:
+                    print(f" - {multas} casos de {nombre}: "
+                          f"{PMT.DCC_FISCALIZADO[nombre][0]} Sickles cada una")
+            # Pagar multas
+            for nombre, multas in dict_multas.items():
+                for _ in range(multas):
+                    if magizoologo.sickles < PMT.DCC_FISCALIZADO[nombre][0]:
+                        print("No puedes pagar las multas, te quitaron la licencia!")
+                        magizoologo.licencia = False
+                        return False
+                    magizoologo.sickles -= PMT.DCC_FISCALIZADO[nombre][0]
+        else:
+            print("No recibiste ninguna multa!")
         return True
 
     def vernder_criaturas(self, magizoologo, lista_criaturas):
@@ -203,3 +211,4 @@ class DCC:
                 print(f"   - {datos[0]} {nombre}: +{datos[1]}hp")
         else:
             print(" - Sin alimentos")
+        return True
