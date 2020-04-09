@@ -188,8 +188,8 @@ class Magizoologo(ABC):
     def energia_actual(self, value):
         if value > self.energia_max:
             self.__energia_actual = self.energia_max
-        elif value < 0:
-            self.__energia_actual = 0
+        elif value < PMT.MAGIZOOLOGOS_ENERGIA_MINIMA:
+            self.__energia_actual = PMT.MAGIZOOLOGOS_ENERGIA_MINIMA
         else:
             self.__energia_actual = value
 
@@ -199,7 +199,7 @@ class Magizoologo(ABC):
 
     @nivel_aprobacion.setter
     def nivel_aprobacion(self, value):
-        if value >= 100:
+        if value > 100:
             self.__nivel_aprobacion = 100
             pass  # Hacer Super Magizoólogo
         elif value < 0:
@@ -239,14 +239,16 @@ class Magizoologo(ABC):
         if not self.alimentos:
             print("No tienes alimentos!")
             return False
-        if self.energia_actual < 5:
+        if self.energia_actual < PMT.MAGIZOOLOGOS_COSTO_ALIMENTAR:
             print("No suficiente tienes energía")
             return False
         while True:
             print("Elige una criatura que quieres alimentar")
-            criatura = input("--> ").strip()
-            if criatura not in self.criaturas:
-                if pc.volver_a_intentarlo(criatura, "Posees esa criatura"):
+            for criatura in self.criaturas:
+                print(f" - {criatura}: {criatura.nivel_hambre}")
+            nombre_criatura = input("--> ").strip()
+            if nombre_criatura not in self.criaturas:
+                if pc.volver_a_intentarlo(nombre_criatura, "Posees esa criatura"):
                     continue
                 else:
                     return False
@@ -255,12 +257,13 @@ class Magizoologo(ABC):
                 alimento_elegido = input("--> ").strip()
                 for alimento in self.alimentos:
                     if str(alimento) == alimento_elegido:
+                        ############################################
                         # Alimenar
-                        c = self.criaturas[self.criaturas.index(criatura)]
-                        c.alimentarse(alimento, self)
+                        c = self.criaturas[self.criaturas.index(nombre_criatura)]
                         self.alimentos.remove(alimento)
                         # Se dirige al método en la clase DCCriatura
-                        return True
+                        return c.alimentarse(alimento, self)
+                        ############################################
                 if not pc.volver_a_intentarlo(alimento_elegido, "Posees el alimento"):
                     return False
 
@@ -270,7 +273,7 @@ class Magizoologo(ABC):
         Cuando un Magizoólogo intenta recuperar una de sus DCCriaturas.
         El coste energético de intentar recuperar una criatura es de 10 puntos.
         """
-        if self.energia_actual < 10:
+        if self.energia_actual < PMT.MAGIZOOLOGOS_COSTO_RECUPERAR:
             print("No suficiente tienes energía")
         # FORMULA EN TODO
 
@@ -281,7 +284,7 @@ class Magizoologo(ABC):
         Cuando un Magizoólogo intenta sanar a alguna de sus DCCriaturas.
         Su coste energético es de 8 puntos.
         """
-        if self.energia_actual < 8:
+        if self.energia_actual < PMT.MAGIZOOLOGOS_COSTO_CURAR:
             print("No suficiente tienes energía")
         # FORMULA EN TODO
         pass
@@ -293,6 +296,7 @@ class Magizoologo(ABC):
         especialización. El costo energético de cualquiera
         de estas habilidades es de 15 puntos.
         """
+        # PMT.MAGIZOOLOGOS_COSTO_HABILIDAD
         pass
 
 
