@@ -257,10 +257,11 @@ class Magizoologo(ABC):
                 else:
                     return False
             while True:
-                print("Elige un alimento")
+                print("Elige un alimento! Asegurate de escribirlo bien!")
+                print(*set(map(lambda x: " - " + str(x), self.alimentos)), sep="\n")
                 alimento_elegido = input("--> ").strip()
                 for alimento in self.alimentos:
-                    if str(alimento) == alimento_elegido:
+                    if str(alimento) == alimento_elegidoalimento_elegido:
                         ############################################
                         # Alimenar
                         c = self.criaturas[self.criaturas.index(nombre_criatura)]
@@ -400,7 +401,7 @@ class MagizoologoTareo(Magizoologo):
 
     def alimentar_dccriatura(self):
         criatura_alimentada = super().alimentar_dccriatura()
-        if criatura_alimentada and PMT.TAREA_PASIVO_PROB_SANAR >= random.random():
+        if criatura_alimentada and PMT.TAREO_PASIVO_PROB_SANAR >= random.random():
             print("Habilidad pasiva: Has sanado toda su vida!")
             criatura_alimentada.vida_actual = criatura_alimentada.vida_max
 

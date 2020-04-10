@@ -37,6 +37,8 @@ Asumo que las licencias se pagan por separado. Es decir, que las multas se van p
 
 Considero que la DCCriatura Augurey puede entregar un alimento a su dueño si esta se escapó.
 
+Asumo que al ingresar un nombre para cargar un Magizoólogo, no se diferencia entre mayúsculas y minúsculas. Por ejemplo, cargar el usuario `lily416potter` se puede usar (por ejemplo) `lily416potter` y `Lily416Potter`, que corresponden al mismo usuario.
+
 ## Diagrama de clases :bookmark_tabs:
 
 ![Diagrama de Clases](diagrama_clases.png?raw=true "Diagrama de Clases")
@@ -89,11 +91,11 @@ Considero que la DCCriatura Augurey puede entregar un alimento a su dueño si es
     - [ ] **2pts** Se implementa correctamente la habilidad especial según el tipo de Magizoólogo.
     - [ ] **2pts** Se descuenta el costo de energía mágica correspondiente a las acciones alimentar, recuperar y sanar.
     - [X] **1pts** Se notifica en caso de no tener energía suficiente para realizar la acción.
-  - DCC (En testeo: pueden funcionar)
-    - [ ] **2pts** Se puede adoptar una DCCriatura correctamente, si se cumplen las condiciones.
-    - [ ] **2pts** Se puede comprar cualquiera de los alimentos disponibles correctamente.
-    - [ ] **1.5pts** Se descuenta el valor de sickles correspondiente al adoptar DCCriaturas y se notifica en caso de no poder realizarse la acción.
-    - [ ] **1.5pts** Se descuenta el valor de sickles correspondiente al comprar alimentos y se notifica en caso de no poder realizarse la acción.
+  - DCC
+    - [X] **2pts** Se puede adoptar una DCCriatura correctamente, si se cumplen las condiciones.
+    - [X] **2pts** Se puede comprar cualquiera de los alimentos disponibles correctamente.
+    - [X] **1.5pts** Se descuenta el valor de sickles correspondiente al adoptar DCCriaturas y se notifica en caso de no poder realizarse la acción.
+    - [X] **1.5pts** Se descuenta el valor de sickles correspondiente al comprar alimentos y se notifica en caso de no poder realizarse la acción.
     - [X] **2pts** Se pueden visualizar los datos actualizados del estado del Magizoólogo y de las DCCriaturas correctamente.
   - Pasar al día siguiente
     - [ ] **2pts** Se aplican correctamente las habilidades especiales de cada DCCriatura.

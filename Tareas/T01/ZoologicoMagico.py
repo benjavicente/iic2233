@@ -162,8 +162,8 @@ class ZoologicoMagico:
     def __crear_magizoologo(self):
         valores = pc.proceso_multipaso(
             ("Elige un nombre único y alfanumérico", (
-                ("Es alfanumérico", str.isalnum),
-                ("Es único", lambda x: x not in self.lista_magizoologos),
+                (PMT.TEXTO_ES_ALFANUMERICO, str.isalnum),
+                (PMT.TEXTO_ES_UNICO, lambda x: x not in self.lista_magizoologos),
                 ),),
             ("Elige el tipo de Magizoólogo que desea ser", (
                 ("Es Docencio, Tareo o Hibrido",
@@ -174,8 +174,8 @@ class ZoologicoMagico:
                  lambda x: x.lower() in {"augurey", "niffler", "erkling"}),
                 ),),
             ("Elige un nombre único y alfanumérico para tu DCCriatura", (
-                ("Es alfanumérico", str.isalnum),
-                ("Es único", lambda x: x not in self.lista_magizoologos),
+                (PMT.TEXTO_ES_ALFANUMERICO, str.isalnum),
+                (PMT.TEXTO_ES_UNICO, lambda x: x not in self.lista_magizoologos),
                 ),),
         )
         if valores:
@@ -223,7 +223,7 @@ class ZoologicoMagico:
                 print(f"{criatura} ha perdido salud por estar hambrienta!")
             # Mostrar su salud si perdió alguna
             if criatura.enferma or criatura.nivel_hambre == "hambrienta":
-                print(f"Su salud actual es {criatura.vida_actual}")
+                print(f" su salud actual es {criatura.vida_actual}")
             # Enfermarse
             if criatura.enfermarse(self.magizoologo_actual.responsabilidad):
                 print(f"{criatura} se ha enfermado :(")
@@ -252,7 +252,8 @@ class ZoologicoMagico:
         self._dcc.pagar_magizoologo(self.magizoologo_actual)
         # Multas
         self._dcc.fiscalizar_magizoologo(self.magizoologo_actual)
-        # Al retornar true se actualiza el archivo
+        print("*" * PMT.UI_ANCHO)
+        print()
         return True
 
     def __alimentar_criatura(self):
@@ -278,7 +279,7 @@ class ZoologicoMagico:
         self._dcc.vernder_alimentos(self.magizoologo_actual)
 
     def __ver_estado(self):
-        return self._dcc.mostrar_estado(self.magizoologo_actual)
+        self._dcc.mostrar_estado(self.magizoologo_actual)
 
 
 if __name__ == "__main__":

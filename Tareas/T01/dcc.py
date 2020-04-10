@@ -103,16 +103,23 @@ class DCC:
         return True
 
     def vernder_criaturas(self, magizoologo, lista_criaturas):
+        """
+        Lista criaturas debe ser una lista en la que
+        se chequeará si el nombre de la criatura existe con
+        nombre == str(lista_criaturas[n])
+        """
         if not magizoologo.licencia:
             print("No puedes adoptar, no tienes licencia")
         while True:
             print("Elige una criatura! Los costos son...")
+            for key, value in PMT.DCC_PRECIO_CRIATURAS.items():
+                print(f" - {key.capitalize()}: {value} Sickles")
             criatura = input("-->").strip().lower()
-            if criatura in PMT.CRIATURAS_TIPOS:
+            if criatura in PMT.DCC_PRECIO_CRIATURAS:
                 if PMT.DCC_PRECIO_CRIATURAS[criatura] <= magizoologo.sickles:
                     razon = None
                 else:
-                    razon = "Contiene sickles suficientes"
+                    razon = PMT.TEXTO_SUFICIENTES_SICKLES
             else:
                 razon = "La criatura es válida"
             if razon:
@@ -123,12 +130,18 @@ class DCC:
             while True:
                 print("Genial! Cual será el nombre de tu criatura?")
                 nombre = input("-->").strip()
-                if nombre not in lista_criaturas:
-                    c = ctr.retornar_clase_criatura(criatura)
-                    magizoologo.adoptar_dccriatura(c(nombre))
-                    return True
+                if nombre.isalnum():
+                    if nombre not in lista_criaturas:
+                        c = ctr.retornar_clase_criatura(criatura)
+                        magizoologo.sickles -= PMT.DCC_PRECIO_CRIATURAS[criatura]
+                        magizoologo.adoptar_dccriatura(c(nombre))
+                        print(f"Felizidades! Adoptaste a {nombre}")
+                        return True
+                    else:
+                        if not pc.volver_a_intentarlo(nombre, PMT.TEXTO_ES_UNICO):
+                            break
                 else:
-                    if not pc.volver_a_intentarlo(nombre, "Nombre único"):
+                    if not pc.volver_a_intentarlo(nombre, PMT.TEXTO_ES_ALFANUMERICO):
                         break
 
     def vernder_alimentos(self, magizoologo):
@@ -141,7 +154,7 @@ class DCC:
                 if PMT.DCC_PRECIO_ALIMENTOS[alimento] <= magizoologo.sickles:
                     razon = None
                 else:
-                    razon = "Contiene sickles suficientes"
+                    razon = PMT.TEXTO_SUFICIENTES_SICKLES
             else:
                 razon = "El alimento es valido"
             if razon:

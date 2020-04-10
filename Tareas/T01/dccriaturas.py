@@ -304,7 +304,7 @@ class Augurey(DCCriaturas):
         # Inicia la clase
         super().__init__(nombre, **kwargs)
 
-    def alimentarse(self):
+    def alimentarse(self, alimento, magizoologo):
         pass
 
     def caracteristica_unica(self, magizoologo):
@@ -348,7 +348,7 @@ class Niffler(DCCriaturas):
         else:
             kwargs["nivel_cleptomania"] = int(kwargs["nivel_cleptomania"])
 
-    def alimentarse(self):
+    def alimentarse(self, alimento, magizoologo):
         pass
 
     def caracteristica_unica(self, magizoologo):
@@ -385,7 +385,7 @@ class Erkling(DCCriaturas):
         # Inicia la clase
         super().__init__(nombre, **kwargs)
 
-    def alimentarse(self):
+    def alimentarse(self, alimento, magizoologo):
         pass
 
     def caracteristica_unica(self, magizoologo):
@@ -393,4 +393,4 @@ class Erkling(DCCriaturas):
             alimento_robado = random.randint(0, len(magizoologo.alimentos) - 1)
             robado = magizoologo.alimentos.pop(alimento_robado)
             print(f"{self} te ha robado un {robado}!")
-            self.nivel_hambre = "satisfecha"
+            self.dias_sin_comer = 0

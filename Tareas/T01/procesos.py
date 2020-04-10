@@ -100,6 +100,8 @@ def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
                 # Cuando se retorne True en out
                 if fin_prc:
                     fin_prc()
+        else:
+            print(f"Opción '{elegida}' no valida\n")
 
 
 def volver_a_intentarlo(valor_invalido: str, *razones_invalido):
@@ -124,7 +126,7 @@ def volver_a_intentarlo(valor_invalido: str, *razones_invalido):
      - razones_invalido: iterable
     Las razones de porque es invalido.
     """
-    print(f"\n'{valor_invalido}' no es valido porque no se cumplió que:")
+    print(f"\n'{valor_invalido}' no es valido porque NO se cumplió que:")
     for numero, razon in enumerate(razones_invalido):
         print(f"{numero + 1}.- {razon}")
     while True:
@@ -139,7 +141,7 @@ def volver_a_intentarlo(valor_invalido: str, *razones_invalido):
             exit()
         elif elegida == "1" or elegida == "2":
             return elegida == "1"
-        print(f"Opción '{elegida}' no valida")
+        print(f"Opción '{elegida}' no valida\n")
 
 
 def proceso_multipaso(*iterable):
