@@ -141,6 +141,7 @@ def volver_a_intentarlo(valor_invalido: str, *razones_invalido):
             exit()
         elif elegida == "1" or elegida == "2":
             return elegida == "1"
+            print()
         print(f"Opción '{elegida}' no valida\n")
 
 

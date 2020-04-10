@@ -54,10 +54,10 @@ class ZoologicoMagico:
                 ("Pasar al día siguiente", self.__pasar_de_dia)
             ),
             "Menú cuidar DCCriaturas": (
-                ("Alimentar criatura", self.__alimentar_criatura),
-                ("Recuperar criatura", self.__recuperar_criatura),
-                ("Sanar criatura", self.__sanar_criatura),
-                ("Habilidad especial", self.__habilidad_especial),
+                ("Alimentar criatura: -5E", self.__alimentar_criatura),
+                ("Recuperar criatura: -10E", self.__recuperar_criatura),
+                ("Sanar criatura: -8E", self.__sanar_criatura),
+                ("Habilidad especial: -15E", self.__habilidad_especial),
                 ("Peleas", self.__empezar_pelea),
             ),
             "Menú DCC": (
@@ -81,6 +81,7 @@ class ZoologicoMagico:
                       self._leer_archivos, self._actualizar_archivos)
 
     def _leer_archivos(self):
+        print("$0")
         # ----------------------- #
         # Archivo de DCCriaturas  #
         # ----------------------- #
@@ -134,6 +135,7 @@ class ZoologicoMagico:
             self.lista_magizoologos.append(clase_magizoologo(**parametros_magizoologo))
 
     def _actualizar_archivos(self):
+        print("$1")
         # Encontré esto en la documentación
         # https://docs.python.org/3/reference/compound_stmts.html#with
         with open(PMT.PATH_MAGIZOOLOGOS, "w", encoding="UTF-8") as archivo_magizoologos,\
@@ -207,7 +209,17 @@ class ZoologicoMagico:
         print("*" * PMT.UI_ANCHO)
         print(" Has pasado al día siguiente! ".center(PMT.UI_ANCHO, "*"))
         print("*" * PMT.UI_ANCHO)
-        print("Resumen de los eventos de hoy...")
+        print(" DCC ".center(PMT.UI_ANCHO - 2, "-").center(PMT.UI_ANCHO, "*"))
+        # Nivel de aprobación
+        self._dcc.calcular_aprobación(self.magizoologo_actual)
+        # Pagos
+        self._dcc.pagar_magizoologo(self.magizoologo_actual)
+        # Multas
+        self._dcc.fiscalizar_magizoologo(self.magizoologo_actual)
+        # Día siguiente
+        print(("-" * (PMT.UI_ANCHO - 2)).center(PMT.UI_ANCHO, "*"))
+        print(" Al día siguiente... ".center(PMT.UI_ANCHO - 2, "-").center(PMT.UI_ANCHO, "*"))
+        print(("-" * (PMT.UI_ANCHO - 2)).center(PMT.UI_ANCHO, "*"))
         escapados = list()
         enfermas = list()
         for criatura in self.magizoologo_actual.criaturas:
@@ -244,14 +256,6 @@ class ZoologicoMagico:
         if enfermas:
             print("Criatura{0} enferma{0}:".format("s" * (len(enfermas) > 1)),
                   ", ".join(enfermas))
-        print("*" * PMT.UI_ANCHO)
-        print("El DCC...")
-        # Nivel de aprobación
-        self._dcc.calcular_aprobación(self.magizoologo_actual)
-        # Pagos
-        self._dcc.pagar_magizoologo(self.magizoologo_actual)
-        # Multas
-        self._dcc.fiscalizar_magizoologo(self.magizoologo_actual)
         print("*" * PMT.UI_ANCHO)
         print()
         return True

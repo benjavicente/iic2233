@@ -29,15 +29,15 @@ Los módulos `dcc`, `dccriaturas`, `magizoologos`, `alimentos` y `procesos` debe
 
 ## Supuestos y consideraciones :thinking:
 
-~~Ninguno? :thinking:~~
+Considero que la DCCriatura Augurey puede entregar un alimento a su dueño si esta se escapó.
 
 Asumo que se debe eliminar los caracteres de espacios en el input del usuario (uso siempre `input().strip()`).
 
 Asumo que las licencias se pagan por separado. Es decir, que las multas se van pagando hasta que el Magizoólogo no tenga Sickles o halla pagado todas las multas.
 
-Considero que la DCCriatura Augurey puede entregar un alimento a su dueño si esta se escapó.
-
 Asumo que al ingresar un nombre para cargar un Magizoólogo, no se diferencia entre mayúsculas y minúsculas. Por ejemplo, cargar el usuario `lily416potter` se puede usar (por ejemplo) `lily416potter` y `Lily416Potter`, que corresponden al mismo usuario.
+
+Asumo que se debe poder alimentar a una criatura en cualquier momento para sanar parte de su salud. Tanto criaturas hambrientas como satisfechas pueden ser alimentadas.
 
 ## Diagrama de clases :bookmark_tabs:
 

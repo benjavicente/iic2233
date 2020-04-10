@@ -44,23 +44,24 @@ class DCC:
         sanas = 0
         retenidas = 0
         total = 0
-        for criaturas in magizoologo.criaturas:
-            sanas += not criaturas.enferma
-            retenidas += not criaturas.escapado
+        for criatura in magizoologo.criaturas:
+            sanas += not criatura.enferma
+            retenidas += not criatura.escapado
             total += 1
-        aprobacion = min(100, max(0, (sanas + retenidas)//(2 * total) * 100))
+        aprobacion = int(min(100, max(0, ((sanas + retenidas)/(2 * total)) * 100)))
         print(f"Tu nuevo nivel de aprobación es: {aprobacion}")
         magizoologo.nivel_aprobacion = aprobacion
         return True
 
     def pagar_magizoologo(self, magizoologo):
         """
-        Paga Sicklets al Magizoólogo al finalizar el día.
+        Paga Sickles al Magizoólogo al finalizar el día.
         """
-        pago = (PMT.DCC_PESO_PAGO["aprobacion"] * magizoologo.nivel_aprobacion
+        pago = int(PMT.DCC_PESO_PAGO["aprobacion"] * magizoologo.nivel_aprobacion
                 + PMT.DCC_PESO_PAGO["alimento"] * len(magizoologo.alimentos)
                 + PMT.DCC_PESO_PAGO["magico"] * magizoologo.nivel_magico)
-        magizoologo.sickles += pago//1
+        magizoologo.sickles += pago
+        print(f"EL DCC te ha pagado {pago} Sickles")
         return True
 
     def fiscalizar_magizoologo(self, magizoologo):

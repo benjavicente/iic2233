@@ -215,6 +215,9 @@ class DCCriaturas(ABC):
     def alimentarse(self, alimento, magizoologo):
         """
         Magizoólogo alimenta a la criatura.
+
+        Retorna la criatura si se alimento y
+        False en el caso contrario.
         """
         # Inicio ataque
         valor = (PMT.ALIMENTARSE_EFECTO_HAMBRE[self.nivel_hambre]
@@ -222,6 +225,7 @@ class DCCriaturas(ABC):
         probabilidad_atacar = min(1, valor/100)
         if probabilidad_atacar >= random.random():
             daño = max(0, magizoologo.nivel_magico - self.nivel_magico)
+            print(f"{self} te ha atacado! Perdiste {daño} de energía")
             magizoologo.energia_actual -= daño
         # Características especiales de los alimentos
         if type(alimento) is alm.TartaMelaza:
@@ -233,8 +237,12 @@ class DCCriaturas(ABC):
         elif type(alimento) is alm.BunueloGusarajo:
             if 0.35 > random.random():
                 print("La criatura ha rechazado el alimento!")
-                return False #  Retorna False --> No se consumió el alimento
+                return False  # Retorna False --> No se consumió el alimento
+        # Alimentarse
         self.vida_actual += alimento.pnt_vida
+        self.dias_sin_comer = 0
+        print(f"{self} ha consumido el {alimento} "
+              f"y ha recuperado {alimento.pnt_vida} de salud")
         return self
 
     def escaparse(self, resp_magizoologo):
@@ -304,8 +312,8 @@ class Augurey(DCCriaturas):
         # Inicia la clase
         super().__init__(nombre, **kwargs)
 
-    def alimentarse(self, alimento, magizoologo):
-        pass
+    # def alimentarse(self, alimento, magizoologo):
+    #     return super().alimentarse(alimento, magizoologo)
 
     def caracteristica_unica(self, magizoologo):
         if (self.nivel_hambre == "satisfecha"
@@ -348,8 +356,8 @@ class Niffler(DCCriaturas):
         else:
             kwargs["nivel_cleptomania"] = int(kwargs["nivel_cleptomania"])
 
-    def alimentarse(self, alimento, magizoologo):
-        pass
+    # def alimentarse(self, alimento, magizoologo):
+    #     return super().alimentarse(alimento, magizoologo)
 
     def caracteristica_unica(self, magizoologo):
         # factor decide se regala (* +1) o roba (* -1)
@@ -385,8 +393,8 @@ class Erkling(DCCriaturas):
         # Inicia la clase
         super().__init__(nombre, **kwargs)
 
-    def alimentarse(self, alimento, magizoologo):
-        pass
+    # def alimentarse(self, alimento, magizoologo):
+    #     return super().alimentarse(alimento, magizoologo)
 
     def caracteristica_unica(self, magizoologo):
         if self.nivel_hambre == "hambrienta" and magizoologo.alimentos:

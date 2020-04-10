@@ -122,7 +122,6 @@ class Magizoologo(ABC):
                  energia_max=None,
                  responsabilidad=None,
                  puede_usar_habilidad=None,
-                 nivel_aprobacion=None,
                  **kwargs):
         # -------------- #
         # Valores únicos #
@@ -150,8 +149,10 @@ class Magizoologo(ABC):
             licencia = PMT.MAGIZOOLOGOS_LICENCIA_INICIAL
         if puede_usar_habilidad is None:
             puede_usar_habilidad = PMT.MAGIZOOLOGOS_HABILIDADES
-        if nivel_aprobacion is None:
-            nivel_aprobacion = PMT.MAGIZOOLOGOS_APROBACION_INICIAL
+        if licencia:
+            nivel_aprobacion = PMT.DCC_APROBACION
+        else:
+            nivel_aprobacion = 0
         # Transformación de valores
         self.__sickles = int(sickles)
         self.licencia = licencia == "True"
@@ -204,6 +205,8 @@ class Magizoologo(ABC):
             pass  # Hacer Super Magizoólogo
         elif value < 0:
             self.__nivel_aprobacion = 0
+        else:
+            self.__nivel_aprobacion = value
         if self.__nivel_aprobacion < PMT.DCC_APROBACION and self.licencia:
             print("Perdiste tu licencia :(")
             self.licencia = False
@@ -239,6 +242,9 @@ class Magizoologo(ABC):
         alguno de sus alimentos, siempre y cuando posea alguno.
         En respuesta a esto, la DCCriatura puede atacar a su dueño.
         El costo energético de alimentar es de 5 puntos.
+
+        Retorna False si no se pudo alimentar,
+        un objecto de clase DCCriatura en el caso contrario.
         """
         if not self.alimentos:
             print("No tienes alimentos!")
@@ -261,16 +267,15 @@ class Magizoologo(ABC):
                 print(*set(map(lambda x: " - " + str(x), self.alimentos)), sep="\n")
                 alimento_elegido = input("--> ").strip()
                 for alimento in self.alimentos:
-                    if str(alimento) == alimento_elegidoalimento_elegido:
+                    if str(alimento).lower() == alimento_elegido.lower():
                         ############################################
                         # Alimenar
                         c = self.criaturas[self.criaturas.index(nombre_criatura)]
+                        print(f"Has tratado de alimentar a {c} con un {alimento}...")
                         self.alimentos.remove(alimento)
+                        self.energia_actual -= PMT.MAGIZOOLOGOS_COSTO_ALIMENTAR
                         # Se dirige al método en la clase DCCriatura
                         return c.alimentarse(alimento, self)
-                        # --> False si no se consumió
-                        # --> Clase DCCCriatura si se consumió
-                        ############################################
                 if not pc.volver_a_intentarlo(alimento_elegido, "Posees el alimento"):
                     return False
 
@@ -305,6 +310,8 @@ class Magizoologo(ABC):
         """
         # PMT.MAGIZOOLOGOS_COSTO_HABILIDAD
         pass
+
+# Inicio Clases heredadas
 
 
 class MagizoologoDocencio(Magizoologo):
@@ -357,7 +364,8 @@ class MagizoologoDocencio(Magizoologo):
         pass
 
     def habilidad_especial(self):
-        pass
+        if self.puede_usar_habilidad:
+            pass
 
 
 class MagizoologoTareo(Magizoologo):
@@ -452,7 +460,7 @@ class MagizoologoHibrido(Magizoologo):
     def alimentar_dccriatura(self):
         criatura_alimentada = super().alimentar_dccriatura()
         if criatura_alimentada:
-            print("Habilidad pasiva: Has sanado 5pts de vida adicionales!")
+            print("Habilidad pasiva: Has sanado 10pts de vida adicionales!")
             criatura_alimentada.vida_actual += PMT.DOCENCIO_PASIVO_SANAR_VIDA
 
     def recuperar_dccriatura(self):
