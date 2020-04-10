@@ -120,9 +120,10 @@ class ZoologicoMagico:
             clase_magizoologo = mzg.retornar_clase_magizoologo(parametros_magizoologo["tipo"])
             # Se agregan sus alimentos
             lista_alimentos_magizoologo = list()
-            for nombre_alimento in parametros_magizoologo["alimentos"].split(";"):
-                tipo_alimento = ams.retornar_clase_alimento(nombre_alimento)
-                lista_alimentos_magizoologo.append(tipo_alimento())
+            if parametros_magizoologo["alimentos"]:
+                for nombre_alimento in parametros_magizoologo["alimentos"].split(";"):
+                    tipo_alimento = ams.retornar_clase_alimento(nombre_alimento)
+                    lista_alimentos_magizoologo.append(tipo_alimento())
             parametros_magizoologo["alimentos"] = lista_alimentos_magizoologo
             # Se agregan sus criaturas
             nombre_criaturas = parametros_magizoologo["criaturas"].split(";")
