@@ -216,13 +216,14 @@ class ZoologicoMagico:
             # Perder salud por enfermedad
             if criatura.enferma:
                 criatura.vida_actual -= PMT.CRIATURAS_PENALISACION_VIDA_ENFERMEDAD
-                print(f"{criatura} ha perdido salud por estar enferma! "
-                      f"Su salud actual es {criatura.vida_actual}")
+                print(f"{criatura} ha perdido salud por estar enferma!")
             # Perder salud por hambre
             if criatura.nivel_hambre == "hambrienta":
                 criatura.vida_actual -= PMT.CRIATURAS_PENALISACION_VIDA_HAMBRIENTA
-                print(f"{criatura} ha perdido salud por estar hambrienta! "
-                      f"Su salud actual es {criatura.vida_actual}")
+                print(f"{criatura} ha perdido salud por estar hambrienta!")
+            # Mostrar su salud si perdió alguna
+            if criatura.enferma or criatura.nivel_hambre == "hambrienta":
+                print(f"Su salud actual es {criatura.vida_actual}")
             # Enfermarse
             if criatura.enfermarse(self.magizoologo_actual.responsabilidad):
                 print(f"{criatura} se ha enfermado :(")
@@ -236,6 +237,7 @@ class ZoologicoMagico:
                 enfermas.append(str(criatura))
             if criatura.escapado:
                 escapados.append(str(criatura))
+        print("*" * PMT.UI_ANCHO)
         if escapados:
             print("Criatura{0} escapada{0}:".format("s" * (len(escapados) > 1)),
                   ", ".join(escapados))
@@ -276,7 +278,7 @@ class ZoologicoMagico:
         self._dcc.vernder_alimentos(self.magizoologo_actual)
 
     def __ver_estado(self):
-        self._dcc.mostrar_estado(self.magizoologo_actual)
+        return self._dcc.mostrar_estado(self.magizoologo_actual)
 
 
 if __name__ == "__main__":

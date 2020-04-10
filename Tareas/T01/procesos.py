@@ -72,6 +72,7 @@ def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
         print("[0] - Salir\n")
         # Se pide el input
         elegida = input("--> ").strip()
+        print()
         if elegida == "0":
             # Sale del loop
             return
@@ -95,8 +96,10 @@ def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
                     if len(valor) == 3:
                         menus_anteriores.append(menu_actual)
                         menu_actual = valor[2]
-                    if fin_prc:
-                        fin_prc()
+                # Esto puede ejecutarse siempre o
+                # Cuando se retorne True en out
+                if fin_prc:
+                    fin_prc()
 
 
 def volver_a_intentarlo(valor_invalido: str, *razones_invalido):

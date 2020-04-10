@@ -223,7 +223,7 @@ class DCCriaturas(ABC):
         if probabilidad_atacar >= random.random():
             daño = max(0, magizoologo.nivel_magico - self.nivel_magico)
             magizoologo.energia_actual -= daño
-        # Inicio propiedades alimentos
+        # Características especiales de los alimentos
         if type(alimento) is alm.TartaMelaza:
             if type(self) is Niffler:
                 if 0.15 > random.random():
@@ -233,9 +233,9 @@ class DCCriaturas(ABC):
         elif type(alimento) is alm.BunueloGusarajo:
             if 0.35 > random.random():
                 print("La criatura ha rechazado el alimento!")
-                return False
+                return False #  Retorna False --> No se consumió el alimento
         self.vida_actual += alimento.pnt_vida
-        return True
+        return self
 
     def escaparse(self, resp_magizoologo):
         """

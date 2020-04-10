@@ -25,7 +25,7 @@ import random
 import parametros as PMT
 from operator import attrgetter
 import procesos as pc
-import alimentos as ams
+import alimentos as alm
 import dccriaturas as ctr
 
 
@@ -45,8 +45,8 @@ class DCC:
         retenidas = 0
         total = 0
         for criaturas in magizoologo.criaturas:
-            sanas += criaturas.enferma
-            retenidas += criaturas.escapado
+            sanas += not criaturas.enferma
+            retenidas += not criaturas.escapado
             total += 1
         aprobacion = min(100, max(0, (sanas + retenidas)//(2 * total) * 100))
         print(f"Tu nuevo nivel de aprobación es: {aprobacion}")
@@ -88,7 +88,7 @@ class DCC:
             # Mostrar multas
             for nombre, multas in dict_multas.items():
                 if multas:
-                    print(f" - {multas} casos de {nombre}: "
+                    print(f" - {multas} caso{'s' * bool(multas)} de {nombre}: "
                           f"{PMT.DCC_FISCALIZADO[nombre][0]} Sickles cada una")
             # Pagar multas
             for nombre, multas in dict_multas.items():
@@ -134,8 +134,10 @@ class DCC:
     def vernder_alimentos(self, magizoologo):
         while True:
             print("Elige un alimento...")
+            for key, value in PMT.DCC_PRECIO_ALIMENTOS.items():
+                print(f" - {key.capitalize()}: {value} Sickles")
             alimento = input("-->").strip().lower()
-            if alimento in PMT.ALIMENTOS_TIPOS:
+            if alimento in PMT.DCC_PRECIO_ALIMENTOS:
                 if PMT.DCC_PRECIO_ALIMENTOS[alimento] <= magizoologo.sickles:
                     razon = None
                 else:
@@ -147,7 +149,10 @@ class DCC:
                     continue
                 else:
                     break
-            clase_alimento = ams.retornar_clase_alimento(alimento)
+            precio = PMT.DCC_PRECIO_ALIMENTOS[alimento]
+            magizoologo.sickles -= precio
+            print(f"Has comprado {alimento} por {precio} Sickles!")
+            clase_alimento = alm.retornar_clase_alimento(alimento)
             magizoologo.comprar_alimentos(clase_alimento())
             return True
 
@@ -156,6 +161,7 @@ class DCC:
         Muestra toda la información del Magizoólogo.
         Esta es:
         - Nombre
+        - Tipo
         - Sickles
         - Energía actual
         - Licencia
@@ -176,7 +182,7 @@ class DCC:
         """
         # Datos Magizoólogo
         print("Estas son tus estadísticas:")
-        datos = ("nombre", "sickles", "energia_actual",
+        datos = ("nombre", "tipo", "sickles", "energia_actual",
                  "licencia", "nivel_aprobacion", "nivel_magico",
                  "destreza", "responsabilidad")
         extractor_datos = attrgetter(*datos)

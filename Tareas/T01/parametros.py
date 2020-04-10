@@ -140,7 +140,6 @@ ERKLING_NIVEL_AGRESIVIDAD = "peligrosa"
 # ============================================ #
 # Parámetros relacionados con los alimentos    #
 # ============================================ #
-ALIMENTOS_TIPOS = {"tarta de melaza", "higado de dragón", "buñuelo de gusarajo"}
 ALIMENTOS_TARTA_MALEZA_PNT = 15
 ALIMENTOS_TARTA_PROB_PACIFICAR_NIFFLER = 0.15
 ALIMENTOS_HIGADO_DRAGON_PNT = 10
