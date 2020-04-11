@@ -59,7 +59,7 @@ def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
             print(f"[{numero + 1}] - {opcion}")
         if menus_anteriores:
             print(f"[{numero + 2}] - Volver al {menus_anteriores[-1]}")
-        print("[0] - Salir\n")
+        print("[0] - Salir y Guardar\n")
         # Se pide el input
         elegida = input("--> ").strip()
         print()
@@ -117,7 +117,7 @@ def volver_a_intentarlo(valor_invalido: str, *razones_invalido):
         print(
             "[1] - Volver a intentarlo",
             "[2] - Volver atrás",
-            "[0] - Salir sin guardar",
+            "[0] - Salir sin Guardar",
             sep="\n"
         )
         elegida = input("--> ").strip()

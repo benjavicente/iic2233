@@ -113,13 +113,13 @@ class DCC:
             print("No puedes adoptar, no tienes licencia")
         while True:
             print("Elige una criatura! Los costos son...")
+            # Elección
             for key, value in PMT.DCC_PRECIO_CRIATURAS.items():
                 print(f" - {key.capitalize()}: {value} Sickles")
             criatura = input("-->").strip().lower()
+            # Chequeo
             if criatura in PMT.DCC_PRECIO_CRIATURAS:
-                if PMT.DCC_PRECIO_CRIATURAS[criatura] <= magizoologo.sickles:
-                    razon = None
-                else:
+                if not PMT.DCC_PRECIO_CRIATURAS[criatura] <= magizoologo.sickles:
                     razon = PMT.TEXTO_SUFICIENTES_SICKLES
             else:
                 razon = "La criatura es válida"
@@ -128,6 +128,7 @@ class DCC:
                     continue
                 else:
                     break
+            # Nombre de la criatura
             while True:
                 print("Genial! Cual será el nombre de tu criatura?")
                 nombre = input("-->").strip()
@@ -144,17 +145,18 @@ class DCC:
                 else:
                     if not pc.volver_a_intentarlo(nombre, PMT.TEXTO_ES_ALFANUMERICO):
                         break
+        return False
 
     def vernder_alimentos(self, magizoologo):
         while True:
+            # Elección
             print("Elige un alimento...")
             for key, value in PMT.DCC_PRECIO_ALIMENTOS.items():
                 print(f" - {key.capitalize()}: {value} Sickles")
             alimento = input("-->").strip().lower()
+            # Chequeo
             if alimento in PMT.DCC_PRECIO_ALIMENTOS:
-                if PMT.DCC_PRECIO_ALIMENTOS[alimento] <= magizoologo.sickles:
-                    razon = None
-                else:
+                if not PMT.DCC_PRECIO_ALIMENTOS[alimento] <= magizoologo.sickles:
                     razon = PMT.TEXTO_SUFICIENTES_SICKLES
             else:
                 razon = "El alimento es valido"
@@ -163,6 +165,7 @@ class DCC:
                     continue
                 else:
                     break
+            # Compra del alimento
             precio = PMT.DCC_PRECIO_ALIMENTOS[alimento]
             magizoologo.sickles -= precio
             print(f"Has comprado {alimento} por {precio} Sickles!")

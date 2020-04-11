@@ -160,11 +160,13 @@ class Magizoologo(ABC):
             self.__sickles = int(value)
 
     def adoptar_dccriatura(self, criatura):
-        # Método llamado en dcc.vernder_criaturas
+        # Método llamado en dcc.vernder_criaturas,
+        # el cual es encargado del proceso de adoptar
         self.criaturas.append(criatura)
 
     def comprar_alimentos(self, alimento):
-        # Método llamado en dcc.vernder_alimentos
+        # Método llamado en dcc.vernder_alimentos,
+        # el cual es encargado del proceso de comprar
         self.alimentos.append(alimento)
 
     @abstractmethod
@@ -269,8 +271,43 @@ class Magizoologo(ABC):
         if self.energia_actual < PMT.MAGIZOOLOGOS_COSTO_CURAR:
             print("No suficiente tienes energía")
             return False
-        else:
-            pass
+        # Lista de criaturas enfermas
+        criaturas_enfermas = list()
+        for c in self.criaturas:
+            if c.enferma:
+                criaturas_enfermas.append(c)
+        if not criaturas_enfermas:
+            print("No hay criaturas enfermas :)")
+            return False
+        # Formateo de lista a str
+        criaturas_a_sanar =\
+            "\n".join(map(lambda x: " - " + str(x), criaturas_enfermas))
+        # Proceso multipaso --> Retorna un str o False
+        criatura_elegida = pc.proceso_multipaso(
+            (f"Elige una criatura a recuperar \n{criaturas_a_sanar}", (
+                ("Tienes a la criatura",
+                    lambda x: x in self.criaturas),
+                ("La criatura se ha escapado",
+                    lambda x: (x in criaturas_enfermas) == (x in self.criaturas)),
+            ),),
+        )[0]  # Esto es porque proceso multipaso retorna una lista
+        if criatura_elegida:
+            # Perdida de energía
+            self.energia_actual -= PMT.MAGIZOOLOGOS_COSTO_CURAR
+            # -- Tratar de curar -- #
+            # Se obtiene la criatura
+            c = self.criaturas[self.criaturas.index(criatura_elegida)]
+            print(f"Has tratado de sanar a {c}...")
+            # Formula
+            valor = ((self.nivel_magico - c.vida_actual)
+                     / (self.nivel_magico - c.vida_actual))
+            prob = min(1, max(0, valor))
+            if prob >= random.random():
+                c.enferma = False
+                print(f"Has sanado a {c}!")
+                return c    # Retorna la criatura para aplicar efectos pasivos
+            else:
+                print(f"No has podido sanar a {c} :(")
 
     @abstractmethod
     def habilidad_especial(self):
