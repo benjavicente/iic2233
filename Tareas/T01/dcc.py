@@ -81,7 +81,7 @@ class DCC:
             if criatura.enferma:
                 dict_multas["enfermedad"] +=\
                     PMT.DCC_FISCALIZADO["enfermedad"][1] >= random.random()
-            if criatura.vida_actual == 1:
+            if criatura.vida_actual == PMT.CRIATURAS_VIDA_MINIMA:
                 dict_multas["vida critica"] +=\
                     PMT.DCC_FISCALIZADO["vida critica"][1] >= random.random()
         if sum(dict_multas.values()):

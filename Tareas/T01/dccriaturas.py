@@ -132,8 +132,8 @@ class DCCriaturas(ABC):
     def vida_actual(self, value):
         if value > self.vida_max:
             self.__vida_actual = self.vida_max
-        elif value < 1:
-            self.__vida_actual = 1
+        elif value < PMT.CRIATURAS_VIDA_MINIMA:
+            self.__vida_actual = PMT.CRIATURAS_VIDA_MINIMA
         else:
             self.__vida_actual = value
 

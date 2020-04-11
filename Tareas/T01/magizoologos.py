@@ -159,6 +159,10 @@ class Magizoologo(ABC):
         else:
             self.__sickles = int(value)
 
+    def obtener_dccriatura(self, nombre_criatura):
+        """Retorna la DCCriatura a partir del nombre"""
+        return self.criaturas[self.criaturas.index(nombre_criatura)]
+
     def adoptar_dccriatura(self, criatura):
         # Método llamado en dcc.vernder_criaturas,
         # el cual es encargado del proceso de adoptar
@@ -204,7 +208,7 @@ class Magizoologo(ABC):
                     if str(alimento).lower() == alimento_elegido.lower():
                         ############################################
                         # Alimenar
-                        c = self.criaturas[self.criaturas.index(nombre_criatura)]
+                        c = self.obtener_dccriatura(nombre_criatura)
                         print(f"Has tratado de alimentar a {c} con un {alimento}...")
                         self.alimentos.remove(alimento)
                         self.energia_actual -= PMT.MAGIZOOLOGOS_COSTO_ALIMENTAR
@@ -249,7 +253,7 @@ class Magizoologo(ABC):
             self.energia_actual -= PMT.MAGIZOOLOGOS_COSTO_RECUPERAR
             # -- Tratar de recuperar -- #
             # Se obtiene la criatura
-            c = self.criaturas[self.criaturas.index(criatura_elegida)]
+            c = self.obtener_dccriatura(criatura_elegida)
             print(f"Has tratado de recuperar a {c}...")
             # Formula
             valor = ((self.destreza + self.nivel_magico - c.nivel_magico)
@@ -286,17 +290,17 @@ class Magizoologo(ABC):
         criatura_elegida = pc.proceso_multipaso(
             (f"Elige una criatura a recuperar \n{criaturas_a_sanar}", (
                 ("Tienes a la criatura",
-                    lambda x: x in self.criaturas),
+                 lambda x: x in self.criaturas),
                 ("La criatura se ha escapado",
-                    lambda x: (x in criaturas_enfermas) == (x in self.criaturas)),
-            ),),
+                 lambda x: (x in criaturas_enfermas) == (x in self.criaturas)),
+            ), ),
         )[0]  # Esto es porque proceso multipaso retorna una lista
         if criatura_elegida:
             # Perdida de energía
             self.energia_actual -= PMT.MAGIZOOLOGOS_COSTO_CURAR
             # -- Tratar de curar -- #
             # Se obtiene la criatura
-            c = self.criaturas[self.criaturas.index(criatura_elegida)]
+            c = self.obtener_dccriatura(criatura_elegida)
             print(f"Has tratado de sanar a {c}...")
             # Formula
             valor = ((self.nivel_magico - c.vida_actual)

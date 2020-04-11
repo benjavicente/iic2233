@@ -105,6 +105,7 @@ ALIMENTARSE_MAXIMO_ATAQUE = 10
 ESCAPARSE_EFECTO_HAMBRE = {"satisfecha": 0, "hambrienta": 20}
 CRIATURAS_PENALISACION_VIDA_ENFERMEDAD = 7
 CRIATURAS_PENALISACION_VIDA_HAMBRIENTA = 3
+CRIATURAS_VIDA_MINIMA = 1
 
 # ---------------- #
 #  Augurey         #
@@ -147,3 +148,14 @@ ALIMENTOS_TARTA_PROB_PACIFICAR_NIFFLER = 0.15
 ALIMENTOS_HIGADO_DRAGON_PNT = 10
 ALIMENTOS_BUNUELO_GUSARAJO = 5
 ALIMENTOS_BUNUELO_PROB_CONSUMIR = 0.65
+
+
+# ============================================ #
+# Parámetros relacionados con las Peleas       #
+# ============================================ #
+
+PELEAS_APUESTA = 30
+PELEAS_ATAQUE = {"inofensiva": 0.25, "arisca": 0.3, "peligrosa": 0.35}
+PELEAS_PROB_ESQUIVAR = 0.5
+PELEAS_EL_DCC_ELIGE = False  # True --> Sí elige | False --> No elige (Pauta)
+PELEAS_INICIAL = 1  # 1 --> Magizoólogo | 0 --> DCC

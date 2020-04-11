@@ -16,6 +16,7 @@ Depende de:
 """
 
 import operator as op
+import random
 
 import parametros as PMT
 import magizoologos as mzg
@@ -44,39 +45,40 @@ class ZoologicoMagico:
                 "Menú cuidar DCCriaturas",
                 "Menú DCC",
                 ("Pasar al día siguiente",
-                 self.__pasar_de_dia),
+                 self.__pasar_de_dia),   # Propio del ZOO
                 ("Guardar Progreso",
-                 self._actualizar_archivos),
+                 self._actualizar_archivos),   # Propio del ZOO
             ),
             "Menú cuidar DCCriaturas": (
                 (f"Alimentar criatura: -{PMT.MAGIZOOLOGOS_COSTO_ALIMENTAR}E",
-                 self.__alimentar_criatura),
+                 lambda: self.magizoologo_actual.alimentar_dccriatura()),
                 (f"Recuperar criatura: -{PMT.MAGIZOOLOGOS_COSTO_RECUPERAR}E",
-                 self.__recuperar_criatura),
+                 lambda: self.magizoologo_actual.recuperar_dccriatura()),
                 (f"Sanar criatura: -{PMT.MAGIZOOLOGOS_COSTO_CURAR}E",
-                 self.__sanar_criatura),
+                 lambda: self.magizoologo_actual.sanar_dccriatura()),
                 (f"Habilidad especial: -{PMT.MAGIZOOLOGOS_COSTO_HABILIDAD}E",
-                 self.__habilidad_especial),
-                ("Peleas",
-                 self.__empezar_pelea),
+                 lambda: self.magizoologo_actual.habilidad_especial()),
+                (f"Peleas: {PMT.PELEAS_APUESTA} Sickles",
+                 self.__empezar_pelea),  # Propio del ZOO
             ),
             "Menú DCC": (
                 ("Adoptar criaturas",
-                 self.__adoptar_criatura),
+                 lambda: self._dcc.vernder_criaturas(self.magizoologo_actual,\
+                                                     self.lista_criaturas)),
                 ("Comprar alimentos",
-                 self.__comprar_alimentos),
+                 lambda: self._dcc.vernder_alimentos(self.magizoologo_actual)),
                 ("Ver estado",
-                 self.__ver_estado),
+                 lambda: self._dcc.mostrar_estado(self.magizoologo_actual)),
             ),
         }
         self._dcc = dcc.DCC()
-        self._indice_magizoologo_actual = None
+        self.__indice_magizoologo_actual = None
         self.lista_criaturas = None
         self.lista_magizoologos = None
 
     @property
     def magizoologo_actual(self):
-        return self.lista_magizoologos[self._indice_magizoologo_actual]
+        return self.lista_magizoologos[self.__indice_magizoologo_actual]
 
     def main_loop(self):
         self._leer_archivos()
@@ -169,19 +171,19 @@ class ZoologicoMagico:
             ("Elige un nombre único y alfanumérico", (
                 (PMT.TEXTO_ES_ALFANUMERICO, str.isalnum),
                 (PMT.TEXTO_ES_UNICO, lambda x: x not in self.lista_magizoologos),
-                ),),
+                ), ),
             ("Elige el tipo de Magizoólogo que desea ser", (
                 ("Es Docencio, Tareo o Hibrido",
-                 lambda x: x.lower() in {"docencio", "tareo", "Hibrido"}),
-                ),),
+                 lambda x: x.lower() in {"docencio", "tareo", "hibrido"}),
+                ), ),
             ("Elige tu primera DCCriatura!", (
                 ("Es Augurey, Niffler o Erkling",
                  lambda x: x.lower() in {"augurey", "niffler", "erkling"}),
-                ),),
+                ), ),
             ("Elige un nombre único y alfanumérico para tu DCCriatura", (
                 (PMT.TEXTO_ES_ALFANUMERICO, str.isalnum),
                 (PMT.TEXTO_ES_UNICO, lambda x: x not in self.lista_magizoologos),
-                ),),
+                ), ),
         )
         if valores:
             nombre_magizoologo, tipo_magizoologo, tipo_criatura, nombre_criatura = valores
@@ -191,7 +193,7 @@ class ZoologicoMagico:
             self.lista_criaturas.append(nueva_criatura)
             self.lista_magizoologos.append(tipo_magizoologo(nombre_magizoologo,
                                                             criaturas=[nueva_criatura]))
-            self._indice_magizoologo_actual = len(self.lista_magizoologos) - 1
+            self.__indice_magizoologo_actual = len(self.lista_magizoologos) - 1
             print("Magizoólogo creado!")
             return True
         return False
@@ -203,7 +205,8 @@ class ZoologicoMagico:
                 ),),
         )
         if nombre:
-            self._indice_magizoologo_actual = self.lista_magizoologos.index(*nombre)
+            nombre = nombre[0]
+            self.__indice_magizoologo_actual = self.lista_magizoologos.index(nombre)
             print("Accediendo...!")
             return True
         return False
@@ -267,31 +270,88 @@ class ZoologicoMagico:
         print()
         return True
 
-    def __alimentar_criatura(self):
-        self.magizoologo_actual.alimentar_dccriatura()
-
-    def __recuperar_criatura(self):
-        self.magizoologo_actual.recuperar_dccriatura()
-
-    def __sanar_criatura(self):
-        self.magizoologo_actual.sanar_dccriatura()
-
-    def __habilidad_especial(self):
-        self.magizoologo_actual.habilidad_especial()
-
     def __empezar_pelea(self):
-        # Magizoólogo?
-        pass
-
-    def __adoptar_criatura(self):
-        self._dcc.vernder_criaturas(self.magizoologo_actual, self.lista_criaturas)
-
-    def __comprar_alimentos(self):
-        self._dcc.vernder_alimentos(self.magizoologo_actual)
-
-    def __ver_estado(self):
-        self._dcc.mostrar_estado(self.magizoologo_actual)
-
+        if len(self.magizoologo_actual.criaturas) < 2:
+            print("No tienes suficientes criaturas!")
+            return False
+        if self.magizoologo_actual.sickles < PMT.PELEAS_APUESTA:
+            print("No contienes suficientes Sickels!")
+            return False
+        print("Tus criaturas son:")
+        for criatura in self.magizoologo_actual.criaturas:
+            print(f" - {criatura}: {criatura.nivel_magico}NM, "
+                  f"{criatura.vida_actual}HP, {criatura.prob_escaparse}PE")
+        while True:
+            # -------------- Selección de criaturas -------------- #
+            # Magizoólogo
+            print("Selecciona la criatura para que te represente")
+            criatura_elegida = input("--> ").strip()
+            if criatura_elegida not in self.magizoologo_actual.criaturas:
+                if pc.volver_a_intentarlo(criatura_elegida, "Tienes esa criatura"):
+                    continue
+                else:
+                    return False
+            while True:
+                # DCC
+                if not PMT.PELEAS_EL_DCC_ELIGE:
+                    criatura_dcc = pc.proceso_multipaso(
+                        ("Selecciona la criatura para que represente al DCC", (
+                            ("Tienes esa criatura",
+                                lambda x: x in self.magizoologo_actual.criaturas),
+                            ("Sea distinta a la elegida",
+                                lambda x: ((x == criatura_elegida)
+                                           != (x in self.magizoologo_actual.criaturas)))
+                        ), ),
+                    )
+                    if not criatura_dcc:
+                        break
+                    else:
+                        criatura_dcc = criatura_dcc[0]
+                    criatura_dcc = random.choice(
+                        [str(c) for c in self.magizoologo_actual.criaturas
+                            if c != criatura_elegida]
+                    )
+                # -------------- Inicio de la pelea -------------- #
+                c_mgz = self.magizoologo_actual.obtener_dccriatura(criatura_elegida)
+                c_dcc = self.magizoologo_actual.obtener_dccriatura(criatura_dcc)
+                turno = 1
+                criaturas = (c_mgz, c_dcc)
+                nombres = (str(self.magizoologo_actual), "DCC")
+                vida_inicial = (c_mgz.vida_actual, c_dcc.vida_actual)
+                while (c_mgz.vida_actual > PMT.CRIATURAS_VIDA_MINIMA
+                       and c_dcc.vida_actual > PMT.CRIATURAS_VIDA_MINIMA):
+                    # Cambio de Turno
+                    turno = (turno + 1) % 2
+                    criatura_atacante = criaturas[turno]
+                    criatura_defendida = criaturas[(turno + 1) % 2]
+                    print(f"\nEs el turno de {nombres[turno]}")
+                    print(f"{criatura_atacante} trata de atacar a {criatura_defendida}!")
+                    # Esquivar
+                    prob_esquivar = (1 - criatura_defendida.prob_escaparse)\
+                        * PMT.PELEAS_PROB_ESQUIVAR
+                    if prob_esquivar > random.random():
+                        print(f"{criatura_defendida} ha esquivado el ataque!")
+                        continue
+                    # Atacar
+                    daño = (criatura_atacante.nivel_magico
+                            * PMT.PELEAS_ATAQUE[criatura_atacante.agresividad])
+                    print(f"{criatura_atacante} realiza un ataque de {daño} daño!")
+                    criatura_defendida.vida_actual -= daño
+                    print(f"{criatura_defendida} ha quedado con "
+                          f"{criatura_defendida.vida_actual} de vida")
+                # -------------- Termino de la pelea -------------- #
+                print("\nLa pelea ha terminado!")
+                print(f"{criatura_atacante} ha derrotado a {criatura_defendida}!")
+                if turno == 0:
+                    print(f"Has ganado! Recibiste {PMT.PELEAS_APUESTA * 2} Sickles")
+                    self.magizoologo_actual.sickles += PMT.PELEAS_APUESTA * 2
+                elif turno == 1:
+                    print(f"Has perdido :(  Perdiste {PMT.PELEAS_APUESTA * 2} Sickles")
+                    self.magizoologo_actual.sickles -= PMT.PELEAS_APUESTA * 2
+                # Recuperar la vida
+                for indice in range(2):
+                    criaturas[indice].vida_actual = vida_inicial[indice]
+                return True
 
 if __name__ == "__main__":
     ZoologicoMagico().main_loop()

@@ -15,7 +15,7 @@ Depende de:
 import parametros as PMT
 
 
-def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
+def loop_menus(menus: dict, menu_inicial: str):
     """
     ==========
     Loop Menus
