@@ -48,68 +48,6 @@ class Magizoologo(ABC):
     Son quienes se encargan de cuidar las DCCriaturas con el objetivo de preservar
     su existencia. Todo Magizoólogo puede y debe alimentar a sus DCCriaturas,
     capturarlas en caso de que escapen y sanarlas en caso de que enfermen.
-
-    Atributos
-    ---------
-    `nombre` : `str`
-        Es el identificador único del Magizoólogo.
-        Ningún otro Magizoólogo puede tener el nombre
-        de uno ya existente y este debe estar formado
-        exclusivamente por caracteres alfanuméricos,
-        y sin distinción entre mayúsculas y minúsculas.
-    `criaturas` : `list`
-        Son las distintas DCCriaturas que están a su
-        cuidado. Todo Magizoólogo tiene al menos una
-        criatura bajo su cuidado.
-    `alimentos` : `list`
-        Son los productos esenciales para el cuidado
-        de tus DCCriaturas. Cada nuevo Magizoólogo
-        parte con 1 alimento aleatorio.
-    `sickles` : `int`
-        Los Sickles son la moneda principal en la
-        economía del mundo mágico. Todo Magizoólogo
-        no puede tener saldo negativo y todos comienzan
-        con una cantidad inicial de 500 Sickles.
-    `energia_actual` : `int`
-        Es el recurso energético que se regenera día a
-        día para ejecutar acciones, puede estar entre
-        0 y su valor máximo y disminuye por cada
-        acción que se realiza. Su valor inicial diario
-        y máximo dependera de cada Magizoólogo.
-    `licencia` : `bool`
-        Indica si el Magizoólogo está certificado como
-        cuidador. Cada nuevo Magizoólogo comienza con su
-        licencia, pero si la pierde el DCC no le permitirá
-        adoptar nuevas criaturas hasta que la recupere.
-    `nivel_aprobacion` : `int`
-        Corresponde a la calificación diaria otorgada por
-        el DCC según el estado de las DCCriaturas que se
-        posee. Varía entre 0 y 100, y si es menor a 60 el
-        Magizoólogo pierde su licencia.
-    `nivel_magico` : `int`
-        Indicará que tan apto es el Magizoólogo para
-        alimentar, recuperar y sanar a sus DCCriaturas.
-    `destreza` : `int`
-        Cuando una de tus DCCriaturas huye,
-        el nivel de destreza influirá en las
-        posibilidades de recuperarla.
-    `energia_max` : `int`
-        El nivel de energía inicial y máxima que determina
-        la cantidad de acciones que un Magizoólogo puede
-        hacer por día. Cada vez que comienza un día nuevo,
-        la energía actual se recupera a este nivel.
-    `responsabilidad` : `int`
-        Influirá en las posibilidades de enfermar y
-        escapar que tienen las DCCriaturas que se poseen.
-
-    Acciones (Métodos)
-    ------------------
-        `adoptar_dccriatura()`
-        `comprar_alimentos()`
-        `alimentar_dccriatura()`
-        `recuperar_dccriatura()`
-        `sanar_dccriatura()`
-        `habilidad_especial()`
     """
     def __init__(self,
                  nombre,
@@ -131,12 +69,8 @@ class Magizoologo(ABC):
         # ---------------------------- #
         # Valores de listad de objetos #
         # ---------------------------- #
-        if criaturas is None:
-            criaturas = list()
         if alimentos is None:
-            alimento = random.choice((alm.BunueloGusarajo,
-                                      alm.HigadoDragon,
-                                      alm.BunueloGusarajo))
+            alimento = random.choice((alm.BunueloGusarajo, alm.HigadoDragon, alm.BunueloGusarajo))
             alimentos = [alimento()]
         self.criaturas = criaturas
         self.alimentos = alimentos
@@ -282,6 +216,8 @@ class Magizoologo(ABC):
         """
         Cuando un Magizoólogo intenta recuperar una de sus DCCriaturas.
         El coste energético de intentar recuperar una criatura es de 10 puntos.
+
+        Retorna False si no se pudo recuperar, la criatura en casi contrario
         """
         if self.energia_actual < PMT.MAGIZOOLOGOS_COSTO_RECUPERAR:
             print("No suficiente tienes energía")

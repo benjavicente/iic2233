@@ -15,14 +15,6 @@ Depende de:
     procesos
 """
 
-# TODO:
-# Completar los procesos del programa
-# Revizar si hay párametros en este archivo
-# Documentar lo que ya está hecho}
-# Mostrar en README los que es funcional
-# Completar pasar día
-# Completar pelea
-
 import operator as op
 
 import parametros as PMT

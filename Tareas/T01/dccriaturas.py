@@ -16,13 +16,9 @@ Depende de:
 
 from abc import ABC, abstractmethod
 import random
+
 import parametros as PMT
 import alimentos as alm
-
-# TODO:
-# Revisar parámetros
-# Completar alimentarse
-# Completar característica única
 
 
 def retornar_clase_criatura(tipo_criatura: str):
@@ -50,76 +46,6 @@ class DCCriaturas(ABC):
     Todas las DCCriaturas pueden alimentarse, escapar e interactuar
     de forma negativa o positiva con su Magizoólogo.
     Poseen diversos atributos cuyos valores variarían según el tipo de criatura.
-
-    Atributos
-    ---------
-    `nombre` : `str`
-        Es el identificador único de cada criatura.
-        No puede repetirse con ninguna criatura existente
-        y debe estar estar formado exclusivamente por
-        caracteres alfanuméricos, y sin distinción
-        entre mayúsculas y minúsculas.
-    `nivel_magico` : `int`
-        Valor que indica cuán poderosa es la criatura.
-        Este valor afecta en la cantidad de daño que
-        puede hacer una criatura, en qué tan difícil
-        es de capturar y en la cantidad de dinero que
-        recibe el Magizoólogo por cuidarla. Varía de
-        forma aleatoria y uniforme dentro de rangos
-        específicos para cada nueva DCCriatura
-    `vida_max` : `int`
-        Valor que indica la cantidad de vida total que
-        posee la DCCriatura. Varía de forma aleatoria
-        y uniforme dentro de rangos específicos para
-        cada nueva DCCriatura.
-    `vida_actual` : `int`
-        Valor que indica la cantidad de vida que posee
-        la DCCriatura actualmente. Comienza como el
-        valor de puntos de salud total. Su valor no
-        puede superar los puntos de salud total,
-        y tiene como valor mínimo 1.
-    `prob_escaparse` : `float`
-        Valor que indica la probabilidad base que tiene
-        la criatura para escapar. Es distinto según tipo,
-        algunas son mas propensas a permanecer junto a
-        su amo, mientras que otras son más rebeldes.
-        Se mantiene entre 0 y 1.
-    `prob_enfermarse` : `float`
-        Valor que indica la probabilidad base que tiene la
-        criatura de enfermarse. Esta probabilidad varia por
-        tipo de criatura y se mantiene entre 0 y 1.
-    `enfermo` : `bool`
-        Valor que indica si la criatura esta enferma o no.
-        En caso de que una criatura se enferme debe ser
-        sanada por su amo, de lo contrario, su salud
-        disminuirá en 7 puntos por cada día
-        que tenga esta condición.
-    `nivel_hambre` : `str`
-        Valor que indica el nivel de hambre de una criatura
-        e influye en los puntos de salud de la misma criatura.
-        Su valor puede ser "satisfecha" o "hambrienta". Se
-        puede pasar de "satisfecha" a "hambrienta" si no se
-        come en una cierta cantidad de días determinados por
-        el tipo de cada criatura. Por otra parte se puede
-        pasar de "hambrienta" a "satisfecha" si la criatura
-        consume alguno de los alimentos que se detallan en
-        Alimentos. Por cada día que una criatura esté
-        "hambrienta" perderá 3 puntos de salud.
-    `dias_ultima_comida` : `int`
-        Valor que representa la cantidad de
-        días que lleva sin comer la criatura.
-    `agresividad` : `str`
-        Indica el nivel de agresividad de una criatura e
-        influye en la probabilidad de que la criatura ataque
-        al Magizoólogo al momento de que este le da alimentos.
-        Puede ser "inofensiva", "arisca" o "peligrosa".
-
-    Acciones (Métodos)
-    ------------------
-        `alimentarse()`
-        `escaparse()`
-        `enfermarse()`
-        `caracteristica_unica()`
     """
     def __init__(self,
                  nombre,
@@ -179,7 +105,6 @@ class DCCriaturas(ABC):
         return self.nombre
 
     def __eq__(self, value):
-        # No se considera la diferencia entre mayúsculas y minúsculas
         if type(value) is str:
             value = value.lower()
         return self.nombre.lower() == value
@@ -312,9 +237,6 @@ class Augurey(DCCriaturas):
         # Inicia la clase
         super().__init__(nombre, **kwargs)
 
-    # def alimentarse(self, alimento, magizoologo):
-    #     return super().alimentarse(alimento, magizoologo)
-
     def caracteristica_unica(self, magizoologo):
         if (self.nivel_hambre == "satisfecha"
                 and not self.enferma
@@ -356,9 +278,6 @@ class Niffler(DCCriaturas):
         else:
             kwargs["nivel_cleptomania"] = int(kwargs["nivel_cleptomania"])
 
-    # def alimentarse(self, alimento, magizoologo):
-    #     return super().alimentarse(alimento, magizoologo)
-
     def caracteristica_unica(self, magizoologo):
         # factor decide se regala (* +1) o roba (* -1)
         factor = (self.nivel_hambre == "satisfecha") * 2 - 1
@@ -392,9 +311,6 @@ class Erkling(DCCriaturas):
             kwargs["agresividad"] = PMT.ERKLING_NIVEL_AGRESIVIDAD
         # Inicia la clase
         super().__init__(nombre, **kwargs)
-
-    # def alimentarse(self, alimento, magizoologo):
-    #     return super().alimentarse(alimento, magizoologo)
 
     def caracteristica_unica(self, magizoologo):
         if self.nivel_hambre == "hambrienta" and magizoologo.alimentos:
