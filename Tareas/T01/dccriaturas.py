@@ -155,9 +155,11 @@ class DCCriaturas(ABC):
         # Características especiales de los alimentos
         if type(alimento) is alm.TartaMelaza:
             if type(self) is Niffler:
+                print(f"el {alimento} ha pacificado a {self}!")
                 if 0.15 > random.random():
                     self.agresividad = "inofensiva"
         elif type(alimento) is alm.HigadoDragon:
+            print(f"El {alimento} ha sanado a tu criatura!")
             self.enferma = False
         elif type(alimento) is alm.BunueloGusarajo:
             if 0.35 > random.random():
