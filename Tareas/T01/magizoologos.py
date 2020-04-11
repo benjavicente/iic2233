@@ -110,7 +110,7 @@ class Magizoologo(ABC):
     def __eq__(self, value):
         if type(value) is str:
             value = value.lower()
-        return self.nombre == value
+        return self.nombre.lower() == value
 
     def __repr__(self):
         return f"{self.nombre} {id(self)}"
