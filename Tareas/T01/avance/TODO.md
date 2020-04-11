@@ -131,7 +131,7 @@ Los datos de las entidades deben almacenarse en los archivos.
 
 - [X] **Adoptar DCCriaturas al DCC**: Se adopta una criatura si se posee licencia y dinero suficiente.
 - [X] **Comprar alimentos al DCC**: Se compra alimentos si posee suficiente dinero.
-- [ ] **Alimentar DCCriatura**: Alimenta a una criatura si posee alimentos, la criatura puede atacar a su dueño, el costo energético es de 5 puntos.
+- [X] **Alimentar DCCriatura**: Alimenta a una criatura si posee alimentos, la criatura puede atacar a su dueño, el costo energético es de 5 puntos.
 - [ ] **Recuperar DCCriatura**: El costo energético es de 5 puntos, la probabilidad de éxito es:
 
 $$

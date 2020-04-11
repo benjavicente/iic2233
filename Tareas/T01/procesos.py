@@ -46,16 +46,6 @@ def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
 
     - menu_inicial: str
     Menú inicial
-
-    - inc_prc: func
-    Función a realizar antes de iniciar un proceso.
-    Útil para cuando se necesitan respaldar datos.
-
-    - fin_prc: func
-    Función a realizar luego de terminar un proceso.
-    Útil para cuando se necesitan respaldar datos.
-    Solo se ejecuta cuando el valor retornado por
-    la función del menú es `True`
     """
     menu_actual = menu_inicial
     menus_anteriores = list()
@@ -89,17 +79,11 @@ def loop_menus(menus: dict, menu_inicial: str, inc_prc=None, fin_prc=None):
                 menu_actual = valor
             elif type(valor) is tuple:
                 # Realizar acción
-                if inc_prc:
-                    inc_prc()
                 out = valor[1]()
                 if out:
                     if len(valor) == 3:
                         menus_anteriores.append(menu_actual)
                         menu_actual = valor[2]
-                # Esto puede ejecutarse siempre o
-                # Cuando se retorne True en out
-                if fin_prc:
-                    fin_prc()
         else:
             print(f"Opción '{elegida}' no valida\n")
 
@@ -133,15 +117,15 @@ def volver_a_intentarlo(valor_invalido: str, *razones_invalido):
         print(
             "[1] - Volver a intentarlo",
             "[2] - Volver atrás",
-            "[0] - Salir",
+            "[0] - Salir sin guardar",
             sep="\n"
         )
         elegida = input("--> ").strip()
         if elegida == "0":
             exit()
         elif elegida == "1" or elegida == "2":
-            return elegida == "1"
             print()
+            return elegida == "1"
         print(f"Opción '{elegida}' no valida\n")
 
 

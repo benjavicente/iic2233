@@ -51,13 +51,18 @@ class ZoologicoMagico:
             "Menú de Acciones": (
                 "Menú cuidar DCCriaturas",
                 "Menú DCC",
-                ("Pasar al día siguiente", self.__pasar_de_dia)
+                ("Pasar al día siguiente", self.__pasar_de_dia),
+                ("Guardar Progreso", self._actualizar_archivos),
             ),
             "Menú cuidar DCCriaturas": (
-                ("Alimentar criatura: -5E", self.__alimentar_criatura),
-                ("Recuperar criatura: -10E", self.__recuperar_criatura),
-                ("Sanar criatura: -8E", self.__sanar_criatura),
-                ("Habilidad especial: -15E", self.__habilidad_especial),
+                (f"Alimentar criatura: -{PMT.MAGIZOOLOGOS_COSTO_ALIMENTAR}E",
+                 self.__alimentar_criatura),
+                (f"Recuperar criatura: -{PMT.MAGIZOOLOGOS_COSTO_RECUPERAR}E",
+                 self.__recuperar_criatura),
+                (f"Sanar criatura: -{PMT.MAGIZOOLOGOS_COSTO_CURAR}E",
+                 self.__sanar_criatura),
+                (f"Habilidad especial: -{PMT.MAGIZOOLOGOS_COSTO_HABILIDAD}E",
+                 self.__habilidad_especial),
                 ("Peleas", self.__empezar_pelea),
             ),
             "Menú DCC": (
@@ -70,18 +75,18 @@ class ZoologicoMagico:
         self._indice_magizoologo_actual = None
         self.lista_criaturas = None
         self.lista_magizoologos = None
-        self._leer_archivos()
 
     @property
     def magizoologo_actual(self):
         return self.lista_magizoologos[self._indice_magizoologo_actual]
 
     def main_loop(self):
-        pc.loop_menus(self._menus, "Menú de Inicio",
-                      self._leer_archivos, self._actualizar_archivos)
+        self._leer_archivos()
+        pc.loop_menus(self._menus, "Menú de Inicio")
+        self._actualizar_archivos()
 
     def _leer_archivos(self):
-        print("$0")
+        print("Cargando...")
         # ----------------------- #
         # Archivo de DCCriaturas  #
         # ----------------------- #
@@ -135,11 +140,11 @@ class ZoologicoMagico:
             self.lista_magizoologos.append(clase_magizoologo(**parametros_magizoologo))
 
     def _actualizar_archivos(self):
-        print("$1")
+        print("Guardando...")
         # Encontré esto en la documentación
         # https://docs.python.org/3/reference/compound_stmts.html#with
         with open(PMT.PATH_MAGIZOOLOGOS, "w", encoding="UTF-8") as archivo_magizoologos,\
-             open(PMT.PATH_CRIATURAS, "w", encoding="UTF-8") as archivo_criaturas:
+                open(PMT.PATH_CRIATURAS, "w", encoding="UTF-8") as archivo_criaturas:
             for magizoologo in self.lista_magizoologos:
                 # Atributos magizoólogo
                 extractor_atributos = op.attrgetter(*PMT.FORMATO_MAGIZOOLOGOS)
@@ -209,6 +214,7 @@ class ZoologicoMagico:
         print("*" * PMT.UI_ANCHO)
         print(" Has pasado al día siguiente! ".center(PMT.UI_ANCHO, "*"))
         print("*" * PMT.UI_ANCHO)
+        # ---------------------------- DCC ---------------------------- #
         print(" DCC ".center(PMT.UI_ANCHO - 2, "-").center(PMT.UI_ANCHO, "*"))
         # Nivel de aprobación
         self._dcc.calcular_aprobación(self.magizoologo_actual)
@@ -216,7 +222,7 @@ class ZoologicoMagico:
         self._dcc.pagar_magizoologo(self.magizoologo_actual)
         # Multas
         self._dcc.fiscalizar_magizoologo(self.magizoologo_actual)
-        # Día siguiente
+        # ----------------------- Día siguiente ----------------------- #
         print(("-" * (PMT.UI_ANCHO - 2)).center(PMT.UI_ANCHO, "*"))
         print(" Al día siguiente... ".center(PMT.UI_ANCHO - 2, "-").center(PMT.UI_ANCHO, "*"))
         print(("-" * (PMT.UI_ANCHO - 2)).center(PMT.UI_ANCHO, "*"))
@@ -249,7 +255,7 @@ class ZoologicoMagico:
                 enfermas.append(str(criatura))
             if criatura.escapado:
                 escapados.append(str(criatura))
-        print("*" * PMT.UI_ANCHO)
+        print("-" * PMT.UI_ANCHO)
         if escapados:
             print("Criatura{0} escapada{0}:".format("s" * (len(escapados) > 1)),
                   ", ".join(escapados))
@@ -257,6 +263,9 @@ class ZoologicoMagico:
             print("Criatura{0} enferma{0}:".format("s" * (len(enfermas) > 1)),
                   ", ".join(enfermas))
         print("*" * PMT.UI_ANCHO)
+        # ------------------------ Magizoólogo ------------------------ #
+        # Recuperar su salud
+        self.magizoologo_actual.energia_actual = self.magizoologo_actual.energia_max
         print()
         return True
 

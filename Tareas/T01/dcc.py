@@ -58,8 +58,8 @@ class DCC:
         Paga Sickles al Magizoólogo al finalizar el día.
         """
         pago = int(PMT.DCC_PESO_PAGO["aprobacion"] * magizoologo.nivel_aprobacion
-                + PMT.DCC_PESO_PAGO["alimento"] * len(magizoologo.alimentos)
-                + PMT.DCC_PESO_PAGO["magico"] * magizoologo.nivel_magico)
+                   + PMT.DCC_PESO_PAGO["alimento"] * len(magizoologo.alimentos)
+                   + PMT.DCC_PESO_PAGO["magico"] * magizoologo.nivel_magico)
         magizoologo.sickles += pago
         print(f"EL DCC te ha pagado {pago} Sickles")
         return True

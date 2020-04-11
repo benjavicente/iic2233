@@ -31,6 +31,8 @@ Los módulos `dcc`, `dccriaturas`, `magizoologos`, `alimentos` y `procesos` debe
 
 Considero que la DCCriatura Augurey puede entregar un alimento a su dueño si esta se escapó.
 
+Asumo que los cambios en los datos solo se guardan al salir por el menú y no por el proceso fallido. He agradado la opción de guardar sin salir para no tener que salir para guardar el progreso.
+
 Asumo que se debe eliminar los caracteres de espacios en el input del usuario (uso siempre `input().strip()`).
 
 Asumo que las licencias se pagan por separado. Es decir, que las multas se van pagando hasta que el Magizoólogo no tenga Sickles o halla pagado todas las multas.
@@ -98,14 +100,14 @@ Asumo que se debe poder alimentar a una criatura en cualquier momento para sanar
     - [X] **1.5pts** Se descuenta el valor de sickles correspondiente al comprar alimentos y se notifica en caso de no poder realizarse la acción.
     - [X] **2pts** Se pueden visualizar los datos actualizados del estado del Magizoólogo y de las DCCriaturas correctamente.
   - Pasar al día siguiente
-    - [ ] **2pts** Se aplican correctamente las habilidades especiales de cada DCCriatura.
-    - [ ] **2pts** Se actualiza correctamente el estado de salud de las DCCriaturas.
-    - [ ] **1pt** Se actualiza el estado de hambre de cada DCCriatura dependiendo del tiempo que lleva sin comer.
-    - [ ] **1pt** Se actualiza correctamente el estado de salud de las DCCriaturas.
-    - [ ] **2pts** Se actualiza correctamente la cantidad de DCCriaturas escapadas.
-    - [ ] **2pts** Se actualiza correctamente el nivel de aprobación y el estado de la licencia del Magizoólogo.
-    - [ ] **2pts** Se paga correctamente la cantidad de sickles al Magizoólogo y se actualiza la cantidad de sickles que tiene.
-    - [ ] **2pts** La fiscalización se realiza correctamente: se calculan multas según los eventos de DCCriaturas.
+    - [X] **2pts** Se aplican correctamente las habilidades especiales de cada DCCriatura.
+    - [X] **2pts** Se actualiza correctamente el estado de salud de las DCCriaturas.
+    - [X] **1pt** Se actualiza el estado de hambre de cada DCCriatura dependiendo del tiempo que lleva sin comer.
+    - [X] **1pt** Se actualiza correctamente el estado de salud de las DCCriaturas.
+    - [X] **2pts** Se actualiza correctamente la cantidad de DCCriaturas escapadas.
+    - [X] **2pts** Se actualiza correctamente el nivel de aprobación y el estado de la licencia del Magizoólogo.
+    - [X] **2pts** Se paga correctamente la cantidad de sickles al Magizoólogo y se actualiza la cantidad de sickles que tiene.
+    - [X] **2pts** La fiscalización se realiza correctamente: se calculan multas según los eventos de DCCriaturas.
 
 - **Consola: 15 pts (14%)**
   - Menú de inicio
@@ -117,7 +119,7 @@ Asumo que se debe poder alimentar a una criatura en cualquier momento para sanar
   - Menú DCC
     - [X] **2pts** El menú contiene las opciones mínimas pedidas.
   - Pasar al día siguiente
-    - [ ] **3pts** Visualiza los resúmenes de todos los eventos del día que se mencionan en el enunciado.
+    - [X] **3pts** Visualiza los resúmenes de todos los eventos del día que se mencionan en el enunciado.
   - Robustez
     - [X] **4pts** Todos los menús son a prueba de errores.
 

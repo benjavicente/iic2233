@@ -100,7 +100,7 @@ HIBRIDO_ACTIVO_EFECTIVIDAD = 1
 # Parámetros relacionados con las criaturas    #
 # ============================================ #
 ALIMENTARSE_EFECTO_HAMBRE = {"satisfecha": 0, "hambrienta": 15}
-ALIMENTARSE_EFECTO_AGRESIVIDAD = {"inofensiva": 0, "arica": 20, "peligrosa": 40}
+ALIMENTARSE_EFECTO_AGRESIVIDAD = {"inofensiva": 0, "arisca": 20, "peligrosa": 40}
 ALIMENTARSE_MAXIMO_ATAQUE = 10
 ESCAPARSE_EFECTO_HAMBRE = {"satisfecha": 0, "hambrienta": 20}
 CRIATURAS_PENALISACION_VIDA_ENFERMEDAD = 7

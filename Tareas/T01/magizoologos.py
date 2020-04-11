@@ -287,9 +287,45 @@ class Magizoologo(ABC):
         """
         if self.energia_actual < PMT.MAGIZOOLOGOS_COSTO_RECUPERAR:
             print("No suficiente tienes energía")
-        # FORMULA EN TODO
-
-        pass
+            return False
+        # Lista de criaturas escapadas
+        criaturas_escapadas = list()
+        for c in self.criaturas:
+            if c.escapado:
+                criaturas_escapadas.append(c)
+        if not criaturas_escapadas:
+            print("No hay criaturas escapadas :)")
+            return False
+        # Formateo de lista a str
+        criaturas_a_recuperar =\
+            "\n".join(map(lambda x: " - " + str(x), criaturas_escapadas))
+        # Proceso multipaso --> Retorna un str o False
+        criatura_elegida = pc.proceso_multipaso(
+            (f"Elige una criatura a recuperar \n{criaturas_a_recuperar}", (
+                ("Tienes a la criatura",
+                    lambda x: x in self.criaturas),
+                ("La criatura se ha escapado",
+                    lambda x: (x in criaturas_escapadas) == (x in self.criaturas)),
+            ),),
+        )[0]  # Esto es porque proceso multipaso retorna una lista
+        if criatura_elegida:
+            # Perdida de energía
+            self.energia_actual -= PMT.MAGIZOOLOGOS_COSTO_RECUPERAR
+            # -- Tratar de recuperar -- #
+            # Se obtiene la criatura
+            c = self.criaturas[self.criaturas.index(criatura_elegida)]
+            print(f"Has tratado de recuperar a {c}...")
+            # Formula
+            valor = ((self.destreza + self.nivel_magico - c.nivel_magico)
+                     / (self.destreza + self.nivel_magico + c.nivel_magico))
+            prob = min(1, max(0, valor))
+            if prob >= random.random():
+                c.escapado = False
+                print(f"Has recuperado a {c}!")
+                return c  # Retorna la criatura para aplicar efectos pasivos
+            else:
+                print(f"No has podido recuperar a {c} :(")
+                return False
 
     def sanar_dccriatura(self):
         """
@@ -298,21 +334,16 @@ class Magizoologo(ABC):
         """
         if self.energia_actual < PMT.MAGIZOOLOGOS_COSTO_CURAR:
             print("No suficiente tienes energía")
-        # FORMULA EN TODO
-        pass
+            return False
+        else:
+            pass
 
     @abstractmethod
     def habilidad_especial(self):
-        """
-        Cada Magizoólogo tiene una habilidad especial que depende de su
-        especialización. El costo energético de cualquiera
-        de estas habilidades es de 15 puntos.
-        """
-        # PMT.MAGIZOOLOGOS_COSTO_HABILIDAD
-        pass
+        self.energia_actual -= PMT.MAGIZOOLOGOS_COSTO_HABILIDAD
+
 
 # Inicio Clases heredadas
-
 
 class MagizoologoDocencio(Magizoologo):
     """
@@ -361,7 +392,10 @@ class MagizoologoDocencio(Magizoologo):
             criatura_alimentada.vida_actual += PMT.DOCENCIO_PASIVO_SANAR_VIDA
 
     def recuperar_dccriatura(self):
-        pass
+        criatura_recuperada = super().recuperar_dccriatura()
+        if criatura_recuperada:
+            criatura_recuperada.vida_actual -= PMT.DOCENCIO_PASIVO_MERMAN
+
 
     def habilidad_especial(self):
         if self.puede_usar_habilidad:
@@ -414,7 +448,7 @@ class MagizoologoTareo(Magizoologo):
             criatura_alimentada.vida_actual = criatura_alimentada.vida_max
 
     def recuperar_dccriatura(self):
-        pass
+        super().recuperar_dccriatura()
 
     def habilidad_especial(self):
         pass
@@ -464,7 +498,7 @@ class MagizoologoHibrido(Magizoologo):
             criatura_alimentada.vida_actual += PMT.DOCENCIO_PASIVO_SANAR_VIDA
 
     def recuperar_dccriatura(self):
-        pass
+        super().recuperar_dccriatura()
 
     def habilidad_especial(self):
         pass
