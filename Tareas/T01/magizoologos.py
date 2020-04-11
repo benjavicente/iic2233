@@ -223,8 +223,6 @@ class Magizoologo(ABC):
         if value <= 0:
             self.__sickles = 0
         else:
-            # Como no pueden ser números racionales
-            # se transforma a int
             self.__sickles = int(value)
 
     def adoptar_dccriatura(self, criatura):
@@ -340,7 +338,18 @@ class Magizoologo(ABC):
 
     @abstractmethod
     def habilidad_especial(self):
-        self.energia_actual -= PMT.MAGIZOOLOGOS_COSTO_HABILIDAD
+        if self.energia_actual >= PMT.MAGIZOOLOGOS_COSTO_HABILIDAD:
+            if self.puede_usar_habilidad:
+                print("Has utilizado tu habilidad especial!")
+                self.puede_usar_habilidad = False
+                self.energia_actual -= PMT.MAGIZOOLOGOS_COSTO_HABILIDAD
+                return True
+            else:
+                print("Ya has usado la habilidad")
+                return False
+        else:
+            print("No tienes energía suficiente")
+            return False
 
 
 # Inicio Clases heredadas
@@ -396,10 +405,11 @@ class MagizoologoDocencio(Magizoologo):
         if criatura_recuperada:
             criatura_recuperada.vida_actual -= PMT.DOCENCIO_PASIVO_MERMAN
 
-
     def habilidad_especial(self):
-        if self.puede_usar_habilidad:
-            pass
+        if super().habilidad_especial():
+            print("Has saciado el hambre de todas tus criaturas!")
+            for criatura in self.criaturas:
+                criatura.dias_sin_comer = 0
 
 
 class MagizoologoTareo(Magizoologo):
@@ -451,7 +461,10 @@ class MagizoologoTareo(Magizoologo):
         super().recuperar_dccriatura()
 
     def habilidad_especial(self):
-        pass
+        if super().habilidad_especial():
+            print("Has recuperado todas tus criaturas!")
+            for criatura in self.criaturas:
+                criatura.escapado = False
 
 
 class MagizoologoHibrido(Magizoologo):
@@ -501,7 +514,10 @@ class MagizoologoHibrido(Magizoologo):
         super().recuperar_dccriatura()
 
     def habilidad_especial(self):
-        pass
+        if super().habilidad_especial():
+            print("Has sanado a todas tus criaturas!")
+            for criatura in self.criaturas:
+                criatura.enferma = False
 
 
 class MagizoologoSuper(MagizoologoTareo, MagizoologoHibrido, MagizoologoDocencio):

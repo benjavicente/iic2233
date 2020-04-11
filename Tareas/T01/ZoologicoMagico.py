@@ -51,8 +51,10 @@ class ZoologicoMagico:
             "Menú de Acciones": (
                 "Menú cuidar DCCriaturas",
                 "Menú DCC",
-                ("Pasar al día siguiente", self.__pasar_de_dia),
-                ("Guardar Progreso", self._actualizar_archivos),
+                ("Pasar al día siguiente",
+                 self.__pasar_de_dia),
+                ("Guardar Progreso",
+                 self._actualizar_archivos),
             ),
             "Menú cuidar DCCriaturas": (
                 (f"Alimentar criatura: -{PMT.MAGIZOOLOGOS_COSTO_ALIMENTAR}E",
@@ -63,12 +65,16 @@ class ZoologicoMagico:
                  self.__sanar_criatura),
                 (f"Habilidad especial: -{PMT.MAGIZOOLOGOS_COSTO_HABILIDAD}E",
                  self.__habilidad_especial),
-                ("Peleas", self.__empezar_pelea),
+                ("Peleas",
+                 self.__empezar_pelea),
             ),
             "Menú DCC": (
-                ("Adoptar criaturas", self.__adoptar_criatura),
-                ("Comprar alimentos", self.__comprar_alimentos),
-                ("Ver estado", self.__ver_estado),
+                ("Adoptar criaturas",
+                 self.__adoptar_criatura),
+                ("Comprar alimentos",
+                 self.__comprar_alimentos),
+                ("Ver estado",
+                 self.__ver_estado),
             ),
         }
         self._dcc = dcc.DCC()
