@@ -82,4 +82,4 @@ class BunueloGusarajo(Alimentos):
     """
     def __init__(self):
         self._nombre = "Buñuelo de Gusarajo"
-        self.pnt_vida = PMT.ALIMENTOS_BUNUELO_GUSARAJO
+        self.pnt_vida = PMT.ALIMENTOS_BUNUELO_GUSARAJO_PNT

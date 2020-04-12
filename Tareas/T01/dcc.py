@@ -1,26 +1,3 @@
-"""
-=========
-Clase DDC
-=========
-Contiene la clase:
-------------------
-    DCC
-Depende de:
------------
-    parametros
-    procesos
-    alimentos
-    dccriaturas
-"""
-
-# TODO:
-# Testear
-
-# IMPORTANTE:
-# Puede ser que me convenga unir la clase DCC con Magizoológico,
-# ya que atributos de la clase Magizoológico son esenciales
-# en los métodos de DCC
-
 import random
 import parametros as PMT
 from operator import attrgetter

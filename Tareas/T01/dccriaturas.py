@@ -47,20 +47,13 @@ class DCCriaturas(ABC):
     de forma negativa o positiva con su Magizoólogo.
     Poseen diversos atributos cuyos valores variarían según el tipo de criatura.
     """
-    def __init__(self,
-                 nombre,
-                 nivel_magico=None,
-                 prob_escaparse=None,
-                 prob_enfermarse=None,
-                 enferma=None,
-                 escapado=None,
-                 vida_max=None,
-                 vida_actual=None,
-                 nivel_hambre=None,
-                 agresividad=None,
-                 dias_sin_comer=None,
-                 nivel_cleptomania=None,
-                 **kwargs):
+    def __init__(self, nombre,
+                 nivel_magico=None, prob_escaparse=None,
+                 prob_enfermarse=None, enferma=None,
+                 escapado=None, vida_max=None,
+                 vida_actual=None, nivel_hambre=None,
+                 agresividad=None, dias_sin_comer=None,
+                 nivel_cleptomania=None, **kwargs):
         # -------------- #
         # Valores únicos #
         # -------------- #
@@ -149,20 +142,20 @@ class DCCriaturas(ABC):
                  + PMT.ALIMENTARSE_EFECTO_AGRESIVIDAD[self.agresividad])
         probabilidad_atacar = min(1, valor/100)
         if probabilidad_atacar >= random.random():
-            daño = max(0, magizoologo.nivel_magico - self.nivel_magico)
+            daño = max(PMT.ALIMENTARSE_MINIMO_ATAQUE, magizoologo.nivel_magico - self.nivel_magico)
             print(f"{self} te ha atacado! Perdiste {daño} de energía")
             magizoologo.energia_actual -= daño
         # Características especiales de los alimentos
         if type(alimento) is alm.TartaMelaza:
             if type(self) is Niffler:
-                print(f"el {alimento} ha pacificado a {self}!")
-                if 0.15 > random.random():
+                if PMT.ALIMENTOS_TARTA_PROB_PACIFICAR_NIFFLER > random.random():
+                    print(f"el {alimento} ha pacificado a {self}!")
                     self.agresividad = "inofensiva"
         elif type(alimento) is alm.HigadoDragon:
             print(f"El {alimento} ha sanado a tu criatura!")
             self.enferma = False
         elif type(alimento) is alm.BunueloGusarajo:
-            if 0.35 > random.random():
+            if PMT.ALIMENTOS_BUNUELO_PROB_CONSUMIR > random.random():
                 print("La criatura ha rechazado el alimento!")
                 return False  # Retorna False --> No se consumió el alimento
         # Alimentarse
@@ -261,7 +254,7 @@ class Niffler(DCCriaturas):
     def __init__(self, nombre, **kwargs):
         # Predeterminados #
         if "tiempo_satisfecha" not in kwargs:
-            kwargs["tiempo_satisfecha"] = PMT.AUGUREY_TIEMPO_SATISFECHA
+            kwargs["tiempo_satisfecha"] = PMT.NIFFLER_TIEMPO_SATISFECHA
         if "nivel_magico" not in kwargs:
             kwargs["nivel_magico"] = random.randint(*PMT.NIFFLER_RANGO_NIVEL_MAGICO)
         if "prob_escaparse" not in kwargs:

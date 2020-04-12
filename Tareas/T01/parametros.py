@@ -13,7 +13,6 @@ from os import path
 # --------- #
 #  PATH     #
 # --------- #
-
 PATH_CARPETA = "data"
 PATH_CRIATURAS = path.join(PATH_CARPETA, "criaturas.csv")
 PATH_MAGIZOOLOGOS = path.join(PATH_CARPETA, "magizoologos.csv")
@@ -58,7 +57,6 @@ DCC_APROBACION = 60
 MAGIZOOLOGOS_SICKLES_INICIALES = 500
 MAGIZOOLOGOS_LICENCIA_INICIAL = "True"
 MAGIZOOLOGOS_HABILIDADES = "True"
-MAGIZOOLOGOS_TIPOS = {"docencio", "tareo", "hibrido"}
 MAGIZOOLOGOS_ENERGIA_MINIMA = 0
 MAGIZOOLOGOS_COSTO_ALIMENTAR = 5
 MAGIZOOLOGOS_COSTO_RECUPERAR = 10
@@ -83,7 +81,6 @@ TAREO_RANGO_DESTREZA = (40, 50)
 TAREO_RANGO_ENERGIA_MAX = (35, 45)
 TAREO_RANGO_RESPONSABILIDAD = (10, 25)
 TAREO_PASIVO_PROB_SANAR = 0.7
-TAREO_ACTIVO_EFECTIVIDAD = 1
 
 # ---------------------- #
 #  Magizoólogos Híbrido  #
@@ -93,7 +90,6 @@ HIBRIDO_RANGO_DESTREZA = (30, 50)
 HIBRIDO_RANGO_ENERGIA_MAX = (50, 55)
 HIBRIDO_RANGO_RESPONSABILIDAD = (15, 25)
 HIBRIDO_PASIVO_SANAR_VIDA = 10
-HIBRIDO_ACTIVO_EFECTIVIDAD = 1
 
 
 # ============================================ #
@@ -101,7 +97,7 @@ HIBRIDO_ACTIVO_EFECTIVIDAD = 1
 # ============================================ #
 ALIMENTARSE_EFECTO_HAMBRE = {"satisfecha": 0, "hambrienta": 15}
 ALIMENTARSE_EFECTO_AGRESIVIDAD = {"inofensiva": 0, "arisca": 20, "peligrosa": 40}
-ALIMENTARSE_MAXIMO_ATAQUE = 10
+ALIMENTARSE_MINIMO_ATAQUE = 10
 ESCAPARSE_EFECTO_HAMBRE = {"satisfecha": 0, "hambrienta": 20}
 CRIATURAS_PENALISACION_VIDA_ENFERMEDAD = 7
 CRIATURAS_PENALISACION_VIDA_HAMBRIENTA = 3
@@ -144,18 +140,22 @@ ERKLING_NIVEL_AGRESIVIDAD = "peligrosa"
 # Parámetros relacionados con los alimentos    #
 # ============================================ #
 ALIMENTOS_TARTA_MALEZA_PNT = 15
-ALIMENTOS_TARTA_PROB_PACIFICAR_NIFFLER = 0.15
 ALIMENTOS_HIGADO_DRAGON_PNT = 10
-ALIMENTOS_BUNUELO_GUSARAJO = 5
+ALIMENTOS_BUNUELO_GUSARAJO_PNT = 5
+ALIMENTOS_TARTA_PROB_PACIFICAR_NIFFLER = 0.15
 ALIMENTOS_BUNUELO_PROB_CONSUMIR = 0.65
 
 
 # ============================================ #
 # Parámetros relacionados con las Peleas       #
 # ============================================ #
-
 PELEAS_APUESTA = 30
 PELEAS_ATAQUE = {"inofensiva": 0.25, "arisca": 0.3, "peligrosa": 0.35}
 PELEAS_PROB_ESQUIVAR = 0.5
 PELEAS_EL_DCC_ELIGE = False  # True --> Sí elige | False --> No elige (Pauta)
 PELEAS_INICIAL = 1  # 1 --> Magizoólogo | 0 --> DCC
+
+# ============================================ #
+# Parámetros relacionados con SuperMagizoólogo #
+# ============================================ #
+SUPERMAGIZOOLOGO_ACTIVO = True

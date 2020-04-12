@@ -141,7 +141,6 @@ class ZoologicoMagico:
 
     def _actualizar_archivos(self):
         print("Guardando...")
-        # Encontré esto en la documentación
         # https://docs.python.org/3/reference/compound_stmts.html#with
         with open(PMT.PATH_MAGIZOOLOGOS, "w", encoding="UTF-8") as archivo_magizoologos,\
                 open(PMT.PATH_CRIATURAS, "w", encoding="UTF-8") as archivo_criaturas:
@@ -223,6 +222,17 @@ class ZoologicoMagico:
         self._dcc.pagar_magizoologo(self.magizoologo_actual)
         # Multas
         self._dcc.fiscalizar_magizoologo(self.magizoologo_actual)
+        # ------------- Tranformación a SuperMagizoólogo ------------- #
+        if PMT.SUPERMAGIZOOLOGO_ACTIVO and self.magizoologo_actual.nivel_aprobacion >= 100:
+            print("Por tener 100 de aprobación, te transformaste en un SuperMagizoólogo!")
+            nombres_atributos = ("nombre", "criaturas", "alimentos", "sickles", "licencia",
+                                 "nivel_aprobacion", "nivel_magico", "destreza", "energia_max",
+                                 "responsabilidad")  # energia_actual == energia_max
+            extractor_atributos = op.attrgetter(*nombres_atributos)
+            atributos = extractor_atributos(self.magizoologo_actual)
+            diccionario_atributos = {k: v for k, v in zip(nombres_atributos, atributos)}
+            nuevo_magizoologo = mzg.MagizoologoSuper(**diccionario_atributos)
+            self.lista_magizoologos[self.__indice_magizoologo_actual] = nuevo_magizoologo
         # ----------------------- Día siguiente ----------------------- #
         print(("-" * (PMT.UI_ANCHO - 2)).center(PMT.UI_ANCHO, "*"))
         print(" Al día siguiente... ".center(PMT.UI_ANCHO - 2, "-").center(PMT.UI_ANCHO, "*"))
@@ -314,7 +324,7 @@ class ZoologicoMagico:
                 # -------------- Inicio de la pelea -------------- #
                 c_mgz = self.magizoologo_actual.obtener_dccriatura(criatura_elegida)
                 c_dcc = self.magizoologo_actual.obtener_dccriatura(criatura_dcc)
-                turno = 1
+                turno = PMT.PELEAS_INICIAL
                 criaturas = (c_mgz, c_dcc)
                 nombres = (str(self.magizoologo_actual), "DCC")
                 vida_inicial = (c_mgz.vida_actual, c_dcc.vida_actual)
@@ -352,6 +362,7 @@ class ZoologicoMagico:
                 for indice in range(2):
                     criaturas[indice].vida_actual = vida_inicial[indice]
                 return True
+
 
 if __name__ == "__main__":
     ZoologicoMagico().main_loop()
