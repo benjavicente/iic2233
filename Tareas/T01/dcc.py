@@ -47,14 +47,14 @@ class DCC:
         necesario. Puede que al DCC se le olvide multar en algunos casos.
         """
         dict_multas = {
-            "escapes": 0,
+            "escape": 0,
             "enfermedad": 0,
             "vida critica": 0,
         }
         for criatura in magizoologo.criaturas:
             if criatura.escapado:
-                dict_multas["escapes"] +=\
-                    PMT.DCC_FISCALIZADO["escapes"][1] >= random.random()
+                dict_multas["escape"] +=\
+                    PMT.DCC_FISCALIZADO["escape"][1] >= random.random()
             if criatura.enferma:
                 dict_multas["enfermedad"] +=\
                     PMT.DCC_FISCALIZADO["enfermedad"][1] >= random.random()
@@ -66,7 +66,7 @@ class DCC:
             # Mostrar multas
             for nombre, multas in dict_multas.items():
                 if multas:
-                    print(f" - {multas} caso{'s' * bool(multas)} de {nombre}: "
+                    print(f" - {multas} caso{'s' * (multas > 1)} de {nombre}: "
                           f"{PMT.DCC_FISCALIZADO[nombre][0]} Sickles cada una")
             # Pagar multas
             for nombre, multas in dict_multas.items():
