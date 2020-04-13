@@ -111,7 +111,7 @@ class DCCriaturas(ABC):
 
     @dias_sin_comer.setter
     def dias_sin_comer(self, value):
-        self.__dias_sin_comer = value
+        self.__dias_sin_comer = max(0, value)
         if self.__dias_sin_comer > self.tiempo_satisfecha:
             self.nivel_hambre = "hambrienta"
         elif not self.__dias_sin_comer:

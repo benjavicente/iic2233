@@ -39,11 +39,11 @@ class Alimentos(ABC):
     y producen distintos efectos al ser consumidos.
     """
     def __init__(self, nombre, pnt_vida):
-        self._nombre = nombre
+        self.nombre = nombre
         self.pnt_vida = pnt_vida
 
     def __str__(self):
-        return self._nombre
+        return self.nombre
 
     def __repr__(self):
         return f"{self}: id{id(self)}"

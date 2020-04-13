@@ -64,7 +64,7 @@ class ZoologicoMagico:
             "Menú DCC": (
                 ("Adoptar criaturas",
                  lambda: self._dcc.vernder_criaturas(self.magizoologo_actual,\
-                                                     self.lista_nombres_criaturas)),
+                                                     self._lista_nombres_criaturas)),
                 ("Comprar alimentos",
                  lambda: self._dcc.vernder_alimentos(self.magizoologo_actual)),
                 ("Ver estado",
@@ -73,12 +73,12 @@ class ZoologicoMagico:
         }
         self._dcc = dcc.DCC()
         self.__indice_magizoologo_actual = None
-        self.lista_nombres_criaturas = None
-        self.lista_magizoologos = None
+        self._lista_nombres_criaturas = None
+        self._lista_magizoologos = None
 
     @property
     def magizoologo_actual(self):
-        return self.lista_magizoologos[self.__indice_magizoologo_actual]
+        return self._lista_magizoologos[self.__indice_magizoologo_actual]
 
     def main_loop(self):
         self._leer_archivos()
@@ -91,7 +91,7 @@ class ZoologicoMagico:
         # Archivo de DCCriaturas  #
         # ----------------------- #
         lista_criaturas = list()
-        self.lista_nombres_criaturas = list()
+        self._lista_nombres_criaturas = list()
         with open(PMT.PATH_CRIATURAS, "r", encoding="UTF-8") as archivo_criaturas:
             datos_archivo_criaturas = archivo_criaturas.readlines()
         for fila_criatura in datos_archivo_criaturas:
@@ -111,11 +111,11 @@ class ZoologicoMagico:
                 continue
             # Se crea la DCCriatura
             lista_criaturas.append(clase_criatura(**parametros_criatura))
-            self.lista_nombres_criaturas.append(parametros_criatura["nombre"])
+            self._lista_nombres_criaturas.append(parametros_criatura["nombre"])
         # ----------------------- #
         # Archivo de Magizoólogos #
         # ----------------------- #
-        self.lista_magizoologos = list()
+        self._lista_magizoologos = list()
         with open(PMT.PATH_MAGIZOOLOGOS, "r", encoding="UTF-8") as archivo_magizoologos:
             datos_archivo_magizoologos = archivo_magizoologos.readlines()
         for fila_magizoologo in datos_archivo_magizoologos:
@@ -139,14 +139,14 @@ class ZoologicoMagico:
                                                 lista_criaturas))
             parametros_magizoologo["criaturas"] = criaturas_magizoologo
             # Se crea el Magizoólogo
-            self.lista_magizoologos.append(clase_magizoologo(**parametros_magizoologo))
+            self._lista_magizoologos.append(clase_magizoologo(**parametros_magizoologo))
 
     def _actualizar_archivos(self):
         print("Guardando...")
         # https://docs.python.org/3/reference/compound_stmts.html#with
         with open(PMT.PATH_MAGIZOOLOGOS, "w", encoding="UTF-8") as archivo_magizoologos,\
                 open(PMT.PATH_CRIATURAS, "w", encoding="UTF-8") as archivo_criaturas:
-            for magizoologo in self.lista_magizoologos:
+            for magizoologo in self._lista_magizoologos:
                 # Atributos magizoólogo
                 extractor_atributos = op.attrgetter(*PMT.FORMATO_MAGIZOOLOGOS)
                 atributos_magizoologo = list(extractor_atributos(magizoologo))
@@ -171,7 +171,7 @@ class ZoologicoMagico:
         valores = pc.proceso_multipaso(
             ("Elige un nombre único y alfanumérico", (
                 (PMT.TEXTO_ES_ALFANUMERICO, str.isalnum),
-                (PMT.TEXTO_ES_UNICO, lambda x: x not in self.lista_magizoologos),
+                (PMT.TEXTO_ES_UNICO, lambda x: x not in self._lista_magizoologos),
                 ), ),
             ("Elige el tipo de Magizoólogo que desea ser", (
                 ("Es Docencio, Tareo o Hibrido",
@@ -183,7 +183,7 @@ class ZoologicoMagico:
                 ), ),
             ("Elige un nombre único y alfanumérico para tu DCCriatura", (
                 (PMT.TEXTO_ES_ALFANUMERICO, str.isalnum),
-                (PMT.TEXTO_ES_UNICO, lambda x: x not in self.lista_magizoologos),
+                (PMT.TEXTO_ES_UNICO, lambda x: x not in self._lista_magizoologos),
                 ), ),
         )
         if valores:
@@ -191,10 +191,10 @@ class ZoologicoMagico:
             tipo_magizoologo = mzg.retornar_clase_magizoologo(tipo_magizoologo)
             tipo_criatura = ctr.retornar_clase_criatura(tipo_criatura)
             nueva_criatura = tipo_criatura(nombre_criatura)
-            self.lista_nombres_criaturas.append(nombre_criatura)
-            self.lista_magizoologos.append(tipo_magizoologo(nombre_magizoologo,
-                                                            criaturas=[nueva_criatura]))
-            self.__indice_magizoologo_actual = len(self.lista_magizoologos) - 1
+            self._lista_nombres_criaturas.append(nombre_criatura)
+            self._lista_magizoologos.append(tipo_magizoologo(nombre_magizoologo,
+                                                             criaturas=[nueva_criatura]))
+            self.__indice_magizoologo_actual = len(self._lista_magizoologos) - 1
             print("Magizoólogo creado!")
             return True
         return False
@@ -202,12 +202,12 @@ class ZoologicoMagico:
     def __cargar_magizoologo(self):
         nombre = pc.proceso_multipaso(
             ("Ingresa tu nombre", (
-                ("El Magizoólogo existe", lambda x: x in self.lista_magizoologos),
+                ("El Magizoólogo existe", lambda x: x in self._lista_magizoologos),
                 ),),
         )
         if nombre:
             nombre = nombre[0]
-            self.__indice_magizoologo_actual = self.lista_magizoologos.index(nombre)
+            self.__indice_magizoologo_actual = self._lista_magizoologos.index(nombre)
             print("Accediendo...!")
             return True
         return False
@@ -234,7 +234,7 @@ class ZoologicoMagico:
             atributos = extractor_atributos(self.magizoologo_actual)
             diccionario_atributos = {k: v for k, v in zip(nombres_atributos, atributos)}
             nuevo_magizoologo = mzg.MagizoologoSuper(**diccionario_atributos)
-            self.lista_magizoologos[self.__indice_magizoologo_actual] = nuevo_magizoologo
+            self._lista_magizoologos[self.__indice_magizoologo_actual] = nuevo_magizoologo
         # ----------------------- Día siguiente ----------------------- #
         print(("-" * (PMT.UI_ANCHO - 2)).center(PMT.UI_ANCHO, "*"))
         print(" Al día siguiente... ".center(PMT.UI_ANCHO - 2, "-").center(PMT.UI_ANCHO, "*"))
