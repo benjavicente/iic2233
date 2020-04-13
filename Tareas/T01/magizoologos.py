@@ -193,8 +193,7 @@ class Magizoologo(ABC):
                         print(f"Has tratado de alimentar a {c} con un {alimento}...")
                         self.alimentos.remove(alimento)  # Eliminar alimento
                         self.energia_actual -= PMT.MAGIZOOLOGOS_COSTO_ALIMENTAR
-                        # Se dirige al método en la clase DCCriatura
-                        c.alimentarse(alimento, self)
+                        c.alimentarse(alimento, self)  # Se dirige a DCCriatura
                         return c
                 if not pc.volver_a_intentarlo(alimento_elegido, "Posees el alimento"):
                     return
@@ -224,7 +223,7 @@ class Magizoologo(ABC):
                     lambda x: x in self.criaturas),
                 ("La criatura se ha escapado",
                     lambda x: (x in criaturas_escapadas) == (x in self.criaturas)),
-            ),),
+            ), ),
         )
         if criatura_elegida:
             criatura_elegida = criatura_elegida[0]  # Lista a str
@@ -277,11 +276,11 @@ class MagizoologoDocencio(Magizoologo):
 
     def alimentar_dccriatura(self) -> None:
         # Habilidad pasiva: Sana a sus criaturas al alimentarlas
-        criatura_alimentada = super().alimentar_dccriatura()
-        if criatura_alimentada:
-            print(f"Habilidad pasiva: Has sanado " +
-                  f"{PMT.DOCENCIO_PASIVO_SANAR_VIDA} pts de vida adicionales!")
-            criatura_alimentada.vida_actual += PMT.DOCENCIO_PASIVO_SANAR_VIDA
+        criatura = super().alimentar_dccriatura()
+        if criatura and criatura.vida_actual < criatura.vida_max:
+            sanado = min(PMT.DOCENCIO_PASIVO_SANAR_VIDA, criatura.vida_max - criatura.vida_actual)
+            print(f"Habilidad pasiva: Has sanado {sanado} pts de vida adicionales!")
+            criatura.vida_actual += sanado
 
     def recuperar_dccriatura(self) -> None:
         # Habilidad pasiva: Hiere a sus criaturas al recuperarlas
@@ -341,11 +340,11 @@ class MagizoologoHibrido(Magizoologo):
 
     def alimentar_dccriatura(self) -> None:
         # Habilidad pasiva: Sana salud a sus criaturas al alimentarlas
-        criatura_alimentada = super().alimentar_dccriatura()
-        if criatura_alimentada:
-            print(f"Habilidad pasiva: Has sanado " +
-                  f"{PMT.DOCENCIO_PASIVO_SANAR_VIDA}pts de vida adicionales!")
-            criatura_alimentada.vida_actual += PMT.DOCENCIO_PASIVO_SANAR_VIDA
+        criatura = super().alimentar_dccriatura()
+        if criatura and criatura.vida_actual < criatura.vida_max:
+            sanado = min(PMT.HIBRIDO_PASIVO_SANAR_VIDA, criatura.vida_max - criatura.vida_actual)
+            print(f"Habilidad pasiva: Has sanado {sanado} pts de vida adicionales!")
+            criatura.vida_actual += sanado
 
     def recuperar_dccriatura(self) -> None:
         super().recuperar_dccriatura()
