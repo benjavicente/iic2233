@@ -83,13 +83,6 @@ class Magizoologo(ABC):
     @nivel_aprobacion.setter
     def nivel_aprobacion(self, value):
         self.__nivel_aprobacion = min(100, max(0, value))
-        # --- Licencia --- #
-        if self.__nivel_aprobacion < PMT.DCC_APROBACION and self.licencia:
-            print("Perdiste tu licencia :(")
-            self.licencia = False
-        elif self.__nivel_aprobacion >= PMT.DCC_APROBACION and not self.licencia:
-            print("Recuperaste tu licencia :)")
-            self.licencia = True
 
     @property
     def sickles(self):

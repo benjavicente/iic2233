@@ -264,10 +264,24 @@ class ZoologicoMagico:
         print(" DCC ".center(PMT.UI_ANCHO - 2, "-").center(PMT.UI_ANCHO, "*"))
         # Nivel de aprobación
         self._dcc.calcular_aprobacion(self.magizoologo_actual)
+        # Licencia
+        if self.magizoologo_actual.licencia:
+            if self.magizoologo_actual.nivel_aprobacion >= 60:
+                print("Felicidades! Continuas con tu licencia")
+            else:
+                print("Perdiste tu con tu licencia :(")
+                self.magizoologo_actual.licencia = False
+        else:
+            if self.magizoologo_actual.nivel_aprobacion >= 60:
+                print("Felicidades! Recuperaste tu licencia!")
+            else:
+                print("Sigues sin con tu licencia :(")
         # Pagos
         self._dcc.pagar_magizoologo(self.magizoologo_actual)
         # Multas
         self._dcc.fiscalizar_magizoologo(self.magizoologo_actual)
+        # Saldo actual
+        print(f"Tu saldo actual es: {self.magizoologo_actual.sickles}")
         # ------------- Tranformación a SuperMagizoólogo ------------- #
         if PMT.SUPERMAGIZOOLOGO_ACTIVO and self.magizoologo_actual.nivel_aprobacion >= 100:
             print("Por tener 100 de aprobación, te transformaste en un SuperMagizoólogo!")
