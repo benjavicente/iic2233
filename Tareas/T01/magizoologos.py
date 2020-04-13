@@ -93,7 +93,7 @@ class Magizoologo(ABC):
     def sickles(self, value):
         self.__sickles = max(0, value)
 
-    def obtener_dccriatura(self, nombre_criatura) -> object:
+    def obtener_dccriatura(self, nombre_criatura: str) -> object:
         """Retorna la DCCriatura a partir del nombre"""
         return self.criaturas[self.criaturas.index(nombre_criatura)]
 
@@ -111,7 +111,7 @@ class Magizoologo(ABC):
         """
         Cuando un Magizoólogo intenta sanar a alguna de sus DCCriaturas.
         Su coste energético es de 8 puntos.
-        Retorna False si no se pudo sanar, la criatura en casi contrario.
+        Retorna None si no se pudo sanar, la criatura en casi contrario.
         """
         # --- Verificación --- #
         if self.energia_actual < PMT.MAGIZOOLOGOS_COSTO_CURAR:
@@ -158,7 +158,7 @@ class Magizoologo(ABC):
         En respuesta a esto, la DCCriatura puede atacar a su dueño.
         El costo energético de alimentar es de 5 puntos.
 
-        Retorna False si no se pudo alimentar,
+        Retorna None si no se pudo alimentar,
         un objecto de clase DCCriatura en el caso contrario.
         """
         if self.energia_actual < PMT.MAGIZOOLOGOS_COSTO_ALIMENTAR:  # No se cumple por energía
@@ -198,16 +198,16 @@ class Magizoologo(ABC):
         """
         Cuando un Magizoólogo intenta recuperar una de sus DCCriaturas.
         El coste energético de intentar recuperar una criatura es de 10 puntos.
-        Retorna False si no se pudo recuperar, la criatura en casi contrario.
+        Retorna None si no se pudo recuperar, la criatura en casi contrario.
         """
         if self.energia_actual < PMT.MAGIZOOLOGOS_COSTO_RECUPERAR:
             print("No suficiente tienes energía")
-            return False
+            return
         # Lista de criaturas escapadas
         criaturas_escapadas = [c for c in self.criaturas if c.escapado]
         if not criaturas_escapadas:
             print("No hay criaturas escapadas :)")
-            return False
+            return
         # Formateo de lista a str
         criaturas_a_recuperar =\
             "\n".join(map(lambda x: " - " + str(x), criaturas_escapadas))
@@ -236,7 +236,7 @@ class Magizoologo(ABC):
                 return c  # Retorna la criatura para aplicar efectos pasivos
             else:
                 print(f"No has podido recuperar a {c} :(")
-                return False
+                return
 
     @abstractmethod
     def habilidad_especial(self):

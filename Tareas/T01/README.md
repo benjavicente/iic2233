@@ -5,53 +5,119 @@
   - [Ejecución :computer:](#ejecuci%c3%b3n-computer)
   - [Supuestos y consideraciones :thinking:](#supuestos-y-consideraciones-thinking)
   - [Diagrama de clases :bookmark_tabs:](#diagrama-de-clases-bookmarktabs)
-  - [Características implementadas :wrench:](#caracter%c3%adsticas-implementadas-wrench)
+    - [Aclaraciones](#aclaraciones)
   - [Librerías :books:](#librer%c3%adas-books)
     - [Librerías externas utilizadas :clipboard:](#librer%c3%adas-externas-utilizadas-clipboard)
     - [Librerías propias :pencil:](#librer%c3%adas-propias-pencil)
   - [Código externo utilizado :package:](#c%c3%b3digo-externo-utilizado-package)
+  - [Características implementadas :wrench:](#caracter%c3%adsticas-implementadas-wrench)
   - [Notas adicionales :moyai:](#notas-adicionales-moyai)
 
 ## Importante :heavy_exclamation_mark:
 
-**Estoy organizando mi progreso en [TODO.md](/avance/TODO.md) y la carpeta avance**
-(Voy a eliminarlos entes de terminar la tarea).
-
-Hay strings incompletos, por lo que en la consola existen menús pocos descriptivos.
+:question:
 
 ## Ejecución :computer:
 
-El programa a ejecutar _(por ahora)_ es **`ZoologicoMagico.py`**
+El programa a ejecutar es **`main.py`**
 
-Los archivos de datos, `criatuas` y `magizoologos`, deben estar creados en una carpeta llamada `data`. El formato de cada uno es de `csv`, donde cada campo termina con una nueva linea.
+Los archivos de datos (`criatuas.csv` y `magizoologos.csv`) deben estar creados en una carpeta llamada `data`. El formato de cada uno es de `csv`, donde cada campo termina con una nueva linea.
 
-Los módulos `dcc`, `dccriaturas`, `magizoologos`, `alimentos` y `procesos` deben encontrarse en el mismo _path_ que `ZoologicoMagico.py`.
+Los módulos `dcc`, `dccriaturas`, `magizoologos`, `alimentos`, `procesos` y `zoologico_magico` deben encontrarse en el mismo _path_ que `main.py`.
 
 ## Supuestos y consideraciones :thinking:
 
 Considero que la DCCriatura Augurey puede entregar un alimento a su dueño si esta se escapó.
 
-Asumo que los cambios en los datos solo se guardan al salir por el menú y no por el proceso fallido. He agradado la opción de guardar sin salir para no tener que salir para guardar el progreso.
+Utilizo `SuperMagizoologoDocencioTareoHibrido` como `MagizoologoSuper`.
+
+Asumo que se debe guardar los datos solo al salir. He agradado la opción de guardar sin salir para no tener que salir para guardar el progreso.
 
 Asumo que se debe eliminar los caracteres de espacios en el input del usuario (uso siempre `input().strip()`).
 
 Asumo que las licencias se pagan por separado. Es decir, que las multas se van pagando hasta que el Magizoólogo no tenga Sickles o halla pagado todas las multas.
 
-Asumo que al ingresar un nombre para cargar un Magizoólogo, no se diferencia entre mayúsculas y minúsculas. Por ejemplo, cargar el usuario `lily416potter` se puede usar (por ejemplo) `lily416potter` y `Lily416Potter`, que corresponden al mismo usuario.
+Asumo que al ingresar un nombre para cargar un Magizoólogo, no se diferencia entre mayúsculas y minúsculas. Por ejemplo, al cargar el usuario, `lily416potter` y `Lily416Potter`, corresponden al mismo usuario.
 
-Asumo que se debe poder alimentar a una criatura en cualquier momento para sanar parte de su salud. Tanto criaturas hambrientas como satisfechas pueden ser alimentadas.
+Asumo que se debe poder alimentar a una criatura en **cualquier momento** para sanar parte de su salud.
+
+Asumo que cuando Erkling roba un alimento, los efectos del alimento robado no son aplicados al Erkling.
+
+Asumo que el orden de los eventos al pasar el día es:
+
+- Por cada DCCriatura
+  - Habilidad especial (si cumple requisitos)
+  - Perder salud por enfermedad
+  - Perder salud por hambre
+  - Mostrar su salud si perdió alguna
+  - Posibilidad de enfermarse
+  - Posibilidad de escaparse
+  - Aumento en los días sin comer
+- Lista de DCCriaturas escapadas
+- Lista de DCCriaturas enfermas
+- DCC
+  - Calcular la aprobación
+  - Pagar Magizoólogo
+  - Fiscalizar Magizoólogo
+- Transformar a `SuperMagizoologo` (si la aprobación es mayor o igual a 100 y está activado en `parametros.py`)
+- Recuperar toda la energía del Magizoólogo
 
 ## Diagrama de clases :bookmark_tabs:
 
 ![Diagrama de Clases](diagrama_clases.png?raw=true "Diagrama de Clases")
 
-:point_right: Hasta ahora tengo en el ZoologicoMágico métodos que corresponden a _acciones_ en el menú. Estoy testeando la posibilidad de almacenar estas _acciones_ en `lambda`s.
+[Versión PDF](diagrama_clases.pdf)
 
-:point_right: Todavía no implemento completamente Magizoólogos ni DCCriaturas, por lo que algunos métodos pueden cambiar.
+### Aclaraciones
 
-:point_right: No existen relaciones de _agregación simple_, ya que las DCCriaturas, Magizoólogos y DCC dependen de que exista un ZoologicoMagico.
+- `ZoologicoMagico`
+  - El atributo `menu` es la estructura que tiene el programa. En el módulo `procesos` se explica el formato que tiene este. El atributo `menu` es _el plano_ del programa, mientras que el modulo `procesos` es el que lo ejecuta.
+  - Los métodos `crear_magizoologo` y `cargar_magizoologo` retornan `True` si la acción fue realizada correctamente, `False` en el caso contrario. Tienen relación con la estructura del atributo menú.
+  - La property `magizoologo_actual` entrega el Magizoólogo actual, que está determinado por el `indice_magizoologo_actual`.
+- `Magizoologos`
+  - Los métodos `alimentar_criatura` y `recuperar_criatura` son llamados en las clases hijas, para realizar el procedimiento en común entre todos los Magizoólogos. Esta retornan una `DCCriatura` o `False`. En el caso que sea una `DCCriatura`, se le aplican a esta las habilidades pasivas de cada Magizoólogos. En el caso que sea `False`, no se hace nada. En las criaturas heredadas, el método retorna `None`.
+- `DCCriaturas`
+  - El método `caracteristica_unica` es un método abstracto.
+- Generales
+  - No pude combinar las clases `ZoologicoMagico` y `DCC`, ya que ambas tienen métodos complejos difíciles de realizar en 400 lineas. `DCC` se utiliza como una extensión de `ZoologicoMagico`.
 
-:point_right: MagizoologoSuper (o SuperMagizoólogoDocencioTareoHíbrido) no lo he implementado aún. Este puede terminar con métodos propios.
+## Librerías :books:
+
+### Librerías externas utilizadas :clipboard:
+
+- **`abc`**
+  - `ABC`: Genera clases abstractas.
+  - `abstractmethod`: Genera métodos abstractos.
+- **`random`**
+  - `random`: Obtiene un número entre 0 y 1 al azar.
+  - `randint`: Obtiene un número entero en un rango dado  al azar.
+  - `choice`: Obtiene un elemento de un conjunto al azar.
+- **`operator`**
+  - `attrgetter`: Obtiene atributos de los objetos.
+- **`os`**
+  - `path` Para crear los paths de los archivos.
+
+### Librerías propias :pencil:
+
+- **`zoologico_magico`**
+  - Encargado de la clase ZoologicoMagico.
+- **`dcc`**
+  - Encargado de la clase DCC.
+- **`dccriaturas`**
+  - Encargado de las clases DCCriaturas. Contiene un transformador de `str` a clase DCCriatura.
+- **`magizoologos`**
+  - Encargado de las clases Magizoologos. Contiene un transformador de `str` a clase Magizoologo.
+- **`alimentos`**
+  - Encargado de las clases de Alimentos. Contiene un transformador de `str` a clase Alimento.
+- **`procesos`**
+  - Encargado de el flujo del programa. Contiene 3 funciones:
+    - `loop_menus()`: Encargada de administrar los menús.
+    - `volver_a_intentarlo()`: Encargada de administrar los errores del usuario.
+    - `proceso_multipaso()`: Encargada de administrar los procesos donde se piden multiples _inputs_.
+
+## Código externo utilizado :package:
+
+Ninguno :tada:
 
 ## Características implementadas :wrench:
 
@@ -85,13 +151,13 @@ Asumo que se debe poder alimentar a una criatura en cualquier momento para sanar
 
 - **Acciones: 35pst (32%)**
   - Cuidar DCCriaturas
-    - [ ] **3pts** Se puede elegir a una criatura para alimentar y el alimento a utilizar correctamente. Se actualiza correctamente el estado de la DCCriatura.
-    - [ ] **1pt** Se aplica correctamente los efectos de los alimentos.
-    - [ ] **1pt** Se implementa correctamente la posibilidad de ataque de las DCCriaturas sus dueños.
-    - [ ] **3pts** Se muestra las criaturas que se han escapado y se puede elegir una para recuperar correctamente. Se actualiza correctamente el estado de la DCCriatura.
-    - [ ] **3pts** Se muestran todas las DCCriaturas que se han enfermado y se puede elegir una para sanar correctamente. Se actualiza correctamente el estado de la DCCriatura.
-    - [ ] **2pts** Se implementa correctamente la habilidad especial según el tipo de Magizoólogo.
-    - [ ] **2pts** Se descuenta el costo de energía mágica correspondiente a las acciones alimentar, recuperar y sanar.
+    - [X] **3pts** Se puede elegir a una criatura para alimentar y el alimento a utilizar correctamente. Se actualiza correctamente el estado de la DCCriatura.
+    - [X] **1pt** Se aplica correctamente los efectos de los alimentos.
+    - [X] **1pt** Se implementa correctamente la posibilidad de ataque de las DCCriaturas sus dueños.
+    - [X] **3pts** Se muestra las criaturas que se han escapado y se puede elegir una para recuperar correctamente. Se actualiza correctamente el estado de la DCCriatura.
+    - [X] **3pts** Se muestran todas las DCCriaturas que se han enfermado y se puede elegir una para sanar correctamente. Se actualiza correctamente el estado de la DCCriatura.
+    - [X] **2pts** Se implementa correctamente la habilidad especial según el tipo de Magizoólogo.
+    - [X] **2pts** Se descuenta el costo de energía mágica correspondiente a las acciones alimentar, recuperar y sanar.
     - [X] **1pts** Se notifica en caso de no tener energía suficiente para realizar la acción.
   - DCC
     - [X] **2pts** Se puede adoptar una DCCriatura correctamente, si se cumplen las condiciones.
@@ -126,56 +192,23 @@ Asumo que se debe poder alimentar a una criatura en cualquier momento para sanar
 - **Manejo de archivos: 9pts (8%)**
   - Archivos CSV
     - [X] **5pts** Trabaja correctamente con todos los archivos CSV entregados.
-  - parametros
+  - parámetros
     - [X] **2pts** Utiliza e importa correctamente `parametros.py`.
-    - [X] **2pts** Archivo `parametros.py}` contiene todos los parámetros especificados en el enunciado.
+    - [X] **2pts** Archivo `parametros.py` contiene todos los parámetros especificados en el enunciado.
 
 - Bonus
   - Super MagizoólogoDocencioTareoHíbrido (3 décimas)
-    - [ ] Se implementa correctamente el bonus con todo lo que se pide.
+    - [X] Se implementa correctamente el bonus con todo lo que se pide.
+      - Se transforma a Super
   - Peleas entre DCCriaturas (5 décimas)
-    - [ ] Se implementa correctamente el bonus con todo lo que se pide.
+    - [X] Se implementa correctamente el bonus con todo lo que se pide.
   - Bonus avance (2 décimas)
-    - [ ] :question:
+    - [X] 1/2
   - Bonus README (de-descuento 5 décimas)
     - [ ] :question:
 
-## Librerías :books:
-
-### Librerías externas utilizadas :clipboard:
-
-- **`abc`**
-  - `ABC`: Genera clases abstractas.
-  - `abstractmethod`: Genera métodos abstractos.
-- **`random`**
-  - `random`: Obtiene un número entre 0 y 1 al azar.
-  - `randint`: Obtiene un número entero en un rango dado  al azar.
-  - `choice`: Obtiene un elemento de un conjunto al azar.
-- **`operator`**
-  - `attrgetter`: Obtiene atributos de los objetos.
-- **`os`**
-  - `path` Para crear los paths de los archivos.
-
-### Librerías propias :pencil:
-
-- **`dcc`**
-  - Encargado de la clase DCC.
-- **`dccriaturas`**
-  - Encargado de las clases DCCriaturas. Contiene un transformador de str a clase DCCriatura.
-- **`magizoologos`**
-  - Encargado de las clases Magizoologos. Contiene un transformador de str a clase Magizoologo.
-- **`alimentos`**
-  - Encargado de las clases de Alimentos. Contiene un transformador de str a clase Alimento.
-- **`procesos`**
-  - Encargado de el flujo del programa. Contiene 3 funciones:
-    - `loop_menus()`: Encargada de administrar los menús.
-    - `volver_a_intentarlo()`: Encargada de administrar los errores del usuario.
-    - `proceso_multipaso()`: Encargada de administrar los procesos donde se piden multiples _inputs_.
-
-## Código externo utilizado :package:
-
-Ninguno :tada:
-
 ## Notas adicionales :moyai:
+
+Estoy probando documentar mi código con [typing](https://docs.python.org/3/library/typing.html) y [docstring](https://www.python.org/dev/peps/pep-0257/#what-is-a-docstring). No estoy siguiendo una convención y tampoco he documentado todo.
 
 Disfrute el programa :tada:

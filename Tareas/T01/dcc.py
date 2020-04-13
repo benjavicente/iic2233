@@ -14,7 +14,7 @@ class DCC:
     nivel de aprobación de los Magizoólogo, pudiendo quitarles
     su licencia.
     """
-    def calcular_aprobacion(self, magizoologo):
+    def calcular_aprobacion(self, magizoologo) -> None:
         """
         Calcula la aprobación del Magizoólogo al finalizar el día.
         """
@@ -30,7 +30,7 @@ class DCC:
         print(f"Tu nuevo nivel de aprobación es: {aprobacion}")
         magizoologo.nivel_aprobacion = aprobacion
 
-    def pagar_magizoologo(self, magizoologo):
+    def pagar_magizoologo(self, magizoologo) -> None:
         """
         Paga Sickles al Magizoólogo al finalizar el día.
         """
@@ -40,7 +40,7 @@ class DCC:
         magizoologo.sickles += pago
         print(f"EL DCC te ha pagado {pago} Sickles")
 
-    def fiscalizar_magizoologo(self, magizoologo):
+    def fiscalizar_magizoologo(self, magizoologo) -> None:
         """
         Fiscaliza al Magizoólogo al finalizar el día, multandolo si es
         necesario. Puede que al DCC se le olvide multar en algunos casos.
@@ -78,7 +78,7 @@ class DCC:
         else:
             print("No recibiste ninguna multa!")
 
-    def vernder_criaturas(self, magizoologo, lista_criaturas):
+    def vernder_criaturas(self, magizoologo, lista_criaturas: list) -> None:
         """
         Lista criaturas debe ser una lista en la que
         se chequeará si el nombre de la criatura existe con
@@ -117,16 +117,16 @@ class DCC:
                         magizoologo.sickles -= PMT.DCC_PRECIO_CRIATURAS[criatura]
                         magizoologo.adoptar_dccriatura(c(nombre))
                         print(f"Felizidades! Adoptaste a {nombre}")
-                        return True
+                        return
                     else:
                         if not pc.volver_a_intentarlo(nombre, PMT.TEXTO_ES_UNICO):
                             break
                 else:
                     if not pc.volver_a_intentarlo(nombre, PMT.TEXTO_ES_ALFANUMERICO):
                         break
-        return False
+        return
 
-    def vernder_alimentos(self, magizoologo):
+    def vernder_alimentos(self, magizoologo) -> None:
         while True:
             # Elección
             print("Elige un alimento...")
@@ -150,9 +150,8 @@ class DCC:
             print(f"Has comprado {alimento} por {precio} Sickles!")
             clase_alimento = alm.retornar_clase_alimento(alimento)
             magizoologo.comprar_alimentos(clase_alimento())
-            return True
 
-    def mostrar_estado(self, magizoologo):
+    def mostrar_estado(self, magizoologo) -> None:
         """
         Muestra toda la información del Magizoólogo.
         Esta es:
@@ -213,4 +212,3 @@ class DCC:
                 print(f"   - {datos[0]} {nombre}: +{datos[1]}hp")
         else:
             print(" - Sin alimentos")
-        return True

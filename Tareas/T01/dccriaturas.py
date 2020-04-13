@@ -47,7 +47,7 @@ class DCCriaturas(ABC):
     de forma negativa o positiva con su Magizoólogo.
     Poseen diversos atributos cuyos valores variarían según el tipo de criatura.
     """
-    def __init__(self, nombre,
+    def __init__(self, nombre, tiempo_satisfecha,
                  nivel_magico=None, prob_escaparse=None,
                  prob_enfermarse=None, enferma=None,
                  escapado=None, vida_max=None,
@@ -83,7 +83,7 @@ class DCCriaturas(ABC):
         # ------------------------------------------------ #
         # Valores predeterminados en distintas DCCriaturas #
         # ------------------------------------------------ #
-        self.tiempo_satisfecha = kwargs["tiempo_satisfecha"]
+        self.tiempo_satisfecha = int(tiempo_satisfecha)
         self.nivel_magico = int(nivel_magico)
         self.prob_escaparse = float(prob_escaparse)
         self.prob_enfermarse = float(prob_enfermarse)
@@ -131,7 +131,7 @@ class DCCriaturas(ABC):
         else:
             self.__vida_actual = value
 
-    def alimentarse(self, alimento, magizoologo):
+    def alimentarse(self, alimento, magizoologo) -> None:
         """
         Magizoólogo alimenta a la criatura.
 
@@ -159,14 +159,14 @@ class DCCriaturas(ABC):
         elif type(alimento) is alm.BunueloGusarajo:
             if not PMT.ALIMENTOS_BUNUELO_PROB_CONSUMIR >= random.random():
                 print("La criatura ha rechazado el alimento!")
-                return False  # Retorna False --> No se consumió el alimento
+                return
         # Alimentarse
         self.vida_actual += alimento.pnt_vida
         self.dias_sin_comer = 0
         print(f"{self} ha consumido el {alimento} "
               f"y ha recuperado {alimento.pnt_vida} de vida")
 
-    def escaparse(self, resp_magizoologo):
+    def escaparse(self, resp_magizoologo: int):
         """
         Las DCCriaturas tienden a ser un poco inquietas y suelen intentar
         escaparse, sobre todo si están hambrientas pues intentaran
@@ -233,7 +233,7 @@ class Augurey(DCCriaturas):
         # Inicia la clase
         super().__init__(nombre, **kwargs)
 
-    def caracteristica_unica(self, magizoologo):
+    def caracteristica_unica(self, magizoologo) -> None:
         if (self.nivel_hambre == "satisfecha"
                 and not self.enferma
                 and self.vida_actual == self.vida_max):
@@ -274,7 +274,7 @@ class Niffler(DCCriaturas):
         else:
             kwargs["nivel_cleptomania"] = int(kwargs["nivel_cleptomania"])
 
-    def caracteristica_unica(self, magizoologo):
+    def caracteristica_unica(self, magizoologo) -> None:
         # factor decide se regala (* +1) o roba (* -1)
         factor = (self.nivel_hambre == "satisfecha") * 2 - 1
         sickles = factor * self.nivel_cleptomania * PMT.NIFFLER_PESO_SICKLES_ROBADOS
@@ -308,7 +308,7 @@ class Erkling(DCCriaturas):
         # Inicia la clase
         super().__init__(nombre, **kwargs)
 
-    def caracteristica_unica(self, magizoologo):
+    def caracteristica_unica(self, magizoologo) -> None:
         if self.nivel_hambre == "hambrienta" and magizoologo.alimentos:
             alimento_robado = random.randint(0, len(magizoologo.alimentos) - 1)
             robado = magizoologo.alimentos.pop(alimento_robado)

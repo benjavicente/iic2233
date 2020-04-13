@@ -80,10 +80,9 @@ def loop_menus(menus: dict, menu_inicial: str):
             elif type(valor) is tuple:
                 # Realizar acción
                 out = valor[1]()
-                if out:
-                    if len(valor) == 3:
-                        menus_anteriores.append(menu_actual)
-                        menu_actual = valor[2]
+                if out and len(valor) == 3:  # Va a un menú aparte
+                    menus_anteriores.append(menu_actual)
+                    menu_actual = valor[2]
         else:
             print(f"Opción '{elegida}' no valida\n")
 
