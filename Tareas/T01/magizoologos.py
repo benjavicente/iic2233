@@ -21,8 +21,8 @@ def retornar_clase_magizoologo(tipo_magizoologo: str):
 
 
 class Magizoologo(ABC):
-    def __init__(self, nombre,
-                 sickles=None, criaturas=None, alimentos=None,
+    def __init__(self, nombre, criaturas,
+                 sickles=None, alimentos=None,
                  licencia=None, nivel_magico=None, destreza=None,
                  energia_max=None, responsabilidad=None,
                  puede_usar_habilidad=None, **kwargs):
@@ -33,7 +33,7 @@ class Magizoologo(ABC):
         if alimentos is None:  # Alimento al azar si se creo por primera vez
             alimento = random.choice((alm.BunueloGusarajo, alm.HigadoDragon, alm.BunueloGusarajo))
             alimentos = [alimento()]  # Si inicia el alimento y se guarda
-        self.criaturas = criaturas
+        self.criaturas = criaturas  # Siempre debe existir una criatura
         self.alimentos = alimentos
         # --- Valores predeterminados en todos los Magizoólogos --- #
         if sickles is None:
@@ -60,13 +60,13 @@ class Magizoologo(ABC):
     def __str__(self):
         return self.nombre
 
+    def __repr__(self):
+        return f"{self.nombre} {id(self)}"
+
     def __eq__(self, value):
         if type(value) is str:
             value = value.lower()
         return self.nombre.lower() == value
-
-    def __repr__(self):
-        return f"{self.nombre} {id(self)}"
 
     @property
     def energia_actual(self):
@@ -82,7 +82,8 @@ class Magizoologo(ABC):
 
     @nivel_aprobacion.setter
     def nivel_aprobacion(self, value):
-        self.__nivel_aprobacion = min(100, max(0, value))
+        min_aprob, max_aprob = PMT.MAGIZOOLOGOS_RANGO_APROBACION
+        self.__nivel_aprobacion = min(max_aprob, max(min_aprob, value))
 
     @property
     def sickles(self):
@@ -142,7 +143,7 @@ class Magizoologo(ABC):
             c = self.obtener_dccriatura(criatura_elegida)  # Se obtiene la criatura
             print(f"Has tratado de sanar a {c}...")
             valor = ((self.nivel_magico - c.vida_actual)
-                     / (self.nivel_magico + c.vida_actual))
+                     / (self.nivel_magico + c.vida_max))
             prob = min(1, max(0, valor))  # Formula
             if prob >= random.random():
                 c.enferma = False
@@ -239,16 +240,16 @@ class Magizoologo(ABC):
 
     @abstractmethod
     def habilidad_especial(self):
-        if self.energia_actual >= PMT.MAGIZOOLOGOS_COSTO_HABILIDAD:
-            if self.puede_usar_habilidad:
+        if self.puede_usar_habilidad:
+            if self.energia_actual >= PMT.MAGIZOOLOGOS_COSTO_HABILIDAD:
                 print("Has utilizado tu habilidad especial!")
                 self.puede_usar_habilidad = False
                 self.energia_actual -= PMT.MAGIZOOLOGOS_COSTO_HABILIDAD
                 return True
             else:
-                print("Ya has usado la habilidad")
+                print("No tienes energía suficiente")
         else:
-            print("No tienes energía suficiente")
+            print("Ya has usado la habilidad!")
         return False
 
 ###################################
@@ -273,7 +274,7 @@ class MagizoologoDocencio(Magizoologo):
         criatura = super().alimentar_dccriatura()
         if criatura and criatura.vida_actual < criatura.vida_max:
             sanado = min(PMT.DOCENCIO_PASIVO_SANAR_VIDA, criatura.vida_max - criatura.vida_actual)
-            print(f"Habilidad pasiva: Has sanado {sanado} pts de vida adicionales!")
+            print(f"Habilidad pasiva: Has sanado {sanado}pts de vida adicionales!")
             criatura.vida_actual += sanado
 
     def recuperar_dccriatura(self) -> None:
@@ -337,7 +338,7 @@ class MagizoologoHibrido(Magizoologo):
         criatura = super().alimentar_dccriatura()
         if criatura and criatura.vida_actual < criatura.vida_max:
             sanado = min(PMT.HIBRIDO_PASIVO_SANAR_VIDA, criatura.vida_max - criatura.vida_actual)
-            print(f"Habilidad pasiva: Has sanado {sanado} pts de vida adicionales!")
+            print(f"Habilidad pasiva: Has sanado {sanado}pts de vida adicionales!")
             criatura.vida_actual += sanado
 
     def recuperar_dccriatura(self) -> None:
@@ -371,21 +372,26 @@ class MagizoologoSuper(MagizoologoDocencio, MagizoologoTareo, MagizoologoHibrido
         super().recuperar_dccriatura()
 
     def habilidad_especial(self) -> None:
-        if super().habilidad_especial():
-            habilidades = (" - Docencio: Saciar a todas tus criaturas\n" +
-                           " - Tareo: Recuperar a todas tus criaturas\n" +
-                           " - Hibrido: Sanar a todas tus criaturas")
-            cual = pc.proceso_multipaso(
-                (f"Elige una habilidad especial: \n {habilidades}", (
-                    ("Es Docencio, Tareo o Hibrido",
-                     lambda x: x.lower() in {"docencio", "tareo", "hibrido"})
-                ), ),
-            )
-            if cual:
-                cual = cual[0].lower()
-                if cual == "docencio":
-                    MagizoologoDocencio.habilidad_especial(self)
-                elif cual == "tareo":
-                    MagizoologoTareo.habilidad_especial(self)
-                elif cual == "hibrido":
-                    MagizoologoHibrido.habilidad_especial(self)
+        if self.puede_usar_habilidad:
+            if self.energia_actual >= PMT.MAGIZOOLOGOS_COSTO_HABILIDAD:
+                habilidades = (" - Docencio: Saciar a todas tus criaturas\n" +
+                               " - Tareo: Recuperar a todas tus criaturas\n" +
+                               " - Hibrido: Sanar a todas tus criaturas")
+                cual = pc.proceso_multipaso(
+                    (f"Elige una habilidad especial: \n {habilidades}", (
+                        ("Es Docencio, Tareo o Hibrido",
+                         lambda x: x.lower() in {"docencio", "tareo", "hibrido"})
+                    ), ),
+                )
+                if cual:
+                    cual = cual[0].lower()
+                    if cual == "docencio":
+                        MagizoologoDocencio.habilidad_especial(self)
+                    elif cual == "tareo":
+                        MagizoologoTareo.habilidad_especial(self)
+                    elif cual == "hibrido":
+                        MagizoologoHibrido.habilidad_especial(self)
+            else:
+                print("No tienes energía para usar una habilidad")
+        else:
+            print("Ya usaste la habilidad!")

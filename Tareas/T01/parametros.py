@@ -46,7 +46,7 @@ TEXTO_SUFICIENTES_SICKLES = "Contienes sickles suficientes"
 # ============================================ #
 DCC_PRECIO_CRIATURAS = {"augurey": 75, "niffler": 100, "erkling": 125}
 DCC_PRECIO_ALIMENTOS = {"tarta de melaza": 10, "higado de dragón": 15, "buñuelo de gusarajo": 3}
-DCC_FISCALIZADO = {"escapes": (50, 0.5), "enfermedad": (70, 0.7), "vida critica": (150, 1)}
+DCC_FISCALIZADO = {"escape": (50, 0.5), "enfermedad": (70, 0.7), "vida critica": (150, 1)}
 DCC_PESO_PAGO = {"aprobacion": 4, "alimento": 15, "magico": 3}
 DCC_APROBACION = 60
 
@@ -63,6 +63,7 @@ MAGIZOOLOGOS_COSTO_ALIMENTAR = 5
 MAGIZOOLOGOS_COSTO_RECUPERAR = 10
 MAGIZOOLOGOS_COSTO_CURAR = 8
 MAGIZOOLOGOS_COSTO_HABILIDAD = 15
+MAGIZOOLOGOS_RANGO_APROBACION = (0, 100)
 
 # ---------------------- #
 #  Magizoólogos Docencio #
@@ -161,3 +162,4 @@ PELEAS_INICIAL = 1  # 1 --> Magizoólogo | 0 --> DCC
 # Parámetros relacionados con SuperMagizoólogo #
 # ============================================ #
 SUPERMAGIZOOLOGO_ACTIVO = True
+SUPERMAGIZOOLOGO_APROBACION = MAGIZOOLOGOS_RANGO_APROBACION[1]  # Aprobación máxima

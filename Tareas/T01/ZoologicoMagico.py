@@ -190,10 +190,10 @@ class ZoologicoMagico:
         )
         if valores:
             nombre_magizoologo, tipo_magizoologo, tipo_criatura, nombre_criatura = valores
+            self._lista_nombres_criaturas.append(nombre_criatura)
             tipo_magizoologo = mzg.retornar_clase_magizoologo(tipo_magizoologo)
             tipo_criatura = ctr.retornar_clase_criatura(tipo_criatura)
             nueva_criatura = tipo_criatura(nombre_criatura)
-            self._lista_nombres_criaturas.append(nombre_criatura)
             self._lista_magizoologos.append(tipo_magizoologo(nombre_magizoologo,
                                                              criaturas=[nueva_criatura]))
             self.__indice_magizoologo_actual = len(self._lista_magizoologos) - 1
@@ -262,17 +262,17 @@ class ZoologicoMagico:
         # ********************* fin día siguiente ********************* #
         # ---------------------------- DCC ---------------------------- #
         print(" DCC ".center(PMT.UI_ANCHO - 2, "-").center(PMT.UI_ANCHO, "*"))
-        # Nivel de aprobación
+        # 1° Nivel de aprobación
         self._dcc.calcular_aprobacion(self.magizoologo_actual)
         # Licencia
         if self.magizoologo_actual.licencia:
-            if self.magizoologo_actual.nivel_aprobacion >= 60:
+            if self.magizoologo_actual.nivel_aprobacion >= PMT.DCC_APROBACION:
                 print("Felicidades! Continuas con tu licencia")
             else:
                 print("Perdiste tu con tu licencia :(")
                 self.magizoologo_actual.licencia = False
         else:
-            if self.magizoologo_actual.nivel_aprobacion >= 60:
+            if self.magizoologo_actual.nivel_aprobacion >= PMT.DCC_APROBACION:
                 print("Felicidades! Recuperaste tu licencia!")
             else:
                 print("Sigues sin con tu licencia :(")
@@ -283,7 +283,8 @@ class ZoologicoMagico:
         # Saldo actual
         print(f"Tu saldo actual es: {self.magizoologo_actual.sickles}")
         # ------------- Tranformación a SuperMagizoólogo ------------- #
-        if PMT.SUPERMAGIZOOLOGO_ACTIVO and self.magizoologo_actual.nivel_aprobacion >= 100:
+        if (PMT.SUPERMAGIZOOLOGO_ACTIVO
+                and self.magizoologo_actual.nivel_aprobacion >= PMT.SUPERMAGIZOOLOGO_APROBACION):
             print("Por tener 100 de aprobación, te transformaste en un SuperMagizoólogo!")
             nombres_atributos = ("nombre", "criaturas", "alimentos", "sickles", "licencia",
                                  "nivel_aprobacion", "nivel_magico", "destreza", "energia_max",
@@ -355,8 +356,8 @@ class ZoologicoMagico:
                     print(f"\nEs el turno de {nombres[turno]}")
                     print(f"{criatura_atacante} trata de atacar a {criatura_defendida}!")
                     # Esquivar
-                    prob_esquivar = (1 - criatura_defendida.prob_escaparse)\
-                        * PMT.PELEAS_PROB_ESQUIVAR
+                    prob_esquivar = ((1 - criatura_defendida.prob_escaparse)
+                                     * PMT.PELEAS_PROB_ESQUIVAR)
                     if prob_esquivar > random.random():
                         print(f"{criatura_defendida} ha esquivado el ataque!")
                         continue

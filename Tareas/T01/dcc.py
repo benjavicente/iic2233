@@ -25,10 +25,10 @@ class DCC:
             sanas += not criatura.enferma
             retenidas += not criatura.escapado
             total += 1
-        aprobacion = int(min(100, max(0, ((sanas + retenidas)/(2 * total)) * 100)))
+        min_aprob, max_aprob = PMT.MAGIZOOLOGOS_RANGO_APROBACION
+        aprobacion = int(min(max_aprob, max(min_aprob, ((sanas + retenidas)/(2 * total)) * 100)))
         print(f"Tu nuevo nivel de aprobación es: {aprobacion}")
         magizoologo.nivel_aprobacion = aprobacion
-        return True
 
     def pagar_magizoologo(self, magizoologo):
         """
@@ -39,7 +39,6 @@ class DCC:
                    + PMT.DCC_PESO_PAGO["magico"] * magizoologo.nivel_magico)
         magizoologo.sickles += pago
         print(f"EL DCC te ha pagado {pago} Sickles")
-        return True
 
     def fiscalizar_magizoologo(self, magizoologo):
         """
@@ -74,11 +73,10 @@ class DCC:
                     if magizoologo.sickles < PMT.DCC_FISCALIZADO[nombre][0]:
                         print("No puedes pagar las multas, te quitaron la licencia!")
                         magizoologo.licencia = False
-                        return False
+                        return
                     magizoologo.sickles -= PMT.DCC_FISCALIZADO[nombre][0]
         else:
             print("No recibiste ninguna multa!")
-        return True
 
     def vernder_criaturas(self, magizoologo, lista_criaturas):
         """

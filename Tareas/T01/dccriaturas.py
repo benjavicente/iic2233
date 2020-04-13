@@ -97,13 +97,13 @@ class DCCriaturas(ABC):
     def __str__(self):
         return self.nombre
 
+    def __repr__(self):
+        return f"{self} en {id(self)}"
+
     def __eq__(self, value):
         if type(value) is str:
             value = value.lower()
         return self.nombre.lower() == value
-
-    def __repr__(self):
-        return f"{self} en {id(self)}"
 
     @property
     def dias_sin_comer(self):
@@ -113,6 +113,7 @@ class DCCriaturas(ABC):
     def dias_sin_comer(self, value):
         self.__dias_sin_comer = max(0, value)
         if self.__dias_sin_comer > self.tiempo_satisfecha:
+            print(f"{self} está hambrienta!")
             self.nivel_hambre = "hambrienta"
         elif not self.__dias_sin_comer:
             self.nivel_hambre = "satisfecha"
@@ -146,16 +147,17 @@ class DCCriaturas(ABC):
             print(f"{self} te ha atacado! Perdiste {daño} de energía")
             magizoologo.energia_actual -= daño
         # Características especiales de los alimentos
-        if type(alimento) is alm.TartaMelaza:
-            if type(self) is Niffler:
-                if PMT.ALIMENTOS_TARTA_PROB_PACIFICAR_NIFFLER > random.random():
+        if type(alimento) is alm.TartaMelaza and type(self) is Niffler:
+            if PMT.ALIMENTOS_TARTA_PROB_PACIFICAR_NIFFLER >= random.random():
+                if self.agresividad == "arisca":
                     print(f"el {alimento} ha pacificado a {self}!")
                     self.agresividad = "inofensiva"
         elif type(alimento) is alm.HigadoDragon:
-            print(f"El {alimento} ha sanado a tu criatura!")
-            self.enferma = False
+            if self.enferma:
+                print(f"El {alimento} ha sanado a tu criatura!")
+                self.enferma = False
         elif type(alimento) is alm.BunueloGusarajo:
-            if PMT.ALIMENTOS_BUNUELO_PROB_CONSUMIR > random.random():
+            if not PMT.ALIMENTOS_BUNUELO_PROB_CONSUMIR >= random.random():
                 print("La criatura ha rechazado el alimento!")
                 return False  # Retorna False --> No se consumió el alimento
         # Alimentarse
@@ -172,8 +174,8 @@ class DCCriaturas(ABC):
         """
         # Formulas en TODO
         if not self.escapado:
-            efecto_hambre = PMT.ESCAPARSE_EFECTO_HAMBRE
-            valor = (efecto_hambre[self.nivel_hambre] - resp_magizoologo)/100
+            efecto_hambre = PMT.ESCAPARSE_EFECTO_HAMBRE[self.nivel_hambre]
+            valor = (efecto_hambre - resp_magizoologo)/100
             prob = min(1, self.prob_escaparse + max(0, valor))
             if prob >= random.random():
                 # Se escapa
