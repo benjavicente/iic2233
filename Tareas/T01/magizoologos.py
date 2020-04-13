@@ -176,7 +176,8 @@ class Magizoologo(ABC):
         while True:
             print("Elige una criatura que quieres alimentar")
             for criatura in self.criaturas:
-                print(f" - {criatura}: {criatura.nivel_hambre}")
+                print(f" - {criatura}: {criatura.nivel_hambre}, "
+                      f"{criatura.vida_actual}/{criatura.vida_max}HP")
             nombre_criatura = input("--> ").strip()
             if nombre_criatura not in self.criaturas:
                 if pc.volver_a_intentarlo(nombre_criatura, "Posees esa criatura"):
@@ -184,7 +185,7 @@ class Magizoologo(ABC):
                 return  # Salir si no volvió en la linea anterior
             while True:
                 print("Elige un alimento! Asegurate de escribirlo bien!")
-                print(*set(map(lambda x: " - " + str(x), self.alimentos)), sep="\n")
+                print(*set(map(lambda x: f" - {x}: +{x.pnt_vida}HP", self.alimentos)), sep="\n")
                 alimento_elegido = input("--> ").strip()
                 for alimento in self.alimentos:
                     if str(alimento).lower() == alimento_elegido.lower():
