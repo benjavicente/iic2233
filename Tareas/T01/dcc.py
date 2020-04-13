@@ -89,14 +89,18 @@ class DCC:
         if not magizoologo.licencia:
             print("No puedes adoptar, no tienes licencia")
         while True:
-            print("Elige una criatura! Los costos son...")
+            # No de puede realizar un proceso multipaso
+            # porque una condición depende del input anterior
+            print("Elige una criatura! Los costos son:")
             # Elección
             for key, value in PMT.DCC_PRECIO_CRIATURAS.items():
                 print(f" - {key.capitalize()}: {value} Sickles")
             criatura = input("-->").strip().lower()
             # Chequeo
             if criatura in PMT.DCC_PRECIO_CRIATURAS:
-                if not PMT.DCC_PRECIO_CRIATURAS[criatura] <= magizoologo.sickles:
+                if PMT.DCC_PRECIO_CRIATURAS[criatura] <= magizoologo.sickles:
+                    razon = None
+                else:
                     razon = PMT.TEXTO_SUFICIENTES_SICKLES
             else:
                 razon = "La criatura es válida"
