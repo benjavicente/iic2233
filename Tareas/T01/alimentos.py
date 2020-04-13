@@ -38,15 +38,15 @@ class Alimentos(ABC):
     Son utilizados para mantener a las criaturas en buen estado
     y producen distintos efectos al ser consumidos.
     """
-    def __init__(self):
-        self._nombre = None
-        self.pnt_vida = None
+    def __init__(self, nombre, pnt_vida):
+        self._nombre = nombre
+        self.pnt_vida = pnt_vida
 
     def __str__(self):
         return self._nombre
 
     def __repr__(self):
-        return self._nombre
+        return f"{self}: id{id(self)}"
 
 
 class TartaMelaza(Alimentos):
@@ -58,8 +58,8 @@ class TartaMelaza(Alimentos):
       en que la agresividad pase de arisca a inofensiva de manera permanente
     """
     def __init__(self):
-        self._nombre = "Tarta de Melaza"
-        self.pnt_vida = PMT.ALIMENTOS_TARTA_MALEZA_PNT
+        super().__init__("Tarta de Melaza",
+                         PMT.ALIMENTOS_TARTA_MALEZA_PNT)
 
 
 class HigadoDragon(Alimentos):
@@ -69,8 +69,8 @@ class HigadoDragon(Alimentos):
     - Si la DCCriatura está enferma, se sanará
     """
     def __init__(self):
-        self._nombre = "Hígado de Dragón"
-        self.pnt_vida = PMT.ALIMENTOS_HIGADO_DRAGON_PNT
+        super().__init__("Hígado de Dragón",
+                         PMT.ALIMENTOS_HIGADO_DRAGON_PNT)
 
 
 class BunueloGusarajo(Alimentos):
@@ -81,5 +81,5 @@ class BunueloGusarajo(Alimentos):
       alimento y este se pierda.
     """
     def __init__(self):
-        self._nombre = "Buñuelo de Gusarajo"
-        self.pnt_vida = PMT.ALIMENTOS_BUNUELO_GUSARAJO_PNT
+        super().__init__("Buñuelo de Gusarajo",
+                         PMT.ALIMENTOS_BUNUELO_GUSARAJO_PNT)
