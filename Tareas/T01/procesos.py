@@ -42,7 +42,7 @@ def loop_menus(menus: dict, menu_inicial: str):
     `función: func` es la acción a realiar
 
     `menu: str` es el menu siguiente, se mantiene en el mismo menú si es omitido.
-    Solo se dirige al nuevo menú si el valor retornado por la funcione es `True`.
+    **Solo se dirige al nuevo menú si el valor retornado por la funcione es `True`**.
 
     - menu_inicial: str
     Menú inicial

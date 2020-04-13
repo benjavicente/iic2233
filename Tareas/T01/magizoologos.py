@@ -99,16 +99,16 @@ class Magizoologo(ABC):
     def sickles(self, value):
         self.__sickles = max(0, value)
 
-    def obtener_dccriatura(self, nombre_criatura):
+    def obtener_dccriatura(self, nombre_criatura) -> object:
         """Retorna la DCCriatura a partir del nombre"""
         return self.criaturas[self.criaturas.index(nombre_criatura)]
 
-    def adoptar_dccriatura(self, criatura):
+    def adoptar_dccriatura(self, criatura) -> None:
         # Método llamado en dcc.vernder_criaturas,
         # el cual es encargado del proceso de adoptar
         self.criaturas.append(criatura)
 
-    def comprar_alimentos(self, alimento):
+    def comprar_alimentos(self, alimento) -> None:
         # Método llamado en dcc.vernder_alimentos,
         # el cual es encargado del proceso de comprar
         self.alimentos.append(alimento)
@@ -122,7 +122,7 @@ class Magizoologo(ABC):
         # --- Verificación --- #
         if self.energia_actual < PMT.MAGIZOOLOGOS_COSTO_CURAR:
             print("No suficiente tienes energía")
-            return False
+            return  # Salir por falta de energía
         # Lista de criaturas enfermas
         criaturas_enfermas = list()
         for c in self.criaturas:
@@ -130,7 +130,7 @@ class Magizoologo(ABC):
                 criaturas_enfermas.append(c)
         if not criaturas_enfermas:
             print("No hay criaturas enfermas :)")
-            return False
+            return  # Salir por falta de criaturas enfermas
         # Formateo de lista a str
         criaturas_a_sanar = "\n".join(map(lambda x: " - " + str(x), criaturas_enfermas))
         # Proceso multipaso --> Retorna un str o False
@@ -154,9 +154,7 @@ class Magizoologo(ABC):
             if prob >= random.random():
                 c.enferma = False
                 print(f"Has sanado a {c}!")
-                return c  # Retorna la criatura para aplicar efectos pasivos
             print(f"No has podido sanar a {c} :(")
-            return False
 
     @abstractmethod
     def alimentar_dccriatura(self):
@@ -171,10 +169,10 @@ class Magizoologo(ABC):
         """
         if self.energia_actual < PMT.MAGIZOOLOGOS_COSTO_ALIMENTAR:  # No se cumple por energía
             print("No suficiente tienes energía")
-            return False
+            return  # Sale
         elif not self.alimentos:  # No se cumple por alimentos
             print("No tienes alimentos!")
-            return False  # Sale de la función
+            return  # Sale
         while True:
             print("Elige una criatura que quieres alimentar")
             for criatura in self.criaturas:
@@ -183,7 +181,7 @@ class Magizoologo(ABC):
             if nombre_criatura not in self.criaturas:
                 if pc.volver_a_intentarlo(nombre_criatura, "Posees esa criatura"):
                     continue  # Volver a pedir la criatura
-                return False  # Salir si no volvió en la linea anterior
+                return  # Salir si no volvió en la linea anterior
             while True:
                 print("Elige un alimento! Asegurate de escribirlo bien!")
                 print(*set(map(lambda x: " - " + str(x), self.alimentos)), sep="\n")
@@ -196,9 +194,10 @@ class Magizoologo(ABC):
                         self.alimentos.remove(alimento)  # Eliminar alimento
                         self.energia_actual -= PMT.MAGIZOOLOGOS_COSTO_ALIMENTAR
                         # Se dirige al método en la clase DCCriatura
-                        return c.alimentarse(alimento, self)
+                        c.alimentarse(alimento, self)
+                        return c
                 if not pc.volver_a_intentarlo(alimento_elegido, "Posees el alimento"):
-                    return False
+                    return
 
     @abstractmethod
     def recuperar_dccriatura(self):
@@ -276,7 +275,7 @@ class MagizoologoDocencio(Magizoologo):
             kwargs["responsabilidad"] = random.randint(*PMT.DOCENCIO_RANGO_RESPONSABILIDAD)
         super().__init__(nombre, **kwargs)
 
-    def alimentar_dccriatura(self):
+    def alimentar_dccriatura(self) -> None:
         # Habilidad pasiva: Sana a sus criaturas al alimentarlas
         criatura_alimentada = super().alimentar_dccriatura()
         if criatura_alimentada:
@@ -284,13 +283,13 @@ class MagizoologoDocencio(Magizoologo):
                   f"{PMT.DOCENCIO_PASIVO_SANAR_VIDA} pts de vida adicionales!")
             criatura_alimentada.vida_actual += PMT.DOCENCIO_PASIVO_SANAR_VIDA
 
-    def recuperar_dccriatura(self):
+    def recuperar_dccriatura(self) -> None:
         # Habilidad pasiva: Hiere a sus criaturas al recuperarlas
         criatura_recuperada = super().recuperar_dccriatura()
         if criatura_recuperada:
             criatura_recuperada.vida_actual -= PMT.DOCENCIO_PASIVO_MERMAN
 
-    def habilidad_especial(self):
+    def habilidad_especial(self) -> None:
         # Habilidad especial: Saciar a todas sus criaturas
         if super().habilidad_especial():
             print("Has saciado el hambre de todas tus criaturas!")
@@ -310,17 +309,17 @@ class MagizoologoTareo(Magizoologo):
             kwargs["responsabilidad"] = random.randint(*PMT.TAREO_RANGO_RESPONSABILIDAD)
         super().__init__(nombre, **kwargs)
 
-    def alimentar_dccriatura(self):
+    def alimentar_dccriatura(self) -> None:
         # Habilidad pasiva: Posibilidad de sanar toda su vida
         criatura_alimentada = super().alimentar_dccriatura()
         if criatura_alimentada and PMT.TAREO_PASIVO_PROB_SANAR >= random.random():
             print("Habilidad pasiva: Has sanado toda su vida!")
             criatura_alimentada.vida_actual = criatura_alimentada.vida_max
 
-    def recuperar_dccriatura(self):
+    def recuperar_dccriatura(self) -> None:
         super().recuperar_dccriatura()
 
-    def habilidad_especial(self):
+    def habilidad_especial(self) -> None:
         # Habilidad especial: Sanar a todas sus criaturas
         if super().habilidad_especial():
             print("Has recuperado todas tus criaturas!")
@@ -340,7 +339,7 @@ class MagizoologoHibrido(Magizoologo):
             kwargs["responsabilidad"] = random.randint(*PMT.HIBRIDO_RANGO_RESPONSABILIDAD)
         super().__init__(nombre, **kwargs)
 
-    def alimentar_dccriatura(self):
+    def alimentar_dccriatura(self) -> None:
         # Habilidad pasiva: Sana salud a sus criaturas al alimentarlas
         criatura_alimentada = super().alimentar_dccriatura()
         if criatura_alimentada:
@@ -348,10 +347,10 @@ class MagizoologoHibrido(Magizoologo):
                   f"{PMT.DOCENCIO_PASIVO_SANAR_VIDA}pts de vida adicionales!")
             criatura_alimentada.vida_actual += PMT.DOCENCIO_PASIVO_SANAR_VIDA
 
-    def recuperar_dccriatura(self):
+    def recuperar_dccriatura(self) -> None:
         super().recuperar_dccriatura()
 
-    def habilidad_especial(self):
+    def habilidad_especial(self) -> None:
         # Habilidad especial: Sana a todas sus criaturas
         if super().habilidad_especial():
             print("Has sanado a todas tus criaturas!")
@@ -364,7 +363,7 @@ class MagizoologoSuper(MagizoologoDocencio, MagizoologoTareo, MagizoologoHibrido
         kwargs["puede_usar_habilidad"] = True
         super().__init__(**kwargs)
 
-    def alimentar_dccriatura(self):
+    def alimentar_dccriatura(self) -> None:
         criatura_alimentada = super().alimentar_dccriatura()
         if criatura_alimentada:
             if PMT.TAREO_PASIVO_PROB_SANAR >= random.random():
@@ -375,10 +374,10 @@ class MagizoologoSuper(MagizoologoDocencio, MagizoologoTareo, MagizoologoHibrido
                 print(f"Habilidad pasiva: Has sanado {recuperar}pts de vida adicionales!")
                 criatura_alimentada.vida_actual += recuperar
 
-    def recuperar_dccriatura(self):
+    def recuperar_dccriatura(self) -> None:
         super().recuperar_dccriatura()
 
-    def habilidad_especial(self):
+    def habilidad_especial(self) -> None:
         if super().habilidad_especial():
             habilidades = (" - Docencio: Saciar a todas tus criaturas\n" +
                            " - Tareo: Recuperar a todas tus criaturas\n" +

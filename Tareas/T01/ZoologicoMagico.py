@@ -80,12 +80,12 @@ class ZoologicoMagico:
     def magizoologo_actual(self):
         return self._lista_magizoologos[self.__indice_magizoologo_actual]
 
-    def main_loop(self):
+    def main_loop(self) -> None:
         self._leer_archivos()
         pc.loop_menus(self._menus, "Menú de Inicio")
         self._actualizar_archivos()
 
-    def _leer_archivos(self):
+    def _leer_archivos(self) -> None:
         print("Cargando...")
         # ----------------------- #
         # Archivo de DCCriaturas  #
@@ -141,7 +141,7 @@ class ZoologicoMagico:
             # Se crea el Magizoólogo
             self._lista_magizoologos.append(clase_magizoologo(**parametros_magizoologo))
 
-    def _actualizar_archivos(self):
+    def _actualizar_archivos(self) -> None:
         print("Guardando...")
         # https://docs.python.org/3/reference/compound_stmts.html#with
         with open(PMT.PATH_MAGIZOOLOGOS, "w", encoding="UTF-8") as archivo_magizoologos,\
@@ -167,7 +167,7 @@ class ZoologicoMagico:
     Inicio de Métodos de Procesos
     """
 
-    def __crear_magizoologo(self):
+    def __crear_magizoologo(self) -> bool:
         valores = pc.proceso_multipaso(
             ("Elige un nombre único y alfanumérico", (
                 (PMT.TEXTO_ES_ALFANUMERICO, str.isalnum),
@@ -199,7 +199,7 @@ class ZoologicoMagico:
             return True
         return False
 
-    def __cargar_magizoologo(self):
+    def __cargar_magizoologo(self) -> bool:
         nombre = pc.proceso_multipaso(
             ("Ingresa tu nombre", (
                 ("El Magizoólogo existe", lambda x: x in self._lista_magizoologos),
@@ -212,7 +212,7 @@ class ZoologicoMagico:
             return True
         return False
 
-    def __pasar_de_dia(self):
+    def __pasar_de_dia(self) -> None:
         print("*" * PMT.UI_ANCHO)
         print(" Has pasado al día siguiente! ".center(PMT.UI_ANCHO, "*"))
         print("*" * PMT.UI_ANCHO)
@@ -280,9 +280,8 @@ class ZoologicoMagico:
         # Recuperar su salud
         self.magizoologo_actual.energia_actual = self.magizoologo_actual.energia_max
         print()
-        return True
 
-    def __empezar_pelea(self):
+    def __empezar_pelea(self) -> None:
         if len(self.magizoologo_actual.criaturas) < 2:
             print("No tienes suficientes criaturas!")
             return False
@@ -363,7 +362,6 @@ class ZoologicoMagico:
                 # Recuperar la vida
                 for indice in range(2):
                     criaturas[indice].vida_actual = vida_inicial[indice]
-                return True
 
 
 if __name__ == "__main__":
