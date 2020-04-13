@@ -218,25 +218,6 @@ class ZoologicoMagico:
         print("*" * PMT.UI_ANCHO)
         print(" Has pasado al día siguiente! ".center(PMT.UI_ANCHO, "*"))
         print("*" * PMT.UI_ANCHO)
-        # ---------------------------- DCC ---------------------------- #
-        print(" DCC ".center(PMT.UI_ANCHO - 2, "-").center(PMT.UI_ANCHO, "*"))
-        # Nivel de aprobación
-        self._dcc.calcular_aprobacion(self.magizoologo_actual)
-        # Pagos
-        self._dcc.pagar_magizoologo(self.magizoologo_actual)
-        # Multas
-        self._dcc.fiscalizar_magizoologo(self.magizoologo_actual)
-        # ------------- Tranformación a SuperMagizoólogo ------------- #
-        if PMT.SUPERMAGIZOOLOGO_ACTIVO and self.magizoologo_actual.nivel_aprobacion >= 100:
-            print("Por tener 100 de aprobación, te transformaste en un SuperMagizoólogo!")
-            nombres_atributos = ("nombre", "criaturas", "alimentos", "sickles", "licencia",
-                                 "nivel_aprobacion", "nivel_magico", "destreza", "energia_max",
-                                 "responsabilidad")  # energia_actual == energia_max
-            extractor_atributos = op.attrgetter(*nombres_atributos)
-            atributos = extractor_atributos(self.magizoologo_actual)
-            diccionario_atributos = {k: v for k, v in zip(nombres_atributos, atributos)}
-            nuevo_magizoologo = mzg.MagizoologoSuper(**diccionario_atributos)
-            self._lista_magizoologos[self.__indice_magizoologo_actual] = nuevo_magizoologo
         # ----------------------- Día siguiente ----------------------- #
         print(("-" * (PMT.UI_ANCHO - 2)).center(PMT.UI_ANCHO, "*"))
         print(" Al día siguiente... ".center(PMT.UI_ANCHO - 2, "-").center(PMT.UI_ANCHO, "*"))
@@ -271,15 +252,35 @@ class ZoologicoMagico:
             if criatura.escapado:
                 escapados.append(str(criatura))
         print("-" * PMT.UI_ANCHO)
+        # Listas
         if escapados:
             print("Criatura{0} escapada{0}:".format("s" * (len(escapados) > 1)),
                   ", ".join(escapados))
         if enfermas:
             print("Criatura{0} enferma{0}:".format("s" * (len(enfermas) > 1)),
                   ", ".join(enfermas))
+        # ********************* fin día siguiente ********************* #
+        # ---------------------------- DCC ---------------------------- #
+        print(" DCC ".center(PMT.UI_ANCHO - 2, "-").center(PMT.UI_ANCHO, "*"))
+        # Nivel de aprobación
+        self._dcc.calcular_aprobacion(self.magizoologo_actual)
+        # Pagos
+        self._dcc.pagar_magizoologo(self.magizoologo_actual)
+        # Multas
+        self._dcc.fiscalizar_magizoologo(self.magizoologo_actual)
+        # ------------- Tranformación a SuperMagizoólogo ------------- #
+        if PMT.SUPERMAGIZOOLOGO_ACTIVO and self.magizoologo_actual.nivel_aprobacion >= 100:
+            print("Por tener 100 de aprobación, te transformaste en un SuperMagizoólogo!")
+            nombres_atributos = ("nombre", "criaturas", "alimentos", "sickles", "licencia",
+                                 "nivel_aprobacion", "nivel_magico", "destreza", "energia_max",
+                                 "responsabilidad")  # energia_actual == energia_max
+            extractor_atributos = op.attrgetter(*nombres_atributos)
+            atributos = extractor_atributos(self.magizoologo_actual)
+            diccionario_atributos = {k: v for k, v in zip(nombres_atributos, atributos)}
+            nuevo_magizoologo = mzg.MagizoologoSuper(**diccionario_atributos)
+            self._lista_magizoologos[self.__indice_magizoologo_actual] = nuevo_magizoologo
         print("*" * PMT.UI_ANCHO)
         # ------------------------ Magizoólogo ------------------------ #
-        # Recuperar su salud
         self.magizoologo_actual.energia_actual = self.magizoologo_actual.energia_max
         print()
 
