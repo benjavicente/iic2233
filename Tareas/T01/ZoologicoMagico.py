@@ -64,7 +64,7 @@ class ZoologicoMagico:
             "Menú DCC": (
                 ("Adoptar criaturas",
                  lambda: self._dcc.vernder_criaturas(self.magizoologo_actual,\
-                                                     self.lista_criaturas)),
+                                                     self.lista_nombres_criaturas)),
                 ("Comprar alimentos",
                  lambda: self._dcc.vernder_alimentos(self.magizoologo_actual)),
                 ("Ver estado",
@@ -73,7 +73,7 @@ class ZoologicoMagico:
         }
         self._dcc = dcc.DCC()
         self.__indice_magizoologo_actual = None
-        self.lista_criaturas = None
+        self.lista_nombres_criaturas = None
         self.lista_magizoologos = None
 
     @property
@@ -90,7 +90,8 @@ class ZoologicoMagico:
         # ----------------------- #
         # Archivo de DCCriaturas  #
         # ----------------------- #
-        self.lista_criaturas = list()
+        lista_criaturas = list()
+        self.lista_nombres_criaturas = list()
         with open(PMT.PATH_CRIATURAS, "r", encoding="UTF-8") as archivo_criaturas:
             datos_archivo_criaturas = archivo_criaturas.readlines()
         for fila_criatura in datos_archivo_criaturas:
@@ -109,7 +110,8 @@ class ZoologicoMagico:
             else:
                 continue
             # Se crea la DCCriatura
-            self.lista_criaturas.append(clase_criatura(**parametros_criatura))
+            lista_criaturas.append(clase_criatura(**parametros_criatura))
+            self.lista_nombres_criaturas.append(parametros_criatura["nombre"])
         # ----------------------- #
         # Archivo de Magizoólogos #
         # ----------------------- #
@@ -133,9 +135,9 @@ class ZoologicoMagico:
             parametros_magizoologo["alimentos"] = lista_alimentos_magizoologo
             # Se agregan sus criaturas
             nombre_criaturas = parametros_magizoologo["criaturas"].split(";")
-            lista_criaturas = list(filter(lambda criatura: criatura in nombre_criaturas,
-                                   self.lista_criaturas))
-            parametros_magizoologo["criaturas"] = lista_criaturas
+            criaturas_magizoologo = list(filter(lambda criatura: criatura in nombre_criaturas,
+                                                lista_criaturas))
+            parametros_magizoologo["criaturas"] = criaturas_magizoologo
             # Se crea el Magizoólogo
             self.lista_magizoologos.append(clase_magizoologo(**parametros_magizoologo))
 
@@ -189,7 +191,7 @@ class ZoologicoMagico:
             tipo_magizoologo = mzg.retornar_clase_magizoologo(tipo_magizoologo)
             tipo_criatura = ctr.retornar_clase_criatura(tipo_criatura)
             nueva_criatura = tipo_criatura(nombre_criatura)
-            self.lista_criaturas.append(nueva_criatura)
+            self.lista_nombres_criaturas.append(nombre_criatura)
             self.lista_magizoologos.append(tipo_magizoologo(nombre_magizoologo,
                                                             criaturas=[nueva_criatura]))
             self.__indice_magizoologo_actual = len(self.lista_magizoologos) - 1
@@ -217,7 +219,7 @@ class ZoologicoMagico:
         # ---------------------------- DCC ---------------------------- #
         print(" DCC ".center(PMT.UI_ANCHO - 2, "-").center(PMT.UI_ANCHO, "*"))
         # Nivel de aprobación
-        self._dcc.calcular_aprobación(self.magizoologo_actual)
+        self._dcc.calcular_aprobacion(self.magizoologo_actual)
         # Pagos
         self._dcc.pagar_magizoologo(self.magizoologo_actual)
         # Multas

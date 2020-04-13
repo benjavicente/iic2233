@@ -14,7 +14,7 @@ class DCC:
     nivel de aprobación de los Magizoólogo, pudiendo quitarles
     su licencia.
     """
-    def calcular_aprobación(self, magizoologo):
+    def calcular_aprobacion(self, magizoologo):
         """
         Calcula la aprobación del Magizoólogo al finalizar el día.
         """
@@ -110,7 +110,7 @@ class DCC:
                 print("Genial! Cual será el nombre de tu criatura?")
                 nombre = input("-->").strip()
                 if nombre.isalnum():
-                    if nombre not in lista_criaturas:
+                    if nombre.lower() not in map(str.lower, lista_criaturas):
                         c = ctr.retornar_clase_criatura(criatura)
                         magizoologo.sickles -= PMT.DCC_PRECIO_CRIATURAS[criatura]
                         magizoologo.adoptar_dccriatura(c(nombre))
