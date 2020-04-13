@@ -54,6 +54,7 @@ DCC_APROBACION = 60
 # ============================================ #
 # Parámetros relacionados con los Magizoólogos #
 # ============================================ #
+MAGIZOOLOGOS_NOMBRES = {"docencio", "tareo", "hibrido"}
 MAGIZOOLOGOS_SICKLES_INICIALES = 500
 MAGIZOOLOGOS_LICENCIA_INICIAL = "True"
 MAGIZOOLOGOS_HABILIDADES = "True"
@@ -95,6 +96,7 @@ HIBRIDO_PASIVO_SANAR_VIDA = 10
 # ============================================ #
 # Parámetros relacionados con las criaturas    #
 # ============================================ #
+CRIATURAS_NOMBRES = {"augurey", "niffler", "erkling"}
 ALIMENTARSE_EFECTO_HAMBRE = {"satisfecha": 0, "hambrienta": 15}
 ALIMENTARSE_EFECTO_AGRESIVIDAD = {"inofensiva": 0, "arisca": 20, "peligrosa": 40}
 ALIMENTARSE_MINIMO_ATAQUE = 10

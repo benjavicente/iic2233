@@ -168,18 +168,20 @@ class ZoologicoMagico:
     """
 
     def __crear_magizoologo(self) -> bool:
+        str_tipos = "\n".join([f" - {str(x).capitalize()}" for x in PMT.MAGIZOOLOGOS_NOMBRES])
+        str_criaturas = "\n".join([f" - {str(x).capitalize()}" for x in PMT.CRIATURAS_NOMBRES])
         valores = pc.proceso_multipaso(
             ("Elige un nombre único y alfanumérico", (
                 (PMT.TEXTO_ES_ALFANUMERICO, str.isalnum),
                 (PMT.TEXTO_ES_UNICO, lambda x: x not in self._lista_magizoologos),
                 ), ),
-            ("Elige el tipo de Magizoólogo que desea ser", (
+            (f"Elige el tipo de Magizoólogo que desea ser\n{str_tipos}", (
                 ("Es Docencio, Tareo o Hibrido",
-                 lambda x: x.lower() in {"docencio", "tareo", "hibrido"}),
+                 lambda x: x.lower() in PMT.MAGIZOOLOGOS_NOMBRES),
                 ), ),
-            ("Elige tu primera DCCriatura!", (
+            (f"Elige tu primera DCCriatura!\n{str_criaturas}", (
                 ("Es Augurey, Niffler o Erkling",
-                 lambda x: x.lower() in {"augurey", "niffler", "erkling"}),
+                 lambda x: x.lower() in PMT.CRIATURAS_NOMBRES),
                 ), ),
             ("Elige un nombre único y alfanumérico para tu DCCriatura", (
                 (PMT.TEXTO_ES_ALFANUMERICO, str.isalnum),

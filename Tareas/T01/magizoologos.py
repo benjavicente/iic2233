@@ -47,8 +47,8 @@ class Magizoologo(ABC):
         else:
             self.__nivel_aprobacion = int(PMT.DCC_APROBACION) * bool(licencia)
         self.__sickles = int(sickles)
-        self.licencia = str(licencia) == "True"
-        self.puede_usar_habilidad = str(puede_usar_habilidad) == "True"
+        self.licencia = str(licencia).capitalize() == "True"
+        self.puede_usar_habilidad = str(puede_usar_habilidad).capitalize() == "True"
         # --- Valores predeterminados en distintos Magizoólogos --- #
         self.nivel_magico = int(nivel_magico)
         self.destreza = int(destreza)
