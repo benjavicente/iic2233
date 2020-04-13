@@ -63,7 +63,7 @@ class ZoologicoMagico:
             ),
             "Menú DCC": (
                 ("Adoptar criaturas",
-                 lambda: self._dcc.vernder_criaturas(self.magizoologo_actual,\
+                 lambda: self._dcc.vernder_criaturas(self.magizoologo_actual, \
                                                      self._lista_nombres_criaturas)),
                 ("Comprar alimentos",
                  lambda: self._dcc.vernder_alimentos(self.magizoologo_actual)),
@@ -144,7 +144,7 @@ class ZoologicoMagico:
     def _actualizar_archivos(self) -> None:
         print("Guardando...")
         # https://docs.python.org/3/reference/compound_stmts.html#with
-        with open(PMT.PATH_MAGIZOOLOGOS, "w", encoding="UTF-8") as archivo_magizoologos,\
+        with open(PMT.PATH_MAGIZOOLOGOS, "w", encoding="UTF-8") as archivo_magizoologos, \
                 open(PMT.PATH_CRIATURAS, "w", encoding="UTF-8") as archivo_criaturas:
             for magizoologo in self._lista_magizoologos:
                 # Atributos magizoólogo
@@ -205,7 +205,7 @@ class ZoologicoMagico:
         nombre = pc.proceso_multipaso(
             ("Ingresa tu nombre", (
                 ("El Magizoólogo existe", lambda x: x in self._lista_magizoologos),
-                ),),
+                ), ),
         )
         if nombre:
             nombre = nombre[0]
