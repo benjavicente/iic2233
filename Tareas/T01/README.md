@@ -19,23 +19,23 @@
 
 ## Ejecución :computer:
 
-El programa a ejecutar es **`main.py`**
+El programa a ejecutar es **`main.py`**.
 
-Los archivos de datos (`criatuas.csv` y `magizoologos.csv`) deben estar creados en una carpeta llamada `data`. El formato de cada uno es de `csv`, donde cada campo termina con una nueva linea.
+Los archivos de datos (`criatuas.csv` y `magizoologos.csv`) deben estar creados en una carpeta llamada `data`. El formato de cada uno es de `csv`, donde cada campo termina con una nueva linea. Los nombres y la ubicación de los archivos puede modificarse en el archivo `parametros.py`.
 
-Los módulos `dcc`, `dccriaturas`, `magizoologos`, `alimentos`, `procesos` y `zoologico_magico` deben encontrarse en el mismo _path_ que `main.py`.
+Los módulos `dcc`, `dccriaturas`, `magizoologos`, `alimentos`, `procesos`, `parametros` y `zoologico_magico` deben encontrarse en el mismo _path_ que `main.py`.
 
 ## Supuestos y consideraciones :thinking:
 
-Considero que la DCCriatura Augurey puede entregar un alimento a su dueño si esta se escapó.
+Considero que la DCCriatura Augurey puede entregar un alimento a su dueño **si esta se escapó**.
 
 Utilizo `SuperMagizoologoDocencioTareoHibrido` como `MagizoologoSuper`.
 
 Asumo que se debe guardar los datos solo al salir. He agradado la opción de guardar sin salir para no tener que salir para guardar el progreso.
 
-Asumo que se debe eliminar los caracteres de espacios en el input del usuario (uso siempre `input().strip()`).
+Asumo que se debe eliminar los **caracteres de espacios** en el input del usuario (uso siempre `input().strip()`).
 
-Asumo que las licencias se pagan por separado. Es decir, que las multas se van pagando hasta que el Magizoólogo no tenga Sickles o halla pagado todas las multas.
+Asumo que las **multas** se pagan por separado. Es decir, que las multas se van pagando hasta que el Magizoólogo no tenga Sickles o no queden multas por pagar. Además, las multas que al DCC se les olvido cobrar no son mostradas.
 
 Asumo que al ingresar un nombre para cargar un Magizoólogo, no se diferencia entre mayúsculas y minúsculas. Por ejemplo, al cargar el usuario, `lily416potter` y `Lily416Potter`, corresponden al mismo usuario.
 
@@ -114,10 +114,11 @@ Asumo que el orden de los eventos al pasar el día es:
     - `loop_menus()`: Encargada de administrar los menús.
     - `volver_a_intentarlo()`: Encargada de administrar los errores del usuario.
     - `proceso_multipaso()`: Encargada de administrar los procesos donde se piden multiples _inputs_.
+- **`parametros`**: Encargada de los parametros del programa
 
 ## Código externo utilizado :package:
 
-Ninguno :tada:
+No utilicé código externo. :tada:
 
 ## Características implementadas :wrench:
 
@@ -210,5 +211,9 @@ Ninguno :tada:
 ## Notas adicionales :moyai:
 
 Estoy probando documentar mi código con [typing](https://docs.python.org/3/library/typing.html) y [docstring](https://www.python.org/dev/peps/pep-0257/#what-is-a-docstring). No estoy siguiendo una convención y tampoco he documentado todo.
+
+Traté de modelar las clases de una forma que sean lo más independientes entre ellas. No pude lograrlo completamente, como es el caso de `DCC` y `MagizoologicoMagico` que deberían ser una única clase, pero la clase `Magizoologico` debería poder funcionar fuera de la clase `MagizoologicoMagico`.
+
+Agregué algunas opciónes adicionales a las pedidas en `parametros.py`, como por ejemplo, que el DCC elija la criatura en la batalla y que la clase SuperMagizoólogo esté desactivada.
 
 Disfrute el programa :tada:
