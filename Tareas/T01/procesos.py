@@ -12,7 +12,7 @@ Depende de:
     parametros
 """
 
-import parametros as PMT
+from parametros import UI_ANCHO
 
 
 def loop_menus(menus: dict, menu_inicial: str):
@@ -52,7 +52,7 @@ def loop_menus(menus: dict, menu_inicial: str):
     while True:
         numero = -1
         # Se imprimen las opciones
-        print("\n" + f" {menu_actual} ".center(PMT.UI_ANCHO, "-"))
+        print("\n" + f" {menu_actual} ".center(UI_ANCHO, "-"))
         for numero, opcion in enumerate(menus[menu_actual]):
             if type(opcion) is tuple:
                 opcion = opcion[0]
