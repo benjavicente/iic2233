@@ -336,10 +336,12 @@ class ZoologicoMagico:
                         break
                     else:
                         criatura_dcc = criatura_dcc[0]
+                else:
                     criatura_dcc = random.choice(
                         [str(c) for c in self.magizoologo_actual.criaturas
-                            if c != criatura_elegida]
+                         if c != criatura_elegida]
                     )
+                    print(f"El DCC ha elegido a {criatura_dcc}!")
                 # -------------- Inicio de la pelea -------------- #
                 c_mgz = self.magizoologo_actual.obtener_dccriatura(criatura_elegida)
                 c_dcc = self.magizoologo_actual.obtener_dccriatura(criatura_dcc)
@@ -380,7 +382,4 @@ class ZoologicoMagico:
                 # Recuperar la vida
                 for indice in range(2):
                     criaturas[indice].vida_actual = vida_inicial[indice]
-
-
-if __name__ == "__main__":
-    ZoologicoMagico().main_loop()
+                return
