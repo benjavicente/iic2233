@@ -71,7 +71,7 @@ Asumo que el orden de los eventos al pasar el día es:
 ### Aclaraciones
 
 - `ZoologicoMagico`
-  - El atributo `menu` es la estructura que tiene el programa. En el módulo `procesos` se explica el formato que tiene este. El atributo `menu` es _el plano_ del programa, mientras que el modulo `procesos` es el que lo ejecuta.
+  - El atributo `menu` es la estructura que tiene el programa. En el módulo `procesos` se explica el formato que tiene este. Se podría decir que el atributo `menu` es _el plano_ del programa, mientras que el modulo `procesos` es el que lo ejecuta.
   - Los métodos `crear_magizoologo` y `cargar_magizoologo` retornan `True` si la acción fue realizada correctamente, `False` en el caso contrario. Tienen relación con la estructura del atributo menú.
   - La property `magizoologo_actual` entrega el Magizoólogo actual, que está determinado por el `indice_magizoologo_actual`.
 - `Magizoologos`
@@ -79,7 +79,7 @@ Asumo que el orden de los eventos al pasar el día es:
 - `DCCriaturas`
   - El método `caracteristica_unica` es un método abstracto.
 - Generales
-  - No pude combinar las clases `ZoologicoMagico` y `DCC`, ya que ambas tienen métodos complejos difíciles de realizar en 400 lineas. `DCC` se utiliza como una extensión de `ZoologicoMagico`.
+  - No pude combinar las clases `ZoologicoMagico` y `DCC`, ya que ambas tienen métodos complejos difíciles de realizar en 400 lineas. `DCC` se utiliza como una extensión de `ZoologicoMagico`.****
 
 ## Librerías :books:
 
@@ -118,9 +118,11 @@ Asumo que el orden de los eventos al pasar el día es:
 
 ## Código externo utilizado :package:
 
-No utilicé código externo. :tada:
+No utilicé código externo :tada:
 
 ## Características implementadas :wrench:
+
+Todo fue implementado :tada:
 
 - **OOP: 38pts (34%)**
   - Diagrama
@@ -206,11 +208,11 @@ No utilicé código externo. :tada:
   - Bonus avance (2 décimas)
     - [X] 1/2
   - Bonus README (de-descuento 5 décimas)
-    - [ ] :question:
+    - [ ] :thinking:
 
 ## Notas adicionales :moyai:
 
-Estoy probando documentar mi código con [typing](https://docs.python.org/3/library/typing.html) y [docstring](https://www.python.org/dev/peps/pep-0257/#what-is-a-docstring). No estoy siguiendo una convención y tampoco he documentado todo.
+Estoy probando documentar mi código con [type hinting](https://www.python.org/dev/peps/pep-0484/#type-definition-syntax) y [docstring](https://www.python.org/dev/peps/pep-0257/#what-is-a-docstring). No estoy siguiendo una convención y tampoco he documentado todo.
 
 Traté de modelar las clases de una forma que sean lo más independientes entre ellas. No pude lograrlo completamente, como es el caso de `DCC` y `MagizoologicoMagico` que deberían ser una única clase, pero la clase `Magizoologico` debería poder funcionar fuera de la clase `MagizoologicoMagico`.
 
