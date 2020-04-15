@@ -172,8 +172,8 @@ class ZoologicoMagico:
         str_criaturas = "\n".join([f" - {str(x).capitalize()}" for x in PMT.CRIATURAS_NOMBRES])
         valores = pc.proceso_multipaso(
             ("Elige un nombre único y alfanumérico", (
-                (PMT.TEXTO_ES_ALFANUMERICO, str.isalnum),
-                (PMT.TEXTO_ES_UNICO, lambda x: x not in self._lista_magizoologos),
+                ("El nombre es alfanumérico", str.isalnum),
+                ("El nombre es único", lambda x: x not in self._lista_magizoologos),
                 ), ),
             (f"Elige el tipo de Magizoólogo que desea ser\n{str_tipos}", (
                 ("Es Docencio, Tareo o Hibrido",
@@ -184,8 +184,8 @@ class ZoologicoMagico:
                  lambda x: x.lower() in PMT.CRIATURAS_NOMBRES),
                 ), ),
             ("Elige un nombre único y alfanumérico para tu DCCriatura", (
-                (PMT.TEXTO_ES_ALFANUMERICO, str.isalnum),
-                (PMT.TEXTO_ES_UNICO, lambda x: x not in self._lista_magizoologos),
+                ("El nombre es alfanumérico", str.isalnum),
+                ("El nombre es único", lambda x: x not in self._lista_magizoologos),
                 ), ),
         )
         if valores:

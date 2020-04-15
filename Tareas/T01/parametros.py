@@ -33,13 +33,9 @@ FORMATO_MAGIZOOLOGOS = ("nombre", "tipo", "sickles", "criaturas",
 
 
 # ============================================ #
-# Parámetros relacionados con el UI y textos   #
+# Parámetros relacionados con el UI            #
 # ============================================ #
 UI_ANCHO = 50  # En caracteres
-TEXTO_ES_ALFANUMERICO = "El nombre es alfanumérico"
-TEXTO_ES_UNICO = "El nombre es único"
-TEXTO_SUFICIENTES_SICKLES = "Contienes sickles suficientes"
-
 
 # ============================================ #
 # Parámetros relacionados con el DCC           #

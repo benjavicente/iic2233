@@ -99,7 +99,7 @@ class DCC:
                 if PMT.DCC_PRECIO_CRIATURAS[criatura] <= magizoologo.sickles:
                     razon = None
                 else:
-                    razon = PMT.TEXTO_SUFICIENTES_SICKLES
+                    razon = "Contienes sickles suficientes"
             else:
                 razon = "La criatura es válida"
             if razon:
@@ -119,10 +119,10 @@ class DCC:
                         print(f"Felizidades! Adoptaste a {nombre}")
                         return
                     else:
-                        if not pc.volver_a_intentarlo(nombre, PMT.TEXTO_ES_UNICO):
+                        if not pc.volver_a_intentarlo(nombre, "El nombre es único"):
                             break
                 else:
-                    if not pc.volver_a_intentarlo(nombre, PMT.TEXTO_ES_ALFANUMERICO):
+                    if not pc.volver_a_intentarlo(nombre, "El nombre es alfanumérico"):
                         break
         return
 
@@ -136,7 +136,7 @@ class DCC:
             # Chequeo
             if alimento in PMT.DCC_PRECIO_ALIMENTOS:
                 if not PMT.DCC_PRECIO_ALIMENTOS[alimento] <= magizoologo.sickles:
-                    razon = PMT.TEXTO_SUFICIENTES_SICKLES
+                    razon = "Contienes sickles suficientes"
             else:
                 razon = "El alimento es valido"
             if razon:
