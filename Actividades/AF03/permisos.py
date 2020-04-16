@@ -15,7 +15,7 @@ def permiso_clave_unica(rut, datos_registrados):
 
 def permiso_asistencia_medica(hora):
     if not hora.isdigit():
-        raise KeyError("El formato de la hora es incorrecto.")
+        raise TypeError("El formato de la hora es incorrecto.")
 
 
 def permiso_servicios_basicos(persona, solicitud, comunas_cuarentena):
