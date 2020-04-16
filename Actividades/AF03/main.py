@@ -15,10 +15,14 @@ from permisos import (
 class ErrorPermiso(Exception):
     def __init__(self, opcion, dic_opciones):
         super().__init__()
-        pass
+        self.opcion = opcion
+        self.dic_opciones = dic_opciones
+        print("\n¡Error de Permiso!")
 
     def mostrar_opciones_validas(self):
-        pass
+        print(f"La opción '{self.opcion}' no es valida")
+        string_opciones = ", ".join(dic_opciones.keys())
+        print(f"Las opciones validas son: {string_opciones}")
 
 
 if __name__ == "__main__":
@@ -99,5 +103,5 @@ if __name__ == "__main__":
             else:
                 raise ErrorPermiso(opcion, dic_opciones)
 
-        except:
-            pass
+        except ErrorPermiso as error:
+            error.mostrar_opciones_validas()
