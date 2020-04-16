@@ -10,9 +10,9 @@ from permisos import (
     permiso_asistencia_medica, permiso_servicios_basicos
 )
 
+
 # Debes completar esta clase
 class ErrorPermiso(Exception):
-
     def __init__(self, opcion, dic_opciones):
         super().__init__()
         pass
@@ -35,10 +35,11 @@ if __name__ == "__main__":
                 verificar_rut(rut, datos_registrados)
                 permiso_clave_unica(rut, datos_registrados)
                 print("Clave única obtenida con éxito")
-
-            #Tienes que implementar las excepciones
-            except:
-                pass
+            # Tienes que implementar las excepciones
+            except ValueError as error:
+                print(f"Error: {error}")
+            except KeyError as error:
+                print(f"Error: {error}")
 
     def asistencia_medica(datos_horas, datos_registrados):
         for solicitud in datos_horas.values():
@@ -46,10 +47,11 @@ if __name__ == "__main__":
                 verificar_rut(solicitud.rut, datos_registrados)
                 permiso_asistencia_medica(solicitud.hora)
                 print("Permiso de Servicio de asistencia médica obtenido con éxito")
-
             #Tienes que implementar las excepciones
-            except:
-                pass
+            except ValueError as error:
+                print(f"Error: {error}")
+            except TypeError as error:
+                print(f"Error: {error}")
 
     def asistencia_servicios_basicos(datos_permiso_supermercado, datos_registrados, comunas_cuarentena):
         for solicitud in datos_permiso_supermercado.values():
@@ -57,14 +59,12 @@ if __name__ == "__main__":
                 persona = verificar_rut(solicitud.rut, datos_registrados)
                 permiso_servicios_basicos(persona, solicitud, comunas_cuarentena)
                 print("Permiso de Servicios básicos obtenido con éxito")
-
             # Tienes que implementar esta excepción
-            except:
-                pass
-
+            except ValueError as error:
+                print(f"Error: {error}")
 
     dic_opciones = {
-        "1" : "Permisos de Clave Unica",
+        "1" : "Permisos de Clave Única",
         "2" : "Permisos de Asistencia Médica",
         "3" : "Permisos de Servicios Básicos",
         "0" : "Salir"
@@ -84,7 +84,7 @@ if __name__ == "__main__":
             if opcion in dic_opciones.keys():
                 permiso = dic_opciones[opcion]
 
-                if permiso ==  "Permisos de Clave Unica":
+                if permiso ==  "Permisos de Clave Única":
                     clave_unica(datos_clave_unica, datos_registrados)
 
                 elif permiso == "Permisos de Asistencia Médica":
