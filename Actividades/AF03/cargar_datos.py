@@ -1,13 +1,15 @@
 from collections import namedtuple
 import os
 
+
 def cargar_comunas_en_cuarentena(path):
     comunas = []
-    with open(path, 'r', encoding="utf-8") as file
+    with open(path, 'r', encoding="utf-8") as file:
         for line in file.readlines():
             comuna = line.strip()
             comunas.append(comuna)
     return comunas
+
 
 def cargar_clave_unica(path):
     solicitantes = []
@@ -15,8 +17,8 @@ def cargar_clave_unica(path):
         for line in file.readlines():
             persona = line.strip()
             solicitantes.append(persona)
-    print(solicitantes[len(solicitantes)]) #esta línea no es necesaria
     return solicitantes
+
 
 def cargar_datos(path):
     datos_registrados = dict()
@@ -35,9 +37,10 @@ def cargar_permiso_hora(path):
     with open(path, 'r', encoding="utf-8") as file:
         for line in file.readlines():
             # Las separamos por coma
-            rut, hora = line.strip().split('')
+            rut, hora = line.strip().split(',')
             permisos[rut] = permiso(rut, hora)
     return permisos
+
 
 def cargar_permiso_supermercado(path):
     permisos = dict()
@@ -46,7 +49,7 @@ def cargar_permiso_supermercado(path):
         for line in file.readlines():
             # Las separamos por coma
             rut, salida, llegada = line.strip().split(',')
-            permisos[rut] = permis(rut, salida, llegada)
+            permisos[rut] = permiso(rut, salida, llegada)
     return permisos
 
 
