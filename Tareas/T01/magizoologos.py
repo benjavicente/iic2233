@@ -148,7 +148,8 @@ class Magizoologo(ABC):
             if prob >= random.random():
                 c.enferma = False
                 print(f"Has sanado a {c}!")
-            print(f"No has podido sanar a {c} :(")
+            else:
+                print(f"No has podido sanar a {c} :(")
 
     @abstractmethod
     def alimentar_dccriatura(self):
