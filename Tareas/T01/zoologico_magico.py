@@ -269,13 +269,13 @@ class ZoologicoMagico:
             if self.magizoologo_actual.nivel_aprobacion >= PMT.DCC_APROBACION:
                 print("Felicidades! Continuas con tu licencia")
             else:
-                print("Perdiste tu con tu licencia :(")
+                print("Perdiste tu licencia :(")
                 self.magizoologo_actual.licencia = False
         else:
             if self.magizoologo_actual.nivel_aprobacion >= PMT.DCC_APROBACION:
                 print("Felicidades! Recuperaste tu licencia!")
             else:
-                print("Sigues sin con tu licencia :(")
+                print("Sigues sin tu licencia :(")
         # Pagos
         self._dcc.pagar_magizoologo(self.magizoologo_actual)
         # Multas
@@ -285,7 +285,7 @@ class ZoologicoMagico:
         # ------------- Tranformación a SuperMagizoólogo ------------- #
         if (PMT.SUPERMAGIZOOLOGO_ACTIVO
                 and self.magizoologo_actual.nivel_aprobacion >= PMT.SUPERMAGIZOOLOGO_APROBACION):
-            print("Por tener 100 de aprobación, te transformaste en un SuperMagizoólogo!")
+            print("Por tener 100 de aprobación,\nte transformaste en un SuperMagizoólogo!")
             nombres_atributos = ("nombre", "criaturas", "alimentos", "sickles", "licencia",
                                  "nivel_aprobacion", "nivel_magico", "destreza", "energia_max",
                                  "responsabilidad")  # energia_actual == energia_max
