@@ -378,9 +378,9 @@ class MagizoologoSuper(MagizoologoDocencio, MagizoologoTareo, MagizoologoHibrido
                                " - Tareo: Recuperar a todas tus criaturas\n" +
                                " - Hibrido: Sanar a todas tus criaturas")
                 cual = pc.proceso_multipaso(
-                    (f"Elige una habilidad especial: \n {habilidades}", (
+                    (f"Elige una habilidad especial: \n{habilidades}", (
                         ("Es Docencio, Tareo o Hibrido",
-                         lambda x: x.lower() in {"docencio", "tareo", "hibrido"})
+                         lambda x: x.lower() in {"docencio", "tareo", "hibrido"}),
                     ), ),
                 )
                 if cual:
