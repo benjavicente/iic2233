@@ -274,8 +274,9 @@ class ZoologicoMagico:
         else:
             if self.magizoologo_actual.nivel_aprobacion >= PMT.DCC_APROBACION:
                 print("Felicidades! Recuperaste tu licencia!")
+                self.magizoologo_actual.licencia = True
             else:
-                print("Sigues sin tu licencia :(")
+                print("Continuas sin tu licencia :(")
         # Pagos
         self._dcc.pagar_magizoologo(self.magizoologo_actual)
         # Multas

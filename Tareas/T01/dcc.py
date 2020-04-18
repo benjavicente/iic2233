@@ -96,6 +96,7 @@ class DCC:
             # Elección
             for key, value in PMT.DCC_PRECIO_CRIATURAS.items():
                 print(f" - {key.capitalize()}: {value} Sickles")
+            print(f"Tienes: {magizoologo.sickles}")
             criatura = input("-->").strip().lower()
             # Chequeo
             if criatura in PMT.DCC_PRECIO_CRIATURAS:
@@ -120,7 +121,7 @@ class DCC:
                         c = ctr.retornar_clase_criatura(criatura)
                         magizoologo.sickles -= PMT.DCC_PRECIO_CRIATURAS[criatura]
                         magizoologo.adoptar_dccriatura(c(nombre))
-                        print(f"Felizidades! Adoptaste a {nombre}")
+                        print(f"Felicidades! Adoptaste a {nombre}")
                         return
                     else:
                         if not pc.volver_a_intentarlo(nombre, "El nombre es único"):
