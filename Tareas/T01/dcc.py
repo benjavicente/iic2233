@@ -134,6 +134,7 @@ class DCC:
                 print(f" - {key.capitalize()}: {value} Sickles")
             alimento = input("-->").strip().lower()
             # Chequeo
+            razon = None
             if alimento in PMT.DCC_PRECIO_ALIMENTOS:
                 if not PMT.DCC_PRECIO_ALIMENTOS[alimento] <= magizoologo.sickles:
                     razon = "Contienes sickles suficientes"
@@ -150,6 +151,7 @@ class DCC:
             print(f"Has comprado {alimento} por {precio} Sickles!")
             clase_alimento = alm.retornar_clase_alimento(alimento)
             magizoologo.comprar_alimentos(clase_alimento())
+            return
 
     def mostrar_estado(self, magizoologo) -> None:
         """
