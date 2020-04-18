@@ -111,7 +111,7 @@ class ZoologicoMagico:
                 continue
             # Se crea la DCCriatura
             lista_criaturas.append(clase_criatura(**parametros_criatura))
-            self._lista_nombres_criaturas.append(parametros_criatura["nombre"])
+            self._lista_nombres_criaturas.append(parametros_criatura["nombre"].lower())
         # ----------------------- #
         # Archivo de Magizoólogos #
         # ----------------------- #
@@ -185,12 +185,12 @@ class ZoologicoMagico:
                 ), ),
             ("Elige un nombre único y alfanumérico para tu DCCriatura", (
                 ("El nombre es alfanumérico", str.isalnum),
-                ("El nombre es único", lambda x: x not in self._lista_magizoologos),
+                ("El nombre es único", lambda x: x.lower() not in self._lista_nombres_criaturas),
                 ), ),
         )
         if valores:
             nombre_magizoologo, tipo_magizoologo, tipo_criatura, nombre_criatura = valores
-            self._lista_nombres_criaturas.append(nombre_criatura)
+            self._lista_nombres_criaturas.append(nombre_criatura.lower())
             tipo_magizoologo = mzg.retornar_clase_magizoologo(tipo_magizoologo)
             tipo_criatura = ctr.retornar_clase_criatura(tipo_criatura)
             nueva_criatura = tipo_criatura(nombre_criatura)

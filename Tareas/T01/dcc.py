@@ -117,7 +117,7 @@ class DCC:
                 nombre = input("-->").strip()
                 if nombre.isalnum():
                     if nombre.lower() not in map(str.lower, lista_criaturas):
-                        lista_criaturas.append(nombre)
+                        lista_criaturas.append(nombre.lower())
                         c = ctr.retornar_clase_criatura(criatura)
                         magizoologo.sickles -= PMT.DCC_PRECIO_CRIATURAS[criatura]
                         magizoologo.adoptar_dccriatura(c(nombre))

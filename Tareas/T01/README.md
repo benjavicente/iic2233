@@ -15,7 +15,7 @@
 
 ## Importante :heavy_exclamation_mark:
 
-:question:
+En algunas opciones, como al comprar alimentos, el tílde puede afectar a sí la acción se puede realizar o no.
 
 ## Ejecución :computer:
 
