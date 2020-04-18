@@ -204,7 +204,6 @@ Todo fue implementado :tada:
 - Bonus
   - Super MagizoólogoDocencioTareoHíbrido (3 décimas)
     - [X] Se implementa correctamente el bonus con todo lo que se pide.
-      - Se transforma a Super
   - Peleas entre DCCriaturas (5 décimas)
     - [X] Se implementa correctamente el bonus con todo lo que se pide.
   - Bonus avance (2 décimas)
