@@ -41,7 +41,7 @@ UI_ANCHO = 50  # En caracteres
 # Parámetros relacionados con el DCC           #
 # ============================================ #
 DCC_PRECIO_CRIATURAS = {"augurey": 75, "niffler": 100, "erkling": 125}
-DCC_PRECIO_ALIMENTOS = {"tarta de melaza": 10, "higado de dragón": 15, "buñuelo de gusarajo": 3}
+DCC_PRECIO_ALIMENTOS = {"tarta de melaza": 10, "higado de dragon": 15, "buñuelo de gusarajo": 3}
 DCC_FISCALIZADO = {"escape": (50, 0.5), "enfermedad": (70, 0.7), "vida critica": (150, 1)}
 DCC_PESO_PAGO = {"aprobacion": 4, "alimento": 15, "magico": 3}
 DCC_APROBACION = 60

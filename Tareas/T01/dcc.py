@@ -144,7 +144,7 @@ class DCC:
                 if not PMT.DCC_PRECIO_ALIMENTOS[alimento] <= magizoologo.sickles:
                     razon = "Contienes sickles suficientes"
             else:
-                razon = "El alimento es valido"
+                razon = f"El alimento es {', '.join(PMT.DCC_PRECIO_ALIMENTOS)}"
             if razon:
                 if pc.volver_a_intentarlo(alimento, razon):
                     continue

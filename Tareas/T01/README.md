@@ -43,6 +43,8 @@ Asumo que se debe poder alimentar a una criatura en **cualquier momento** para s
 
 Asumo que cuando Erkling roba un alimento, los efectos del alimento robado no son aplicados al Erkling.
 
+Asumo que las criaturas tienen que tener su vida sobre la vida minima para pelear.
+
 Asumo que el orden de los eventos al pasar el día es:
 
 - Por cada DCCriatura

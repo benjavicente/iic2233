@@ -316,11 +316,21 @@ class ZoologicoMagico:
             # Magizoólogo
             print("Selecciona la criatura para que te represente")
             criatura_elegida = input("--> ").strip()
+            # Ver si la criatura existe
             if criatura_elegida not in self.magizoologo_actual.criaturas:
                 if pc.volver_a_intentarlo(criatura_elegida, "Tienes esa criatura"):
                     continue
                 else:
-                    return False
+                    return
+            else:
+                # Ver si la criatura tiene vida suficiente
+                c_mgz = self.magizoologo_actual.obtener_dccriatura(criatura_elegida)
+                if c_mgz.vida_actual <= PMT.CRIATURAS_VIDA_MINIMA:
+                    if pc.volver_a_intentarlo(criatura_elegida,
+                                              "La criatura tiene vida suficiente"):
+                        continue
+                    else:
+                        return
             while True:
                 # DCC
                 if not PMT.PELEAS_EL_DCC_ELIGE:
@@ -340,12 +350,11 @@ class ZoologicoMagico:
                 else:
                     criatura_dcc = random.choice(
                         [str(c) for c in self.magizoologo_actual.criaturas
-                         if c != criatura_elegida]
+                         if c != criatura_elegida and c.vida_actual > PMT.CRIATURAS_VIDA_MINIMA]
                     )
                     print(f"El DCC ha elegido a {criatura_dcc}!")
-                # -------------- Inicio de la pelea -------------- #
-                c_mgz = self.magizoologo_actual.obtener_dccriatura(criatura_elegida)
                 c_dcc = self.magizoologo_actual.obtener_dccriatura(criatura_dcc)
+                # -------------- Inicio de la pelea -------------- #
                 turno = PMT.PELEAS_INICIAL
                 criaturas = (c_mgz, c_dcc)
                 nombres = (str(self.magizoologo_actual), "DCC")
