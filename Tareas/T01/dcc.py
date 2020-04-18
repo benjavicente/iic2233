@@ -71,8 +71,10 @@ class DCC:
             for nombre, multas in dict_multas.items():
                 for _ in range(multas):
                     if magizoologo.sickles < PMT.DCC_FISCALIZADO[nombre][0]:
-                        print("  No puedes pagar las multas,\nte quitaron la licencia!")
-                        magizoologo.licencia = False
+                        print("  No puedes pagar las multas!")
+                        if magizoologo.licencia:
+                            print("  Te quitaron la licencia!")
+                            magizoologo.licencia = False
                         return
                     magizoologo.sickles -= PMT.DCC_FISCALIZADO[nombre][0]
         else:
