@@ -220,4 +220,6 @@ Traté de modelar las clases de una forma que sean lo más independientes entre 
 
 Agregué algunas opciónes adicionales a las pedidas en `parametros.py`, como por ejemplo, que el DCC elija la criatura en la batalla y que la clase SuperMagizoólogo esté desactivada.
 
+No mantuve la consistencia al verificar los nombres de algunas cosas, por lo que hay ocasiones donde añadir el tilde a la palabra puede hacer que esta funcione o no.
+
 Disfrute el programa :tada:
