@@ -266,13 +266,13 @@ class Niffler(DCCriaturas):
             kwargs["vida_max"] = random.randint(*PMT.NIFFLER_RANGO_VIDA_MAXIMA)
         if "agresividad" not in kwargs:
             kwargs["agresividad"] = PMT.NIFFLER_NIVEL_AGRESIVIDAD
-        # Inicia la clase
-        super().__init__(nombre, **kwargs)
         # Atributo único
         if "nivel_cleptomania" not in kwargs:
             kwargs["nivel_cleptomania"] = random.randint(*PMT.NIFFLER_RANGO_CLEPTOMANIA)
         else:
             kwargs["nivel_cleptomania"] = int(kwargs["nivel_cleptomania"])
+        # Inicia la clase
+        super().__init__(nombre, **kwargs)
 
     def caracteristica_unica(self, magizoologo) -> None:
         # factor decide se regala (* +1) o roba (* -1)
