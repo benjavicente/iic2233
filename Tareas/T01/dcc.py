@@ -88,6 +88,7 @@ class DCC:
         """
         if not magizoologo.licencia:
             print("No puedes adoptar, no tienes licencia")
+            return
         while True:
             # No de puede realizar un proceso multipaso
             # porque una condición depende del input anterior
