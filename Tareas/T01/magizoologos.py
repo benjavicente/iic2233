@@ -186,7 +186,7 @@ class Magizoologo(ABC):
                     if str(alimento).lower() == alimento_elegido.lower():
                         # --- Alimenar --- #
                         c = self.obtener_dccriatura(nombre_criatura)  # Criatura a alimentar
-                        print(f"Has tratado de alimentar a {c} con un {alimento}...")
+                        print(f"Has tratado de alimentar a {c}\ncon un {alimento}...")
                         self.alimentos.remove(alimento)  # Eliminar alimento
                         self.energia_actual -= PMT.MAGIZOOLOGOS_COSTO_ALIMENTAR
                         c.alimentarse(alimento, self)  # Se dirige a DCCriatura

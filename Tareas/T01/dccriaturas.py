@@ -163,7 +163,7 @@ class DCCriaturas(ABC):
         # Alimentarse
         self.vida_actual += alimento.pnt_vida
         self.dias_sin_comer = 0
-        print(f"{self} ha consumido el {alimento} "
+        print(f"{self} ha consumido el {alimento}\n"
               f"y ha recuperado {alimento.pnt_vida} de vida")
 
     def escaparse(self, resp_magizoologo: int):
