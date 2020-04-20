@@ -39,7 +39,7 @@ Asumo que las **multas** se pagan por separado. Es decir, que las multas se van 
 
 Asumo que al ingresar un nombre para cargar un Magizoólogo, no se diferencia entre mayúsculas y minúsculas. Por ejemplo, al cargar el usuario, `lily416potter` y `Lily416Potter`, corresponden al mismo usuario.
 
-Asumo que se debe poder alimentar a una criatura en **cualquier momento** para sanar parte de su salud.
+Asumo que se debe poder alimentar, sanar y recuperar a una criatura en **cualquier momento**.
 
 Asumo que cuando Erkling roba un alimento, los efectos del alimento robado no son aplicados al Erkling.
 
@@ -77,11 +77,11 @@ Asumo que el orden de los eventos al pasar el día es:
   - Los métodos `crear_magizoologo` y `cargar_magizoologo` retornan `True` si la acción fue realizada correctamente, `False` en el caso contrario. Tienen relación con la estructura del atributo menú.
   - La property `magizoologo_actual` entrega el Magizoólogo actual, que está determinado por el `indice_magizoologo_actual`.
 - `Magizoologos`
-  - Los métodos `alimentar_criatura` y `recuperar_criatura` son llamados en las clases hijas, para realizar el procedimiento en común entre todos los Magizoólogos. Esta retornan una `DCCriatura` o `False`. En el caso que sea una `DCCriatura`, se le aplican a esta las habilidades pasivas de cada Magizoólogos. En el caso que sea `False`, no se hace nada. En las criaturas heredadas, el método retorna `None`.
+  - Los métodos `alimentar_criatura`, `recuperar_criatura` y `habilidad_especial` son métodos abstractos que son llamados en las clases hijas, para realizar el procedimiento en común entre todos los Magizoólogos. En los primeros dos métodos, se retornan una `DCCriatura` o `False`. En el caso que sea una `DCCriatura`, se le aplican a esta las habilidades pasivas de cada Magizoólogos. En el caso que sea `False`, no se hace nada. En las criaturas heredadas, el método retorna `None`. En el método `habilidad_especial` se retorna `True` o `False`, que dicta si es posible o no realizar la habilidad especial _(En el caso de `SuperMagizoologo`, no se llama a la clase abstracta ya que esta clase tiene que pasar por un proceso distinto antes de realizar una habilidad)_.
 - `DCCriaturas`
-  - El método `caracteristica_unica` es un método abstracto.
+  - El método `caracteristica_unica` es un método abstracto vacío.
 - Generales
-  - No pude combinar las clases `ZoologicoMagico` y `DCC`, ya que ambas tienen métodos complejos difíciles de realizar en 400 lineas. `DCC` se utiliza como una extensión de `ZoologicoMagico`.****
+  - No pude combinar las clases `ZoologicoMagico` y `DCC`, ya que ambas tienen métodos complejos difíciles de realizar en 400 lineas. `DCC` se utiliza como una extensión de `ZoologicoMagico`.
 
 ## Librerías :books:
 
