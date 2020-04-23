@@ -26,11 +26,11 @@ def obtener_clientes(lista_clientes_encriptados):
 
 
 def categorizar(productos, categoria):
-    return filter(lambda x: categoria == x.categoria, productos)
+    return list(filter(lambda x: categoria == x.categoria, productos))
 
 
 def calcular_precio(productos):
-    return reduce(lambda x, y: x + y.precio, productos , 0)
+    return reduce(lambda x, y: x + y.precio, productos, 0)
 
 
 def generar_productos_disponibles(clientes):
