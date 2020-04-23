@@ -20,21 +20,21 @@ def desencriptar(cliente_encriptado):
     cliente_desencriptado[1] = nombre_desencriptado
     return cliente_desencriptado
 
+
 def obtener_clientes(lista_clientes_encriptados):
-    # Completar
-    pass
+    return map(desencriptar, lista_clientes_encriptados)
 
 
 def categorizar(productos, categoria):
-    # Completar
-    pass
+    return filter(lambda x: categoria == x.categoria, productos)
 
 
 def calcular_precio(productos):
-    # Completar
-    pass
+    return reduce(lambda x, y: x + y.precio, productos , 0)
 
 
 def generar_productos_disponibles(clientes):
-    # Completar
-    pass
+    for cliente in clientes:
+        for producto in cliente.carrito:
+            if producto.disponible:
+                yield (cliente, producto)
