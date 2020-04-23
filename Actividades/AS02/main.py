@@ -16,14 +16,12 @@ def cargar_encriptados(ruta_clientes):
     return clientes
 
 
-# Bonus
-def formato_fila(linea):
-    linea = linea.strip().split(",")
-    linea[2] = linea[2].split(";")
-    return linea
-
-
 def cargar_bonus(ruta_clientes):
+    def formato_fila(linea):
+        linea = linea.strip().split(",")
+        linea[2] = linea[2].split(";")
+        return linea
+
     with open(ruta_clientes, "rt", encoding="utf-8") as archivo:
         archivo.readline()
         return list(map(formato_fila, archivo))
