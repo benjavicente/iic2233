@@ -37,14 +37,14 @@ def cargar_productos(ruta_productos):
             linea = linea.strip().split(",")
             id_, nombre, categoria, precio, disponible, desc = linea
             productos[id_] = Producto(int(id_), nombre, categoria, int(precio),
-                                        disponible == "True", int(desc))
+                                      disponible == "True", int(desc))
     return productos
 
 
 if __name__ == "__main__":
 
     # Se cargan clientes encriptados
-    #encriptados = cargar_encriptados(os.path.join("data", "clientes_encriptados.csv"))
+    # encriptados = cargar_encriptados(os.path.join("data", "clientes_encriptados.csv"))
     encriptados = cargar_bonus(os.path.join("data", "clientes_encriptados.csv"))
 
     # Se cargan productos
