@@ -34,9 +34,12 @@ class IteradorOfertones:
         self.iterable = copy(iterable)
 
     def __iter__(self):
-        # Completar
-        pass
+        return self.iterable.productos
 
     def __next__(self):
-        # Completar
-        pass
+        if not self.iterable.productos:
+            raise StopIteration("No quedan más productos")
+        else:
+            maximo = max(self.iterable.productos, key=lambda k: k.descuento_oferta)
+            self.iterable.productos.remove(maximo)
+            return maximo
