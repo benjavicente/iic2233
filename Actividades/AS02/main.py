@@ -17,16 +17,16 @@ def cargar_encriptados(ruta_clientes):
 
 
 # Bonus
-def formato_fila(fila):
-    lista = fila.strip().split(",")
-    lista[2] = lista[2].split(";")
-    return lista
+def formato_fila(linea):
+    linea = linea.strip().split(",")
+    linea[2] = linea[2].split(";")
+    return linea
 
 
 def cargar_bonus(ruta_clientes):
     with open(ruta_clientes, "rt", encoding="utf-8") as archivo:
-        archivo.readline()  # omite los nombres
-        return list(map(formato_fila, archivo.readlines()))
+        archivo.readline()
+        return list(map(formato_fila, archivo))
 
 
 def cargar_productos(ruta_productos):
