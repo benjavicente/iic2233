@@ -16,8 +16,17 @@ def cargar_encriptados(ruta_clientes):
     return clientes
 
 
+# Bonus
+def formato_fila(fila):
+    lista = fila.strip().split(",")
+    lista[2] = lista[2].split(";")
+    return lista
+
+
 def cargar_bonus(ruta_clientes):
-    pass
+    with open(ruta_clientes, "rt", encoding="utf-8") as archivo:
+        archivo.readline()  # omite los nombres
+        return list(map(formato_fila, archivo.readlines()))
 
 
 def cargar_productos(ruta_productos):
@@ -35,8 +44,8 @@ def cargar_productos(ruta_productos):
 if __name__ == "__main__":
 
     # Se cargan clientes encriptados
-    encriptados = cargar_encriptados(os.path.join("data", "clientes_encriptados.csv"))
-    # encriptados = cargar_bonus(os.path.join("data", "clientes_encriptados.csv"))
+    #encriptados = cargar_encriptados(os.path.join("data", "clientes_encriptados.csv"))
+    encriptados = cargar_bonus(os.path.join("data", "clientes_encriptados.csv"))
 
     # Se cargan productos
     productos = cargar_productos(os.path.join("data", "productos.csv"))
