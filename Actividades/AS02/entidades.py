@@ -34,7 +34,7 @@ class IteradorOfertones:
         self.iterable = copy(iterable)
 
     def __iter__(self):
-        return self.iterable.productos
+        return self
 
     def __next__(self):
         if not self.iterable.productos:
@@ -42,4 +42,5 @@ class IteradorOfertones:
         else:
             maximo = max(self.iterable.productos, key=lambda k: k.descuento_oferta)
             self.iterable.productos.remove(maximo)
+            maximo.precio *= 1 - (maximo.descuento_oferta / 100)
             return maximo
