@@ -80,9 +80,6 @@ class Hacker(LiderMundial, Thread):
                 self.reloj.quedan_lideres = False
             sleep(0.5)
 
-        print("Se ha detenido el Doomsday Clock")
-        print(TADA)
-
 
 if __name__ == "__main__":
     # Instanciamos al lider mundial
