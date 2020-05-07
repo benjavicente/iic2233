@@ -38,8 +38,8 @@ class LiderMundial(Thread):
     def run(self):
         # Completar o modificar si es necesario
         while self.puede_twitear:
-            sleep(max(5 * (1.05)**(-self.enojo), 0.25))
             self.twitear()
+            sleep(max(5 * (1.05)**(-self.enojo), 0.25))
 
     def twitear(self):
         # Completar o modificar si es necesario
@@ -48,6 +48,8 @@ class LiderMundial(Thread):
             print(f'{self.nombre}: {tweet.texto}')
             self.enojo += tweet.enojo
             self.reloj.acelerar(self.nombre, self.enojo)
+
+
 
 class Hacker(LiderMundial, Thread):
 
@@ -64,7 +66,15 @@ class Hacker(LiderMundial, Thread):
         while self.reloj.quedan_lideres:
             sleep(0.5)
             # Completar
-
+            with lock_tweet_lideres:
+                if PROBABILIDAD_HACKEO > random.random() and self.trumpzini.puede_twitear:
+                    self.trumpzini.puede_twitear = False
+                    print(f'{self.nombre} ha hackeado el teléfono de Trumpzini!')
+                    print('Trumpzini ya no podrá seguir twiteando :(')
+                if PROBABILIDAD_DESAPARECER > random.random() and self.dr_pinto.puede_twitear:
+                    self.dr_pinto.puede_twitear = False
+                    print(f'{self.nombre} ha boicoteado la cirugía de Dr. Pin Tong-Um!')
+                    print('Dr. Pin Tong-Um ya no podrá seguir twiteando :(')
 
             # No modificar
             if not self.trumpzini.puede_twitear and not self.dr_pinto.puede_twitear:

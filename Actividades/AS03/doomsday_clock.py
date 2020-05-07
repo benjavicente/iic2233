@@ -38,11 +38,11 @@ class DoomsdayClock(Thread):
     def run(self):
         # Completar o modificar si es necesario
         while self.tiempo_restante:
-            sleep(1/self.velocidad)
             self.contar()  # Avanza
+            sleep(1/self.velocidad)
 
         # No modificar siguientes líneas
-        if self.tiempo_restante == 0:
+        if self.tiempo_restante == 0 and self.quedan_lideres:
             print(BOMBA_NUCLEAR)
 
     def acelerar(self, nombre, enojo):
