@@ -50,7 +50,6 @@ class LiderMundial(Thread):
             self.reloj.acelerar(self.nombre, self.enojo)
 
 
-
 class Hacker(LiderMundial, Thread):
 
     def __init__(self, nombre, trumpzini, dr_pinto, reloj):

@@ -12,7 +12,6 @@ class DoomsdayClock(Thread):
         # Completar
         super().__init__()
 
-
         # No modificar siguientes líneas
         self.velocidad = velocidad
         self._tiempo_restante = tiempo_restante
