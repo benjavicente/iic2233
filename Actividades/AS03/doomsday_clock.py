@@ -37,7 +37,7 @@ class DoomsdayClock(Thread):
 
     def run(self):
         # Completar o modificar si es necesario
-        while self.tiempo_restante:
+        while self.tiempo_restante and self.quedan_lideres:
             self.contar()  # Avanza
             sleep(1/self.velocidad)
 

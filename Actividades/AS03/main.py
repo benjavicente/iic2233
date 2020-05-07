@@ -13,6 +13,7 @@ class Simulacion:
         self.dr_pinto = LiderMundial("Dr. Pin Tong-Un", tweets_pinto, ENOJO_INICIAL, self.doomsday_clock)
         self.trumpzini = LiderMundial("Trumpzini", tweets_trumpzini, ENOJO_INICIAL, self.doomsday_clock)
         # Implementar bonus a continuación
+        self.hacker = Hacker("El mismísimo Antonio Ossa", self.trumpzini, self.dr_pinto, self.doomsday_clock)
 
     def comenzar(self):
         print("INICIANDO SIMULACIÓN...")
@@ -20,6 +21,7 @@ class Simulacion:
         self.doomsday_clock.start()
         self.dr_pinto.start()
         self.trumpzini.start()
+        self.hacker.start()
         self.doomsday_clock.join()
 
 
