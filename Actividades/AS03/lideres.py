@@ -64,12 +64,13 @@ class Hacker(LiderMundial, Thread):
     def run(self):
         while self.reloj.quedan_lideres:
             # Completar
-            with lock_tweet_lideres:
-                if PROBABILIDAD_HACKEO > random.random() and self.trumpzini.puede_twitear:
+            if PROBABILIDAD_HACKEO > random.random() and self.trumpzini.puede_twitear:
+                with lock_tweet_lideres:
                     self.trumpzini.puede_twitear = False
                     print(f'{self.nombre} ha hackeado el teléfono de Trumpzini!')
                     print('Trumpzini ya no podrá seguir twiteando :(')
-                if PROBABILIDAD_DESAPARECER > random.random() and self.dr_pinto.puede_twitear:
+            if PROBABILIDAD_DESAPARECER > random.random() and self.dr_pinto.puede_twitear:
+                with lock_tweet_lideres:
                     self.dr_pinto.puede_twitear = False
                     print(f'{self.nombre} ha boicoteado la cirugía de Dr. Pin Tong-Um!')
                     print('Dr. Pin Tong-Um ya no podrá seguir twiteando :(')
