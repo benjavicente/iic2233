@@ -64,7 +64,6 @@ class Hacker(LiderMundial, Thread):
 
     def run(self):
         while self.reloj.quedan_lideres:
-            sleep(0.5)
             # Completar
             with lock_tweet_lideres:
                 if PROBABILIDAD_HACKEO > random.random() and self.trumpzini.puede_twitear:
@@ -79,6 +78,7 @@ class Hacker(LiderMundial, Thread):
             # No modificar
             if not self.trumpzini.puede_twitear and not self.dr_pinto.puede_twitear:
                 self.reloj.quedan_lideres = False
+            sleep(0.5)
 
         print("Se ha detenido el Doomsday Clock")
 
