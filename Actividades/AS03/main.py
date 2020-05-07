@@ -17,7 +17,9 @@ class Simulacion:
     def comenzar(self):
         print("INICIANDO SIMULACIÓN...")
         # Completar
-        pass
+        self.dr_pinto.start()
+        self.trumpzini.start()
+        self.doomsday_clock.start()
 
 
 if __name__ == "__main__":
