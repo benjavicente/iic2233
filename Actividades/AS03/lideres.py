@@ -79,6 +79,8 @@ class Hacker(LiderMundial, Thread):
             if not self.trumpzini.puede_twitear and not self.dr_pinto.puede_twitear:
                 self.reloj.quedan_lideres = False
             sleep(0.5)
+        # Cambie la ubicación de un print aquí ya que este podría
+        # no imprimirse al ser Hacker un Thread deamon :)
 
 
 if __name__ == "__main__":
