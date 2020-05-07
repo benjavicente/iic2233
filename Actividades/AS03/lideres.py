@@ -81,6 +81,7 @@ class Hacker(LiderMundial, Thread):
             sleep(0.5)
 
         print("Se ha detenido el Doomsday Clock")
+        print(TADA)
 
 
 if __name__ == "__main__":
