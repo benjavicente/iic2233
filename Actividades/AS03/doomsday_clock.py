@@ -3,7 +3,7 @@ from threading import Thread
 from time import sleep
 
 from cargar_tweets import cargar_tweets
-from parametros import BOMBA_NUCLEAR, TIEMPO_INICIAL, VELOCIDAD_INICIAL
+from parametros import BOMBA_NUCLEAR, TIEMPO_INICIAL, VELOCIDAD_INICIAL, TADA
 
 
 class DoomsdayClock(Thread):
@@ -45,7 +45,8 @@ class DoomsdayClock(Thread):
         if self.tiempo_restante == 0 and self.quedan_lideres:
             print(BOMBA_NUCLEAR)
         else:
-            print("La humanidad se ha salvado! No quedan lideres")
+            print("No quedan lideres!")
+            print(TADA)
 
     def acelerar(self, nombre, enojo):
         # Completar o modificar si es necesario
