@@ -44,6 +44,8 @@ class DoomsdayClock(Thread):
         # No modificar siguientes líneas
         if self.tiempo_restante == 0 and self.quedan_lideres:
             print(BOMBA_NUCLEAR)
+        else:
+            print("La humanidad se ha salvado! No quedan lideres")
 
     def acelerar(self, nombre, enojo):
         # Completar o modificar si es necesario
