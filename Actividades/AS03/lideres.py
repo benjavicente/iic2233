@@ -7,12 +7,15 @@ from time import sleep
 from cargar_tweets import cargar_tweets
 from parametros import ENOJO_INICIAL, PROBABILIDAD_DESAPARECER, PROBABILIDAD_HACKEO
 
+# Lock para evitar que lideres se manden tweets al mismo tiempo
+lock_tweet_lideres = Lock()
 
-class LiderMundial:
+
+class LiderMundial(Thread):
 
     def __init__(self, nombre, tweets, enojo, reloj):
         # Completar
-
+        super().__init__(daemon=True)  # Creado como daemon directamente
 
         # No modificar
         self.nombre = nombre
@@ -34,12 +37,17 @@ class LiderMundial:
 
     def run(self):
         # Completar o modificar si es necesario
-        pass
+        while self.puede_twitear:
+            sleep(max(5 * (1.05)**(-self.enojo), 0.25))
+            self.twitear()
 
     def twitear(self):
         # Completar o modificar si es necesario
-        pass
-
+        with lock_tweet_lideres:
+            tweet = random.choice(self.tweets)  # Named tuple
+            print(f'{self.nombre}: {tweet.texto}')
+            self.enojo += tweet.enojo
+            self.reloj.acelerar(self.nombre, self.enojo)
 
 class Hacker(LiderMundial, Thread):
 
