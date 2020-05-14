@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QLabel, QWidget, QLineEdit, \
 from PyQt5.QtCore import Qt, pyqtSignal, QDir, QUrl
 from PyQt5.QtGui import QPixmap, QMovie, QPainter
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtMultimedia import QMediaPlaylist, QMediaPlayer, QMediaContent,QSound
+from PyQt5.QtMultimedia import QMediaPlaylist, QMediaPlayer, QMediaContent, QSound
 from PyQt5 import QtMultimedia
 
 from parametros import ruta_victoria, ruta_derrota, ruta_sonido_victoria, ruta_sonido_derrota
@@ -25,14 +25,14 @@ class VentanaFinal(QWidget):
             self.ruta = ruta_derrota
             self.ruta_sonido = ruta_sonido_derrota
             titulo = 'Derrota :('
-                        
+
         self.setWindowTitle(titulo)
-        
+
         self.label_usuario = QLabel()
         self.movie = QMovie(self.ruta)
         self.movie.frameChanged.connect(self.repaint)
         self.movie.start()
-        
+
         self.sonido()
         self.show()
 
@@ -55,12 +55,12 @@ if __name__ == '__main__':
         print(type)
         print(traceback)
     sys.__excepthook__ = hook
-    
+
     a = QApplication(sys.argv)
-    
+
     print("estoy sonado")
-     
+
     ventana_final = VentanaFinal()
     ventana_final.show()
-    
+
     sys.exit(a.exec())

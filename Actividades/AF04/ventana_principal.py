@@ -18,7 +18,6 @@ class VentanaPrincipal(QWidget):
         super().__init__(*args)
         self.crear_pantalla()
 
-
     def crear_pantalla(self):
         # Aquí deben crear la ventana vacia.
         self.setWindowTitle("DCCuent")
@@ -43,24 +42,17 @@ class VentanaPrincipal(QWidget):
 
         self.carta_infanteria = QLabel(self)
         self.carta_infanteria.setFixedSize(238, 452)
-        # pixmap_infanteria = QPixmap()
-        # self.carta_infanteria.setPixmap(pixmap_infanteria)
         main_layout.addWidget(self.carta_infanteria, 2, 0)
 
         self.carta_rango = QLabel(self)
         self.carta_rango.setFixedSize(238, 452)
-        # pixmap_rango = QPixmap()
-        # self.carta_rango.setPixmap(pixmap_rango)
         main_layout.addWidget(self.carta_rango, 2, 1)
 
         self.carta_artilleria = QLabel(self)
         self.carta_artilleria.setFixedSize(238, 452)
-        # pixmap_artilleria = QPixmap()
-        # self.carta_artilleria.setPixmap(pixmap_artilleria)
         main_layout.addWidget(self.carta_artilleria, 2, 2)
 
         self.setLayout(main_layout)
-
 
     def actualizar(self, datos):
         # Esta es la funcion que se encarga de actualizar el contenido de la ventana y abrirla
@@ -99,7 +91,6 @@ class VentanaCombate(QWidget):
     # Esta señal envia a la ventana final con el resultado del juego
     senal_abrir_ventana_final = pyqtSignal(str)
 
-
     def __init__(self, *args):
         super().__init__(*args)
         self.crear_pantalla()
@@ -128,8 +119,8 @@ class VentanaCombate(QWidget):
         mensaje = datos["mensaje"]
         carta_enemiga = datos["enemigo"]
         carta_jugador = datos["jugador"]
-        self.label_carta_usuario.setPixmap(QPixmap(carta_jugador["ruta"]).scaled(238,452))
-        self.label_carta_enemiga.setPixmap(QPixmap(carta_enemiga["ruta"]).scaled(238,452))
+        self.label_carta_usuario.setPixmap(QPixmap(carta_jugador["ruta"]).scaled(238, 452))
+        self.label_carta_enemiga.setPixmap(QPixmap(carta_enemiga["ruta"]).scaled(238, 452))
         self.label_victoria.setText(mensaje)
         self.show()
 

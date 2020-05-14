@@ -5,7 +5,7 @@ from PyQt5.QtCore import QObject, pyqtSignal
 from parametros import dic_infanteria, dic_artilleria, dic_rango
 
 
-class Logica(QObject):  
+class Logica(QObject):
 
     senal_resultado_verificacion = pyqtSignal(bool)
     senal_comenzar_juego = pyqtSignal(dict)
@@ -15,7 +15,7 @@ class Logica(QObject):
         'Rango': 'Artilleria',
         'Artilleria': 'Infanteria'
     }
-    
+
     def __init__(self):
         super().__init__()
 
@@ -92,4 +92,3 @@ class Logica(QObject):
         elif self.derrotas >= 4:
             data['resultado'] = 'derrota'
         self.senal_enviar_resultado_ronda.emit(data)
-    
