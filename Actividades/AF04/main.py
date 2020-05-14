@@ -19,7 +19,7 @@ if __name__ == "__main__":
     a = QApplication(sys.argv)
 
     # Se instancia back-end principal
-    logica_dccuent = Logica()
+    logica_dccuent = Logica(VentanaPrincipal.senal_enviar_jugada)
 
     # Se instancia la ventana inicial
     ventana_inicial = VentanaInicial()
