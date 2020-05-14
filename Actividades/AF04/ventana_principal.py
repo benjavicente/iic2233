@@ -72,9 +72,9 @@ class VentanaPrincipal(QWidget):
 
         self.derrotas.setText(f'Derrotas; {datos["derrotas"]}')
 
-        self.carta_infanteria.setPixmap(datos['infanteria']['ruta'])
-        self.carta_rango.setPixmap(datos['rango']['ruta'])
-        self.carta_artilleria.setPixmap(datos['artilleria']['ruta'])
+        self.carta_infanteria.setPixmap(QPixmap(datos['infanteria']['ruta']))
+        self.carta_rango.setPixmap(QPixmap(datos['rango']['ruta']))
+        self.carta_artilleria.setPixmap(QPixmap(datos['artilleria']['ruta']))
 
         # Al final, se muestra la ventana.
         self.show()
@@ -90,7 +90,7 @@ class VentanaPrincipal(QWidget):
             "tecla": eleccion
         }
 
-        self.senal_enviar_jugada.send(datos)
+        self.senal_enviar_jugada.emit(datos)
 
         self.hide()
 
@@ -101,6 +101,7 @@ class VentanaCombate(QWidget):
     senal_regresar = pyqtSignal(dict)
     # Esta señal envia a la ventana final con el resultado del juego
     senal_abrir_ventana_final = pyqtSignal(str)
+
 
     def __init__(self, *args):
         super().__init__(*args)
