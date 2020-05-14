@@ -25,11 +25,38 @@ class VentanaInicial(QWidget):
         # El logo, la caja de texto y el botón.
         # IMPORTANTE la caja de texto debe llamarse input_usuario
         # Si usas layout recuerda agregar los labels al layout y finalmente setear el layout
+        columna_principal = QVBoxLayout(self)
+
+        self.logo = QLabel(self)
+        self.logo.setFixedSize(400, 400)
+        self.logo.setPixmap(QPixmap(ruta_logo))
+        columna_principal.addWidget(self.logo)
+
+        # Inicio fila input
+        fila_usuario = QHBoxLayout()
+
+        self.etiqueta_usuario = QLabel('Ingrese su nombre de usuario:', self)
+        fila_usuario.addWidget(self.etiqueta_usuario)
+
+        self.input_usuario = QLineEdit(self)
+        self.input_usuario.setPlaceholderText("usuario")
+        fila_usuario.addWidget(self.input_usuario)
+
+        columna_principal.addLayout(fila_usuario)
+        # Fin fila input
+
+        self.boton = QPushButton('Ingresar', self)
+        self.boton.clicked.connect(self.revisar_input)
+        columna_principal.addWidget(self.boton)
+
+        self.setLayout(columna_principal)
 
     def revisar_input(self):
         # Aquí deben enviar el nombre de usuario, para verificar si es un usuario valido
         # Para esto utilizar senal_revisar_nombre
-        pass
+        usuario = self.input_usuario.text()
+        self.senal_revisar_nombre.emit(usuario)
+
 
 
     def recibir_revision(self, error):
