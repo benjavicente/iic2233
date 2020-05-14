@@ -64,9 +64,9 @@ class VentanaPrincipal(QWidget):
 
         self.derrotas.setText(f'Derrotas; {datos["derrotas"]}')
 
-        self.carta_infanteria.setPixmap(QPixmap(datos['infanteria']['ruta']))
-        self.carta_rango.setPixmap(QPixmap(datos['rango']['ruta']))
-        self.carta_artilleria.setPixmap(QPixmap(datos['artilleria']['ruta']))
+        self.carta_infanteria.setPixmap(QPixmap(datos['infanteria']['ruta']).scaled(238, 452))
+        self.carta_rango.setPixmap(QPixmap(datos['rango']['ruta']).scaled(238, 452))
+        self.carta_artilleria.setPixmap(QPixmap(datos['artilleria']['ruta']).scaled(238, 452))
 
         self.datos = datos
 
