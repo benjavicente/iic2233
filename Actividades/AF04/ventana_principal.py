@@ -77,7 +77,7 @@ class VentanaPrincipal(QWidget):
         # Aquí debes capturar la techa apretara,
         # y enviar la carta que es elegida
         eleccion = evento.text().lower()
-        dic_elecc = {"q": 'infanteria', "w": 'rango', "e": 'infanteria'}
+        dic_elecc = {"q": 'infanteria', "w": 'rango', "e": 'artilleria'}
 
         self.senal_enviar_jugada.emit(self.datos[dic_elecc[eleccion]])
 
