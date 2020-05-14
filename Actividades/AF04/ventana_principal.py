@@ -66,13 +66,33 @@ class VentanaPrincipal(QWidget):
         # Esta es la funcion que se encarga de actualizar el contenido de la ventana y abrirla
         # Recibe las nuevas cartas y la puntuación actual en un diccionario
 
+        self.nombre_usuario.setText(f'Usuario: {datos["usuario"]}')
+
+        self.victorias.setText(f'Victorias: {datos["victorias"]}')
+
+        self.derrotas.setText(f'Derrotas; {datos["derrotas"]}')
+
+        self.carta_infanteria.setPixmap(datos['infanteria']['ruta'])
+        self.carta_rango.setPixmap(datos['rango']['ruta'])
+        self.carta_artilleria.setPixmap(datos['artilleria']['ruta'])
+
         # Al final, se muestra la ventana.
         self.show()
 
     def keyPressEvent(self, evento):
         # Aquí debes capturar la techa apretara,
         # y enviar la carta que es elegida
-        pass
+        eleccion = evento.text()
+        dic_elecc = {"q": 'infanteria', "w": 'rango', "e": 'infanteria'}
+
+        datos = {
+            "elegido": dic_elecc[eleccion],
+            "tecla": eleccion
+        }
+
+        self.senal_enviar_jugada.send(datos)
+
+        self.hide()
 
 
 class VentanaCombate(QWidget):
