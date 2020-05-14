@@ -3,7 +3,7 @@ import sys
 from random import choice
 
 from PyQt5.QtWidgets import QLabel, QWidget, QLineEdit, \
-    QHBoxLayout, QVBoxLayout, QPushButton
+    QHBoxLayout, QVBoxLayout, QPushButton, QGridLayout
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication
@@ -24,7 +24,43 @@ class VentanaPrincipal(QWidget):
         self.setWindowTitle("DCCuent")
         # Es decir, agregar y crear labels respectivos a datos del juego, pero sin contenido
         # Si usas layout recuerda agregar los labels al layout y finalmente setear el layout
-        pass
+
+        main_layout = QGridLayout()
+
+        self.nombre_usuario = QLabel('Usuario:', self)
+        main_layout.addWidget(self.nombre_usuario, 0, 0)
+        self.victorias = QLabel('Victorias', self)
+        main_layout.addWidget(self.victorias, 0, 1)
+        self.derrotas = QLabel('Derrotas', self)
+        main_layout.addWidget(self.derrotas, 0, 2)
+
+        self.tecla_infanteria = QLabel('Q', self)
+        main_layout.addWidget(self.tecla_infanteria, 1, 0)
+        self.tecla_rango = QLabel('W', self)
+        main_layout.addWidget(self.tecla_rango, 1, 1)
+        self.tecla_artilleria = QLabel('E', self)
+        main_layout.addWidget(self.tecla_artilleria, 1, 2)
+
+        self.carta_infanteria = QLabel(self)
+        self.carta_infanteria.setFixedSize(238, 452)
+        # pixmap_infanteria = QPixmap()
+        # self.carta_infanteria.setPixmap(pixmap_infanteria)
+        main_layout.addWidget(self.carta_infanteria, 2, 0)
+
+        self.carta_rango = QLabel(self)
+        self.carta_rango.setFixedSize(238, 452)
+        # pixmap_rango = QPixmap()
+        # self.carta_rango.setPixmap(pixmap_rango)
+        main_layout.addWidget(self.carta_rango, 2, 1)
+
+        self.carta_artilleria = QLabel(self)
+        self.carta_artilleria.setFixedSize(238, 452)
+        # pixmap_artilleria = QPixmap()
+        # self.carta_artilleria.setPixmap(pixmap_artilleria)
+        main_layout.addWidget(self.carta_artilleria, 2, 2)
+
+        self.setLayout(main_layout)
+
 
     def actualizar(self, datos):
         # Esta es la funcion que se encarga de actualizar el contenido de la ventana y abrirla
