@@ -76,21 +76,18 @@ class VentanaPrincipal(QWidget):
         self.carta_rango.setPixmap(QPixmap(datos['rango']['ruta']))
         self.carta_artilleria.setPixmap(QPixmap(datos['artilleria']['ruta']))
 
+        self.datos = datos
+
         # Al final, se muestra la ventana.
         self.show()
 
     def keyPressEvent(self, evento):
         # Aquí debes capturar la techa apretara,
         # y enviar la carta que es elegida
-        eleccion = evento.text()
+        eleccion = evento.text().lower()
         dic_elecc = {"q": 'infanteria', "w": 'rango', "e": 'infanteria'}
 
-        datos = {
-            "elegido": dic_elecc[eleccion],
-            "tecla": eleccion
-        }
-
-        self.senal_enviar_jugada.emit(datos)
+        self.senal_enviar_jugada.emit(self.datos[dic_elecc[eleccion]])
 
         self.hide()
 
