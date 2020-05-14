@@ -29,16 +29,16 @@ class VentanaPrincipal(QWidget):
         self.nombre_usuario = QLabel('Usuario:', self)
         main_layout.addWidget(self.nombre_usuario, 0, 0)
         self.victorias = QLabel('Victorias', self)
-        main_layout.addWidget(self.victorias, 0, 1)
+        main_layout.addWidget(self.victorias, 0, 1, Qt.AlignHCenter)
         self.derrotas = QLabel('Derrotas', self)
-        main_layout.addWidget(self.derrotas, 0, 2)
+        main_layout.addWidget(self.derrotas, 0, 2, Qt.AlignHCenter)
 
         self.tecla_infanteria = QLabel('Q', self)
-        main_layout.addWidget(self.tecla_infanteria, 1, 0)
+        main_layout.addWidget(self.tecla_infanteria, 1, 0, Qt.AlignHCenter)
         self.tecla_rango = QLabel('W', self)
-        main_layout.addWidget(self.tecla_rango, 1, 1)
+        main_layout.addWidget(self.tecla_rango, 1, 1, Qt.AlignHCenter)
         self.tecla_artilleria = QLabel('E', self)
-        main_layout.addWidget(self.tecla_artilleria, 1, 2)
+        main_layout.addWidget(self.tecla_artilleria, 1, 2, Qt.AlignHCenter)
 
         self.carta_infanteria = QLabel(self)
         self.carta_infanteria.setFixedSize(238, 452)
@@ -62,7 +62,7 @@ class VentanaPrincipal(QWidget):
 
         self.victorias.setText(f'Victorias: {datos["victorias"]}')
 
-        self.derrotas.setText(f'Derrotas; {datos["derrotas"]}')
+        self.derrotas.setText(f'Derrotas: {datos["derrotas"]}')
 
         self.carta_infanteria.setPixmap(QPixmap(datos['infanteria']['ruta']).scaled(238, 452))
         self.carta_rango.setPixmap(QPixmap(datos['rango']['ruta']).scaled(238, 452))
