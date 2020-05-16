@@ -1,0 +1,12 @@
+# Entorno de desarrollo
+.vscode/
+
+# Archivos de datos
+sprites/
+*.csv
+
+# Python
+__pycache__/
+
+# Otros
+*.pdf
