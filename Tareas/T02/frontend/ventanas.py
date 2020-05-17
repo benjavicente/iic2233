@@ -5,12 +5,13 @@ Ventana principal
 import sys
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
-                             QPushButton, QSizePolicy, QSpacerItem,
-                             QToolButton, QVBoxLayout, QWidget)
+from PyQt5.QtGui import QCursor, QIcon, QPixmap
+from PyQt5.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
+                             QLabel, QPushButton, QSizePolicy, QSpacerItem,
+                             QToolButton, QVBoxLayout, QWidget, QToolTip)
 
-RUTA_LOGO = R'sprites\otros\logo_blanco.png'  # TODO: Cambiar!
+from ui_tools import RUTA_LOGO, STYLE_SHEET_VENTANA_INICIO
+
 
 class VentanaInicio(QWidget):
     '''Ventana que se abre al iniciar el programa'''
@@ -21,11 +22,17 @@ class VentanaInicio(QWidget):
     def iniciar(self):
         '''Inicia la ventana'''
         self.setWindowTitle('DCCafé - Inicio')
+        self.setStyleSheet(STYLE_SHEET_VENTANA_INICIO)
         #self.setWindowIcon(QIcon(QPixmap(RUTA_LOGO))) # TODO: Ver lo de loos íconos
 
         # Crear un Grid de 5x5
         main_layout = QGridLayout()
         self.setLayout(main_layout)
+
+        # Firma
+        self.desarrollador = QLabel('benjavicente', self)
+        self.desarrollador.setAlignment(Qt.AlignCenter)
+        main_layout.addWidget(self.desarrollador, 4, 0, 1, 5)
 
         # ----------------------- #
         # Botones de herramientas #
@@ -35,16 +42,20 @@ class VentanaInicio(QWidget):
         barra_herramientas.addItem(QSpacerItem(0, 0, hPolicy=QSizePolicy.Expanding))
         # -> Botón Información
         self.info = QToolButton(self)
+        self.info.setToolTip('Información')
         barra_herramientas.addWidget(self.info)
         # -> Botón Configuración
         self.config = QToolButton(self)
+        self.config.setToolTip('Configuración')
         barra_herramientas.addWidget(self.config)
 
         # ---------------- #
         # Cuadro principal #
         # ---------------- #
-        cuadro_principal = QVBoxLayout()
-        main_layout.addLayout(cuadro_principal, 2, 2)
+        self.cuadro_principal = QFrame(self)
+        cuadro_principal_layout = QVBoxLayout()
+        self.cuadro_principal.setLayout(cuadro_principal_layout)
+        main_layout.addWidget(self.cuadro_principal, 2, 2)
         # -> Logo
         self.logo = QLabel(self)
         # Formato
@@ -53,33 +64,27 @@ class VentanaInicio(QWidget):
         self.logo.setPixmap(QPixmap(RUTA_LOGO))
         self.logo.setScaledContents(True)
         # Añadilo al cuadro
-        cuadro_principal.addWidget(self.logo)
+        cuadro_principal_layout.addWidget(self.logo)
         # -> Texto de bienvenida
         self.bienvenida = QLabel('Hola!', self)
         # Formato
         self.bienvenida.setAlignment(Qt.AlignCenter)
-        self.bienvenida.setStyleSheet('''
-            font: 24px "Roboto Slab";
-        ''')
         # Añadirlo al cuadro
-        cuadro_principal.addWidget(self.bienvenida)
+        cuadro_principal_layout.addWidget(self.bienvenida)
         # Añadir espacio
-        cuadro_principal.addItem(QSpacerItem(0, 50))
+        cuadro_principal_layout.addItem(QSpacerItem(0, 50))
         # -> Botones
         fila_botones = QHBoxLayout()
-        cuadro_principal.addLayout(fila_botones)
+        cuadro_principal_layout.addLayout(fila_botones)
+        fila_botones.setSpacing(0)
         # --> Cargar partida
-        self.cargar = QPushButton('Cargar partida', self)
+        self.cargar = QPushButton('Cargar Partida', self)
         fila_botones.addWidget(self.cargar)
-        self.cargar.setStyleSheet('''
-            font: 18px "Roboto Slab";
-        ''')
+        self.cargar.setCursor(QCursor(Qt.PointingHandCursor))
         # --> Nueva pertida
         self.nueva = QPushButton('Nueva Partida', self)
         fila_botones.addWidget(self.nueva)
-        self.nueva.setStyleSheet('''
-            font: 18px "Roboto Slab";
-        ''')
+        self.nueva.setCursor(QCursor(Qt.PointingHandCursor))
 
         # -------- #
         # Espacios #
