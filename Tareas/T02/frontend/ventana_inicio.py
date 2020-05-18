@@ -1,5 +1,5 @@
 '''
-Ventana principal
+Ventana inicial del juego
 '''
 
 import sys
@@ -22,6 +22,7 @@ class VentanaInicio(QWidget):
     def iniciar(self):
         '''Inicia la ventana'''
         self.setWindowTitle('DCCafé - Inicio')
+        self.setObjectName('VentanaInicio')
         self.setStyleSheet(STYLE_SHEET_VENTANA_INICIO)
         #self.setWindowIcon(QIcon(QPixmap(RUTA_LOGO))) # TODO: Ver lo de loos íconos
 
@@ -32,6 +33,7 @@ class VentanaInicio(QWidget):
         # Firma
         self.desarrollador = QLabel('benjavicente', self)
         self.desarrollador.setAlignment(Qt.AlignCenter)
+        self.desarrollador.setObjectName('desarrollador')
         main_layout.addWidget(self.desarrollador, 4, 0, 1, 5)
 
         # ----------------------- #
@@ -53,38 +55,42 @@ class VentanaInicio(QWidget):
         # Cuadro principal #
         # ---------------- #
         self.cuadro_principal = QFrame(self)
+        self.cuadro_principal.setObjectName('cuadro')
         cuadro_principal_layout = QVBoxLayout()
         self.cuadro_principal.setLayout(cuadro_principal_layout)
         main_layout.addWidget(self.cuadro_principal, 2, 2)
         # -> Logo
         self.logo = QLabel(self)
-        # Formato
-        self.logo.setMinimumSize(520, 200)
-        self.logo.setMaximumSize(520, 200)
+        self.logo.setFixedSize(520, 200)
         self.logo.setPixmap(QPixmap(RUTA_LOGO))
         self.logo.setScaledContents(True)
         # Añadilo al cuadro
         cuadro_principal_layout.addWidget(self.logo)
+
         # -> Texto de bienvenida
         self.bienvenida = QLabel('Hola!', self)
-        # Formato
+        self.bienvenida.setObjectName('bienvenida')
         self.bienvenida.setAlignment(Qt.AlignCenter)
         # Añadirlo al cuadro
         cuadro_principal_layout.addWidget(self.bienvenida)
         # Añadir espacio
-        cuadro_principal_layout.addItem(QSpacerItem(0, 50))
+        cuadro_principal_layout.addSpacing(50)
+
         # -> Botones
         fila_botones = QHBoxLayout()
         cuadro_principal_layout.addLayout(fila_botones)
-        fila_botones.setSpacing(0)
+        fila_botones.setSpacing(20)
+        fila_botones.setContentsMargins(30, 0, 30, 0)
+
         # --> Cargar partida
         self.cargar = QPushButton('Cargar Partida', self)
-        fila_botones.addWidget(self.cargar)
         self.cargar.setCursor(QCursor(Qt.PointingHandCursor))
+        fila_botones.addWidget(self.cargar)
+
         # --> Nueva pertida
         self.nueva = QPushButton('Nueva Partida', self)
-        fila_botones.addWidget(self.nueva)
         self.nueva.setCursor(QCursor(Qt.PointingHandCursor))
+        fila_botones.addWidget(self.nueva)
 
         # -------- #
         # Espacios #
@@ -103,4 +109,4 @@ if __name__ == "__main__":
     APP = QApplication(sys.argv)
     VENTANA = VentanaInicio()
     VENTANA.show()
-    sys.exit(APP.exec())
+    sys.exit(APP.exec_())

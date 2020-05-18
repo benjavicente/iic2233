@@ -3,6 +3,7 @@
 
 # Archivos de datos
 sprites/
+sprites_extras/
 *.csv
 
 # Python
@@ -10,3 +11,4 @@ __pycache__/
 
 # Otros
 *.pdf
+test*
