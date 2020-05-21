@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
                              QLabel, QPushButton, QSizePolicy, QSpacerItem,
                              QToolButton, QVBoxLayout, QWidget, QToolTip)
 
-from .datos.ui_tools import RUTA_LOGO, STYLE_SHEET_VENTANA_INICIO
+from .data.ui_tools import RUTA_LOGO, STYLE_SHEET_VENTANA_INICIO
 
 
 class VentanaInicio(QWidget):

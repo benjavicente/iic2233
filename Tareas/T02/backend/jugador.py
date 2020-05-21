@@ -1,33 +1,68 @@
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
-class Jugador(QObject):
+
+class GameObject(QObject):
+    signal_update_sprite = pyqtSignal(dict)
+    id_counter = 0
+    def __init__(self, type_name, x, y):
+        super().__init__()
+        self._type = type_name
+        self._id = self.id_counter
+        self.id_counter += 1
+        self._x = y
+        self._y = y
+
+    @property
+    def position(self):
+        return (self._x, self._y)
+
+    @property
+    def data(self):
+        return {'object': self._type, 'id': self._id, 'pos': self.position}
+
+
+
+class Jugador(GameObject):
     '''
     Jugador del juego que empeña el rol de mesero
     Bonus: Dos jugadores al mismo tiempo
     '''
-    signal_update_pos = pyqtSignal(tuple)
-
-    def __init__(self):
-        super().__init__()
-        self.__x = 0
-        self.__y = 0
+    def __init__(self, x, y):
+        super().__init__('player', 0, 0)
         self._move_speed = 10
         self._movemet_keys = {'w': (0, -1), 'a': (-1, 0), 's': (0, 1), 'd': (1, 0)}
 
-    def set_position(self, x, y):
-        self.__x = y
-        self.__y = x
+    def move(self, key):
+        # * Signal de KeyPressEvent
+        if key in self._movemet_keys:
+            move_x, move_y = self._movemet_keys[key]
+            self._x += move_x * self._move_speed
+            self._y += move_y * self._move_speed
 
-    def move(self, x, y):
-        self.__x += x * self._move_speed
-        self.__y += y * self._move_speed
-        self.signal_update_pos.emit(self.position)
+
+class Mesa(GameObject):
+    '''Mesa donde se pueden sentar los clientes'''
+    def __init__(self, x, y):
+        super().__init__('table', x, y)
+        self.client = None
+
+
+class Chef(GameObject):
+    '''
+    Preparan la comida.
+    Tienen un nivel de experiencia relacionado con los platos preparador
+    '''
+    def __init__(self, x, y):
+        super().__init__('chef', x, y)
+        self._exp = int()
+        self._platos_preparador = int()
 
     @property
-    def position(self):
-        return (self.__x, self.__y)
+    def platos_preparados(self):
+        return self._platos_preparador
 
-    def mover(self, key):
-        if key in self._movemet_keys:
-            self.move(*self._movemet_keys[key.lower()])
+    @platos_preparados.setter
+    def platos_preparados(self, value):
+        # TODO: condiciones de experiencia
+        self._platos_preparador += value
