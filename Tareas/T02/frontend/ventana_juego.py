@@ -14,14 +14,17 @@ class VentanaJuego(name, base_class):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        print('stop')
 
     def partir(self):
         # TODO: iniciar backend con señales
         self.show()
 
     def keyPressEvent(self, event):
-        self.key_signal.emit(event.key())
+        self.signal_keypress.emit(event.text())
 
+    def mover_jugador(self, pos):
+        self.player1.move(*pos)
 
 
 
