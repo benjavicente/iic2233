@@ -19,12 +19,13 @@ Los paths no están como paths relativos aún!
 Hay un problema en las señales que causa un error inesperado.
 
 Hasta ahora el programa se inicia correctamente pero las instancias
-no son cargadas bien en la ventana de juego, causando el error
+no son cargadas bien en la ventana de juego, causando el error.
 ```py
 ...
     getattr(self, data['object'])[data['id']].move(*data['pos'])
 IndexError: list index out of range
 ```
+Deje unos prints para ver que está pasando.
 
 ## Ejecución :computer:
 
