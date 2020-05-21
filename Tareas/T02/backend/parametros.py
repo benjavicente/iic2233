@@ -1,73 +1,85 @@
 '''
 Parámetros del backend de DCCafé
+# TODO
+Una vez ejecutado el problema, pueden ser
+cambiados en la pantalla de inicio
 '''
 
-GAME_DATA = {
-    "CHEF": {
-        "PRINCIPIANTE": {
-            "EXPERIENCIA": 1,
-            "PLATOS_SIG_NIVEL": 5,
-            "SIG_NIVEL": "INTERMEDIO",
+
+PARAMETROS_JUEGO = {
+    "chef": {
+        "niveles": {
+            "principiante": {
+                "experiencia": 1,
+                "platos siguiente nivel": 5,
+                "siguiente nivel": "intermedio",
+            },
+            "intermedio": {
+                "experiencia": 2,
+                "platos siguiente nivel": 20,
+                "siguiente nivel": "experto",
+            },
+            "experto": {
+                "experiencia": 3,
+                "platos siguiente nivel": float("inf"),
+                "siguiente nivel": None,
+            },
         },
-        "INTERMEDIO": {
-            "EXPERIENCIA": 2,
-            "PLATOS_SIG_NIVEL": 20,
-            "SIG_NIVEL": "EXPERTO",
-        },
-        "EXPERTO": {
-            "EXPERIENCIA": 3,
-            "PLATOS_SIG_NIVEL": float("inf"),
-            "SIG_NIVEL": None,
-        },
-        "PROB_FALLAR": {
-            "FACTOR": 0.3,
-            "SUMA": 1,
-        },
-    },
-    "BOCADILLOS": {
-        "PRECIO": 100,
-        "CALC_PREP": {
-            "MINIMO": 0,
-            "BASE": 15,
-            "FACTOR": 2,
-        },
-        "CAL_CALIDAD": {
-            "MINIMO": 0,
-            "BASE": 1,
-            "FACTOR": 0.05,
-            "DIV": 3,
+        "probabilidad fallar": {
+            "factor": 0.3,
+            "suma": 1,
         },
     },
-    "CLIENTES": {
-        "LLAGADA_CLIENTES": 5,
-        "PROPINA": 200,
-        "RELAJADO" : {
-            "TIEMPO_ESPERA": 6,
-            "PROB": 0.3,
-        },
-        "APURADO": {
-            "TIEMPO_ESPERA": 2,
-            "PROB": 0.6,
+    "bocadillos": {
+        "precio": 100,
+        "calculos": {
+            "tiempo preparación": {
+                "mínimo": 0,
+                "base": 15,
+                "factor": 2,
+            },
+            "calidad pedido": {
+                "mínimo": 0,
+                "base": 1,
+                "factor": 0.05,
+                "divisor": 3,
+            },
         },
     },
-    "DCCAFE": {
-        "CAL_REP": {
-            "MIN": 0,
-            "MAX": 5,
-            "FACTOR": 4,
-            "RESTA": 2,
+    "clientes": {
+        "periodo de llegada": 5,
+        "propina": 200,
+        "tipos": {
+            "relajado" : {
+                "tiempo de espera": 6,
+                "probabilidad": 0.3,
+            },
+            "apurado": {
+                "tiempo de espera": 2,
+                "probabilidad": 0.6,
+            },
         },
-        "CLIENTES_RONDA": {
-            "FACTOR": 5,
-            "BASE": 1,
+    },
+    "DCCafé": {
+        "calculos": {
+            "reputación": {
+                "mínimo": 0,
+                "máximo": 5,
+                "factor": 4,
+                "resta": 2,
+            },
+            "clientes por ronda": {
+                "factor": 5,
+                "base": 1,
+            },
         },
-        "INICIALES": {
-            "DINERO": 500,
-            "REPUTACION": 2,
-            "CHEFS": 1,
-            "MESAS": 2,
-            "CLIENTES": 5,
-            "DISPONIBILIDAD": True,
+        "inicial": {
+            "dinero": 500,
+            "reputación": 2,
+            "chefs": 1,
+            "mesas": 2,
+            "clientes": 5,
+            "disponibilidad": True,
         },
     },
 }
