@@ -84,6 +84,8 @@ class DCCafe(QObject):
         self.rep = rep
         self.rondas_terminadas = rounds
         for clase, pos_x, pos_y in map_data:
+            print(f'# ~ cargando: {clase}')
+            print('# ~ señan emitida')
             self.signal_add_object.emit({'object': clase})
             if clase == 'mesero':
                 objeto = Jugador(pos_x, pos_y)
@@ -95,6 +97,9 @@ class DCCafe(QObject):
             elif clase == 'mesa':
                 objeto = Mesa(pos_x, pos_y)
                 self.mesas.append(objeto)
+            else:
+                raise ValueError('clase no valida en mapa.csv')
+            print('# ~ señan emitida')
 
 
 def get_last_game_data() -> dict:

@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
                              QLabel, QPushButton, QSizePolicy, QSpacerItem,
                              QToolButton, QVBoxLayout, QWidget, QToolTip)
 
-from ui_tools import STYLE_SHEET_VENTANA_POSTERIOR, RUTA_ESTRELLA_LLENA, RUTA_ESTRELLA_VACIA
+from .data.ui_tools import STYLE_SHEET_VENTANA_POSTERIOR, RUTA_ESTRELLA_LLENA, RUTA_ESTRELLA_VACIA
 
 
 

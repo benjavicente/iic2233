@@ -16,7 +16,7 @@ class VentanaJuego(*uic.loadUiType('frontend/data/juego.ui')):  # TODO: path rel
         self.tables = list()
 
     def start(self):
-        # TODO: iniciar backend con señales
+        # TODO: iniciar backend con señales para no iniciarlo en main
         self.show()
 
     def keyPressEvent(self, event):
@@ -26,23 +26,14 @@ class VentanaJuego(*uic.loadUiType('frontend/data/juego.ui')):  # TODO: path rel
         print(data)
         getattr(self, data['object'])[data['id']].move(*data['pos'])
 
-    def add_object(self, data: dict):
+    def add_new_object(self, data: dict):
+        print('# ~ señal recibida!')
         # TODO: cambiar a Pixmap y mamaño
-        print(object_type, 'añadido')
         new_object = QLabel(self)
         new_object.setStyleSheet('background-color:red')
         object_type = data['object']
         obj_names = {'mesero': 'players', 'chef': 'chefs', 'mesa': 'tables'}
         if object_type in obj_names:
             object_type = obj_names[object_type]
+        print(getattr(self, object_type))
         getattr(self, object_type).append(new_object)
-
-
-
-
-if __name__ == "__main__":
-    sys.__excepthook__ = lambda t, v, trace: print(t, trace, sep="\n")
-    APP = QApplication(sys.argv)
-    VENTANA = VentanaJuego()
-    VENTANA.show()
-    sys.exit(APP.exec_())

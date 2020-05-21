@@ -27,7 +27,8 @@ class VentanaInicio(QWidget):
         self.setWindowTitle('DCCafé - Inicio')
         self.setObjectName('VentanaInicio')
         self.setStyleSheet(STYLE_SHEET_VENTANA_INICIO)
-        #self.setWindowIcon(QIcon(QPixmap(RUTA_LOGO))) # TODO: Ver lo de loos íconos
+        # TODO: Ver lo de los íconos
+        #self.setWindowIcon(QIcon(QPixmap(RUTA_LOGO))) 
 
         # Crear un Grid de 5x3
         main_layout = QGridLayout()
@@ -71,7 +72,11 @@ class VentanaInicio(QWidget):
         cuadro_principal_layout.addWidget(self.logo)
 
         # -> Texto de bienvenida
-        self.bienvenida = QLabel('Hola!', self)
+        # TODO: esto podría estar en parámetros
+        texto = ('Hola! El juego esté en desarrollo, faltan añadir muchas cosas. '
+                 'Hay un error en las señales que no he podido solucionar aún :(')
+        self.bienvenida = QLabel(texto, self)
+        self.bienvenida.setWordWrap(True)
         self.bienvenida.setObjectName('bienvenida')
         self.bienvenida.setAlignment(Qt.AlignCenter)
         # Añadirlo al cuadro
