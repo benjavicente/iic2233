@@ -14,30 +14,48 @@
 
 ## Importante :heavy_exclamation_mark:
 
+Los paths no están como paths relativos aún!
+
+Hay un problema en las señales que causa un error inesperado.
+
+Hasta ahora el programa se inicia correctamente pero las instancias
+no son cargadas bien en la ventana de juego, causando el error
+```py
+...
+    getattr(self, data['object'])[data['id']].move(*data['pos'])
+IndexError: list index out of range
+```
+
 ## Ejecución :computer:
 
-El programa a ejecutar es **`archivo`**.
-
+El programa a ejecutar es **`main.py`**.
 
 ## Supuestos y consideraciones :thinking:
 
+TODO
 
 ### Aclaraciones
 
+TODO
 
 ## Librerías :books:
 
 ### Librerías externas utilizadas :clipboard:
 
 - **`PyQt`**
+- **`math`**
 
 ### Librerías propias :pencil:
+
+TODO
 
 ## Código externo utilizado :package:
 
 No utilicé código externo :tada:
 
 ## Características implementadas :wrench:
+
+TODO
 
 ## Notas adicionales :moyai:
 
