@@ -10,7 +10,7 @@ class GameObject(QObject):
         self._type = type_name
         self._id = self.id_counter
         self.id_counter += 1
-        self._x = y
+        self._x = x
         self._y = y
 
     @property
