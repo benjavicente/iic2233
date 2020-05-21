@@ -5,8 +5,7 @@ herramientas para el manejo de estas
 
 from math import floor
 from .parametros import GAME_DATA
-from .jugador import Jugador, Mesa, Chef
-
+from .jugador import Player, Table, Chef
 from PyQt5.QtCore import QObject, pyqtSignal
 
 
@@ -70,7 +69,6 @@ class DCCafe(QObject):
     def load_game(self, players: int = 1):
         self.load_dccafe(**get_last_game_data(), pl=players)
 
-
     def move_player(self, key):
         # * Signal de KeyPressEvent
         for player in self.jugadores:
@@ -84,22 +82,19 @@ class DCCafe(QObject):
         self.rep = rep
         self.rondas_terminadas = rounds
         for clase, pos_x, pos_y in map_data:
-            print(f'# ~ cargando: {clase}')
-            print('# ~ señan `signal_add_object` emitida')
-            self.signal_add_object.emit({'object': clase})
             if clase == 'mesero':
-                objeto = Jugador(pos_x, pos_y)
-                self.jugadores.append(objeto)
+                new_object = Player(pos_x, pos_y)
+                self.jugadores.append(new_object)
             elif clase == 'chef':
-                objeto = Chef(pos_x, pos_y)
-                objeto.dishes = dishes.pop(0)
-                self.chefs.append(objeto)
+                new_object = Chef(pos_x, pos_y)
+                new_object.dishes = int(dishes.pop(0))
+                self.chefs.append(new_object)
             elif clase == 'mesa':
-                objeto = Mesa(pos_x, pos_y)
-                self.mesas.append(objeto)
+                new_object = Table(pos_x, pos_y)
+                self.mesas.append(new_object)
             else:
                 raise ValueError('clase no valida en mapa.csv')
-            print('# ~ clase cargada\n')
+            self.signal_add_object.emit(new_object.data)
 
 
 def get_last_game_data() -> dict:

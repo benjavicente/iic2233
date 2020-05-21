@@ -1,6 +1,7 @@
 from PyQt5 import uic
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QApplication, QLabel
+from PyQt5.QtGui import QPixmap
 
 
 
@@ -11,9 +12,8 @@ class VentanaJuego(*uic.loadUiType('frontend/data/juego.ui')):  # TODO: path rel
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.player = list()
-        self.chefs = list()
-        self.tables = list()
+        self.game_objects = dict()
+        self.game_map.setStyleSheet('background-color:grey')
 
     def start(self):
         # TODO: iniciar backend con señales para no iniciarlo en main
@@ -22,18 +22,14 @@ class VentanaJuego(*uic.loadUiType('frontend/data/juego.ui')):  # TODO: path rel
     def keyPressEvent(self, event):
         self.signal_keypress.emit(event.text())
 
-    def move_object(self, data: dict):
-        print(data)
-        getattr(self, data['object'])[data['id']].move(*data['pos'])
+    def move_object(self, obj: dict):
+       self.game_objects[obj['id']].move(*obj['pos'])
 
-    def add_new_object(self, data: dict):
-        print('# ~ señal recibida!')
-        # TODO: cambiar a Pixmap y mamaño
-        new_object = QLabel(self)
-        new_object.setStyleSheet('background-color:red')
-        object_type = data['object']
-        obj_names = {'mesero': 'players', 'chef': 'chefs', 'mesa': 'tables'}
-        if object_type in obj_names:
-            object_type = obj_names[object_type]
-        print(getattr(self, object_type))
-        getattr(self, object_type).append(new_object)
+    def add_new_object(self, obj: dict):
+        '''`obj`: dict con id e información del objeto'''
+        new_object = QLabel(self.game_map)
+        new_object.setGeometry(*obj['pos'], *obj['size'])
+        new_object.setPixmap(QPixmap(obj['sprite_path']))
+        new_object.setScaledContents(True)
+        new_object.setStyleSheet('background-color:red')  # TODO: eliminar
+        self.game_objects[obj['id']] = new_object

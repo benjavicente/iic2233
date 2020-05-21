@@ -21,7 +21,6 @@ if __name__ == "__main__":
     VJ = VentanaJuego()
 
     DCCAFE = DCCafe()
-    DCCAFE.load_game() # TODO: cambiar esto
 
     VI.signal_start.connect(VJ.start)
 
@@ -29,6 +28,8 @@ if __name__ == "__main__":
     DCCAFE.signal_update_pos.connect(VJ.move_object)
 
     VJ.signal_keypress.connect(DCCAFE.move_player)
+
+    DCCAFE.load_game() # TODO: cambiar esto
 
     VI.show()
 
