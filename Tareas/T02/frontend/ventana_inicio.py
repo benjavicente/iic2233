@@ -28,7 +28,7 @@ class VentanaInicio(QWidget):
         self.setObjectName('VentanaInicio')
         self.setStyleSheet(STYLE_SHEET_VENTANA_INICIO)
         # TODO: Ver lo de los íconos
-        #self.setWindowIcon(QIcon(QPixmap(RUTA_LOGO))) 
+        #self.setWindowIcon(QIcon(QPixmap(RUTA_LOGO)))
 
         # Crear un Grid de 5x3
         main_layout = QGridLayout()
