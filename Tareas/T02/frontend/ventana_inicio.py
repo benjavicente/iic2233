@@ -4,17 +4,20 @@ Ventana inicial del juego
 
 import sys
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QCursor, QIcon, QPixmap
 from PyQt5.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
                              QLabel, QPushButton, QSizePolicy, QSpacerItem,
                              QToolButton, QVBoxLayout, QWidget, QToolTip)
 
-from ui_tools import RUTA_LOGO, STYLE_SHEET_VENTANA_INICIO
+from .datos.ui_tools import RUTA_LOGO, STYLE_SHEET_VENTANA_INICIO
 
 
 class VentanaInicio(QWidget):
     '''Ventana que se abre al iniciar el programa'''
+
+    signal_start = pyqtSignal(bool) # True si se carga partida
+
     def __init__(self, *args, **kwards):
         super().__init__(*args, **kwards)
         self.iniciar()
@@ -26,7 +29,7 @@ class VentanaInicio(QWidget):
         self.setStyleSheet(STYLE_SHEET_VENTANA_INICIO)
         #self.setWindowIcon(QIcon(QPixmap(RUTA_LOGO))) # TODO: Ver lo de loos íconos
 
-        # Crear un Grid de 5x5
+        # Crear un Grid de 5x3
         main_layout = QGridLayout()
         self.setLayout(main_layout)
 
@@ -34,13 +37,13 @@ class VentanaInicio(QWidget):
         self.desarrollador = QLabel('benjavicente', self)
         self.desarrollador.setAlignment(Qt.AlignCenter)
         self.desarrollador.setObjectName('desarrollador')
-        main_layout.addWidget(self.desarrollador, 4, 0, 1, 5)
+        main_layout.addWidget(self.desarrollador, 4, 0, 1, 3)
 
         # ----------------------- #
         # Botones de herramientas #
         # ----------------------- #
         barra_herramientas = QHBoxLayout()
-        main_layout.addLayout(barra_herramientas, 0, 0, 1, 5)
+        main_layout.addLayout(barra_herramientas, 0, 0, 1, 3)
         barra_herramientas.addItem(QSpacerItem(0, 0, hPolicy=QSizePolicy.Expanding))
         # -> Botón Información
         self.info = QToolButton(self)
@@ -58,7 +61,7 @@ class VentanaInicio(QWidget):
         self.cuadro_principal.setObjectName('cuadro')
         cuadro_principal_layout = QVBoxLayout()
         self.cuadro_principal.setLayout(cuadro_principal_layout)
-        main_layout.addWidget(self.cuadro_principal, 2, 2)
+        main_layout.addWidget(self.cuadro_principal, 2, 1)
         # -> Logo
         self.logo = QLabel(self)
         self.logo.setFixedSize(520, 200)
@@ -85,23 +88,25 @@ class VentanaInicio(QWidget):
         # --> Cargar partida
         self.cargar = QPushButton('Cargar Partida', self)
         self.cargar.setCursor(QCursor(Qt.PointingHandCursor))
+        self.cargar.clicked.connect(self.empezar_juego)
         fila_botones.addWidget(self.cargar)
 
         # --> Nueva pertida
         self.nueva = QPushButton('Nueva Partida', self)
         self.nueva.setCursor(QCursor(Qt.PointingHandCursor))
+        self.nueva.clicked.connect(self.empezar_juego)
         fila_botones.addWidget(self.nueva)
 
         # -------- #
         # Espacios #
         # -------- #
-        main_layout.addItem(QSpacerItem(0, 0, vPolicy=QSizePolicy.Expanding), 1, 2)
-        main_layout.addItem(QSpacerItem(0, 0, vPolicy=QSizePolicy.Expanding), 3, 2)
+        main_layout.addItem(QSpacerItem(0, 0, vPolicy=QSizePolicy.Expanding), 1, 1)
+        main_layout.addItem(QSpacerItem(0, 0, vPolicy=QSizePolicy.Expanding), 3, 1)
 
-        # ------- #
-        # Mostrar #
-        # ------- #
-        self.show()
+
+    def empezar_juego(self):
+        self.signal_start.emit(True) # TODO
+        self.hide()
 
 
 if __name__ == "__main__":

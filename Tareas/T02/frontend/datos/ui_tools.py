@@ -5,12 +5,13 @@ Parámetros y herramientas relacionados con el UI
 from os.path import join, dirname, realpath
 
 # TODO: buscar una fuente para los textos
-
 # TODO: investigar como trabajar mejor con paths
+
 __RUTA_UI_TOOLS = realpath(dirname(dirname(__file__)))
 RUTA_LOGO = join(__RUTA_UI_TOOLS, 'sprites', 'otros', 'logo_blanco.png')
 RUTA_ESTRELLA_LLENA = join(__RUTA_UI_TOOLS, 'sprites', 'otros', 'estrella_amarilla.png')
 RUTA_ESTRELLA_VACIA = join(__RUTA_UI_TOOLS, 'sprites', 'otros', 'estrella_blanca.png')
+RUTA_MAPA = join(__RUTA_UI_TOOLS, 'sprites', 'mapa', 'mapa_2.png')
 
 # FONT_FAMILY = 'Roboto Slab', 'Rockwell', 'Arial Black'
 #           2 = 'HP Simplified', 'Shruti', 'Arial'
@@ -91,5 +92,11 @@ VentanaPosterior{
     background-color: hsl(161, 98, 70);
     border-radius: 2px;
     margin: 0px 30px 0px 30px;
+}
+'''
+
+STYLE_SHEET_VENTANA_JUEGO = R'''
+#VentanaJuego {
+    background-color: lightgreen;
 }
 '''
