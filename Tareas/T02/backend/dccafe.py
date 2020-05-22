@@ -4,9 +4,10 @@ herramientas para el manejo de estas
 '''
 
 from math import floor
-from .parametros import GAME_DATA
-from .jugador import Player, Table, Chef
 from PyQt5.QtCore import QObject, pyqtSignal
+
+from .parametros import PARAMETROS_JUEGO
+from .game_objects import Player, Table, Chef
 
 
 class DCCafe(QObject):
@@ -72,8 +73,8 @@ class DCCafe(QObject):
     def move_player(self, key):
         # * Signal de KeyPressEvent
         for player in self.jugadores:
-            player.move(key)
-            self.signal_update_pos.emit(player.data)
+            if player.move(key):
+                self.signal_update_pos.emit(player.display_info)
 
 
     def load_dccafe(self, money: int, rep: int, rounds: int,
@@ -94,7 +95,7 @@ class DCCafe(QObject):
                 self.mesas.append(new_object)
             else:
                 raise ValueError('clase no valida en mapa.csv')
-            self.signal_add_object.emit(new_object.data)
+            self.signal_add_object.emit(new_object.display_info)
 
 
 def get_last_game_data() -> dict:

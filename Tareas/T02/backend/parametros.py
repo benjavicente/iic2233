@@ -5,8 +5,16 @@ Una vez ejecutado el problema, pueden ser
 cambiados en la pantalla de inicio
 '''
 
+PATH_MAPA = 'mapa.csv'
+PATH_DATOS = 'datos.csv'
 
+# El mapa esta compuesto por celdas de 40x40
 PARAMETROS_JUEGO = {
+    "mapa": {
+        "tamaño celda": 40,
+        "ancho": 10,
+        "largo": 20,
+    },
     "chef": {
         "niveles": {
             "principiante": {
@@ -51,11 +59,11 @@ PARAMETROS_JUEGO = {
         "propina": 200,
         "tipos": {
             "relajado" : {
-                "tiempo de espera": 6,
+                "tiempo de espera": 30,
                 "probabilidad": 0.3,
             },
             "apurado": {
-                "tiempo de espera": 2,
+                "tiempo de espera": 20,
                 "probabilidad": 0.6,
             },
         },
@@ -76,9 +84,9 @@ PARAMETROS_JUEGO = {
         "inicial": {
             "dinero": 500,
             "reputación": 2,
+            "clientes": 5,
             "chefs": 1,
             "mesas": 2,
-            "clientes": 5,
             "disponibilidad": True,
         },
     },

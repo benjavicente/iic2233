@@ -1,5 +1,6 @@
 
 from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtGui import QPixmap
 
 PATH_MESERO = R'sprites\mesero\down_02.png'
 PATH_MESA = R'sprites\mapa\accesorios\silla_mesa_roja.png'
@@ -24,14 +25,17 @@ class GameObject(QObject):
 
     @property
     def position(self):
+        '''Posición del objeto'''
         return (self._x, self._y)
 
     @property
     def size(self):
+        '''Tamaño del objeto'''
         return (self._width, self._height)
 
     @property
-    def data(self):
+    def display_info(self):
+        # TODO: el backend debería entregar pixelmaps, no paths
         return {
             'id': self._id,
             'pos': self.position,
@@ -51,12 +55,17 @@ class Player(GameObject):
         self._move_speed = 10
         self._movemet_keys = {'w': (0, -1), 'a': (-1, 0), 's': (0, 1), 'd': (1, 0)}
 
-    def move(self, key):
+    def move(self, key) -> bool:
+        '''
+        Mueve al jugador según la tecla `key`
+        Retorna si se pudo mover le jugador con esa tecla
+        '''
         # * Signal de KeyPressEvent
         if key in self._movemet_keys:
             move_x, move_y = self._movemet_keys[key]
             self._x += move_x * self._move_speed
             self._y += move_y * self._move_speed
+            return True
 
 
 class Table(GameObject):
@@ -72,7 +81,7 @@ class Chef(GameObject):
     Tienen un nivel de experiencia relacionado con los platos preparador
     '''
     def __init__(self, x, y):
-        super().__init__(x, y, 60, 70, PATH_CHEF)
+        super().__init__(x, y, 80, 95, PATH_CHEF)
         self._exp = int()
         self._dishes = int()
 

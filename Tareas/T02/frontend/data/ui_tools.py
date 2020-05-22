@@ -2,16 +2,19 @@
 Parámetros y herramientas relacionados con el UI
 '''
 
-from os.path import join, dirname, realpath
+from os.path import join
+from os import getcwd
 
 # TODO: buscar una fuente para los textos
-# TODO: investigar como trabajar mejor con paths
 
-__RUTA_UI_TOOLS = realpath(dirname(dirname(__file__)))
-RUTA_LOGO = join(__RUTA_UI_TOOLS, 'sprites', 'otros', 'logo_blanco.png')
-RUTA_ESTRELLA_LLENA = join(__RUTA_UI_TOOLS, 'sprites', 'otros', 'estrella_amarilla.png')
-RUTA_ESTRELLA_VACIA = join(__RUTA_UI_TOOLS, 'sprites', 'otros', 'estrella_blanca.png')
-RUTA_MAPA = join(__RUTA_UI_TOOLS, 'sprites', 'mapa', 'mapa_2.png')
+RUTA_LOGO = join(getcwd(), 'sprites', 'otros', 'logo_blanco.png')
+RUTA_ESTRELLA_LLENA = join(getcwd(), 'sprites', 'otros', 'estrella_amarilla.png')
+RUTA_ESTRELLA_VACIA = join(getcwd(), 'sprites', 'otros', 'estrella_blanca.png')
+RUTA_CELDA = join(getcwd(), 'sprites', 'mapa', 'mapa_2_parte_02.png')
+RUTA_DEC_1 = join(getcwd(), 'sprites', 'mapa', 'mapa_2_parte_03.png')
+RUTA_DEC_2 = join(getcwd(), 'sprites', 'mapa', 'mapa_2_parte_01.png')
+RUTA_TIENDA_CHEF = join(getcwd(), 'sprites', 'chef', 'meson_00.png')
+RUTA_TIENDA_MESA = join(getcwd(), 'sprites', 'mapa', 'accesorios', 'silla_mesa_roja.png')
 
 # FONT_FAMILY = 'Roboto Slab', 'Rockwell', 'Arial Black'
 #           2 = 'HP Simplified', 'Shruti', 'Arial'
@@ -96,7 +99,7 @@ VentanaPosterior{
 '''
 
 STYLE_SHEET_VENTANA_JUEGO = R'''
-#VentanaJuego {
+#GameWindow {
     background-color: lightgreen;
 }
 '''

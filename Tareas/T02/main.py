@@ -6,8 +6,7 @@ import sys
 from PyQt5.QtWidgets import QApplication
 
 from frontend.ventana_inicio import VentanaInicio
-from frontend.ventana_juego import VentanaJuego
-from backend.jugador import GameObject
+from frontend.ventana_juego import GameWindow
 from backend.dccafe import DCCafe
 
 
@@ -18,7 +17,7 @@ if __name__ == "__main__":
     ################################
 
     VI = VentanaInicio()
-    VJ = VentanaJuego()
+    VJ = GameWindow()
 
     DCCAFE = DCCafe()
 
@@ -29,6 +28,7 @@ if __name__ == "__main__":
 
     VJ.signal_keypress.connect(DCCAFE.move_player)
 
+    VJ.make_map()
     DCCAFE.load_game() # TODO: cambiar esto
 
     VI.show()
