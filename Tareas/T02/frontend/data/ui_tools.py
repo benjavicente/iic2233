@@ -24,7 +24,7 @@ RUTA_TIENDA_MESA = join(getcwd(), 'sprites', 'mapa', 'accesorios', 'silla_mesa_r
 
 STYLE_SHEET_VENTANA_INICIO = R'''
 #VentanaInicio {
-    background-color: black;
+    background: black;
     border-radius: 15px;
     padding: 15px;
 }
@@ -32,13 +32,13 @@ STYLE_SHEET_VENTANA_INICIO = R'''
     font-family: 'Rockwell';
     font-size: 24px;
     border-radius: 8px;
-    background-color: hsl(161, 98, 70);
+    background: hsl(161, 98, 70);
     color: white;
     margin: 2px;
     height: 35px;
 }
 .QPushButton:hover{
-    background-color: hsl(161, 98, 100);
+    background: hsl(161, 98, 100);
 }
 #cuadro {
     background-color: white;
@@ -57,10 +57,10 @@ STYLE_SHEET_VENTANA_INICIO = R'''
 
 STYLE_SHEET_VENTANA_POSTERIOR = R'''
 VentanaPosterior{
-    background-color: black;
+    background: black;
 }
 #bloque {
-    background-color: white;
+    background: white;
     border-radius: 10px;
     padding: 20px 5px;
 }
@@ -72,13 +72,13 @@ VentanaPosterior{
     margin: 2px;
     font-size: 20px;
     border-radius: 8px;
-    background-color: hsl(161, 98, 70);
+    background: hsl(161, 98, 70);
     color: white;
     height: 35px;
     width: 120px;
 }
 #salir:hover, #guardar:hover, #continuar:hover {
-    background-color: hsl(161, 98, 100);
+    background: hsl(161, 98, 100);
 }
 #pedidos, #atendidos, #dinero {
     font-family: consolas;
@@ -92,14 +92,46 @@ VentanaPosterior{
     font-size: 24px;
 }
 #linea{
-    background-color: hsl(161, 98, 70);
+    background: hsl(161, 98, 70);
     border-radius: 2px;
     margin: 0px 30px 0px 30px;
 }
 '''
 
 STYLE_SHEET_VENTANA_JUEGO = R'''
-#GameWindow {
-    background-color: lightgreen;
+/* Botones */
+.QPushButton {
+    color: white;
+    border-radius: 10px;
+    font-size: 16px;
+    margin: 2px;
+    height: 30px;
+    width: 100px;
+}
+#button_time{
+    background: hsl(161, 98, 70);
+}
+#button_time:hover{
+    background: hsl(161, 98, 100);
+}
+#button_exit{
+    background: hsl(0, 98, 70);
+}
+#button_exit:hover{
+    background: hsl(0, 98, 110);
+}
+/* Status bar */
+.QStatusBar, .QMenuBar{
+    color: white;
+    background: black;
+}
+/* Docks */
+.QDockWidget::title{
+    background: hsl(161, 98, 70);
+}
+/* Shop */
+#shop_label{
+    font-family: 'Rockwell';
+    font-size: 24px;
 }
 '''

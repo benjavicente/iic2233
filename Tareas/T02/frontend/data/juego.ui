@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1013</width>
-    <height>805</height>
+    <width>944</width>
+    <height>727</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -17,10 +17,13 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string notr="true">DCCafé</string>
   </property>
   <property name="animated">
    <bool>true</bool>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="main_widget">
    <property name="sizePolicy">
@@ -28,12 +31,6 @@
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>800</width>
-     <height>500</height>
-    </size>
    </property>
    <property name="styleSheet">
     <string notr="true">#main_widget {background-color: black;}</string>
@@ -54,6 +51,32 @@
     <property name="spacing">
      <number>0</number>
     </property>
+    <item row="1" column="2">
+     <spacer name="horizontalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="1" column="0">
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
     <item row="0" column="1">
      <spacer name="verticalSpacer">
       <property name="orientation">
@@ -81,61 +104,40 @@
      </spacer>
     </item>
     <item row="1" column="1">
-     <widget class="QWidget" name="game_map" native="true">
+     <widget class="QWidget" name="game_area" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="minimumSize">
        <size>
-        <width>800</width>
-        <height>500</height>
+        <width>200</width>
+        <height>100</height>
        </size>
       </property>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
-        <widget class="QLabel" name="backgorund">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap>../../sprites/mapa/mapa_2.png</pixmap>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
       </layout>
      </widget>
-    </item>
-    <item row="1" column="2">
-     <spacer name="horizontalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="1" column="0">
-     <spacer name="horizontalSpacer">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-     </spacer>
     </item>
    </layout>
   </widget>
@@ -144,19 +146,22 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1013</width>
+     <width>944</width>
      <height>26</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuTrampas">
+    <property name="title">
+     <string>Trampas</string>
+    </property>
+    <addaction name="imprimir_dinero"/>
+    <addaction name="comrar_reputacion"/>
+    <addaction name="terminar_ronda"/>
+   </widget>
+   <addaction name="menuTrampas"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="dock_derecha">
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">backgorund-color: red</string>
-   </property>
    <property name="features">
     <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
@@ -169,7 +174,7 @@
    <widget class="QWidget" name="dock_derecha_layout">
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QLabel" name="titulo_tienda">
+      <widget class="QLabel" name="shop_label">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
          <horstretch>0</horstretch>
@@ -185,7 +190,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="tienda">
+      <widget class="QLabel" name="chef_icon">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -196,7 +201,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>../../sprites/chef/meson_01.png</pixmap>
+        <pixmap>C:/Users/Benjamín/sprites/chef/meson_01.png</pixmap>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
@@ -214,7 +219,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="mesa">
+      <widget class="QLabel" name="table_icon">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -225,7 +230,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>../../sprites/mapa/accesorios/silla_mesa_roja.png</pixmap>
+        <pixmap>C:/Users/Benjamín/sprites/mapa/accesorios/silla_mesa_roja.png</pixmap>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
@@ -258,7 +263,7 @@
    <widget class="QWidget" name="dock_superior_layout">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="logo">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -272,7 +277,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>../../sprites/otros/logo_blanco.png</pixmap>
+        <pixmap>C:/Users/Benjamín/sprites/otros/logo_blanco.png</pixmap>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
@@ -452,39 +457,49 @@
       </spacer>
      </item>
      <item>
-      <widget class="QWidget" name="widget" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QPushButton" name="boton_pausar">
-          <property name="text">
-           <string>Pausar</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="boton_salir">
-          <property name="text">
-           <string>Salir</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QPushButton" name="button_time">
+         <property name="text">
+          <string>Continuar</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="button_exit">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string notr="true">Salir</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
   </widget>
+  <action name="imprimir_dinero">
+   <property name="text">
+    <string>Imprimir Dinero</string>
+   </property>
+  </action>
+  <action name="comrar_reputacion">
+   <property name="text">
+    <string>Comparar Reputación</string>
+   </property>
+  </action>
+  <action name="terminar_ronda">
+   <property name="text">
+    <string>Terminar Ronda</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>
   <connection>
-   <sender>boton_salir</sender>
+   <sender>button_exit</sender>
    <signal>clicked()</signal>
    <receiver>ventana_juego</receiver>
    <slot>close()</slot>
