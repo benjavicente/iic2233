@@ -60,7 +60,7 @@ class GameWindow(*uic.loadUiType('frontend/data/juego.ui')):  # TODO: path relat
         new_object.setScaledContents(True)
         self.game_objects[obj['id']] = new_object
 
-    def make_map(self, width: int = 800, height: int = 400, cell_size: int = 20):
+    def make_map(self, width: int = 750, height: int = 450, cell_size: int = 25):
         '''Crea el mapa del juego a partir de los mapámetros dados'''
         if width % cell_size or height % cell_size:
             mesage = 'Los valores del tamaño del mapa no son divisibles por el tamaño de la celda'

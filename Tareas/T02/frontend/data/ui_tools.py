@@ -99,6 +99,12 @@ VentanaPosterior{
 '''
 
 STYLE_SHEET_VENTANA_JUEGO = R'''
+QMainWindow {
+    background: black;
+}
+QMainWindow::separator {
+    background: black;
+}
 /* Botones */
 .QPushButton {
     color: white;
@@ -126,8 +132,12 @@ STYLE_SHEET_VENTANA_JUEGO = R'''
     background: black;
 }
 /* Docks */
-.QDockWidget::title{
+QDockWidget::title{
     background: hsl(161, 98, 70);
+}
+#shop, #info {
+    background: white;
+    border: 5px solid hsl(161, 98, 70);
 }
 /* Shop */
 #shop_label{
