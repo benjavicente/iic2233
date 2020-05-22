@@ -14,18 +14,7 @@
 
 ## Importante :heavy_exclamation_mark:
 
-Los paths no están como paths relativos aún!
-
-Hay un problema en las señales que causa un error inesperado.
-
-Hasta ahora el programa se inicia correctamente pero las instancias
-no son cargadas bien en la ventana de juego, causando el error.
-```py
-...
-    getattr(self, data['object'])[data['id']].move(*data['pos'])
-IndexError: list index out of range
-```
-Deje unos prints para ver que está pasando.
+TODO
 
 ## Ejecución :computer:
 
@@ -33,18 +22,34 @@ El programa a ejecutar es **`main.py`**.
 
 ## Supuestos y consideraciones :thinking:
 
-TODO
+
 
 ### Aclaraciones
 
-TODO
+El proceso que se realiza el juego es:
+
+1. Cada cierto tiempo establecido en `parametros.py` se genera un cliente en una mesa desocupada aleatoria.
+2. El jugador recibe la orden del cliente.
+3. El jugador entrega la orden a un chef arbitrario.
+4. El chef prepara la orden que le ha sido entregada. Si falla en preparar la orden, el chef intenta nuevamente.
+5. El jugador receive la orden preparada por el chef.
+6. El jugador entrega la orden al cliente.
+7. El cliente consume la orden y se va.
+
+Es importante notar que:
+
+- El cliente puede recibir cualquier orden.
+- El jugador puede atender a varios clientes al mismo tiempo.
+- El jugador interactúa con el cliente y el chef con colisiones.
 
 ## Librerías :books:
 
 ### Librerías externas utilizadas :clipboard:
 
-- **`PyQt`**
+- **`PyQt`**:
+  - Encargada del interfaz gráfica.
 - **`math`**
+  - Operaciones matemáticas como la función `floor`.
 
 ### Librerías propias :pencil:
 
@@ -56,8 +61,10 @@ No utilicé código externo :tada:
 
 ## Características implementadas :wrench:
 
-TODO
+TODO (De _TO DO_ (por hacer), no todo)
 
 ## Notas adicionales :moyai:
+
+Algunas animaciones de PyQt pueden no funcionar correctamente en un monitor adicional (Windows).
 
 Disfrute el programa :tada:
