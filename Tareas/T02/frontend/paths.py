@@ -5,7 +5,54 @@ Paths de los archivos del UI
 from os.path import join
 from os import getcwd
 
+
+class SpritePath(dict):
+    '''
+    Clase Auxiliar que permite obtener valores
+    de un diccionario de una manera distinta.
+
+    En vez de dict['key1']['key2']['key3]
+    permite dict[['key1', 'key2', 'key3']].
+
+    Esto hace la comunicación del backend al
+    frontend del sprite a mostrar mucho más fácil,
+    ya que el backend solo necesita entregar al
+    frontend una lista con el estado de la entidad.
+
+    Por ejemplo, ['player', 'a', 'free', 'idle', 'down']
+    retorna el sprite del jugador usando el personaje 'a',
+    sin un snack, quieto y mirando hacia abajo.
+    '''
+    def __getitem__(self, index_values: list):
+        # Si el index no es una lista (o tupla) se llama normalmente
+        if not isinstance(index_values, (list, tuple)):
+            return super().__getitem__(index_values)
+        # En al caso que es una lista, se itera por la lista
+        # donde cade elemento es la llave del valor anterior
+        curret_level = dict(self)
+        for key in index_values:
+            if isinstance(curret_level, dict) and key in curret_level:
+                # Si es un diccionario se obtiene el valor
+                curret_level = curret_level.__getitem__(key)
+            else:
+                # Si la llave no está o no es valida,
+                # se muestra el último nivel
+                # obtenido para poder identificar el error
+                last_level = '\n'.join(list(map(
+                    lambda key, value: f'\t{repr(key)}: {repr(value)}',
+                    curret_level.keys(), curret_level.values()
+                )))
+                error = '\n'.join([
+                    f"La llave {repr(key)} no en existe en el último nivel obtenido.",
+                    f"Ultimo nivel obtenido:", last_level
+                ])
+                raise ValueError(error)
+        return curret_level
+
+
 _SPRITES = join(getcwd(), 'sprites')
+
+
 
 PATH = {
     'ui': {
@@ -36,19 +83,17 @@ PATH = {
                     'down': join(_SPRITES, 'mesero', 'down_02.png'),
                     'left': join(_SPRITES, 'mesero', 'left_02.png'),
                 },
-                'moving': {
-                    '1': {
-                        'up': join(_SPRITES, 'mesero', 'up_01png'),
-                        'right': join(_SPRITES, 'mesero', 'right_01.png'),
-                        'down': join(_SPRITES, 'mesero', 'down_01.png'),
-                        'left': join(_SPRITES, 'mesero', 'left_01.png'),
-                    },
-                    '2': {
-                        'up': join(_SPRITES, 'mesero', 'up_03png'),
-                        'right': join(_SPRITES, 'mesero', 'right_03.png'),
-                        'down': join(_SPRITES, 'mesero', 'down_03.png'),
-                        'left': join(_SPRITES, 'mesero', 'left_03.png'),
-                    },
+                'mov1': {
+                    'up': join(_SPRITES, 'mesero', 'up_01png'),
+                    'right': join(_SPRITES, 'mesero', 'right_01.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_01.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_01.png'),
+                },
+                'mov2': {
+                    'up': join(_SPRITES, 'mesero', 'up_03png'),
+                    'right': join(_SPRITES, 'mesero', 'right_03.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_03.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_03.png'),
                 },
             },
             'snack': {
@@ -78,3 +123,19 @@ PATH = {
     'chef': {},
     'client': {},
 }
+
+
+SPRITE_PATH = SpritePath(PATH)
+
+
+if __name__ == "__main__":
+    # Ejemplos
+    BEFORE = PATH['player']['a']['free']['idle']['down']
+    AFTER = SPRITE_PATH[['player', 'a', 'free', 'idle', 'down']]
+    print(BEFORE)
+    print(AFTER)
+    print(BEFORE == AFTER)
+    print()
+    print(SPRITE_PATH[['star', 'empty']])
+    print()
+    print(SPRITE_PATH[['star', 'hola']])

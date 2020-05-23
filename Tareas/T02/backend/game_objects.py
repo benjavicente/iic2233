@@ -1,5 +1,5 @@
 
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
 from config.parametros import PARAMETROS_JUEGO
 
@@ -10,23 +10,24 @@ PATH_CHEF = R'sprites\chef\meson_01.png'
 
 _CELL_SIZE = PARAMETROS_JUEGO['mapa']['tamaño celda']
 
+
 class GameObject(QObject):
+    '''Clase abstracta de un objeto del juego'''
     signal_update_sprite = pyqtSignal(dict)
     id_counter = 0
     def __init__(self, x, y, width, height, sprite_path):
         super().__init__()
-        self._class_name = type(self).__name__
-        self._id = self._class_name + str(self.id_counter)
+        self.class_name = type(self).__name__.lower()
+        self._id = self.class_name + str(self.id_counter)
         self.id_counter += 1
         self._x = int(x)
         self._y = int(y)
-        self._width = int(width) * _CELL_SIZE
-        self._height = int(height) * _CELL_SIZE
-        self._sprite_path = str(sprite_path)
-        self._state = tuple()
+        self.size = (int(width) * _CELL_SIZE, int(height) * _CELL_SIZE)
+        self._sprite_path = str(sprite_path)  # TODO: remove
+        self._object_state = [self.class_name]
 
     def __repr__(self):
-        return self._id
+        return self.id
 
     @property
     def position(self):
@@ -34,17 +35,13 @@ class GameObject(QObject):
         return (self._x, self._y)
 
     @property
-    def size(self):
-        '''Tamaño del objeto'''
-        return (self._width, self._height)
-
-    @property
     def display_info(self):
+        '''Información que se manda al frontend'''
         return {
             'id': self._id,
             'pos': self.position,
             'size': self.size,
-            'state': self._state,
+            'state': tuple(self._object_state),
             'sprite_path': self._sprite_path, # TODO: eliminar
         }
 
@@ -57,6 +54,8 @@ class Player(GameObject):
     '''
     def __init__(self, x, y):
         super().__init__(x, y, 1, 2, PATH_MESERO)
+        # estado = (disfraz, libre o ocupado, tipo movimiento, direc movimiento)
+        self._object_state += ('a', 'free', 'idle', 'down')
         self._move_speed = _CELL_SIZE/2
         self._movemet_keys = {'w': (0, -1), 'a': (-1, 0), 's': (0, 1), 'd': (1, 0)}
 
@@ -67,17 +66,16 @@ class Player(GameObject):
         '''
         # * Signal de KeyPressEvent
         if key in self._movemet_keys:
+            # TODO: cambiar
+            if key == "w":
+                self._object_state[4] = 'up'
+            else:
+                self._object_state[4] = 'down'
             move_x, move_y = self._movemet_keys[key]
             self._x += move_x * self._move_speed
             self._y += move_y * self._move_speed
             return True
 
-
-class Table(GameObject):
-    '''Mesa donde se pueden sentar los clientes'''
-    def __init__(self, x, y):
-        super().__init__(x, y, 1, 2, PATH_MESA)
-        self.client = None
 
 
 class Chef(GameObject):
@@ -86,7 +84,7 @@ class Chef(GameObject):
     Tienen un nivel de experiencia relacionado con los platos preparador
     '''
     def __init__(self, x, y):
-        super().__init__(x, y, 3, 3, PATH_CHEF)
+        super().__init__(x, y, 4, 4, PATH_CHEF)
         self._exp = int()
         self._dishes = int()
 
@@ -99,3 +97,15 @@ class Chef(GameObject):
     def dishes(self, value):
         # TODO: condiciones de experiencia
         self._dishes += value
+
+
+class Table(GameObject):
+    '''Mesa donde se pueden sentar los clientes'''
+    def __init__(self, x, y):
+        super().__init__(x, y, 1, 2, PATH_MESA)
+        self.client = None
+
+
+class Customer(QThread):
+    '''Cliente. Es asignado a una mesa aleatoria'''
+    pass

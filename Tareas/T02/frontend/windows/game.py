@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import QLabel
 #                                     RUTA_TIENDA_MESA,
 #                                     STYLE_SHEET_GAME_WINDOW)
 
-from frontend.paths import PATH
+from frontend.paths import PATH, SPRITE_PATH
 from frontend.themes import GAME_THEME
 
 # TODO: path relativo
@@ -57,6 +57,7 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
     def move_object(self, obj: dict):
         print(obj)  # TODO: remove
         self.game_objects[obj['id']].raise_()
+        self.game_objects[obj['id']].setPixmap(QPixmap(SPRITE_PATH[obj['state']]))
         self.game_objects[obj['id']].move(*obj['pos'])
 
     def add_new_object(self, obj: dict):
