@@ -8,7 +8,7 @@ cambiados en la pantalla de inicio
 PATH_MAPA = 'mapa.csv'
 PATH_DATOS = 'datos.csv'
 
-# El mapa esta compuesto por celdas de 40x40
+
 PARAMETROS_JUEGO = {
     "mapa": {
         "tamaño celda": 40,

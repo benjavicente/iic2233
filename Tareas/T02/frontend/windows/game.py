@@ -7,14 +7,16 @@ from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap, QCursor
 from PyQt5.QtWidgets import QLabel
 
-from config.ui_tools import (RUTA_CELDA, RUTA_DEC_1, RUTA_DEC_2,
-                                    RUTA_LOGO, RUTA_TIENDA_CHEF,
-                                    RUTA_TIENDA_MESA,
-                                    STYLE_SHEET_GAME_WINDOW)
+# from config.ui_tools import (RUTA_CELDA, RUTA_DEC_1, RUTA_DEC_2,
+#                                     RUTA_LOGO, RUTA_TIENDA_CHEF,
+#                                     RUTA_TIENDA_MESA,
+#                                     STYLE_SHEET_GAME_WINDOW)
 
+from frontend.paths import PATH
+from frontend.themes import GAME_THEME
 
 # TODO: path relativo
-class GameWindow(*uic.loadUiType('frontend/data/juego.ui')):
+class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
     '''Ventana del juego'''
     signal_keypress = pyqtSignal(str)
 
@@ -34,13 +36,13 @@ class GameWindow(*uic.loadUiType('frontend/data/juego.ui')):
         designer o porque permite cambios rápidos en algún path o estilo.
         '''
         # Imágenes
-        self.logo.setPixmap(QPixmap(RUTA_LOGO))
-        self.chef_icon.setPixmap(QPixmap(RUTA_TIENDA_CHEF))
-        self.table_icon.setPixmap(QPixmap(RUTA_TIENDA_MESA))
+        self.logo.setPixmap(QPixmap(PATH['logo']))
+        self.chef_icon.setPixmap(QPixmap(PATH['shop']['chef']))
+        self.table_icon.setPixmap(QPixmap(PATH['shop']['table']))
         # Es raro que PointingHandCursor no este disponible en Designer...
         self.button_exit.setCursor(QCursor(Qt.PointingHandCursor))
         self.button_time.setCursor(QCursor(Qt.PointingHandCursor))
-        self.setStyleSheet(STYLE_SHEET_GAME_WINDOW)
+        self.setStyleSheet(GAME_THEME)
 
     def start(self):
         '''Inicia el juego'''
@@ -81,10 +83,10 @@ class GameWindow(*uic.loadUiType('frontend/data/juego.ui')):
             decoration = QLabel(self.game_area)
             decoration.setStyleSheet('background: blue')
             if x_pos % 4:
-                decoration.setPixmap(QPixmap(RUTA_DEC_2))
+                decoration.setPixmap(QPixmap(PATH['map']['window']))
                 decoration.setFixedSize(cell_size * 2, cell_size * 4)
             else:
-                decoration.setPixmap(QPixmap(RUTA_DEC_1))
+                decoration.setPixmap(QPixmap(PATH['map']['wall']))
                 decoration.setFixedSize(cell_size * 2, cell_size * 4)
             decoration.setScaledContents(True)
             area_grid.addWidget(decoration, 0, x_pos, 1, 2)
@@ -94,6 +96,6 @@ class GameWindow(*uic.loadUiType('frontend/data/juego.ui')):
             for y_pos in range(grid_height):
                 cell = QLabel(self.game_area)
                 cell.setFixedSize(cell_size, cell_size)
-                cell.setPixmap(QPixmap(RUTA_CELDA))
+                cell.setPixmap(QPixmap(PATH['map']['tile']))
                 cell.setScaledContents(True)
                 area_grid.addWidget(cell, y_pos + 1, x_pos, 1, 1)

@@ -5,10 +5,11 @@ Simulador del DCCafé
 import sys
 from PyQt5.QtWidgets import QApplication
 
-from frontend.ventana_inicio import VentanaInicio
-from frontend.ventana_juego import GameWindow
-from backend.dccafe import DCCafe
+from frontend.windows.game import GameWindow
+from frontend.windows.initial import InitialWindow
+from frontend.windows.summary import SummaryWindow
 
+from backend.dccafe import DCCafe
 
 
 if __name__ == "__main__":
@@ -16,7 +17,7 @@ if __name__ == "__main__":
     APP = QApplication(sys.argv)
     ################################
 
-    VI = VentanaInicio()
+    VI = InitialWindow()
     VJ = GameWindow()
 
     DCCAFE = DCCafe()

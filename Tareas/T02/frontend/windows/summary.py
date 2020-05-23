@@ -10,11 +10,10 @@ from PyQt5.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
                              QLabel, QPushButton, QSizePolicy, QSpacerItem,
                              QVBoxLayout, QWidget)
 
-from config.ui_tools import (RUTA_ESTRELLA_LLENA, RUTA_ESTRELLA_VACIA,
-                                    STYLE_SHEET_SUMMARY_WINDOW)
+from ..themes import SUMMARY_THEME
+from ..paths import PATH
 
-
-class VentanaPosterior(QWidget):
+class SummaryWindow(QWidget):
     '''Ventana que muestra los el resumen de la ronda'''
     def __init__(self, *args, **kwards):
         super().__init__(*args, **kwards)
@@ -23,7 +22,7 @@ class VentanaPosterior(QWidget):
     def iniciar(self):
         '''Inicia la ventana'''
         self.setWindowTitle('DCCafé - Resumen Ronda')
-        self.setStyleSheet(STYLE_SHEET_SUMMARY_WINDOW)
+        self.setStyleSheet(SUMMARY_THEME)
         # Grid principal
         main_layout = QGridLayout()
         self.setLayout(main_layout)
@@ -92,8 +91,8 @@ class VentanaPosterior(QWidget):
         # --> Estrellas
         fila_estrellas = QHBoxLayout()
         fila_estrellas.setContentsMargins(30, 0, 30, 0)
-        self.estrella_llena = QPixmap(RUTA_ESTRELLA_LLENA)
-        self.estrella_vacia = QPixmap(RUTA_ESTRELLA_VACIA)
+        self.estrella_llena = QPixmap(PATH['star']['filed'])
+        self.estrella_vacia = QPixmap(PATH['star']['empty'])
         self.estrellas = []
         for _ in range(5):
             estrella = QLabel()
@@ -143,14 +142,3 @@ class VentanaPosterior(QWidget):
             else:
                 self.estrellas[indice].setPixmap(self.estrella_vacia)
             rep -= 1
-
-
-
-if __name__ == "__main__":
-    sys.__excepthook__ = lambda t, v, trace: print(t, trace, sep="\n")
-    APP = QApplication(sys.argv)
-    VENTANA = VentanaPosterior()
-    VENTANA.titulo_ronda(5)
-    VENTANA.mostrar_reputacion(5)
-    VENTANA.show()
-    sys.exit(APP.exec_())

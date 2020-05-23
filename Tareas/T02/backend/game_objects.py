@@ -1,6 +1,7 @@
 
 from PyQt5.QtCore import QObject, pyqtSignal
 from PyQt5.QtGui import QPixmap
+from abc import ABC
 
 PATH_MESERO = R'sprites\mesero\down_02.png'
 PATH_MESA = R'sprites\mapa\accesorios\silla_mesa_roja.png'
@@ -19,6 +20,7 @@ class GameObject(QObject):
         self._width = int(width)
         self._height = int(height)
         self._sprite_path = str(sprite_path)
+        self._state = tuple()
 
     def __repr__(self):
         return self._id
@@ -35,20 +37,20 @@ class GameObject(QObject):
 
     @property
     def display_info(self):
-        # TODO: el backend debería entregar pixelmaps, no paths
         return {
             'id': self._id,
             'pos': self.position,
             'size': self.size,
-            'sprite_path': self._sprite_path
+            'state': self._state,
+            'sprite_path': self._sprite_path, # TODO: eliminar
         }
 
 
 
 class Player(GameObject):
     '''
-    Jugador del juego que empeña el rol de mesero
-    Bonus: Dos jugadores al mismo tiempo
+    Jugador del juego que empeña el rol de mesero.
+    Bonus: Dos jugadores al mismo tiempo.
     '''
     def __init__(self, x, y):
         super().__init__(x, y, 30, 50, PATH_MESERO)

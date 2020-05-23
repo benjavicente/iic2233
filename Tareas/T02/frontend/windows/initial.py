@@ -10,10 +10,12 @@ from PyQt5.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
                              QLabel, QPushButton, QSizePolicy, QSpacerItem,
                              QToolButton, QVBoxLayout, QWidget, QToolTip)
 
-from config.ui_tools import RUTA_LOGO, STYLE_SHEET_INITIAL_WINDOW
+
+from frontend.paths import PATH
+from frontend.themes import INITIAL_THEME
 
 
-class VentanaInicio(QWidget):
+class InitialWindow(QWidget):
     '''Ventana que se abre al iniciar el programa'''
 
     signal_start = pyqtSignal(bool) # True si se carga partida
@@ -26,7 +28,7 @@ class VentanaInicio(QWidget):
         '''Inicia la ventana'''
         self.setWindowTitle('DCCafé - Inicio')
         self.setObjectName('VentanaInicio')
-        self.setStyleSheet(STYLE_SHEET_INITIAL_WINDOW)
+        self.setStyleSheet(INITIAL_THEME)
         # TODO: Ver lo de los íconos
         #self.setWindowIcon(QIcon(QPixmap(RUTA_LOGO)))
 
@@ -66,7 +68,7 @@ class VentanaInicio(QWidget):
         # -> Logo
         self.logo = QLabel(self)
         self.logo.setFixedSize(520, 200)
-        self.logo.setPixmap(QPixmap(RUTA_LOGO))
+        self.logo.setPixmap(QPixmap(PATH['logo']))
         self.logo.setScaledContents(True)
         # Añadilo al cuadro
         cuadro_principal_layout.addWidget(self.logo)
@@ -108,15 +110,7 @@ class VentanaInicio(QWidget):
         main_layout.addItem(QSpacerItem(0, 0, vPolicy=QSizePolicy.Expanding), 1, 1)
         main_layout.addItem(QSpacerItem(0, 0, vPolicy=QSizePolicy.Expanding), 3, 1)
 
-
     def empezar_juego(self):
-        self.signal_start.emit(True) # TODO
+        '''El juego se inicia inmediatamente al cerrar esta ventana'''
+        self.signal_start.emit(True)
         self.hide()
-
-
-if __name__ == "__main__":
-    sys.__excepthook__ = lambda t, v, trace: print(t, trace, sep="\n")
-    APP = QApplication(sys.argv)
-    VENTANA = VentanaInicio()
-    VENTANA.show()
-    sys.exit(APP.exec_())
