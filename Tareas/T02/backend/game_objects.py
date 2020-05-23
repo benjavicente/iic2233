@@ -6,14 +6,14 @@ from PyQt5.QtCore import QObject, pyqtSignal, QThread
 from math import floor
 
 
-from config.parametros import PARAMETROS_JUEGO
+from config.parametros import PARAMETROS
 
 
 
 class GameObject(QObject):
     '''Clase abstracta de un objeto del juego'''
     signal_update_sprite = pyqtSignal(dict)
-    _CELL_SIZE = PARAMETROS_JUEGO['mapa']['tamaño celda']
+    _CELL_SIZE = PARAMETROS['mapa']['tamaño celda']
     id_counter = 0
     def __init__(self, x: int, y: int, width: int, height: int):
         super().__init__()
@@ -61,8 +61,8 @@ class Cafe(QObject):
     @property
     def round_clients(self):
         '''Clientes de la ronda'''
-        alpha = PARAMETROS_JUEGO['clientes por ronda']['factor']
-        beta = PARAMETROS_JUEGO['clientes por ronda']['base']
+        alpha = PARAMETROS['clientes por ronda']['factor']
+        beta = PARAMETROS['clientes por ronda']['base']
         return alpha * (beta + self.rounds)
 
     def get_new_rep(self) -> int:
@@ -70,10 +70,10 @@ class Cafe(QObject):
         Calcula la nueva reputación del Café
         Guarda el valor en el objeto y lo retorna
         '''
-        min_value = PARAMETROS_JUEGO['reputación']['mínimo']
-        max_value = PARAMETROS_JUEGO['reputación']['máximo']
-        alpha = PARAMETROS_JUEGO['reputación']['factor']
-        beta = PARAMETROS_JUEGO['reputación']['resta']
+        min_value = PARAMETROS['reputación']['mínimo']
+        max_value = PARAMETROS['reputación']['máximo']
+        alpha = PARAMETROS['reputación']['factor']
+        beta = PARAMETROS['reputación']['resta']
         expr = self.rep + floor(alpha * self.completed_orders/self.total_orders - beta)
         self.rep = max(min_value, min(max_value, expr))
         return self.rep
@@ -86,7 +86,7 @@ class Player(GameObject):
     Bonus: Dos jugadores al mismo tiempo.
     '''
     _movemet_direction = {'up': (0, -1), 'right': (1, 0), 'down': (0, 1), 'left': (-1, 0)}
-    _movement_speed = PARAMETROS_JUEGO['personaje']['velocidad']
+    _movement_speed = PARAMETROS['personaje']['velocidad']
 
     def __init__(self, x: int, y: int):
         # TODO: parametros de disfraz y teclas

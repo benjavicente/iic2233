@@ -18,13 +18,14 @@ from frontend.themes import INITIAL_THEME
 class InitialWindow(QWidget):
     '''Ventana que se abre al iniciar el programa'''
 
-    signal_start = pyqtSignal(bool) # True si se carga partida
+    signal_load = pyqtSignal()
+    signal_new = pyqtSignal()
 
     def __init__(self, *args, **kwards):
         super().__init__(*args, **kwards)
-        self.iniciar()
+        self.init_ui()
 
-    def iniciar(self):
+    def init_ui(self):
         '''Inicia la ventana'''
         self.setWindowTitle('DCCafé - Inicio')
         self.setObjectName('VentanaInicio')
@@ -95,13 +96,13 @@ class InitialWindow(QWidget):
         # --> Cargar partida
         self.cargar = QPushButton('Cargar Partida', self)
         self.cargar.setCursor(QCursor(Qt.PointingHandCursor))
-        self.cargar.clicked.connect(self.empezar_juego)
+        self.cargar.clicked.connect(self.load_game)
         fila_botones.addWidget(self.cargar)
 
         # --> Nueva pertida
         self.nueva = QPushButton('Nueva Partida', self)
         self.nueva.setCursor(QCursor(Qt.PointingHandCursor))
-        self.nueva.clicked.connect(self.empezar_juego)
+        self.nueva.clicked.connect(self.new_game)
         fila_botones.addWidget(self.nueva)
 
         # -------- #
@@ -110,7 +111,12 @@ class InitialWindow(QWidget):
         main_layout.addItem(QSpacerItem(0, 0, vPolicy=QSizePolicy.Expanding), 1, 1)
         main_layout.addItem(QSpacerItem(0, 0, vPolicy=QSizePolicy.Expanding), 3, 1)
 
-    def empezar_juego(self):
-        '''El juego se inicia inmediatamente al cerrar esta ventana'''
-        self.signal_start.emit(True)
+    def load_game(self):
+        '''Se carga un juego'''
+        self.signal_load.emit()
+        self.hide()
+
+    def new_game(self):
+        '''Se empieza un nuevo juego'''
+        self.signal_new.emit()
         self.hide()

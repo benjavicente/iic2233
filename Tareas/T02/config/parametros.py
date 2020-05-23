@@ -6,11 +6,18 @@ cambiados en la pantalla de inicio
 '''
 
 
-PARAMETROS_JUEGO = {
+# El tamaño de la celda dicta el tamaño de
+# las entidades, por lo que modificarla puede
+# modificar como quedan las entidades en el mapa.
+# Se al ubicar las entidades ocurre una colición,
+# se entregará un mensaje de error
+# y se terminará el programa (no se mostrará el menú de juego)
+
+PARAMETROS = {
     "mapa": {
         "tamaño celda": 25,
         "largo": 750,
-        "ancho": 450,
+        "ancho": 450,  # creo que esta malo...
     },
     'personaje': {
         'velocidad': 5

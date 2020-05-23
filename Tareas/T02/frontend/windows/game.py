@@ -7,15 +7,10 @@ from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap, QCursor
 from PyQt5.QtWidgets import QLabel
 
-# from config.ui_tools import (RUTA_CELDA, RUTA_DEC_1, RUTA_DEC_2,
-#                                     RUTA_LOGO, RUTA_TIENDA_CHEF,
-#                                     RUTA_TIENDA_MESA,
-#                                     STYLE_SHEET_GAME_WINDOW)
-
 from frontend.paths import PATH, SPRITE_PATH
 from frontend.themes import GAME_THEME
 
-# TODO: path relativo
+
 class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
     '''Ventana del juego'''
     signal_keypress = pyqtSignal(str)
@@ -46,12 +41,13 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
 
     def start(self):
         '''Inicia el juego'''
-        # TODO: iniciar backend con señales para no iniciarlo en main
-        # Toma todos los inputs del teclado en el programa
+        # TODO: música?
+        self.make_map()
         self.grabKeyboard()
         self.show()
 
     def keyPressEvent(self, event):
+        # TODO: este método no entrega señales completamente continuas
         self.signal_keypress.emit(event.text())
 
     def move_object(self, obj: dict):
@@ -59,6 +55,7 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
         self.game_objects[obj['id']].raise_()
         self.game_objects[obj['id']].setPixmap(QPixmap(SPRITE_PATH[obj['state']]))
         self.game_objects[obj['id']].move(*obj['pos'])
+        self.game_objects[obj['id']].raise_()
 
     def add_new_object(self, obj: dict):
         '''`obj`: dict con id e información del objeto'''
@@ -67,6 +64,7 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
         new_object.setPixmap(QPixmap(SPRITE_PATH[obj['state']]))
         new_object.setScaledContents(True)
         self.game_objects[obj['id']] = new_object
+        new_object.show()
 
     def make_map(self, width: int = 750, height: int = 450, cell_size: int = 25):
         '''Crea el mapa del juego a partir de los mapámetros dados'''

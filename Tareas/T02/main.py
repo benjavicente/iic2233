@@ -9,30 +9,32 @@ from frontend.windows.game import GameWindow
 from frontend.windows.initial import InitialWindow
 from frontend.windows.summary import SummaryWindow
 
-from backend.dccafe import DCCafe
-
+from backend.game_core import GameCore
 
 if __name__ == "__main__":
     sys.__excepthook__ = lambda t, v, trace: print(t, v, trace, sep="\n")
     APP = QApplication(sys.argv)
     ################################
 
-    VI = InitialWindow()
-    VJ = GameWindow()
+    INITIAL_WINDOW = InitialWindow()
+    GAME_WINDOW = GameWindow()
 
-    DCCAFE = DCCafe()
+    GAME_CORE = GameCore()
 
-    VI.signal_start.connect(VJ.start)
+    #DCCAFE = DCCafe()
 
-    DCCAFE.signal_add_object.connect(VJ.add_new_object)
-    DCCAFE.signal_update_pos.connect(VJ.move_object)
+    INITIAL_WINDOW.signal_new.connect(GAME_CORE.new_game)
+    INITIAL_WINDOW.signal_load.connect(GAME_CORE.load_game)
 
-    VJ.signal_keypress.connect(DCCAFE.move_player)
+    GAME_CORE.signal_add_new_object.connect(GAME_WINDOW.add_new_object)
+    GAME_CORE.signal_update_pos.connect(GAME_WINDOW.move_object)
 
-    VJ.make_map()
-    DCCAFE.load_game() # TODO: cambiar esto
+    GAME_CORE.signal_start_game_window.connect(GAME_WINDOW.start)
 
-    VI.show()
+    GAME_WINDOW.signal_keypress.connect(GAME_CORE.move_player)
+
+
+    INITIAL_WINDOW.show()
 
     ################################
     sys.exit(APP.exec_())
