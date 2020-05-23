@@ -1,11 +1,14 @@
 
 from PyQt5.QtCore import QObject, pyqtSignal
-from PyQt5.QtGui import QPixmap
-from abc import ABC
 
+from config.parametros import PARAMETROS_JUEGO
+
+# TODO: eliminar esto
 PATH_MESERO = R'sprites\mesero\down_02.png'
 PATH_MESA = R'sprites\mapa\accesorios\silla_mesa_roja.png'
 PATH_CHEF = R'sprites\chef\meson_01.png'
+
+_CELL_SIZE = PARAMETROS_JUEGO['mapa']['tamaño celda']
 
 class GameObject(QObject):
     signal_update_sprite = pyqtSignal(dict)
@@ -17,8 +20,8 @@ class GameObject(QObject):
         self.id_counter += 1
         self._x = int(x)
         self._y = int(y)
-        self._width = int(width)
-        self._height = int(height)
+        self._width = int(width) * _CELL_SIZE
+        self._height = int(height) * _CELL_SIZE
         self._sprite_path = str(sprite_path)
         self._state = tuple()
 
@@ -53,8 +56,8 @@ class Player(GameObject):
     Bonus: Dos jugadores al mismo tiempo.
     '''
     def __init__(self, x, y):
-        super().__init__(x, y, 30, 50, PATH_MESERO)
-        self._move_speed = 10
+        super().__init__(x, y, 1, 2, PATH_MESERO)
+        self._move_speed = _CELL_SIZE/2
         self._movemet_keys = {'w': (0, -1), 'a': (-1, 0), 's': (0, 1), 'd': (1, 0)}
 
     def move(self, key) -> bool:
@@ -73,7 +76,7 @@ class Player(GameObject):
 class Table(GameObject):
     '''Mesa donde se pueden sentar los clientes'''
     def __init__(self, x, y):
-        super().__init__(x, y, 30, 45, PATH_MESA)
+        super().__init__(x, y, 1, 2, PATH_MESA)
         self.client = None
 
 
@@ -83,7 +86,7 @@ class Chef(GameObject):
     Tienen un nivel de experiencia relacionado con los platos preparador
     '''
     def __init__(self, x, y):
-        super().__init__(x, y, 80, 95, PATH_CHEF)
+        super().__init__(x, y, 3, 3, PATH_CHEF)
         self._exp = int()
         self._dishes = int()
 

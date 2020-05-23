@@ -5,15 +5,12 @@ Una vez ejecutado el problema, pueden ser
 cambiados en la pantalla de inicio
 '''
 
-PATH_MAPA = 'mapa.csv'
-PATH_DATOS = 'datos.csv'
-
 
 PARAMETROS_JUEGO = {
     "mapa": {
-        "tamaño celda": 40,
-        "ancho": 10,
-        "largo": 20,
+        "tamaño celda": 25,
+        "largo": 750,
+        "ancho": 450,
     },
     "chef": {
         "niveles": {
