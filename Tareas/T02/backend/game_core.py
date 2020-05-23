@@ -18,6 +18,7 @@ class GameCore(QObject):
     signal_add_new_object = pyqtSignal(dict)
     signal_update_pos = pyqtSignal(dict)
     signal_start_game_window = pyqtSignal()
+    signal_update_cafe_stats = pyqtSignal(dict)
 
     object_classes = {'mesero': Player, 'chef': Chef, 'mesa': Table}
 
@@ -54,6 +55,7 @@ class GameCore(QObject):
         # TODO
         for _ in range(PARAMETROS['DCCafé']['inicial']['mesas']):
             pass
+        self.start_round()
 
     def load_game(self) -> None:
         '''Carga un juego'''
@@ -69,6 +71,7 @@ class GameCore(QObject):
             # TODO: ver si los objetos colisionan
             self.object_lists[object_name].append(new_object)
             self.signal_add_new_object.emit(new_object.display_info)
+        self.start_round()
 
     def exit_game(self):
         '''Sale del juego'''
@@ -81,6 +84,11 @@ class GameCore(QObject):
     def save_game(self):
         '''Guarda el juego'''
         pass
+
+    def start_round(self):
+        '''Empieza una ronda'''
+        # TODO: esto tiene que estar conectado a un thread que maneje los tiempos
+        self.signal_update_cafe_stats.emit(self.cafe.stats)
 
     def move_player(self, key: str):
         # TODO: esto no evita que el jugador no colisione

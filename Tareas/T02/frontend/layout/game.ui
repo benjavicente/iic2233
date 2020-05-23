@@ -350,42 +350,42 @@
      <item>
       <layout class="QGridLayout" name="grid_estadisticas_cafe">
        <item row="1" column="0">
-        <widget class="QLabel" name="label_dinero">
+        <widget class="QLabel" name="money_label">
          <property name="text">
           <string>Dinero</string>
          </property>
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="label_ronda">
+        <widget class="QLabel" name="round_label">
          <property name="text">
           <string>Ronda N°</string>
          </property>
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QLabel" name="label_reputacion">
+        <widget class="QLabel" name="rep_label">
          <property name="text">
           <string>Reputación</string>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLabel" name="reputacion">
+        <widget class="QLabel" name="rep">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLabel" name="dinero">
+        <widget class="QLabel" name="money">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLabel" name="ronda">
+        <widget class="QLabel" name="round">
          <property name="text">
           <string>TextLabel</string>
          </property>
@@ -415,42 +415,42 @@
      <item>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="1" column="0">
-        <widget class="QLabel" name="label_perdidos">
+        <widget class="QLabel" name="failed_orders_label">
          <property name="text">
           <string>Perdidos</string>
          </property>
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QLabel" name="label_atendidos">
+        <widget class="QLabel" name="completed_orders_label">
          <property name="text">
           <string>Atendidos</string>
          </property>
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="label_proximos">
+        <widget class="QLabel" name="total_orders_label">
          <property name="text">
-          <string>Próximos</string>
+          <string>Total</string>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLabel" name="atendidos">
+        <widget class="QLabel" name="completed_orders">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLabel" name="perdidos">
+        <widget class="QLabel" name="failed_orders">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLabel" name="proximos">
+        <widget class="QLabel" name="total_orders">
          <property name="text">
           <string>TextLabel</string>
          </property>

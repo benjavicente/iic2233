@@ -50,6 +50,16 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
         # TODO: este método no entrega señales completamente continuas
         self.signal_keypress.emit(event.text())
 
+    def update_cafe_stats(self, stats: dict):
+        print(repr(stats['rep']))
+        self.rep.setText(stats['rep'])
+        self.money.setText(stats['money'])
+        self.round.setText(stats['round'])
+        self.completed_orders.setText(stats['completed_orders'])
+        self.total_orders.setText(stats['total_orders'])
+        self.failed_orders.setText(stats['failed_orders'])
+
+
     def move_object(self, obj: dict):
         print(obj)  # TODO: remove
         self.game_objects[obj['id']].raise_()

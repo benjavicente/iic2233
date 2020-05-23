@@ -30,6 +30,7 @@ if __name__ == "__main__":
     GAME_CORE.signal_update_pos.connect(GAME_WINDOW.move_object)
 
     GAME_CORE.signal_start_game_window.connect(GAME_WINDOW.start)
+    GAME_CORE.signal_update_cafe_stats.connect(GAME_WINDOW.update_cafe_stats)
 
     GAME_WINDOW.signal_keypress.connect(GAME_CORE.move_player)
 

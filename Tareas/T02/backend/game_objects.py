@@ -11,7 +11,13 @@ from config.parametros import PARAMETROS
 
 
 class GameObject(QObject):
-    '''Clase abstracta de un objeto del juego'''
+    '''
+    Clase abstracta de un objeto del juego.
+    Crea un identificador único al objeto.
+    Como atributo tiene display_info, que retorna
+    toda la información necesaria para
+    mostrar el objeto en la pantalla.
+    '''
     signal_update_sprite = pyqtSignal(dict)
     _CELL_SIZE = PARAMETROS['mapa']['tamaño celda']
     id_counter = 0
@@ -59,6 +65,19 @@ class Cafe(QObject):
         self.total_orders = 0
 
     @property
+    def stats(self):
+        '''Estadísticas a mostrar en el interfaz'''
+        return {
+            'money': str(self.money),
+            'rep': str(self.rep),
+            'round': str(self.rounds),
+            'open': str(self.open),
+            'completed_orders': str(self.completed_orders),
+            'total_orders': str(self.total_orders),
+            'failed_orders': str(self.total_orders - self.completed_orders),
+        }
+
+    @property
     def round_clients(self):
         '''Clientes de la ronda'''
         alpha = PARAMETROS['clientes por ronda']['factor']
@@ -67,8 +86,9 @@ class Cafe(QObject):
 
     def get_new_rep(self) -> int:
         '''
-        Calcula la nueva reputación del Café
-        Guarda el valor en el objeto y lo retorna
+        Calcula la nueva reputación del Café.
+        Guarda el valor en el objeto y lo retorna.
+        Solo debe ejecutarse al terminar la ronda.
         '''
         min_value = PARAMETROS['reputación']['mínimo']
         max_value = PARAMETROS['reputación']['máximo']
