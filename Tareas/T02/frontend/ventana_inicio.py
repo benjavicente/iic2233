@@ -1,4 +1,4 @@
-'''
+﻿'''
 Ventana inicial del juego
 '''
 
@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
                              QLabel, QPushButton, QSizePolicy, QSpacerItem,
                              QToolButton, QVBoxLayout, QWidget, QToolTip)
 
-from .data.ui_tools import RUTA_LOGO, STYLE_SHEET_VENTANA_INICIO
+from config.ui_tools import RUTA_LOGO, STYLE_SHEET_INITIAL_WINDOW
 
 
 class VentanaInicio(QWidget):
@@ -26,7 +26,7 @@ class VentanaInicio(QWidget):
         '''Inicia la ventana'''
         self.setWindowTitle('DCCafé - Inicio')
         self.setObjectName('VentanaInicio')
-        self.setStyleSheet(STYLE_SHEET_VENTANA_INICIO)
+        self.setStyleSheet(STYLE_SHEET_INITIAL_WINDOW)
         # TODO: Ver lo de los íconos
         #self.setWindowIcon(QIcon(QPixmap(RUTA_LOGO)))
 
@@ -73,8 +73,8 @@ class VentanaInicio(QWidget):
 
         # -> Texto de bienvenida
         # TODO: esto podría estar en parámetros
-        texto = ('Hola! El juego esté en desarrollo, faltan añadir muchas cosas. '
-                 'Hay un error en las señales que no he podido solucionar aún :(')
+        texto = ('Hola! Bienvenido al DCCafé!'
+                 'No está completamente listo para su apertura aún')
         self.bienvenida = QLabel(texto, self)
         self.bienvenida.setWordWrap(True)
         self.bienvenida.setObjectName('bienvenida')

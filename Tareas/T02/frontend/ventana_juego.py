@@ -7,13 +7,14 @@ from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap, QCursor
 from PyQt5.QtWidgets import QLabel
 
-from frontend.data.ui_tools import (RUTA_CELDA, RUTA_DEC_1, RUTA_DEC_2,
+from config.ui_tools import (RUTA_CELDA, RUTA_DEC_1, RUTA_DEC_2,
                                     RUTA_LOGO, RUTA_TIENDA_CHEF,
                                     RUTA_TIENDA_MESA,
-                                    STYLE_SHEET_VENTANA_JUEGO)
+                                    STYLE_SHEET_GAME_WINDOW)
 
 
-class GameWindow(*uic.loadUiType('frontend/data/juego.ui')):  # TODO: path relativo
+# TODO: path relativo
+class GameWindow(*uic.loadUiType('frontend/data/juego.ui')):
     '''Ventana del juego'''
     signal_keypress = pyqtSignal(str)
 
@@ -21,7 +22,9 @@ class GameWindow(*uic.loadUiType('frontend/data/juego.ui')):  # TODO: path relat
         super().__init__()
         self.setupUi(self)
         self.add_style()
+        # Offset de la decoración en el cuadro de juego
         self.y_game_offset = 0
+        # Objetos del juego a mostrar en el cuadro de juego
         self.game_objects = dict()
 
     def add_style(self):
@@ -30,18 +33,20 @@ class GameWindow(*uic.loadUiType('frontend/data/juego.ui')):  # TODO: path relat
         Se realiza en código ya que no se pudo realizar fácilmente en
         designer o porque permite cambios rápidos en algún path o estilo.
         '''
+        # Imágenes
         self.logo.setPixmap(QPixmap(RUTA_LOGO))
         self.chef_icon.setPixmap(QPixmap(RUTA_TIENDA_CHEF))
         self.table_icon.setPixmap(QPixmap(RUTA_TIENDA_MESA))
         # Es raro que PointingHandCursor no este disponible en Designer...
         self.button_exit.setCursor(QCursor(Qt.PointingHandCursor))
         self.button_time.setCursor(QCursor(Qt.PointingHandCursor))
-        self.setStyleSheet(STYLE_SHEET_VENTANA_JUEGO)
-
+        self.setStyleSheet(STYLE_SHEET_GAME_WINDOW)
 
     def start(self):
         '''Inicia el juego'''
         # TODO: iniciar backend con señales para no iniciarlo en main
+        # Toma todos los inputs del teclado en el programa
+        self.grabKeyboard()
         self.show()
 
     def keyPressEvent(self, event):

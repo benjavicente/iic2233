@@ -5,13 +5,13 @@ Ventana Posterior del juego
 import sys
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QCursor, QIcon, QPixmap
+from PyQt5.QtGui import QCursor, QPixmap
 from PyQt5.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
                              QLabel, QPushButton, QSizePolicy, QSpacerItem,
-                             QToolButton, QVBoxLayout, QWidget, QToolTip)
+                             QVBoxLayout, QWidget)
 
-from .data.ui_tools import STYLE_SHEET_VENTANA_POSTERIOR, RUTA_ESTRELLA_LLENA, RUTA_ESTRELLA_VACIA
-
+from config.ui_tools import (RUTA_ESTRELLA_LLENA, RUTA_ESTRELLA_VACIA,
+                                    STYLE_SHEET_SUMMARY_WINDOW)
 
 
 class VentanaPosterior(QWidget):
@@ -23,7 +23,7 @@ class VentanaPosterior(QWidget):
     def iniciar(self):
         '''Inicia la ventana'''
         self.setWindowTitle('DCCafé - Resumen Ronda')
-        self.setStyleSheet(STYLE_SHEET_VENTANA_POSTERIOR)
+        self.setStyleSheet(STYLE_SHEET_SUMMARY_WINDOW)
         # Grid principal
         main_layout = QGridLayout()
         self.setLayout(main_layout)

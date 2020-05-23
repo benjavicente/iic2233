@@ -6,8 +6,8 @@ herramientas para el manejo de estas
 from math import floor
 from PyQt5.QtCore import QObject, pyqtSignal
 
-from .parametros import PARAMETROS_JUEGO
-from .game_objects import Player, Table, Chef
+from config.parametros import PARAMETROS_JUEGO
+from backend.game_objects import Player, Table, Chef
 
 
 class DCCafe(QObject):
