@@ -1,8 +1,10 @@
+'''
+Clases del los objetos del juego DCCafé
+'''
 
 from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
 from config.parametros import PARAMETROS_JUEGO
-
 
 _CELL_SIZE = PARAMETROS_JUEGO['mapa']['tamaño celda']
 
@@ -46,13 +48,14 @@ class Player(GameObject):
     Jugador del juego que empeña el rol de mesero.
     Bonus: Dos jugadores al mismo tiempo.
     '''
+    _movemet_direction = {'up': (0, -1), 'right': (1, 0), 'down': (0, 1), 'left': (-1, 0)}
+    _move_speed = _CELL_SIZE/2
+
     def __init__(self, x, y):
         super().__init__(x, y, 1, 2)
         # estado = (jugador, disfraz, libre o ocupado, tipo movimiento, direc movimiento)
         self._object_state += ['a', 'free', 'idle', 'down']
-        self._move_speed = _CELL_SIZE/2
-        # TODO: movemet_keys debe dictar las direcciones del movimiento, no el movimiento en si.
-        self._movemet_keys = {'w': (0, -1), 'a': (-1, 0), 's': (0, 1), 'd': (1, 0)}
+        self._movemet_keys = {'w': 'up', 'd': 'right', 's': 'down', 'a': 'left'}
 
     def move(self, key) -> bool:
         '''
@@ -61,15 +64,13 @@ class Player(GameObject):
         '''
         # * Signal de KeyPressEvent
         if key in self._movemet_keys:
-            # TODO: cambiar
-            if key == "w":
-                self._object_state[4] = 'up'
-            else:
-                self._object_state[4] = 'down'
-            move_x, move_y = self._movemet_keys[key]
+            direction = self._movemet_keys[key]
+            self._object_state[4] = direction
+            move_x, move_y = self._movemet_direction[direction]
             self._x += move_x * self._move_speed
             self._y += move_y * self._move_speed
             return True
+        return False
 
 
 
@@ -103,6 +104,6 @@ class Table(GameObject):
         self.client = None
 
 
-class Customer(QThread):
+class Customer(GameObject):
     '''Cliente. Es asignado a una mesa aleatoria'''
     pass
