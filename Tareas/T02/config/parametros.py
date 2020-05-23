@@ -12,6 +12,9 @@ PARAMETROS_JUEGO = {
         "largo": 750,
         "ancho": 450,
     },
+    'personaje': {
+        'velocidad': 5
+    },
     "chef": {
         "niveles": {
             "principiante": {

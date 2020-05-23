@@ -3,24 +3,26 @@ Clases del los objetos del juego DCCafé
 '''
 
 from PyQt5.QtCore import QObject, pyqtSignal, QThread
+from math import floor
+
 
 from config.parametros import PARAMETROS_JUEGO
 
-_CELL_SIZE = PARAMETROS_JUEGO['mapa']['tamaño celda']
 
 
 class GameObject(QObject):
     '''Clase abstracta de un objeto del juego'''
     signal_update_sprite = pyqtSignal(dict)
+    _CELL_SIZE = PARAMETROS_JUEGO['mapa']['tamaño celda']
     id_counter = 0
-    def __init__(self, x, y, width, height):
+    def __init__(self, x: int, y: int, width: int, height: int):
         super().__init__()
         self.class_name = type(self).__name__.lower()
         self._id = self.class_name + str(self.id_counter)
         self.id_counter += 1
         self._x = int(x)
         self._y = int(y)
-        self.size = (int(width) * _CELL_SIZE, int(height) * _CELL_SIZE)
+        self.size = (int(width) * self._CELL_SIZE, int(height) * self._CELL_SIZE)
         self._object_state = [self.class_name]
 
     def __repr__(self):
@@ -43,19 +45,56 @@ class GameObject(QObject):
 
 
 
+class Cafe(QObject):
+    '''Café que se administra en el juego'''
+    def __init__(self):
+        super().__init__()
+        # Parámetros guardados
+        self.money = int()
+        self.rep = int()
+        self.rounds = int()
+        # Parámetros de la ronda
+        self.open = True
+        self.completed_orders = 0
+        self.total_orders = 0
+
+    @property
+    def round_clients(self):
+        '''Clientes de la ronda'''
+        alpha = PARAMETROS_JUEGO['clientes por ronda']['factor']
+        beta = PARAMETROS_JUEGO['clientes por ronda']['base']
+        return alpha * (beta + self.rounds)
+
+    def get_new_rep(self) -> int:
+        '''
+        Calcula la nueva reputación del Café
+        Guarda el valor en el objeto y lo retorna
+        '''
+        min_value = PARAMETROS_JUEGO['reputación']['mínimo']
+        max_value = PARAMETROS_JUEGO['reputación']['máximo']
+        alpha = PARAMETROS_JUEGO['reputación']['factor']
+        beta = PARAMETROS_JUEGO['reputación']['resta']
+        expr = self.rep + floor(alpha * self.completed_orders/self.total_orders - beta)
+        self.rep = max(min_value, min(max_value, expr))
+        return self.rep
+
+
+
 class Player(GameObject):
     '''
     Jugador del juego que empeña el rol de mesero.
     Bonus: Dos jugadores al mismo tiempo.
     '''
     _movemet_direction = {'up': (0, -1), 'right': (1, 0), 'down': (0, 1), 'left': (-1, 0)}
-    _move_speed = _CELL_SIZE/2
+    _movement_speed = PARAMETROS_JUEGO['personaje']['velocidad']
 
-    def __init__(self, x, y):
+    def __init__(self, x: int, y: int):
+        # TODO: parametros de disfraz y teclas
         super().__init__(x, y, 1, 2)
         # estado = (jugador, disfraz, libre o ocupado, tipo movimiento, direc movimiento)
         self._object_state += ['a', 'free', 'idle', 'down']
         self._movemet_keys = {'w': 'up', 'd': 'right', 's': 'down', 'a': 'left'}
+        self.orders = 0
 
     def move(self, key) -> bool:
         '''
@@ -67,8 +106,8 @@ class Player(GameObject):
             direction = self._movemet_keys[key]
             self._object_state[4] = direction
             move_x, move_y = self._movemet_direction[direction]
-            self._x += move_x * self._move_speed
-            self._y += move_y * self._move_speed
+            self._x += move_x * self._movement_speed
+            self._y += move_y * self._movement_speed
             return True
         return False
 
@@ -79,7 +118,7 @@ class Chef(GameObject):
     Preparan la comida.
     Tienen un nivel de experiencia relacionado con los platos preparador
     '''
-    def __init__(self, x, y):
+    def __init__(self, x: int, y: int):
         super().__init__(x, y, 4, 4)
         self._object_state += ['idle']
         # TODO
@@ -94,16 +133,18 @@ class Chef(GameObject):
     @dishes.setter
     def dishes(self, value):
         # TODO: condiciones de experiencia
-        self._dishes += value
+        self._dishes = value
 
 
 class Table(GameObject):
     '''Mesa donde se pueden sentar los clientes'''
-    def __init__(self, x, y):
+    def __init__(self, x: int, y: int):
         super().__init__(x, y, 1, 2)
-        self.client = None
+        self.client = False
 
 
 class Customer(GameObject):
     '''Cliente. Es asignado a una mesa aleatoria'''
-    pass
+    def __init__(self, x: int, y: int, customer_type: str):
+        super().__init__(x, y, 1, 1)
+        self.customer_type = customer_type
