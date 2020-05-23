@@ -83,17 +83,25 @@ PATH = {
                     'down': join(_SPRITES, 'mesero', 'down_02.png'),
                     'left': join(_SPRITES, 'mesero', 'left_02.png'),
                 },
-                'mov1': {
-                    'up': join(_SPRITES, 'mesero', 'up_01png'),
-                    'right': join(_SPRITES, 'mesero', 'right_01.png'),
-                    'down': join(_SPRITES, 'mesero', 'down_01.png'),
-                    'left': join(_SPRITES, 'mesero', 'left_01.png'),
-                },
-                'mov2': {
-                    'up': join(_SPRITES, 'mesero', 'up_03png'),
-                    'right': join(_SPRITES, 'mesero', 'right_03.png'),
-                    'down': join(_SPRITES, 'mesero', 'down_03.png'),
-                    'left': join(_SPRITES, 'mesero', 'left_03.png'),
+                'moving': {
+                    '1': {
+                        'up': join(_SPRITES, 'mesero', 'up_01.png'),
+                        'right': join(_SPRITES, 'mesero', 'right_01.png'),
+                        'down': join(_SPRITES, 'mesero', 'down_01.png'),
+                        'left': join(_SPRITES, 'mesero', 'left_01.png'),
+                    },
+                    '2': {
+                        'up': join(_SPRITES, 'mesero', 'up_01.png'),
+                        'right': join(_SPRITES, 'mesero', 'right_01.png'),
+                        'down': join(_SPRITES, 'mesero', 'down_01.png'),
+                        'left': join(_SPRITES, 'mesero', 'left_01.png'),
+                    },
+                    '3': {
+                        'up': join(_SPRITES, 'mesero', 'up_03.png'),
+                        'right': join(_SPRITES, 'mesero', 'right_03.png'),
+                        'down': join(_SPRITES, 'mesero', 'down_03.png'),
+                        'left': join(_SPRITES, 'mesero', 'left_03.png'),
+                    },
                 },
             },
             'snack': {
@@ -105,13 +113,19 @@ PATH = {
                 },
                 'moving': {
                     '1': {
-                        'up': join(_SPRITES, 'mesero', 'up_snack_01png'),
+                        'up': join(_SPRITES, 'mesero', 'up_snack_01.png'),
                         'right': join(_SPRITES, 'mesero', 'right_snack_01.png'),
                         'down': join(_SPRITES, 'mesero', 'down_snack_01.png'),
                         'left': join(_SPRITES, 'mesero', 'left_snack_01.png'),
                     },
                     '2': {
-                        'up': join(_SPRITES, 'mesero', 'up_snack_03png'),
+                        'up': join(_SPRITES, 'mesero', 'up_snack_01.png'),
+                        'right': join(_SPRITES, 'mesero', 'right_snack_01.png'),
+                        'down': join(_SPRITES, 'mesero', 'down_snack_01.png'),
+                        'left': join(_SPRITES, 'mesero', 'left_snack_01.png'),
+                    },
+                    '3': {
+                        'up': join(_SPRITES, 'mesero', 'up_snack_03.png'),
                         'right': join(_SPRITES, 'mesero', 'right_snack_03.png'),
                         'down': join(_SPRITES, 'mesero', 'down_snack_03.png'),
                         'left': join(_SPRITES, 'mesero', 'left_snack_03.png'),
@@ -120,8 +134,24 @@ PATH = {
             },
         },
     },
-    'chef': {},
-    'client': {},
+    'chef': {
+        'idle': join(_SPRITES, 'chef', 'meson_01.png'),
+        'done': join(_SPRITES, 'chef', 'meson_16.png'),
+        'reading': join(_SPRITES, 'chef', 'meson_17.png'),
+        'cooking': {
+            '1': {
+                '1': join(_SPRITES, 'chef', 'meson_13.png'),
+                '2': join(_SPRITES, 'chef', 'meson_14.png'),
+                '3': join(_SPRITES, 'chef', 'meson_15.png'),
+            },
+            '2': {
+                '1': join(_SPRITES, 'chef', 'meson_07.png'),
+                '2': join(_SPRITES, 'chef', 'meson_08.png'),
+                '3': join(_SPRITES, 'chef', 'meson_09.png'),
+            },
+        },
+    },
+    'client': None, # TODO
 }
 
 
@@ -131,8 +161,9 @@ SPRITE_PATH = SpritePath(PATH)
 if __name__ == "__main__":
     # Ejemplos
     BEFORE = PATH['player']['a']['free']['idle']['down']
-    AFTER = SPRITE_PATH[['player', 'a', 'free', 'idle', 'down']]
     print(BEFORE)
+    INFO = ['player', 'a', 'free', 'idle', 'down']
+    AFTER = SPRITE_PATH[INFO]
     print(AFTER)
     print(BEFORE == AFTER)
     print()

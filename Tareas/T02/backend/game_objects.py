@@ -3,10 +3,6 @@ from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
 from config.parametros import PARAMETROS_JUEGO
 
-# TODO: eliminar esto
-PATH_MESERO = R'sprites\mesero\down_02.png'
-PATH_MESA = R'sprites\mapa\accesorios\silla_mesa_roja.png'
-PATH_CHEF = R'sprites\chef\meson_01.png'
 
 _CELL_SIZE = PARAMETROS_JUEGO['mapa']['tamaño celda']
 
@@ -15,7 +11,7 @@ class GameObject(QObject):
     '''Clase abstracta de un objeto del juego'''
     signal_update_sprite = pyqtSignal(dict)
     id_counter = 0
-    def __init__(self, x, y, width, height, sprite_path):
+    def __init__(self, x, y, width, height):
         super().__init__()
         self.class_name = type(self).__name__.lower()
         self._id = self.class_name + str(self.id_counter)
@@ -23,7 +19,6 @@ class GameObject(QObject):
         self._x = int(x)
         self._y = int(y)
         self.size = (int(width) * _CELL_SIZE, int(height) * _CELL_SIZE)
-        self._sprite_path = str(sprite_path)  # TODO: remove
         self._object_state = [self.class_name]
 
     def __repr__(self):
@@ -42,7 +37,6 @@ class GameObject(QObject):
             'pos': self.position,
             'size': self.size,
             'state': tuple(self._object_state),
-            'sprite_path': self._sprite_path, # TODO: eliminar
         }
 
 
@@ -53,10 +47,11 @@ class Player(GameObject):
     Bonus: Dos jugadores al mismo tiempo.
     '''
     def __init__(self, x, y):
-        super().__init__(x, y, 1, 2, PATH_MESERO)
-        # estado = (disfraz, libre o ocupado, tipo movimiento, direc movimiento)
-        self._object_state += ('a', 'free', 'idle', 'down')
+        super().__init__(x, y, 1, 2)
+        # estado = (jugador, disfraz, libre o ocupado, tipo movimiento, direc movimiento)
+        self._object_state += ['a', 'free', 'idle', 'down']
         self._move_speed = _CELL_SIZE/2
+        # TODO: movemet_keys debe dictar las direcciones del movimiento, no el movimiento en si.
         self._movemet_keys = {'w': (0, -1), 'a': (-1, 0), 's': (0, 1), 'd': (1, 0)}
 
     def move(self, key) -> bool:
@@ -84,7 +79,9 @@ class Chef(GameObject):
     Tienen un nivel de experiencia relacionado con los platos preparador
     '''
     def __init__(self, x, y):
-        super().__init__(x, y, 4, 4, PATH_CHEF)
+        super().__init__(x, y, 4, 4)
+        self._object_state += ['idle']
+        # TODO
         self._exp = int()
         self._dishes = int()
 
@@ -102,7 +99,7 @@ class Chef(GameObject):
 class Table(GameObject):
     '''Mesa donde se pueden sentar los clientes'''
     def __init__(self, x, y):
-        super().__init__(x, y, 1, 2, PATH_MESA)
+        super().__init__(x, y, 1, 2)
         self.client = None
 
 

@@ -64,7 +64,7 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
         '''`obj`: dict con id e información del objeto'''
         new_object = QLabel(self.game_area)
         new_object.setGeometry(*obj['pos'], *obj['size'])
-        new_object.setPixmap(QPixmap(obj['sprite_path']))
+        new_object.setPixmap(QPixmap(SPRITE_PATH[obj['state']]))
         new_object.setScaledContents(True)
         self.game_objects[obj['id']] = new_object
 
