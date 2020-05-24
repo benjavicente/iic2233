@@ -25,7 +25,7 @@ class GameObject(QObject):
     def __init__(self, x: int, y: int, width: int, height: int):
         super().__init__()
         self.class_name = type(self).__name__.lower()
-        self._id = self.class_name + str(GameObject.id_counter)
+        self._id = str(GameObject.id_counter)
         GameObject.id_counter += 1
         self._x = int(x)
         self._y = int(y)
@@ -157,6 +157,13 @@ class Chef(GameObject):
         self._dishes = value
 
 
+class Customer(GameObject):
+    '''Cliente. Es asignado a una mesa aleatoria'''
+    def __init__(self, x: int, y: int, customer_type: str):
+        super().__init__(x, y, 1, 2)
+        self.customer_type = customer_type
+
+
 class Table(GameObject):
     '''Mesa donde se pueden sentar los clientes'''
     def __init__(self, x: int, y: int):
@@ -164,17 +171,10 @@ class Table(GameObject):
         self.free = True
         self.customer = None
 
-    def add_customer(self, customer_type: str):
-        '''Añade un cliente a la mesa'''
+    def add_customer(self, customer_type: str) -> Customer:
+        '''Añade un cliente a la mesa y lo retorna'''
         self.free = False
         self.customer = Customer(*self.position, customer_type)
         print(f'Cliente {customer_type} asignado en la mesa {self._id}')
+        return self.customer
 
-
-
-
-class Customer(GameObject):
-    '''Cliente. Es asignado a una mesa aleatoria'''
-    def __init__(self, x: int, y: int, customer_type: str):
-        super().__init__(x, y, 1, 1)
-        self.customer_type = customer_type

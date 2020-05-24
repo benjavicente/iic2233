@@ -15,7 +15,7 @@ cambiados en la pantalla de inicio
 
 PARAMETROS = {
     "mapa": {
-        "tamaño celda": 25,
+        "tamaño celda": 30,
         "largo": 750,
         "ancho": 450,  # creo que esta malo...
     },
@@ -62,7 +62,7 @@ PARAMETROS = {
         },
     },
     "clientes": {
-        "periodo de llegada": 20,
+        "periodo de llegada": 5,
         "propina": 200,
         "tipos": {
             "relajado" : {

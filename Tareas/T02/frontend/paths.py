@@ -154,8 +154,7 @@ PATH = {
             },
         },
     },
-    'client':
-        ''
+    'customer': join(_SPRITES, 'bonus', 'presidente.png')
 }
 
 

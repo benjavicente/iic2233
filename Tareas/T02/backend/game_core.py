@@ -1,18 +1,14 @@
 '''Administrador del Juego'''
 
-from PyQt5.QtCore import QObject, pyqtSignal, QTimer
-#from random import randint
+from random import choices, shuffle
+
+from PyQt5.QtCore import QObject, pyqtSignal
 
 from backend.game_objects import Player, Chef, Table, Cafe
 from backend.clock import GameClock
 from backend.paths import PATH_DATOS, PATH_MAPA
+
 from config.parametros import PARAMETROS
-
-
-'''TODO list
-Ver QTimer.singleShot y otras propiedades de timer
-https://doc.qt.io/qtforpython/PySide2/QtCore/QTimer.html?highlight=qtimer#PySide2.QtCore.QTimer
-'''
 
 
 class GameCore(QObject):
@@ -30,12 +26,14 @@ class GameCore(QObject):
 
     def __init__(self):
         super().__init__()
-        # Entidades
         self.cafe = Cafe()
         self.players = list()
         self.chefs = list()
         self.tables = list()
-        self.customers = list()
+        self.set_up()
+
+    def set_up(self):
+        '''Crea objetos para el manejo del juego'''
         # Diccionario de acceso
         self.object_lists = {
             'mesero': self.players,
@@ -51,6 +49,15 @@ class GameCore(QObject):
             event=self.new_customer,
             interval=PARAMETROS['clientes']['periodo de llegada'],
         )
+        # Posibilidades de tipos del cliente
+        self.posible_clients = list()
+        for client_name, client_info in PARAMETROS['clientes']['tipos'].items():
+            # TODO
+            print(client_name)
+            print(client_info)
+            client_wait_time = client_info['tiempo de espera']
+            client_probability = client_info['probabilidad']
+
 
     def add_key(self, key: str):
         # TODO
@@ -121,11 +128,22 @@ class GameCore(QObject):
         '''Mueve al jugador'''
         for player in self.players:
             if player.move(key):  # Si el jugador se movió
+                print(player.display_info)
                 self.signal_update_pos.emit(player.display_info)
 
     def new_customer(self):
         '''Llega un cliente a la tienda. Si hay mesas, se sienta y espera un pedido'''
         print('Ha llegado un cliente!')
+        # Revuelve las mesas para que el la mesa sea al azar
+        shuffle(self.tables)
+        # Buscar si hay mesas
+        for table in self.tables:
+            if table.free:
+                # Generar cliente
+                customer = table.add_customer('cliente X')
+                self.signal_add_new_object.emit(customer.display_info)
+                return
+
 
 
 def get_last_game_data() -> dict:
