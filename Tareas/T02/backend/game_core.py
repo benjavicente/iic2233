@@ -143,11 +143,15 @@ class GameCore(QObject):
 
     def pause_game(self):
         '''Pausa el juego'''
+        # TODO
         self.clock_customer_spawn.pause_()
+        self.clock_check_keys.pause_()
 
     def continue_game(self):
         '''Continua el juego'''
+        # TODO
         self.clock_customer_spawn.continue_()
+        self.clock_check_keys.continue_()
 
     def start_round(self):
         '''Empieza una ronda'''

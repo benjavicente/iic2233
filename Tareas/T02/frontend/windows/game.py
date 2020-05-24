@@ -17,6 +17,9 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
     signal_key_press = pyqtSignal(int)
     signal_key_relase = pyqtSignal(int)
 
+    signal_pause_game = pyqtSignal()
+    signal_continue_game = pyqtSignal()
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -25,6 +28,9 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
         self.y_game_offset = 0
         # Objetos del juego a mostrar en el cuadro de juego
         self.game_objects = dict()
+        # Pausa/Continuar
+        self.paused = False
+        self.button_time.pressed.connect(self.pause_continue)
 
     def add_style(self):
         '''
@@ -63,6 +69,21 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
 
     def keyReleaseEvent(self, key_event):
         self.signal_key_relase.emit(key_event.key())
+
+    def pause_continue(self):
+        '''
+        Pausa o continua el juego.
+        Cambia el texto del botón
+        '''
+        if self.paused:
+            self.button_time.setText('Pausar')
+            self.game_area.setDisabled(False)
+            self.signal_continue_game.emit()
+        else:
+            self.button_time.setText('Seguir')
+            self.game_area.setDisabled(True)
+            self.signal_pause_game.emit()
+        self.paused = not self.paused
 
     def update_cafe_stats(self, stats: dict):
         self.rep.setText(stats['rep'])
@@ -105,7 +126,6 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
         # Se añade decoración
         for x_pos in range(0, grid_width, 2):
             decoration = QLabel(self.game_area)
-            decoration.setStyleSheet('background: blue')
             if x_pos % 4:
                 decoration.setPixmap(QPixmap(PATH['map']['window']))
                 decoration.setFixedSize(cell_size * 2, cell_size * 4)

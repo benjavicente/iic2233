@@ -36,6 +36,8 @@ if __name__ == "__main__":
     GAME_WINDOW.signal_key_press.connect(GAME_CORE.add_key)
     GAME_WINDOW.signal_key_relase.connect(GAME_CORE.remove_key)
 
+    GAME_WINDOW.signal_pause_game.connect(GAME_CORE.pause_game)
+    GAME_WINDOW.signal_continue_game.connect(GAME_CORE.continue_game)
 
     INITIAL_WINDOW.show()
 
