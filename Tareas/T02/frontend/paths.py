@@ -6,6 +6,19 @@ from os.path import join
 from os import getcwd
 
 
+class SpritePathError(Exception):
+    '''Error en el mal manejo de SpritePath'''
+    def __init__(self, key, curret_level):
+        last_level = '\n'.join([f'\t{repr(key)}: {repr(value)}'
+                                for key, value in curret_level.items()])
+        mesage = '\n'.join([
+            f"La llave {repr(key)} no en existe en el último nivel obtenido.",
+            f"Ultimo nivel obtenido:", last_level
+        ])
+        super().__init__(mesage)
+
+
+
 class SpritePath(dict):
     '''
     Clase Auxiliar que permite obtener valores
@@ -24,29 +37,19 @@ class SpritePath(dict):
     sin un snack, quieto y mirando hacia abajo.
     '''
     def __getitem__(self, index_values: list):
+        curret_level = dict(self)
         # Si el index no es una lista (o tupla) se llama normalmente
         if not isinstance(index_values, (list, tuple)):
-            return super().__getitem__(index_values)
+            return curret_level[index_values]
         # En al caso que es una lista, se itera por la lista
         # donde cade elemento es la llave del valor anterior
-        curret_level = dict(self)
         for key in index_values:
             if isinstance(curret_level, dict) and key in curret_level:
                 # Si es un diccionario se obtiene el valor
-                curret_level = curret_level.__getitem__(key)
+                curret_level = curret_level[key]
             else:
-                # Si la llave no está o no es valida,
-                # se muestra el último nivel
-                # obtenido para poder identificar el error
-                last_level = '\n'.join(list(map(
-                    lambda key, value: f'\t{repr(key)}: {repr(value)}',
-                    curret_level.keys(), curret_level.values()
-                )))
-                error = '\n'.join([
-                    f"La llave {repr(key)} no en existe en el último nivel obtenido.",
-                    f"Ultimo nivel obtenido:", last_level
-                ])
-                raise ValueError(error)
+                # Si no es el caso, se levanta un error
+                raise SpritePathError(key, curret_level)
         return curret_level
 
 
@@ -151,7 +154,8 @@ PATH = {
             },
         },
     },
-    'client': None, # TODO
+    'client':
+        ''
 }
 
 
