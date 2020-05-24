@@ -18,21 +18,22 @@ class GameObject(QObject):
     toda la información necesaria para
     mostrar el objeto en la pantalla.
     '''
+    # TODO: ver que hacer con esta señal
     signal_update_sprite = pyqtSignal(dict)
     _CELL_SIZE = PARAMETROS['mapa']['tamaño celda']
     id_counter = 0
     def __init__(self, x: int, y: int, width: int, height: int):
         super().__init__()
         self.class_name = type(self).__name__.lower()
-        self._id = self.class_name + str(self.id_counter)
-        self.id_counter += 1
+        self._id = self.class_name + str(GameObject.id_counter)
+        GameObject.id_counter += 1
         self._x = int(x)
         self._y = int(y)
         self.size = (int(width) * self._CELL_SIZE, int(height) * self._CELL_SIZE)
         self._object_state = [self.class_name]
 
     def __repr__(self):
-        return self.id
+        return self._id
 
     @property
     def position(self):
@@ -160,7 +161,16 @@ class Table(GameObject):
     '''Mesa donde se pueden sentar los clientes'''
     def __init__(self, x: int, y: int):
         super().__init__(x, y, 1, 2)
-        self.client = False
+        self.free = True
+        self.customer = None
+
+    def add_customer(self, customer_type: str):
+        '''Añade un cliente a la mesa'''
+        self.free = False
+        self.customer = Customer(*self.position, customer_type)
+        print(f'Cliente {customer_type} asignado en la mesa {self._id}')
+
+
 
 
 class Customer(GameObject):
