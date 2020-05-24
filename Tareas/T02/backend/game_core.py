@@ -4,6 +4,7 @@ from PyQt5.QtCore import QObject, pyqtSignal, QTimer
 #from random import randint
 
 from backend.game_objects import Player, Chef, Table, Cafe
+from backend.clock import GameClock
 from backend.paths import PATH_DATOS, PATH_MAPA
 from config.parametros import PARAMETROS
 
@@ -45,10 +46,11 @@ class GameCore(QObject):
         self.map_size = (
             int(PARAMETROS['mapa']['largo']), int(PARAMETROS['mapa']['ancho'])
         )
-        # Parametros de la simulación
-        self.customer_spawn_period = PARAMETROS['clientes']['periodo de llegada']
         # Señales y theads de la simulación simulación
-        # TODO
+        self.clock_customer_spawn = GameClock(
+            event=self.new_customer,
+            interval=PARAMETROS['clientes']['periodo de llegada'],
+        )
 
     def add_key(self, key: str):
         # TODO
@@ -61,9 +63,9 @@ class GameCore(QObject):
     def new_game(self) -> None:
         '''Carga un nuevo juego'''
         self.signal_start_game_window.emit()
-        self.cafe.money = PARAMETROS['DCCafé']['inicial']['dinero']
-        self.cafe.rep = PARAMETROS['DCCafé']['inicial']['reputación']
-        self.cafe.clients = PARAMETROS['DCCafé']['inicial']['clientes']
+        self.cafe.money = int(PARAMETROS['DCCafé']['inicial']['dinero'])
+        self.cafe.rep = int(PARAMETROS['DCCafé']['inicial']['reputación'])
+        self.cafe.clients = int(PARAMETROS['DCCafé']['inicial']['clientes'])
         # Creación de chefs aleatorias
         # TODO
         for _ in range(PARAMETROS['DCCafé']['inicial']['chefs']):
@@ -78,9 +80,9 @@ class GameCore(QObject):
         '''Carga un juego'''
         self.signal_start_game_window.emit()
         data = get_last_game_data()
-        self.cafe.money = data['money']
-        self.cafe.rep = data['rep']
-        self.cafe.rounds = data['rounds']
+        self.cafe.money = int(data['money'])
+        self.cafe.rep = int(data['rep'])
+        self.cafe.rounds = int(data['rounds'])
         for object_name, pos_x, pos_y in data['map']:
             new_object = self.object_classes[object_name](pos_x, pos_y)
             if isinstance(new_object, Chef):
@@ -94,22 +96,23 @@ class GameCore(QObject):
         '''Sale del juego'''
         pass
 
-    def pause_game(self):
-        '''Pausa el juego'''
-        pass
-
-    def continue_game(self):
-        '''Continua el juego'''
-        pass
-
     def save_game(self):
         '''Guarda el juego'''
         pass
 
+    def pause_game(self):
+        '''Pausa el juego'''
+        self.clock_customer_spawn.pause_()
+
+    def continue_game(self):
+        '''Continua el juego'''
+        self.clock_customer_spawn.continue_()
+
     def start_round(self):
         '''Empieza una ronda'''
-        # TODO: esto tiene que estar conectado a un thread que maneje los tiempos
         self.signal_update_cafe_stats.emit(self.cafe.stats)
+        self.clock_customer_spawn.set_rep(self.cafe.round_clients)
+        self.clock_customer_spawn.start()
 
     def move_player(self, key: str):
         # TODO: esto no evita que el jugador no colisione
@@ -119,6 +122,10 @@ class GameCore(QObject):
         for player in self.players:
             if player.move(key):  # Si el jugador se movió
                 self.signal_update_pos.emit(player.display_info)
+
+    def new_customer(self):
+        '''Llega un cliente a la tienda. Si hay mesas, se sienta y espera un pedido'''
+        print('Ha llegado un cliente!')
 
 
 def get_last_game_data() -> dict:

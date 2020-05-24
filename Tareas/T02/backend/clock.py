@@ -15,14 +15,24 @@ class GameClock(QTimer):
     '''
     Implementación de un QTimer con un método de pausa y continuar,
     además de la posibilidad de añadir un número de repeticiones y
-    un evento a llamar al terminar las repeticiones, pararlo o continuarlo.
+    eventos al terminar las repeticiones, pararlo o continuarlo.
     '''
-    def __init__(self, event=None, interval: int = 1000, rep: int = -1,
+    def __init__(self, event=None, interval: int = 1, rep: int = -1,
                  final_event=None, paused_event=None, continue_event=None):
+        '''
+        Parámetros:
+            event, final_event, paused_event, continue_event
+        Evaluable (función o método)
+            interval
+        Tiempo en segundos en el que se realiza el evento principal
+            rep
+        Repeticiones que realiza el reloj.
+        Por defecto se repite indefinidamente
+        '''
         super().__init__()
         # Parámetros
         self._counter = rep
-        self._interval = interval
+        self._interval = interval * 1000
         self._remaining_time = False
         # Eventos
         self._event = event
@@ -30,17 +40,22 @@ class GameClock(QTimer):
         self._paused_event = paused_event
         self._continue_event = continue_event
         # QTimer setup
-        self.setInterval(interval)
+        self.setInterval(self._interval)
         self.timeout.connect(self.__call_event)
 
     def is_paused(self) -> bool:
         '''Verifica que si el reloj esta pausado'''
         return not self._remaining_time
 
+    def set_rep(self, value: int) -> None:
+        '''Redefine el número de repeticiones que realiza el reloj'''
+        if not self.isActive():
+            self._counter = value
+
     def pause_(self) -> None:
         '''Pausa el reloj'''
         if not self.isActive():
-            raise GameClockError('El reloj ya está pausado')
+            raise GameClockError('El reloj está pausado o no ha empezado')
         else:
             self._remaining_time = self.remainingTime()
             if self._paused_event:
@@ -89,7 +104,7 @@ if __name__ == "__main__":
     sys.__excepthook__ = lambda t, v, trace: print(t, v, trace, sep="\n")
     APP = QApplication(sys.argv)
 
-    EVENT = lambda: print('Hola! Terminé un ciclo')
+    EVENT = lambda: print('Hola! Terminé un ciclo de 5 segundos')
     FINAL_EVENT = lambda: print('Me voy')
     PAUSE_EVENT = lambda: print('Esperando...')
     CONTINUE_EVENT = lambda: print('Aquí volví')

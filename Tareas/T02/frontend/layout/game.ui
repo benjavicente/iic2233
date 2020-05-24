@@ -492,7 +492,7 @@
        <item>
         <widget class="QPushButton" name="button_time">
          <property name="text">
-          <string>Continuar</string>
+          <string>Pausar</string>
          </property>
         </widget>
        </item>
