@@ -62,7 +62,7 @@ PARAMETROS = {
         },
     },
     "clientes": {
-        "periodo de llegada": 5,
+        "periodo de llegada": 14,
         "propina": 200,
         "tipos": {
             "relajado" : {

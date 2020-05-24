@@ -2,13 +2,20 @@
 Clases del los objetos del juego DCCafé
 '''
 
-from PyQt5.QtCore import QObject, pyqtSignal, QThread
+from PyQt5.QtCore import QObject, pyqtSignal
 from math import floor
 
 
 from config.parametros import PARAMETROS
 from backend.clock import GameClock
 
+
+def generate_ids():
+    '''Genera un id para cada objeto'''
+    counter = 0
+    while True:
+        yield counter
+        counter += 1
 
 
 class GameObject(QObject):
@@ -19,19 +26,22 @@ class GameObject(QObject):
     toda la información necesaria para
     mostrar el objeto en la pantalla.
     '''
-    # TODO: ver que hacer con esta señal
-    signal_update_sprite = pyqtSignal(dict)
+
+    signal_create_object = pyqtSignal(dict)
+    signal_update_object = pyqtSignal(dict)
+    signal_delete_object = pyqtSignal(dict)
+
     _CELL_SIZE = PARAMETROS['mapa']['tamaño celda']
-    id_counter = 0
-    def __init__(self, x: int, y: int, width: int, height: int):
+    id_counter = generate_ids()
+
+    def __init__(self, x: int, y: int, width: int, height: int, initial_state: list):
         super().__init__()
         self.class_name = type(self).__name__.lower()
-        self._id = str(GameObject.id_counter)
-        GameObject.id_counter += 1
+        self._id = str(next(GameObject.id_counter))
         self._x = int(x)
         self._y = int(y)
         self.size = (int(width) * self._CELL_SIZE, int(height) * self._CELL_SIZE)
-        self._object_state = [self.class_name]
+        self._object_state = [self.class_name] + initial_state
 
     def __repr__(self):
         return self._id
@@ -101,6 +111,7 @@ class Cafe(QObject):
         return self.rep
 
 
+# Game Objects
 
 class Player(GameObject):
     '''
@@ -112,9 +123,8 @@ class Player(GameObject):
 
     def __init__(self, x: int, y: int):
         # TODO: parametros de disfraz y teclas
-        super().__init__(x, y, 1, 2)
+        super().__init__(x, y, 1, 2, ['a', 'free', 'idle', 'down'])
         # estado = (jugador, disfraz, libre o ocupado, tipo movimiento, direc movimiento)
-        self._object_state += ['a', 'free', 'idle', 'down']
         self._movemet_keys = {'w': 'up', 'd': 'right', 's': 'down', 'a': 'left'}
         self.orders = 0
 
@@ -141,8 +151,7 @@ class Chef(GameObject):
     Tienen un nivel de experiencia relacionado con los platos preparador
     '''
     def __init__(self, x: int, y: int):
-        super().__init__(x, y, 4, 4)
-        self._object_state += ['idle']
+        super().__init__(x, y, 4, 4, ['idle'])
         # TODO
         self._exp = int()
         self._dishes = int()
@@ -160,24 +169,34 @@ class Chef(GameObject):
 
 class Customer(GameObject):
     '''Cliente. Es asignado a una mesa aleatoria'''
-    def __init__(self, x: int, y: int, customer_type: str, wait_time: int):
-        super().__init__(x, y, 1, 2)
+    def __init__(self, x: int, y: int, table, customer_type: str, wait_time: int):
+        super().__init__(x, y, 1, 2, [customer_type])
+        self.table = table
         self.wait_time = wait_time
         self.customer_type = customer_type
-        self._object_state += [customer_type]
+        self.clock = GameClock(interval=wait_time, final_event=self.exit_cafe, rep=1)
+        self.clock.start()
+
+    def exit_cafe(self):
+        '''Cliente se retira de la mesa'''
+        print('me voy >:(')
+        self.signal_delete_object.emit(self.display_info)
+        self.table.free = True
+        self.table.customer = None
+
 
 
 class Table(GameObject):
     '''Mesa donde se pueden sentar los clientes'''
     def __init__(self, x: int, y: int):
-        super().__init__(x, y, 1, 2)
+        super().__init__(x, y, 1, 2, [])
         self.free = True
         self.customer = None
 
     def add_customer(self, customer_type: str, wait_time: int) -> Customer:
         '''Añade un cliente a la mesa y lo retorna'''
         self.free = False
-        self.customer = Customer(*self.position, customer_type, wait_time)
+        self.customer = Customer(*self.position, self, customer_type, wait_time)
         print(f'Cliente {customer_type} asignado en la mesa {self._id}')
         return self.customer
 

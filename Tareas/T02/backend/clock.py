@@ -16,6 +16,9 @@ class GameClock(QTimer):
     Implementación de un QTimer con un método de pausa y continuar,
     además de la posibilidad de añadir un número de repeticiones y
     eventos al terminar las repeticiones, pararlo o continuarlo.
+
+    El evento se realiza también en la primera
+    al llamar el método start cuando se inicia.
     '''
     def __init__(self, event=None, interval: int = 1, rep: int = -1,
                  final_event=None, paused_event=None, continue_event=None):
@@ -34,6 +37,7 @@ class GameClock(QTimer):
         self._counter = rep
         self._interval = interval * 1000
         self._remaining_time = False
+        self.__started = False
         # Eventos
         self._event = event
         self._final_event = final_event
@@ -42,6 +46,13 @@ class GameClock(QTimer):
         # QTimer setup
         self.setInterval(self._interval)
         self.timeout.connect(self.__call_event)
+
+    def start(self, *args):
+        '''Overrite de start. Ejecuta el evento.'''
+        if not self.__started and self._event:
+            self.__started = True
+            self._event()
+        super().start(*args)
 
     def is_paused(self) -> bool:
         '''Verifica que si el reloj esta pausado'''

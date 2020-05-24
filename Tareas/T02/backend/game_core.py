@@ -4,7 +4,7 @@ from random import choices, shuffle
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
-from backend.game_objects import Player, Chef, Table, Cafe
+from backend.game_objects import GameObject, Player, Chef, Table, Cafe
 from backend.clock import GameClock
 from backend.paths import PATH_DATOS, PATH_MAPA
 
@@ -46,7 +46,7 @@ class GameCore(QObject):
         self.map_size = (
             int(PARAMETROS['mapa']['largo']), int(PARAMETROS['mapa']['ancho'])
         )
-        # Señales y theads de la simulación simulación
+        # Relojes de la simulación
         self.clock_customer_spawn = GameClock(
             event=self.new_customer,
             interval=PARAMETROS['clientes']['periodo de llegada'],
@@ -133,7 +133,6 @@ class GameCore(QObject):
         '''Mueve al jugador'''
         for player in self.players:
             if player.move(key):  # Si el jugador se movió
-                print(player.display_info)
                 self.signal_update_object.emit(player.display_info)
 
     def new_customer(self):
@@ -152,6 +151,8 @@ class GameCore(QObject):
                 )[0]
                 print(new_client_type, new_client_wait_time)
                 customer = table.add_customer(new_client_type, new_client_wait_time)
+                #! TEST
+                customer.signal_delete_object.connect(self.signal_delete_object.emit)
                 self.signal_add_new_object.emit(customer.display_info)
                 return
 
