@@ -57,7 +57,7 @@ class GameCore(QObject):
         )
         self.clock_check_keys = GameClock(
             event=self.check_keys,
-            interval=0.01,  # Frecuencia de obtención de teclas
+            interval=self.key_access_rate,  # Frecuencia de obtención de teclas
         )
         # Posibilidades de tipos del cliente
         #* El formato puede mejorar
@@ -152,16 +152,15 @@ class GameCore(QObject):
     def start_round(self):
         '''Empieza una ronda'''
         self.signal_update_cafe_stats.emit(self.cafe.stats)
-        self.clock_customer_spawn.set_rep(self.cafe.round_clients)
+        self.remaining_clients = self.cafe.round_clients
         self.clock_customer_spawn.start()
         self.clock_check_keys.start()
 
     def new_customer(self):
         '''Llega un cliente a la tienda. Si hay mesas, se sienta y espera un pedido'''
         print('Ha llegado un cliente!')
-        # Revuelve las mesas para que el la mesa sea al azar
         shuffle(self.tables)
-        # Buscar si hay mesas
+        #self.clock_customer_spawn.pause_()
         for table in self.tables:
             if table.free:
                 # Generar cliente
@@ -171,10 +170,17 @@ class GameCore(QObject):
                 )[0]
                 print(new_client_type, new_client_wait_time)
                 customer = table.add_customer(new_client_type, new_client_wait_time)
-                #! TEST
+                #! TEST: funciona, pero el código es mejorable
                 customer.signal_delete_object.connect(self.signal_delete_object.emit)
                 self.signal_add_new_object.emit(customer.display_info)
+                self.remaining_clients -= 1
                 return
+        else:
+            print('El cliente se ha ido, volverá luego')
+        if not self.remaining_clients:
+            print('Se han acabado los clientes!')
+            self.clock_customer_spawn.stop()
+
 
 
 
