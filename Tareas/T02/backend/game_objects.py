@@ -80,8 +80,8 @@ class Cafe(QObject):
     @property
     def round_clients(self):
         '''Clientes de la ronda'''
-        alpha = PARAMETROS['clientes por ronda']['factor']
-        beta = PARAMETROS['clientes por ronda']['base']
+        alpha = PARAMETROS['DCCafé']['calculos']['clientes por ronda']['factor']
+        beta = PARAMETROS['DCCafé']['calculos']['clientes por ronda']['base']
         return alpha * (beta + self.rounds)
 
     def get_new_rep(self) -> int:
@@ -90,10 +90,10 @@ class Cafe(QObject):
         Guarda el valor en el objeto y lo retorna.
         Solo debe ejecutarse al terminar la ronda.
         '''
-        min_value = PARAMETROS['reputación']['mínimo']
-        max_value = PARAMETROS['reputación']['máximo']
-        alpha = PARAMETROS['reputación']['factor']
-        beta = PARAMETROS['reputación']['resta']
+        min_value = PARAMETROS['DCCafé']['calculos']['reputación']['mínimo']
+        max_value = PARAMETROS['DCCafé']['calculos']['reputación']['máximo']
+        alpha = PARAMETROS['DCCafé']['calculos']['reputación']['factor']
+        beta = PARAMETROS['DCCafé']['calculos']['reputación']['resta']
         expr = self.rep + floor(alpha * self.completed_orders/self.total_orders - beta)
         self.rep = max(min_value, min(max_value, expr))
         return self.rep
