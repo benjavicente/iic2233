@@ -17,8 +17,7 @@ class GameClock(QTimer):
     además de la posibilidad de añadir un número de repeticiones y
     eventos al terminar las repeticiones, pararlo o continuarlo.
 
-    El evento se realiza también en la primera
-    al llamar el método start cuando se inicia.
+    El evento principal también es llamado al iniciar el reloj.
     '''
     def __init__(self, event=None, interval: int = 1, rep: int = -1,
                  final_event=None, paused_event=None, continue_event=None):
@@ -48,7 +47,7 @@ class GameClock(QTimer):
         self.timeout.connect(self.__call_event)
 
     def start(self, *args):
-        '''Overrite de start. Ejecuta el evento.'''
+        '''Overrite de start. Ejecuta el evento si es que tiene uno.'''
         if not self.__started and self._event:
             self.__started = True
             self._event()

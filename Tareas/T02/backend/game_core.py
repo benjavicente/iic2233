@@ -2,7 +2,7 @@
 
 from random import choices, shuffle
 
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal, Qt
 
 from backend.game_objects import GameObject, Player, Chef, Table, Cafe
 from backend.clock import GameClock
@@ -36,6 +36,8 @@ class GameCore(QObject):
 
     def set_up(self):
         '''Crea objetos para el manejo del juego'''
+        # Parámetros especiales
+        self.key_access_rate = 0.05  # En segundos
         # Diccionario de acceso
         self.object_lists = {
             'mesero': self.players,
@@ -46,10 +48,16 @@ class GameCore(QObject):
         self.map_size = (
             int(PARAMETROS['mapa']['largo']), int(PARAMETROS['mapa']['ancho'])
         )
+        # Set de teclas precionadas
+        self.pressed_keys = set()
         # Relojes de la simulación
         self.clock_customer_spawn = GameClock(
             event=self.new_customer,
             interval=PARAMETROS['clientes']['periodo de llegada'],
+        )
+        self.clock_check_keys = GameClock(
+            event=self.check_keys,
+            interval=0.01,  # Frecuencia de obtención de teclas
         )
         # Posibilidades de tipos del cliente
         #* El formato puede mejorar
@@ -61,14 +69,35 @@ class GameCore(QObject):
             probability = float(c_info['probabilidad'])
             self.posible_clients.append((client_type, wait_time, probability))
 
-    # TODO: _API_ para el movimiento y las teclas especiales
+    # 24/05
+    # La idea de usar sets para crear un _API_ de teclas apretadas
+    # está en multiples foros. Se menciona la aplicación de un event-filter,
+    # pero creo que no es compatible con la forma ehn que estoy modelando el
+    # backend y frontend.
+
     def add_key(self, key: str):
-        # TODO
-        pass
+        '''Añade una tecla al las teclas precionadas'''
+        self.pressed_keys.add(key)
 
     def remove_key(self, key: str):
+        '''Remueve una tecla al las teclas precionadas'''
+        self.pressed_keys.remove(key)
+
+    def check_keys(self):
+        '''
+        Revisa si hay teclas precionadas.
+        Si es que hay, se revisa cuales y
+        se se ejecutan las acciones asociadas.
+        '''
         # TODO
-        pass
+        if self.pressed_keys:
+            print(self.pressed_keys)
+            for key in self.pressed_keys:
+                for player in self.players:
+                    #! Aquí debe verse las colisiones del jugador
+                    if player.move(key):
+                        pass
+                    self.signal_update_object.emit(player.display_info)
 
     def new_game(self) -> None:
         '''Carga un nuevo juego'''
@@ -125,15 +154,7 @@ class GameCore(QObject):
         self.signal_update_cafe_stats.emit(self.cafe.stats)
         self.clock_customer_spawn.set_rep(self.cafe.round_clients)
         self.clock_customer_spawn.start()
-
-    def move_player(self, key: str):
-        # TODO: esto no evita que el jugador no colisione
-        # TODO: buscar una manera de ver la posición final cantes de actualizarla
-        #! Mejor rehacer el movimiento de los jugadores de 0
-        '''Mueve al jugador'''
-        for player in self.players:
-            if player.move(key):  # Si el jugador se movió
-                self.signal_update_object.emit(player.display_info)
+        self.clock_check_keys.start()
 
     def new_customer(self):
         '''Llega un cliente a la tienda. Si hay mesas, se sienta y espera un pedido'''
@@ -144,7 +165,6 @@ class GameCore(QObject):
         for table in self.tables:
             if table.free:
                 # Generar cliente
-                print(self.posible_clients)
                 new_client_type, new_client_wait_time, _ = choices(
                     self.posible_clients,
                     weights=[x[-1] for x in self.posible_clients]

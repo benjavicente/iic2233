@@ -2,7 +2,7 @@
 Clases del los objetos del juego DCCafé
 '''
 
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal, Qt
 from math import floor
 
 
@@ -125,17 +125,21 @@ class Player(GameObject):
         # TODO: parametros de disfraz y teclas
         super().__init__(x, y, 1, 2, ['a', 'free', 'idle', 'down'])
         # estado = (jugador, disfraz, libre o ocupado, tipo movimiento, direc movimiento)
-        self._movemet_keys = {'w': 'up', 'd': 'right', 's': 'down', 'a': 'left'}
+        self.movemet_keys = {Qt.Key_W: 'up', Qt.Key_D: 'right', Qt.Key_S: 'down', Qt.Key_A: 'left'}
         self.orders = 0
 
     def move(self, key) -> bool:
+        #! Este método debe re-implementarse.
+        #! La forma actual no puede detectar colisiones
+        #! y no es muy eficaz con ña implementación nueva
+        #! de la obtención de teclas en GameCore.
         '''
         Mueve al jugador según la tecla `key`
         Retorna si se pudo mover le jugador con esa tecla
         '''
         # * Signal de KeyPressEvent
-        if key in self._movemet_keys:
-            direction = self._movemet_keys[key]
+        if key in self.movemet_keys:
+            direction = self.movemet_keys[key]
             self._object_state[4] = direction
             move_x, move_y = self._movemet_direction[direction]
             self._x += move_x * self._movement_speed

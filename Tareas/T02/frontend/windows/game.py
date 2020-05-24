@@ -4,7 +4,7 @@ Ventana del Juego DCCafé
 
 from PyQt5 import uic
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QPixmap, QCursor
+from PyQt5.QtGui import QPixmap, QCursor, QKeyEvent
 from PyQt5.QtWidgets import QLabel
 
 from frontend.paths import PATH, SPRITE_PATH
@@ -13,8 +13,9 @@ from frontend.themes import GAME_THEME
 
 class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
     '''Ventana del juego'''
-    signal_key_press = pyqtSignal(str)
-    signal_key_relase = pyqtSignal(str)
+
+    signal_key_press = pyqtSignal(int)
+    signal_key_relase = pyqtSignal(int)
 
     def __init__(self):
         super().__init__()
@@ -57,11 +58,11 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
     #! Lo anterior no funciona. Puede ser que sea necesario
     #! añadir un filtro a los eventos de la ventana.
 
-    def keyPressEvent(self, event):
-        self.signal_key_press.emit(event.text())
+    def keyPressEvent(self, key_event):
+        self.signal_key_press.emit(key_event.key())
 
-    def keyReleaseEvent(self, event):
-        self.signal_key_relase.emit(event.text())
+    def keyReleaseEvent(self, key_event):
+        self.signal_key_relase.emit(key_event.key())
 
     def update_cafe_stats(self, stats: dict):
         self.rep.setText(stats['rep'])

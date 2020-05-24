@@ -33,9 +33,6 @@ if __name__ == "__main__":
     GAME_CORE.signal_start_game_window.connect(GAME_WINDOW.start)
     GAME_CORE.signal_update_cafe_stats.connect(GAME_WINDOW.update_cafe_stats)
 
-    # TODO: eliminar que directamente el jugador se mueva al presionar una teclas
-    GAME_WINDOW.signal_key_press.connect(GAME_CORE.move_player)
-
     GAME_WINDOW.signal_key_press.connect(GAME_CORE.add_key)
     GAME_WINDOW.signal_key_relase.connect(GAME_CORE.remove_key)
 
