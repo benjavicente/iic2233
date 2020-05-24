@@ -48,10 +48,7 @@ class GameCore(QObject):
         # Parametros de la simulación
         self.customer_spawn_period = PARAMETROS['clientes']['periodo de llegada']
         # Señales y theads de la simulación simulación
-        self.customer_spawn_clock = QTimer()
-        #self.customer_spawn_clock.timeout.connect(self.customer_spawn)
-        self.test = GameClock()
-        self.test.start()
+        # TODO
 
     def add_key(self, key: str):
         # TODO
@@ -113,7 +110,6 @@ class GameCore(QObject):
         '''Empieza una ronda'''
         # TODO: esto tiene que estar conectado a un thread que maneje los tiempos
         self.signal_update_cafe_stats.emit(self.cafe.stats)
-        self.customer_spawn_clock.start()
 
     def move_player(self, key: str):
         # TODO: esto no evita que el jugador no colisione
