@@ -1,12 +1,17 @@
 '''Administrador del Juego'''
 
-from PyQt5.QtCore import QObject, pyqtSignal, QThread
+from PyQt5.QtCore import QObject, pyqtSignal, QTimer
 #from random import randint
 
 from backend.game_objects import Player, Chef, Table, Cafe
 from backend.paths import PATH_DATOS, PATH_MAPA
 from config.parametros import PARAMETROS
 
+
+'''TODO list
+Ver QTimer.singleShot y otras propiedades de timer
+https://doc.qt.io/qtforpython/PySide2/QtCore/QTimer.html?highlight=qtimer#PySide2.QtCore.QTimer
+'''
 
 
 class GameCore(QObject):
@@ -40,6 +45,21 @@ class GameCore(QObject):
         self.map_size = (
             int(PARAMETROS['mapa']['largo']), int(PARAMETROS['mapa']['ancho'])
         )
+        # Parametros de la simulación
+        self.customer_spawn_period = PARAMETROS['clientes']['periodo de llegada']
+        # Señales y theads de la simulación simulación
+        self.customer_spawn_clock = QTimer()
+        #self.customer_spawn_clock.timeout.connect(self.customer_spawn)
+        self.test = GameClock()
+        self.test.start()
+
+    def add_key(self, key: str):
+        # TODO
+        pass
+
+    def remove_key(self, key: str):
+        # TODO
+        pass
 
     def new_game(self) -> None:
         '''Carga un nuevo juego'''
@@ -81,6 +101,10 @@ class GameCore(QObject):
         '''Pausa el juego'''
         pass
 
+    def continue_game(self):
+        '''Continua el juego'''
+        pass
+
     def save_game(self):
         '''Guarda el juego'''
         pass
@@ -89,10 +113,12 @@ class GameCore(QObject):
         '''Empieza una ronda'''
         # TODO: esto tiene que estar conectado a un thread que maneje los tiempos
         self.signal_update_cafe_stats.emit(self.cafe.stats)
+        self.customer_spawn_clock.start()
 
     def move_player(self, key: str):
         # TODO: esto no evita que el jugador no colisione
         # TODO: buscar una manera de ver la posición final cantes de actualizarla
+        #! Mejor rehacer el movimiento de los jugadores de 0
         '''Mueve al jugador'''
         for player in self.players:
             if player.move(key):  # Si el jugador se movió
@@ -114,3 +140,6 @@ def get_last_game_data() -> dict:
         last_game_data[key] = value
     last_game_data['dishes'] = dishes.split(',')
     return last_game_data
+
+
+

@@ -13,7 +13,8 @@ from frontend.themes import GAME_THEME
 
 class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
     '''Ventana del juego'''
-    signal_keypress = pyqtSignal(str)
+    signal_key_press = pyqtSignal(str)
+    signal_key_relase = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -46,12 +47,23 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
         self.grabKeyboard()
         self.show()
 
+    # 23/05
+    # Por lo que tengo entendido, Qt no tiene un _API_ para trabar con
+    # input del teclado de forma continua (evitando el retardo al
+    # presionar constántemente una tecla), por lo que se tiene que
+    # crear una. GameCore será encargado de almacenar cuales teclas
+    # están siendo precionadas y un thread sera encargado de realizar
+    # las acciones de las teclas asociadas.
+    #! Lo anterior no funciona. Puede ser que sea necesario
+    #! añadir un filtro a los eventos de la ventana.
+
     def keyPressEvent(self, event):
-        # TODO: este método no entrega señales completamente continuas
-        self.signal_keypress.emit(event.text())
+        self.signal_key_press.emit(event.text())
+
+    def keyReleaseEvent(self, event):
+        self.signal_key_relase.emit(event.text())
 
     def update_cafe_stats(self, stats: dict):
-        print(repr(stats['rep']))
         self.rep.setText(stats['rep'])
         self.money.setText(stats['money'])
         self.round.setText(stats['round'])
@@ -61,7 +73,6 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
 
 
     def move_object(self, obj: dict):
-        print(obj)  # TODO: remove
         self.game_objects[obj['id']].raise_()
         self.game_objects[obj['id']].setPixmap(QPixmap(SPRITE_PATH[obj['state']]))
         self.game_objects[obj['id']].move(*obj['pos'])
