@@ -18,7 +18,9 @@ class GameCore(QObject):
     '''
 
     signal_add_new_object = pyqtSignal(dict)
-    signal_update_pos = pyqtSignal(dict)
+    signal_update_object = pyqtSignal(dict)
+    signal_delete_object = pyqtSignal(dict)
+
     signal_start_game_window = pyqtSignal()
     signal_update_cafe_stats = pyqtSignal(dict)
 
@@ -50,15 +52,16 @@ class GameCore(QObject):
             interval=PARAMETROS['clientes']['periodo de llegada'],
         )
         # Posibilidades de tipos del cliente
+        #* El formato puede mejorar
         self.posible_clients = list()
-        for client_name, client_info in PARAMETROS['clientes']['tipos'].items():
-            # TODO
-            print(client_name)
-            print(client_info)
-            client_wait_time = client_info['tiempo de espera']
-            client_probability = client_info['probabilidad']
+        client_types = {'relajado': 'hamster', 'apurado': 'dog', 'especial': 'special'}
+        for c_name, c_info in PARAMETROS['clientes']['tipos'].items():
+            client_type = client_types[c_name]
+            wait_time = float(c_info['tiempo de espera'])
+            probability = float(c_info['probabilidad'])
+            self.posible_clients.append((client_type, wait_time, probability))
 
-
+    # TODO: _API_ para el movimiento y las teclas especiales
     def add_key(self, key: str):
         # TODO
         pass
@@ -101,10 +104,12 @@ class GameCore(QObject):
 
     def exit_game(self):
         '''Sale del juego'''
+        # TODO
         pass
 
     def save_game(self):
         '''Guarda el juego'''
+        # TODO
         pass
 
     def pause_game(self):
@@ -129,7 +134,7 @@ class GameCore(QObject):
         for player in self.players:
             if player.move(key):  # Si el jugador se movió
                 print(player.display_info)
-                self.signal_update_pos.emit(player.display_info)
+                self.signal_update_object.emit(player.display_info)
 
     def new_customer(self):
         '''Llega un cliente a la tienda. Si hay mesas, se sienta y espera un pedido'''
@@ -140,7 +145,13 @@ class GameCore(QObject):
         for table in self.tables:
             if table.free:
                 # Generar cliente
-                customer = table.add_customer('cliente X')
+                print(self.posible_clients)
+                new_client_type, new_client_wait_time, _ = choices(
+                    self.posible_clients,
+                    weights=[x[-1] for x in self.posible_clients]
+                )[0]
+                print(new_client_type, new_client_wait_time)
+                customer = table.add_customer(new_client_type, new_client_wait_time)
                 self.signal_add_new_object.emit(customer.display_info)
                 return
 

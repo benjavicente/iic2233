@@ -154,7 +154,11 @@ PATH = {
             },
         },
     },
-    'customer': join(_SPRITES, 'bonus', 'presidente.png')
+    'customer': {
+        'dog': join(_SPRITES, 'clientes', 'perro', 'perro_31.png'),
+        'hamster': join(_SPRITES, 'clientes', 'hamster', 'hamster_13.png'),
+        'special': join(_SPRITES, 'bonus', 'presidente.png'),
+    }
 }
 
 

@@ -27,7 +27,8 @@ if __name__ == "__main__":
     INITIAL_WINDOW.signal_load.connect(GAME_CORE.load_game)
 
     GAME_CORE.signal_add_new_object.connect(GAME_WINDOW.add_new_object)
-    GAME_CORE.signal_update_pos.connect(GAME_WINDOW.move_object)
+    GAME_CORE.signal_update_object.connect(GAME_WINDOW.update_object)
+    GAME_CORE.signal_delete_object.connect(GAME_WINDOW.delete_object)
 
     GAME_CORE.signal_start_game_window.connect(GAME_WINDOW.start)
     GAME_CORE.signal_update_cafe_stats.connect(GAME_WINDOW.update_cafe_stats)

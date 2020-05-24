@@ -67,12 +67,16 @@ PARAMETROS = {
         "tipos": {
             "relajado" : {
                 "tiempo de espera": 30,
-                "probabilidad": 0.3,
+                "probabilidad": 0.35,
             },
             "apurado": {
                 "tiempo de espera": 20,
                 "probabilidad": 0.6,
             },
+            "especial": {
+                "tiempo de espera": 40,
+                "probabilidad": 0.05,
+            }
         },
     },
     "DCCafé": {

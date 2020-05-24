@@ -71,21 +71,24 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
         self.total_orders.setText(stats['total_orders'])
         self.failed_orders.setText(stats['failed_orders'])
 
-
-    def move_object(self, obj: dict):
-        self.game_objects[obj['id']].raise_()
-        self.game_objects[obj['id']].setPixmap(QPixmap(SPRITE_PATH[obj['state']]))
-        self.game_objects[obj['id']].move(*obj['pos'])
-        self.game_objects[obj['id']].raise_()
-
     def add_new_object(self, obj: dict):
-        '''`obj`: dict con id e información del objeto'''
+        '''Crea un nuevo objeto en el area de juego'''
         new_object = QLabel(self.game_area)
         new_object.setGeometry(*obj['pos'], *obj['size'])
         new_object.setPixmap(QPixmap(SPRITE_PATH[obj['state']]))
         new_object.setScaledContents(True)
         self.game_objects[obj['id']] = new_object
         new_object.show()
+
+    def update_object(self, obj: dict):
+        '''Actualiza el sprite y la posición del objeto'''
+        self.game_objects[obj['id']].setPixmap(QPixmap(SPRITE_PATH[obj['state']]))
+        self.game_objects[obj['id']].move(*obj['pos'])
+        self.game_objects[obj['id']].raise_()
+
+    def delete_object(self, obj: dict):
+        '''Elimina un objeto'''
+        self.game_objects[obj['id']].close()
 
     def make_map(self, width: int = 750, height: int = 450, cell_size: int = 25):
         '''Crea el mapa del juego a partir de los mapámetros dados'''

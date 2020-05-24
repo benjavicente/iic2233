@@ -7,6 +7,7 @@ from math import floor
 
 
 from config.parametros import PARAMETROS
+from backend.clock import GameClock
 
 
 
@@ -159,9 +160,11 @@ class Chef(GameObject):
 
 class Customer(GameObject):
     '''Cliente. Es asignado a una mesa aleatoria'''
-    def __init__(self, x: int, y: int, customer_type: str):
+    def __init__(self, x: int, y: int, customer_type: str, wait_time: int):
         super().__init__(x, y, 1, 2)
+        self.wait_time = wait_time
         self.customer_type = customer_type
+        self._object_state += [customer_type]
 
 
 class Table(GameObject):
@@ -171,10 +174,10 @@ class Table(GameObject):
         self.free = True
         self.customer = None
 
-    def add_customer(self, customer_type: str) -> Customer:
+    def add_customer(self, customer_type: str, wait_time: int) -> Customer:
         '''Añade un cliente a la mesa y lo retorna'''
         self.free = False
-        self.customer = Customer(*self.position, customer_type)
+        self.customer = Customer(*self.position, customer_type, wait_time)
         print(f'Cliente {customer_type} asignado en la mesa {self._id}')
         return self.customer
 
