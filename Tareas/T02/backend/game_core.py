@@ -210,20 +210,27 @@ class GameCore(QObject):
         Revisa si el objeto entregado colisiona con algo.
         Retorna una lista con los elementos que coliciona.
         '''
-        x1, y1, w1, h1 = moved_object_hitbox
         collied = list()
         for game_object in self:
             if moved_obj_id == game_object.id:
                 continue
-            x2, y2, w2, h2 = game_object.hit_box
-            # Hay muchas páginas que mencionan como realizar
-            # colisiones entre cuadrados. Mozilla tiene un ejemplo básico:
-            # https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
-            if x1 + w1 > x2 and x1 < x2 + w2 and y1 + h1 > y2 and y1 < y2 + h2:
+            if check_colision(moved_object_hitbox, game_object.hit_box):
                 collied.append(game_object)
+        # Mapa del juego
+        x1, y1, w1, h1 = moved_object_hitbox
+        map_width, map_height = self._map_size
+        if x1 < 0 or y1 < 0 or x1 + w1 > map_width or y1 + h1 > map_height:
+            collied.append(True)
         return collied
 
 
+def check_colision(hitbox1, hitbox2):
+    # Hay muchas páginas que mencionan como realizar
+    # colisiones entre cuadrados. Mozilla tiene un ejemplo básico:
+    # https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+    x1, y1, w1, h1 = hitbox1
+    x2, y2, w2, h2 = hitbox2
+    return x1 + w1 > x2 and x1 < x2 + w2 and y1 + h1 > y2 and y1 < y2 + h2
 
 
 def get_last_game_data() -> dict:
