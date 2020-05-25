@@ -2,9 +2,9 @@
 Clases del los objetos del juego DCCafé
 '''
 
-from PyQt5.QtCore import QObject, pyqtSignal, Qt
 from math import floor
 
+from PyQt5.QtCore import QObject, pyqtSignal, Qt
 
 from config.parametros import PARAMETROS
 from backend.clock import GameClock
@@ -30,20 +30,34 @@ class GameObject(QObject):
     _cell_size = int(PARAMETROS['mapa']['tamaño celda'])
     id_counter = generate_ids()
 
-
     def __init__(self, core, x: int, y: int, width: int, height: int, initial_state: list):
         super().__init__()
-        self.core = core
-        self.class_name = type(self).__name__.lower()
         self._id = str(next(GameObject.id_counter))
         self._x = int(x)
         self._y = int(y)
         self.size = (int(width) * self._cell_size, int(height) * self._cell_size)
-        self._object_state = [self.class_name] + initial_state
-        core.signal_add_new_object.emit(self.display_info)
+        self._object_state = [type(self).__name__.lower()] + initial_state
+        self.core = core
+        self.connect_to_core()
 
     def __repr__(self):
         return self._id
+
+    def connect_to_core(self):
+        '''Conecta las señales con su core asociado'''
+        self.core.signal_add_new_object.emit(self.display_info)
+        self.core.signal_pause_objects.connect(self.object_clock_pause)
+        self.core.signal_resume_objects.connect(self.object_clock_continue)
+
+    def object_clock_pause(self):
+        '''Método para pausar los relojes del objeto'''
+        # TODO
+        pass
+
+    def object_clock_continue(self):
+        '''Método para pausar los relojes del objeto'''
+        # TODO
+        pass
 
     @property
     def position(self):
@@ -59,7 +73,6 @@ class GameObject(QObject):
             'size': self.size,
             'state': tuple(self._object_state),
         }
-
 
 
 class Cafe(QObject):
@@ -184,8 +197,9 @@ class Table(GameObject):
         '''Añade un cliente a la mesa y lo retorna'''
         self.free = False
         self.customer = Customer(self.core, *self.position, self, customer_type, wait_time)
+        self.core.signal_stack_under.emit(self.customer.display_info, self.display_info)
+        self.core.signal_stack_under.emit(self.table.display_info, self.customer.display_info)
         print(f'Cliente {customer_type} asignado en la mesa con id {self._id}')
-        #! La mesa debe encargarse del manejo del cliente, no el GameCore
         return self.customer
 
 

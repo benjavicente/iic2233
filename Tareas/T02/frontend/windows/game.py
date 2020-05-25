@@ -100,11 +100,14 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         '''Actualiza el sprite y la posición del objeto'''
         self.game_objects[obj['id']].setPixmap(QPixmap(SPRITE_PATH[obj['state']]))
         self.game_objects[obj['id']].move(*obj['pos'])
-        self.game_objects[obj['id']].raise_()
 
     def delete_object(self, obj: dict):
         '''Elimina un objeto'''
         self.game_objects[obj['id']].close()
+
+    def stack_under(self, obj_below: dict, obj_above: dict):
+        '''Mueve un objeto detrás de otro'''
+        self.game_objects[obj_below['id']].stackUnder(self.game_objects[obj_above['id']])
 
     def make_map(self, width: int = 750, height: int = 450, cell_size: int = 25):
         '''Crea el mapa del juego a partir de los mapámetros dados'''

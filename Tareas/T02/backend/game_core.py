@@ -19,9 +19,13 @@ class GameCore(QObject):
     signal_add_new_object = pyqtSignal(dict)
     signal_update_object = pyqtSignal(dict)
     signal_delete_object = pyqtSignal(dict)
+    signal_stack_under = pyqtSignal(dict, dict)
 
     signal_start_game_window = pyqtSignal()
     signal_update_cafe_stats = pyqtSignal(dict)
+
+    signal_pause_objects = pyqtSignal()
+    signal_resume_objects = pyqtSignal()
 
     object_classes = {'mesero': Player, 'chef': Chef, 'mesa': Table}
 
@@ -99,7 +103,7 @@ class GameCore(QObject):
                         pass
                     self.signal_update_object.emit(player.display_info)
 
-    def _new_game(self) -> None:
+    def new_game(self) -> None:
         '''Carga un nuevo juego'''
         self.signal_start_game_window.emit()
         self._cafe.money = int(PARAMETROS['DCCafé']['inicial']['dinero'])
@@ -115,7 +119,7 @@ class GameCore(QObject):
             pass
         self.start_round()
 
-    def _load_game(self) -> None:
+    def load_game(self) -> None:
         '''Carga un juego'''
         self.signal_start_game_window.emit()
         data = get_last_game_data()
@@ -145,12 +149,14 @@ class GameCore(QObject):
         # TODO
         self._clock_customer_spawn.pause_()
         self._clock_check_keys.stop()
+        self.signal_pause_objects.emit()
 
-    def continue_game(self) -> None:
+    def resume_game(self) -> None:
         '''Continua el juego'''
         # TODO
         self._clock_customer_spawn.continue_()
         self._clock_check_keys.start()
+        self.signal_resume_objects.emit()
 
     def start_round(self) -> None:
         '''Empieza una ronda'''
