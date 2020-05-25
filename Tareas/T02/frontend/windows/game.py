@@ -17,8 +17,7 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
     signal_key_press = pyqtSignal(int)
     signal_key_relase = pyqtSignal(int)
 
-    signal_pause_game = pyqtSignal()
-    signal_continue_game = pyqtSignal()
+    signal_pause_continue = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -30,7 +29,7 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         self.game_objects = dict()
         # Pausa/Continuar
         self.paused = False
-        self.button_time.pressed.connect(self.pause_continue)
+        self.button_time.pressed.connect(self.signal_pause_continue.emit)
 
     def add_style(self):
         '''
@@ -64,18 +63,15 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         '''Entrega las teclas soltadas al backend'''
         self.signal_key_relase.emit(key_event.key())
 
-    def pause_continue(self):
+    def paused_ui(self, paused: bool):
         '''
         Pausa o continua el juego.
         Cambia el texto del botón.
         '''
-        self.paused = not self.paused
-        self.game_area.setDisabled(self.paused)
-        if self.paused:
-            self.signal_pause_game.emit()
+        self.game_area.setDisabled(paused)
+        if paused:
             self.button_time.setText('Seguir')
         else:
-            self.signal_continue_game.emit()
             self.button_time.setText('Pausar')
 
     def update_cafe_stats(self, stats: dict):

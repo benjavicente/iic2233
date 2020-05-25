@@ -27,6 +27,8 @@ class GameCore(QObject):
     signal_pause_objects = pyqtSignal()
     signal_resume_objects = pyqtSignal()
 
+    signal_show_paused = pyqtSignal(bool)
+
     object_classes = {'mesero': Player, 'chef': Chef, 'mesa': Table}
 
     def __init__(self):
@@ -42,6 +44,7 @@ class GameCore(QObject):
         # Parámetros especiales
         self._key_access_rate = 0.05  # En segundos
         self._remaining_clients = 0
+        self.paused = False
         # Diccionario de acceso
         self._object_lists = {
             'mesero': self._players,
@@ -79,13 +82,17 @@ class GameCore(QObject):
     # pero creo que no es compatible con la forma ehn que estoy modelando el
     # backend y frontend.
 
-    def add_key(self, key: str) -> None:
+    def add_key(self, key: int) -> None:
         '''Añade una tecla al las teclas precionadas'''
-        self._pressed_keys.add(key)
+        if key == Qt.Key_P:
+            pass
+        else:
+            self._pressed_keys.add(key)
 
-    def remove_key(self, key: str) -> None:
+    def remove_key(self, key: int) -> None:
         '''Remueve una tecla al las teclas precionadas'''
-        self._pressed_keys.remove(key)
+        if key != Qt.Key_P: 
+            self._pressed_keys.remove(key)
 
     def _check_keys(self) -> None:
         '''
@@ -145,19 +152,18 @@ class GameCore(QObject):
         # TODO
         pass
 
-    def pause_game(self) -> None:
+    def pause_continue_game(self) -> None:
         '''Pausa el juego'''
-        # TODO
-        self._clock_customer_spawn.pause_()
-        self._clock_check_keys.stop()
-        self.signal_pause_objects.emit()
-
-    def resume_game(self) -> None:
-        '''Continua el juego'''
-        # TODO
-        self._clock_customer_spawn.continue_()
-        self._clock_check_keys.start()
-        self.signal_resume_objects.emit()
+        if self.paused:
+            self._clock_customer_spawn.continue_()
+            self._clock_check_keys.start()
+            self.signal_resume_objects.emit()
+        else:
+            self._clock_customer_spawn.pause_()
+            self._clock_check_keys.stop()
+            self.signal_pause_objects.emit()
+        self.paused = not self.paused
+        self.signal_show_paused.emit(self.paused)
 
     def start_round(self) -> None:
         '''Empieza una ronda'''
