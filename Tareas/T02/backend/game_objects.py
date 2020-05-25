@@ -80,7 +80,7 @@ class GameObject(QObject):
         '''Animación/sprite siguiente'''
         act = self._animation_state
         self._animation_state = (self._animation_state + 1) % len(self._animation_cicle)
-        return str(act)
+        return self._animation_cicle[act]
 
     @property
     def hit_box(self):
@@ -172,6 +172,14 @@ class Player(GameObject):
         super().__init__(core, x, y, 1, 2, ['a', 'free', 'idle', 'down'])
         self.movemet_keys = {Qt.Key_W: 'up', Qt.Key_D: 'right', Qt.Key_S: 'down', Qt.Key_A: 'left'}
         self.orders = 0
+        self.walked = True
+        self._animation_cicle = ['rightfoot', 'idle', 'leftfoot', 'idle']
+        self.clock_check_if_walking = GameClock(
+            event=self.check_if_walking,
+            interval=0.1
+        )
+        self.clock_check_if_walking.start()
+        self.clocks.append(self.clock_check_if_walking)
 
     def has_key(self, key: int) -> bool:
         '''Ve si tiene la tecla entregada'''
@@ -207,9 +215,22 @@ class Player(GameObject):
         Mueve al jugador luego de probar que no colisionará en el core.
         '''
         self._x, self._y = pos
-        print(self.pos)
         self.update_object()
         self.core.signal_move_up.emit(self.display_info)
+        self.walked = True
+
+    def check_if_walking(self):
+        if self.walked:
+            self.walked = False
+            self.update_animation()
+        else:
+            self._object_state[3] = 'idle'
+            self.update_object()
+
+    def update_animation(self):
+        '''Cambia la animación del cliente'''
+        self._object_state[3] = self.animation()
+        self.update_object()
 
 
 class Chef(GameObject):
@@ -274,10 +295,10 @@ class Customer(GameObject):
         self.table = table
         self.wait_time = wait_time
         self.customer_type = customer_type
-        self._animation_cicle = ['1', '2', '3']
+        self._animation_cicle = ['0', '1', '2']
         self._animation_state = 0
         self.wait_clock = GameClock(
-            event=self.change_animation,
+            event=self.update_animation,
             interval=wait_time/3,
             final_event=self.exit_cafe,
             rep=3)
@@ -293,7 +314,7 @@ class Customer(GameObject):
         self.disconnect_to_core()
         self.delete_object()
 
-    def change_animation(self):
+    def update_animation(self):
         '''Cambia la animación del cliente'''
         self._object_state[2] = self.animation()
         self.update_object()

@@ -87,25 +87,17 @@ PATH = {
                     'down': join(_SPRITES, 'mesero', 'down_02.png'),
                     'left': join(_SPRITES, 'mesero', 'left_02.png'),
                 },
-                'moving': {
-                    '0': {
-                        'up': join(_SPRITES, 'mesero', 'up_01.png'),
-                        'right': join(_SPRITES, 'mesero', 'right_01.png'),
-                        'down': join(_SPRITES, 'mesero', 'down_01.png'),
-                        'left': join(_SPRITES, 'mesero', 'left_01.png'),
-                    },
-                    '1': {
-                        'up': join(_SPRITES, 'mesero', 'up_01.png'),
-                        'right': join(_SPRITES, 'mesero', 'right_01.png'),
-                        'down': join(_SPRITES, 'mesero', 'down_01.png'),
-                        'left': join(_SPRITES, 'mesero', 'left_01.png'),
-                    },
-                    '2': {
-                        'up': join(_SPRITES, 'mesero', 'up_03.png'),
-                        'right': join(_SPRITES, 'mesero', 'right_03.png'),
-                        'down': join(_SPRITES, 'mesero', 'down_03.png'),
-                        'left': join(_SPRITES, 'mesero', 'left_03.png'),
-                    },
+                'rightfoot': {
+                    'up': join(_SPRITES, 'mesero', 'up_01.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_01.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_01.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_01.png'),
+                },
+                'leftfoot': {
+                    'up': join(_SPRITES, 'mesero', 'up_03.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_03.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_03.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_03.png'),
                 },
             },
             'snack': {
@@ -115,25 +107,17 @@ PATH = {
                     'down': join(_SPRITES, 'mesero', 'down_snack_02.png'),
                     'left': join(_SPRITES, 'mesero', 'left_snack_02.png'),
                 },
-                'moving': {
-                    '0': {
-                        'up': join(_SPRITES, 'mesero', 'up_snack_01.png'),
-                        'right': join(_SPRITES, 'mesero', 'right_snack_01.png'),
-                        'down': join(_SPRITES, 'mesero', 'down_snack_01.png'),
-                        'left': join(_SPRITES, 'mesero', 'left_snack_01.png'),
-                    },
-                    '1': {
-                        'up': join(_SPRITES, 'mesero', 'up_snack_01.png'),
-                        'right': join(_SPRITES, 'mesero', 'right_snack_01.png'),
-                        'down': join(_SPRITES, 'mesero', 'down_snack_01.png'),
-                        'left': join(_SPRITES, 'mesero', 'left_snack_01.png'),
-                    },
-                    '2': {
-                        'up': join(_SPRITES, 'mesero', 'up_snack_03.png'),
-                        'right': join(_SPRITES, 'mesero', 'right_snack_03.png'),
-                        'down': join(_SPRITES, 'mesero', 'down_snack_03.png'),
-                        'left': join(_SPRITES, 'mesero', 'left_snack_03.png'),
-                    },
+                'rightfoot': {
+                    'up': join(_SPRITES, 'mesero', 'up_snack_01.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_snack_01.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_snack_01.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_snack_01.png'),
+                },
+                'leftfoot': {
+                    'up': join(_SPRITES, 'mesero', 'up_snack_03.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_snack_03.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_snack_03.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_snack_03.png'),
                 },
             },
         },
@@ -144,14 +128,14 @@ PATH = {
         'reading': join(_SPRITES, 'chef', 'meson_17.png'),
         'cooking': {
             '0': {
-                '1': join(_SPRITES, 'chef', 'meson_13.png'),
-                '2': join(_SPRITES, 'chef', 'meson_14.png'),
-                '3': join(_SPRITES, 'chef', 'meson_15.png'),
+                '0': join(_SPRITES, 'chef', 'meson_13.png'),
+                '1': join(_SPRITES, 'chef', 'meson_14.png'),
+                '2': join(_SPRITES, 'chef', 'meson_15.png'),
             },
             '1': {
-                '1': join(_SPRITES, 'chef', 'meson_07.png'),
-                '2': join(_SPRITES, 'chef', 'meson_08.png'),
-                '3': join(_SPRITES, 'chef', 'meson_09.png'),
+                '0': join(_SPRITES, 'chef', 'meson_07.png'),
+                '1': join(_SPRITES, 'chef', 'meson_08.png'),
+                '2': join(_SPRITES, 'chef', 'meson_09.png'),
             },
         },
     },
