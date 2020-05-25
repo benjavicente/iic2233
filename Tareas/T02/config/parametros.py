@@ -73,7 +73,10 @@ PARAMETROS = {
                 "tiempo de espera": 20,
                 "probabilidad": 0.6,
             },
-            "especial": {
+            "especial": { #TODO
+                "reputación": 2,
+                "max": 15,
+                "min": 25,
                 "tiempo de espera": 40,
                 "probabilidad": 0.05,
             }

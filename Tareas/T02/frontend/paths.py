@@ -88,6 +88,12 @@ PATH = {
                     'left': join(_SPRITES, 'mesero', 'left_02.png'),
                 },
                 'moving': {
+                    '0': {
+                        'up': join(_SPRITES, 'mesero', 'up_01.png'),
+                        'right': join(_SPRITES, 'mesero', 'right_01.png'),
+                        'down': join(_SPRITES, 'mesero', 'down_01.png'),
+                        'left': join(_SPRITES, 'mesero', 'left_01.png'),
+                    },
                     '1': {
                         'up': join(_SPRITES, 'mesero', 'up_01.png'),
                         'right': join(_SPRITES, 'mesero', 'right_01.png'),
@@ -95,12 +101,6 @@ PATH = {
                         'left': join(_SPRITES, 'mesero', 'left_01.png'),
                     },
                     '2': {
-                        'up': join(_SPRITES, 'mesero', 'up_01.png'),
-                        'right': join(_SPRITES, 'mesero', 'right_01.png'),
-                        'down': join(_SPRITES, 'mesero', 'down_01.png'),
-                        'left': join(_SPRITES, 'mesero', 'left_01.png'),
-                    },
-                    '3': {
                         'up': join(_SPRITES, 'mesero', 'up_03.png'),
                         'right': join(_SPRITES, 'mesero', 'right_03.png'),
                         'down': join(_SPRITES, 'mesero', 'down_03.png'),
@@ -116,6 +116,12 @@ PATH = {
                     'left': join(_SPRITES, 'mesero', 'left_snack_02.png'),
                 },
                 'moving': {
+                    '0': {
+                        'up': join(_SPRITES, 'mesero', 'up_snack_01.png'),
+                        'right': join(_SPRITES, 'mesero', 'right_snack_01.png'),
+                        'down': join(_SPRITES, 'mesero', 'down_snack_01.png'),
+                        'left': join(_SPRITES, 'mesero', 'left_snack_01.png'),
+                    },
                     '1': {
                         'up': join(_SPRITES, 'mesero', 'up_snack_01.png'),
                         'right': join(_SPRITES, 'mesero', 'right_snack_01.png'),
@@ -123,12 +129,6 @@ PATH = {
                         'left': join(_SPRITES, 'mesero', 'left_snack_01.png'),
                     },
                     '2': {
-                        'up': join(_SPRITES, 'mesero', 'up_snack_01.png'),
-                        'right': join(_SPRITES, 'mesero', 'right_snack_01.png'),
-                        'down': join(_SPRITES, 'mesero', 'down_snack_01.png'),
-                        'left': join(_SPRITES, 'mesero', 'left_snack_01.png'),
-                    },
-                    '3': {
                         'up': join(_SPRITES, 'mesero', 'up_snack_03.png'),
                         'right': join(_SPRITES, 'mesero', 'right_snack_03.png'),
                         'down': join(_SPRITES, 'mesero', 'down_snack_03.png'),
@@ -143,12 +143,12 @@ PATH = {
         'done': join(_SPRITES, 'chef', 'meson_16.png'),
         'reading': join(_SPRITES, 'chef', 'meson_17.png'),
         'cooking': {
-            '1': {
+            '0': {
                 '1': join(_SPRITES, 'chef', 'meson_13.png'),
                 '2': join(_SPRITES, 'chef', 'meson_14.png'),
                 '3': join(_SPRITES, 'chef', 'meson_15.png'),
             },
-            '2': {
+            '1': {
                 '1': join(_SPRITES, 'chef', 'meson_07.png'),
                 '2': join(_SPRITES, 'chef', 'meson_08.png'),
                 '3': join(_SPRITES, 'chef', 'meson_09.png'),
@@ -156,9 +156,21 @@ PATH = {
         },
     },
     'customer': {
-        'dog': join(_SPRITES, 'clientes', 'perro', 'perro_31.png'),
-        'hamster': join(_SPRITES, 'clientes', 'hamster', 'hamster_13.png'),
-        'special': join(_SPRITES, 'bonus', 'presidente.png'),
+        'dog': {
+            '0': join(_SPRITES, 'clientes', 'perro', 'perro_31.png'),
+            '1': join(_SPRITES, 'clientes', 'perro', 'perro_13.png'),
+            '2': join(_SPRITES, 'clientes', 'perro', 'perro_16.png'),
+        },
+        'hamster': {
+            '0': join(_SPRITES, 'clientes', 'hamster', 'hamster_01.png'),
+            '1': join(_SPRITES, 'clientes', 'hamster', 'hamster_26.png'),
+            '2': join(_SPRITES, 'clientes', 'hamster', 'hamster_18.png'),
+        },
+        'special': {
+            '0': join(_SPRITES, 'bonus', 'presidente.png'),
+            '1': join(_SPRITES, 'bonus', 'presidente.png'),
+            '2': join(_SPRITES, 'bonus', 'presidente.png'),
+        },
     }
 }
 

@@ -40,13 +40,23 @@ class GameObject(QObject):
         self.core = core
         self.connect_to_core()
         self.clocks = list()
+        self._animation_state = int()
+        self._animation_cicle = list()
+        self.core.signal_add_new_object.emit(self.display_info)
 
     def __repr__(self):
         return type(self).__name__ + self._id
 
+    def update_object(self):
+        '''Actualiza el objeto en el ui.'''
+        self.core.signal_update_object.emit(self.display_info)
+
+    def delete_object(self):
+        '''Elimina el objeto en el ui.'''
+        self.core.signal_delete_object.emit(self.display_info)
+
     def connect_to_core(self):
         '''Conecta las señales con su core asociado'''
-        self.core.signal_add_new_object.emit(self.display_info)
         self.core.signal_pause_objects.connect(self.object_clock_pause)
         self.core.signal_resume_objects.connect(self.object_clock_continue)
 
@@ -60,8 +70,16 @@ class GameObject(QObject):
         for clock in self.clocks:
             clock.continue_()
 
+    def animation(self):
+        '''Animación/sprite siguiente'''
+        print(self, self._animation_cicle)
+        act = self._animation_state
+        self._animation_state = (self._animation_state + 1) % len(self._animation_cicle)
+        return str(act)
+
     @property
     def hit_box(self):
+        '''Caja que detecta las colisiones'''
         # TODO: ver variables que modifiquen el hit box
         return (*self.pos, *self.size)
 
@@ -214,11 +232,17 @@ class Chair(GameObject):
 class Customer(GameObject):
     '''Cliente. Es asignado a una mesa aleatoria'''
     def __init__(self, core, x: int, y: int, table, customer_type: str, wait_time: int):
-        super().__init__(core, x, y - self._cell_size * 1.5, 1, 2, [customer_type])
+        super().__init__(core, x, y - self._cell_size * 1.5, 1, 2, [customer_type, '1'])
         self.table = table
         self.wait_time = wait_time
         self.customer_type = customer_type
-        self.clock = GameClock(interval=wait_time, final_event=self.exit_cafe, rep=1)
+        self._animation_cicle = ['1', '2', '3']
+        self._animation_state = 0
+        self.clock = GameClock(
+            event=self.change_animation,
+            interval=wait_time/3,
+            final_event=self.exit_cafe,
+            rep=3)
         self.clocks.append(self.clock)
         self.clock.start()
 
@@ -227,4 +251,9 @@ class Customer(GameObject):
         print('me voy >:(')
         self.table.free = True
         self.table.customer = None
-        self.core.signal_delete_object.emit(self.display_info)
+        self.delete_object()
+
+    def change_animation(self):
+        '''Cambia la animación del cliente'''
+        self._object_state[2] = self.animation()
+        self.update_object()
