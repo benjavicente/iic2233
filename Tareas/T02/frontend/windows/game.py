@@ -4,14 +4,14 @@ Ventana del Juego DCCafé
 
 from PyQt5 import uic
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QPixmap, QCursor, QKeyEvent
+from PyQt5.QtGui import QPixmap, QCursor, QKeyEvent, QTransform
 from PyQt5.QtWidgets import QLabel
 
-from frontend.paths import PATH, SPRITE_PATH
+from frontend.paths import SPRITE_PATH
 from frontend.themes import GAME_THEME
 
 
-class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
+class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
     '''Ventana del juego'''
 
     signal_key_press = pyqtSignal(int)
@@ -39,9 +39,9 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
         designer o porque permite cambios rápidos en algún path o estilo.
         '''
         # Imágenes
-        self.logo.setPixmap(QPixmap(PATH['logo']))
-        self.chef_icon.setPixmap(QPixmap(PATH['shop']['chef']))
-        self.table_icon.setPixmap(QPixmap(PATH['shop']['table']))
+        self.logo.setPixmap(QPixmap(SPRITE_PATH['logo']))
+        self.chef_icon.setPixmap(QPixmap(SPRITE_PATH['shop', 'chef']))
+        self.table_icon.setPixmap(QPixmap(SPRITE_PATH['shop', 'table']))
         # Es raro que PointingHandCursor no este disponible en Designer...
         self.button_exit.setCursor(QCursor(Qt.PointingHandCursor))
         self.button_time.setCursor(QCursor(Qt.PointingHandCursor))
@@ -54,38 +54,32 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
         self.grabKeyboard()
         self.show()
 
-    # 23/05
-    # Por lo que tengo entendido, Qt no tiene un _API_ para trabar con
-    # input del teclado de forma continua (evitando el retardo al
-    # presionar constántemente una tecla), por lo que se tiene que
-    # crear una. GameCore será encargado de almacenar cuales teclas
-    # están siendo precionadas y un thread sera encargado de realizar
-    # las acciones de las teclas asociadas.
-    #! Lo anterior no funciona. Puede ser que sea necesario
-    #! añadir un filtro a los eventos de la ventana.
-
     def keyPressEvent(self, key_event):
+        # TODO: ver como implementar sin método los eventos
+        '''Entrega las teclas apretadas al backend'''
         self.signal_key_press.emit(key_event.key())
 
     def keyReleaseEvent(self, key_event):
+        # TODO: ver como implementar sin método los eventos
+        '''Entrega las teclas soltadas al backend'''
         self.signal_key_relase.emit(key_event.key())
 
     def pause_continue(self):
         '''
         Pausa o continua el juego.
-        Cambia el texto del botón
+        Cambia el texto del botón.
         '''
         if self.paused:
             self.button_time.setText('Pausar')
-            self.game_area.setDisabled(False)
             self.signal_continue_game.emit()
         else:
             self.button_time.setText('Seguir')
-            self.game_area.setDisabled(True)
             self.signal_pause_game.emit()
         self.paused = not self.paused
+        self.game_area.setDisabled(self.paused)
 
     def update_cafe_stats(self, stats: dict):
+        '''Actualiza los datos del Café en la ventana'''
         self.rep.setText(stats['rep'])
         self.money.setText(stats['money'])
         self.round.setText(stats['round'])
@@ -99,8 +93,8 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
         new_object.setGeometry(*obj['pos'], *obj['size'])
         new_object.setPixmap(QPixmap(SPRITE_PATH[obj['state']]))
         new_object.setScaledContents(True)
-        self.game_objects[obj['id']] = new_object
         new_object.show()
+        self.game_objects[obj['id']] = new_object
 
     def update_object(self, obj: dict):
         '''Actualiza el sprite y la posición del objeto'''
@@ -115,22 +109,22 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
     def make_map(self, width: int = 750, height: int = 450, cell_size: int = 25):
         '''Crea el mapa del juego a partir de los mapámetros dados'''
         if width % cell_size or height % cell_size:
-            mesage = 'Los valores del tamaño del mapa no son divisibles por el tamaño de la celda'
-            raise ValueError(mesage)
+            raise ValueError('El tamaño de la celda no es factor del tamaño del mapa')
+
         grid_width = width // cell_size
         grid_height = height // cell_size
-
         self.game_area.setFixedSize(width, height + cell_size * 4)
+
         area_grid = self.game_area.layout()
 
         # Se añade decoración
         for x_pos in range(0, grid_width, 2):
             decoration = QLabel(self.game_area)
             if x_pos % 4:
-                decoration.setPixmap(QPixmap(PATH['map']['window']))
+                decoration.setPixmap(QPixmap(SPRITE_PATH['map', 'window']))
                 decoration.setFixedSize(cell_size * 2, cell_size * 4)
             else:
-                decoration.setPixmap(QPixmap(PATH['map']['wall']))
+                decoration.setPixmap(QPixmap(SPRITE_PATH['map', 'wall']))
                 decoration.setFixedSize(cell_size * 2, cell_size * 4)
             decoration.setScaledContents(True)
             area_grid.addWidget(decoration, 0, x_pos, 1, 2)
@@ -138,8 +132,13 @@ class GameWindow(*uic.loadUiType(PATH['ui']['game_window'])):
         # Se crean las celdas y se añaden al grid del juego
         for x_pos in range(grid_width):
             for y_pos in range(grid_height):
+                if y_pos:
+                    pixmap = QPixmap(SPRITE_PATH['map', 'tile'])
+                else:
+                    rotation = QTransform().rotate(90)
+                    pixmap = QPixmap(SPRITE_PATH['map', 'border']).transformed(rotation)
                 cell = QLabel(self.game_area)
                 cell.setFixedSize(cell_size, cell_size)
-                cell.setPixmap(QPixmap(PATH['map']['tile']))
+                cell.setPixmap(pixmap)
                 cell.setScaledContents(True)
                 area_grid.addWidget(cell, y_pos + 1, x_pos, 1, 1)

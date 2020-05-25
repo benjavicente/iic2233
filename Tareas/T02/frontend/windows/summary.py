@@ -28,10 +28,10 @@ class SummaryWindow(QWidget):
         self.setLayout(main_layout)
         # Bloque de información
         layout_resumen = QVBoxLayout()
-        self.cuadro_resumen = QFrame()
-        self.cuadro_resumen.setLayout(layout_resumen)
-        self.cuadro_resumen.setObjectName('bloque')
-        main_layout.addWidget(self.cuadro_resumen, 1, 1)
+        self.card_resumen = QFrame()
+        self.card_resumen.setLayout(layout_resumen)
+        self.card_resumen.setObjectName('bloque')
+        main_layout.addWidget(self.card_resumen, 1, 1)
         # -> Título
         self.titulo = QLabel(self)
         self.titulo.setObjectName('titulo')

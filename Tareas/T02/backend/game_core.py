@@ -2,12 +2,11 @@
 
 from random import choices, shuffle
 
-from PyQt5.QtCore import QObject, pyqtSignal, Qt
+from PyQt5.QtCore import QObject, Qt, pyqtSignal
 
-from backend.game_objects import GameObject, Player, Chef, Table, Cafe
 from backend.clock import GameClock
+from backend.game_objects import Cafe, Chef, GameObject, Player, Table
 from backend.paths import PATH_DATOS, PATH_MAPA
-
 from config.parametros import PARAMETROS
 
 
@@ -34,10 +33,11 @@ class GameCore(QObject):
         self.tables = list()
         self.set_up()
 
-    def set_up(self):
+    def set_up(self) -> None:
         '''Crea objetos para el manejo del juego'''
         # Parámetros especiales
         self.key_access_rate = 0.05  # En segundos
+        self.remaining_clients = 0
         # Diccionario de acceso
         self.object_lists = {
             'mesero': self.players,
@@ -75,15 +75,15 @@ class GameCore(QObject):
     # pero creo que no es compatible con la forma ehn que estoy modelando el
     # backend y frontend.
 
-    def add_key(self, key: str):
+    def add_key(self, key: str) -> None:
         '''Añade una tecla al las teclas precionadas'''
         self.pressed_keys.add(key)
 
-    def remove_key(self, key: str):
+    def remove_key(self, key: str) -> None:
         '''Remueve una tecla al las teclas precionadas'''
         self.pressed_keys.remove(key)
 
-    def check_keys(self):
+    def check_keys(self) -> None:
         '''
         Revisa si hay teclas precionadas.
         Si es que hay, se revisa cuales y
@@ -131,36 +131,40 @@ class GameCore(QObject):
             self.signal_add_new_object.emit(new_object.display_info)
         self.start_round()
 
-    def exit_game(self):
+    def load_objects(self) -> None:
+        # TODO: para evitar cargar los elementos al front end tanto en load como new game
+        pass
+
+    def exit_game(self) -> None:
         '''Sale del juego'''
         # TODO
         pass
 
-    def save_game(self):
+    def save_game(self) -> None:
         '''Guarda el juego'''
         # TODO
         pass
 
-    def pause_game(self):
+    def pause_game(self) -> None:
         '''Pausa el juego'''
         # TODO
         self.clock_customer_spawn.pause_()
-        self.clock_check_keys.pause_()
+        self.clock_check_keys.stop()
 
-    def continue_game(self):
+    def continue_game(self) -> None:
         '''Continua el juego'''
         # TODO
         self.clock_customer_spawn.continue_()
-        self.clock_check_keys.continue_()
+        self.clock_check_keys.start()
 
-    def start_round(self):
+    def start_round(self) -> None:
         '''Empieza una ronda'''
         self.signal_update_cafe_stats.emit(self.cafe.stats)
         self.remaining_clients = self.cafe.round_clients
         self.clock_customer_spawn.start()
         self.clock_check_keys.start()
 
-    def new_customer(self):
+    def new_customer(self) -> None:
         '''Llega un cliente a la tienda. Si hay mesas, se sienta y espera un pedido'''
         print('Ha llegado un cliente!')
         shuffle(self.tables)
@@ -186,15 +190,9 @@ class GameCore(QObject):
             self.clock_customer_spawn.stop()
 
 
-
-
 def get_last_game_data() -> dict:
     '''Obtiene en un diccionario la información de la partida guardada'''
     last_game_data = {}
-    # Cargar la información del mapa
-    with open(PATH_MAPA, 'r', encoding='utf-8') as file:
-        map_content = file.readlines()
-    last_game_data['map'] = list(map(lambda line: line.split(','), map_content))
     # Cargar la información de el DCCafé
     with open(PATH_DATOS, 'r', encoding='utf-8') as file:
         stats = file.readline()
@@ -202,7 +200,8 @@ def get_last_game_data() -> dict:
     for key, value in zip(('money', 'rep', 'rounds'), stats.split(',')):
         last_game_data[key] = value
     last_game_data['dishes'] = dishes.split(',')
+    # Cargar la información del mapa
+    with open(PATH_MAPA, 'r', encoding='utf-8') as file:
+        map_content = file.readlines()
+    last_game_data['map'] = [line.split(',') for line in map_content]
     return last_game_data
-
-
-

@@ -3,13 +3,13 @@ Simulador del DCCafé
 '''
 
 import sys
+
 from PyQt5.QtWidgets import QApplication
 
+from backend.game_core import GameCore
 from frontend.windows.game import GameWindow
 from frontend.windows.initial import InitialWindow
-from frontend.windows.summary import SummaryWindow
-
-from backend.game_core import GameCore
+# from frontend.windows.summary import SummaryWindow  # TODO
 
 if __name__ == "__main__":
     sys.__excepthook__ = lambda t, v, trace: print(t, v, trace, sep="\n")
@@ -20,8 +20,6 @@ if __name__ == "__main__":
     GAME_WINDOW = GameWindow()
 
     GAME_CORE = GameCore()
-
-    #DCCAFE = DCCafe()
 
     INITIAL_WINDOW.signal_new.connect(GAME_CORE.new_game)
     INITIAL_WINDOW.signal_load.connect(GAME_CORE.load_game)
@@ -43,6 +41,3 @@ if __name__ == "__main__":
 
     ################################
     sys.exit(APP.exec_())
-
-
-

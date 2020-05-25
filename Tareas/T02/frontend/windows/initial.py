@@ -38,58 +38,58 @@ class InitialWindow(QWidget):
         self.setLayout(main_layout)
 
         # Firma
-        self.desarrollador = QLabel('benjavicente', self)
-        self.desarrollador.setAlignment(Qt.AlignCenter)
-        self.desarrollador.setObjectName('desarrollador')
-        main_layout.addWidget(self.desarrollador, 4, 0, 1, 3)
+        self.developer = QLabel('benjavicente', self)
+        self.developer.setAlignment(Qt.AlignCenter)
+        self.developer.setObjectName('developer')
+        main_layout.addWidget(self.developer, 4, 0, 1, 3)
 
         # ----------------------- #
         # Botones de herramientas #
         # ----------------------- #
-        barra_herramientas = QHBoxLayout()
-        main_layout.addLayout(barra_herramientas, 0, 0, 1, 3)
-        barra_herramientas.addItem(QSpacerItem(0, 0, hPolicy=QSizePolicy.Expanding))
+        tool_bar = QHBoxLayout()
+        main_layout.addLayout(tool_bar, 0, 0, 1, 3)
+        tool_bar.addItem(QSpacerItem(0, 0, hPolicy=QSizePolicy.Expanding))
         # -> Botón Información
         self.info = QToolButton(self)
         self.info.setToolTip('Información')
-        barra_herramientas.addWidget(self.info)
+        tool_bar.addWidget(self.info)
         # -> Botón Configuración
         self.config = QToolButton(self)
         self.config.setToolTip('Configuración')
-        barra_herramientas.addWidget(self.config)
+        tool_bar.addWidget(self.config)
 
         # ---------------- #
         # Cuadro principal #
         # ---------------- #
-        self.cuadro_principal = QFrame(self)
-        self.cuadro_principal.setObjectName('cuadro')
-        cuadro_principal_layout = QVBoxLayout()
-        self.cuadro_principal.setLayout(cuadro_principal_layout)
-        main_layout.addWidget(self.cuadro_principal, 2, 1)
+        self.card_principal = QFrame(self)
+        self.card_principal.setObjectName('card')
+        card_principal_layout = QVBoxLayout()
+        self.card_principal.setLayout(card_principal_layout)
+        main_layout.addWidget(self.card_principal, 2, 1)
         # -> Logo
         self.logo = QLabel(self)
         self.logo.setFixedSize(520, 200)
         self.logo.setPixmap(QPixmap(PATH['logo']))
         self.logo.setScaledContents(True)
         # Añadilo al cuadro
-        cuadro_principal_layout.addWidget(self.logo)
+        card_principal_layout.addWidget(self.logo)
 
         # -> Texto de bienvenida
         # TODO: esto podría estar en parámetros
         texto = ('Hola! Bienvenido al DCCafé!'
                  'No está completamente listo para su apertura aún')
-        self.bienvenida = QLabel(texto, self)
-        self.bienvenida.setWordWrap(True)
-        self.bienvenida.setObjectName('bienvenida')
-        self.bienvenida.setAlignment(Qt.AlignCenter)
+        self.message = QLabel(texto, self)
+        self.message.setWordWrap(True)
+        self.message.setObjectName('message')
+        self.message.setAlignment(Qt.AlignCenter)
         # Añadirlo al cuadro
-        cuadro_principal_layout.addWidget(self.bienvenida)
+        card_principal_layout.addWidget(self.message)
         # Añadir espacio
-        cuadro_principal_layout.addSpacing(50)
+        card_principal_layout.addSpacing(50)
 
         # -> Botones
         fila_botones = QHBoxLayout()
-        cuadro_principal_layout.addLayout(fila_botones)
+        card_principal_layout.addLayout(fila_botones)
         fila_botones.setSpacing(20)
         fila_botones.setContentsMargins(30, 0, 30, 0)
 
