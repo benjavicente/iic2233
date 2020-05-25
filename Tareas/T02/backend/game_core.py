@@ -101,6 +101,7 @@ class GameCore(QObject):
                     #! Aquí debe verse las colisiones del jugador
                     if player.move(key):
                         pass
+                    print(*self.__check_colision(player))
                     self.signal_update_object.emit(player.display_info)
 
     def new_game(self) -> None:
@@ -169,7 +170,6 @@ class GameCore(QObject):
         '''Llega un cliente a la tienda. Si hay mesas, se sienta y espera un pedido'''
         print('Ha llegado un cliente!')
         shuffle(self._tables)
-        #self.clock_customer_spawn.pause_()
         for table in self._tables:
             if table.free:
                 # Generar cliente
@@ -177,17 +177,35 @@ class GameCore(QObject):
                     self.posible_clients,
                     weights=[x[-1] for x in self.posible_clients]
                 )[0]  # El [0] es porque choices retorna una lista de largo 1
-                print(new_client_type, new_client_wait_time)
                 # Se añade el cliente a la mesa
-                customer = table.add_customer(new_client_type, new_client_wait_time)
+                table.add_customer(new_client_type, new_client_wait_time)
                 # Disminuye la cantidad de clientes restantes
                 self._remaining_clients -= 1
+                if not self._remaining_clients:
+                    print('Se han acabado los clientes!')
+                    self._clock_customer_spawn.stop()
                 return
-        else:
-            print('El cliente se ha ido, volverá luego')
-        if not self._remaining_clients:
-            print('Se han acabado los clientes!')
-            self._clock_customer_spawn.stop()
+        print('El cliente se ha ido por falta de mesas, volverá luego')
+
+    def __check_colision(self, moved_obj) -> list:
+        '''
+        Revisa si el objeto entregado colisiona con algo.
+        Retorna una lista con los elementos que coliciona.
+        '''
+        x1, y1, w1, h1 = moved_obj.hit_box
+        collied = list()
+        for game_object in self._tables + self._chefs + self._players:
+            if moved_obj is game_object:
+                continue
+            x2, y2, w2, h2 = game_object.hit_box
+            # Hay muchas páginas que mencionan como realizar
+            # colisiones entre cuadrados. Mozilla tiene un ejemplo básico:
+            # https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+            if x1 + w1 > x2 and x1 < x2 + w2 and y1 + h1 > y2 and y1 < y2 + h2:
+                collied.append(game_object)
+        return collied
+
+
 
 
 def get_last_game_data() -> dict:

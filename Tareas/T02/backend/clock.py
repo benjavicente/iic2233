@@ -59,8 +59,7 @@ class GameClock(QTimer):
 
     def set_rep(self, value: int) -> None:
         '''Redefine el número de repeticiones que realiza el reloj'''
-        if not self.isActive():
-            self._counter = value
+        self._counter = value
 
     def pause_(self) -> None:
         '''Pausa el reloj'''

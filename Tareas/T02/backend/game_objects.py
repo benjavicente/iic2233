@@ -42,7 +42,7 @@ class GameObject(QObject):
         self.clocks = list()
 
     def __repr__(self):
-        return self._id
+        return type(self).__name__ + self._id
 
     def connect_to_core(self):
         '''Conecta las señales con su core asociado'''
@@ -61,7 +61,12 @@ class GameObject(QObject):
             clock.continue_()
 
     @property
-    def position(self):
+    def hit_box(self):
+        # TODO: ver variables que modifiquen el hit box
+        return (*self.pos, *self.size)
+
+    @property
+    def pos(self):
         '''Posición del objeto'''
         return (self._x, self._y)
 
@@ -70,7 +75,7 @@ class GameObject(QObject):
         '''Información que se manda al frontend'''
         return {
             'id': self._id,
-            'pos': self.position,
+            'pos': self.pos,
             'size': self.size,
             'state': tuple(self._object_state),
         }
@@ -190,14 +195,11 @@ class Table(GameObject):
         self.free = True
         self.customer = None
         self.table = Chair(core, self._x, self._y - self._cell_size)
-        # Overite del atributo size, para que tanto mesa como silla se
-        # consideren como un objeto único al detectar colisiones
-        self.size = (self.size[0], self.size[0] + self._cell_size)
 
     def add_customer(self, customer_type: str, wait_time: int):
         '''Añade un cliente a la mesa y lo retorna'''
         self.free = False
-        self.customer = Customer(self.core, *self.position, self, customer_type, wait_time)
+        self.customer = Customer(self.core, *self.pos, self, customer_type, wait_time)
         self.core.signal_stack_under.emit(self.customer.display_info, self.display_info)
         self.core.signal_stack_under.emit(self.table.display_info, self.customer.display_info)
         print(f'Cliente {customer_type} asignado en la mesa con id {self._id}')
