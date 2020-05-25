@@ -1,0 +1,48 @@
+QMainWindow {
+    background: black;
+}
+QMainWindow::separator {
+    background: black;
+}
+/* Botones */
+.QPushButton {
+    color: white;
+    border-radius: 10px;
+    font-size: 16px;
+    margin: 2px;
+    height: 30px;
+    width: 100px;
+}
+#button_time{
+    background: hsl(200, 98, 70);
+}
+#button_time:hover{
+    background: hsl(200, 98, 100);
+}
+#button_exit{
+    background: hsl(0, 98, 70);
+}
+#button_exit:hover{
+    background: hsl(0, 98, 110);
+}
+/* Status bar */
+.QStatusBar, .QMenuBar{
+    color: white;
+    background: black;
+}
+/* Docks */
+.QDockWidget::title{
+    background: hsl(161, 98, 70);
+}
+.QDockWidget{
+    color: hsl(161, 98, 70);
+}
+#shop, #info {
+    background: white;
+    border: 5px solid hsl(161, 98, 70);
+}
+/* Shop */
+#shop_label{
+    font-family: 'Rockwell';
+    font-size: 24px;
+}

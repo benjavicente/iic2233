@@ -1,0 +1,29 @@
+.InitialWindow {
+    background: black;
+    padding: 15px;
+}
+.QPushButton {
+    font-family: 'Rockwell';
+    font-size: 24px;
+    border-radius: 8px;
+    background: hsl(161, 98, 70);
+    color: white;
+    margin: 2px;
+    height: 35px;
+}
+.QPushButton:hover{
+    background: hsl(161, 98, 100);
+}
+#card {
+    background-color: white;
+    border-radius: 8px;
+    margin: 10px;
+}
+#message {
+    font-size: 24px;
+}
+#developer {
+    color: rgb(133, 133, 133);
+    font-size: 14px;
+    font-family: consolas
+}
