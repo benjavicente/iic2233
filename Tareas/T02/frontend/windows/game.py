@@ -112,6 +112,10 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         '''Mueve un objeto detrás de otro'''
         self.game_objects[obj_below['id']].stackUnder(self.game_objects[obj_above['id']])
 
+    def move_up(self, obj: dict):
+        '''Mueve el objeto hacia adelante'''
+        self.game_objects[obj['id']].raise_()
+
     def make_map(self, map_size: tuple):
         '''Crea el mapa del juego a partir de los mapámetros dados'''
         # TODO: limpiar
@@ -122,6 +126,10 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
 
         grid_width = width // cell_size
         grid_height = height // cell_size
+
+        if grid_width % 2:
+            raise ValueError('La cantidad de celdas en el eje X debe ser múltiplo de 2')
+
         self.game_area.setFixedSize(width, height + cell_size * 4)
 
         area_grid = self.game_area.layout()
@@ -130,6 +138,8 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         wall = QPixmap(SPRITE_PATH['map', 'wall'])
         tile = QPixmap(SPRITE_PATH['map', 'tile'])
         border = QPixmap(SPRITE_PATH['map', 'border'])
+
+        print(grid_width)
 
         # Se añade decoración
         for x_pos in range(0, grid_width, 2):

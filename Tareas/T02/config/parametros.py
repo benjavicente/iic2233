@@ -16,9 +16,9 @@ cambiados en la pantalla de inicio
 PARAMETROS = {
     "mapa": {
         "tamaño celda": 30,
-        "largo": 750,
-        "ancho": 450,  # creo que esta malo...
-        "reducción de hitbox": 0.4,
+        "alto": 450,  # creo que esta malo...
+        "largo": 780,
+        "reducción de hitbox": 0.2,
     },
     'personaje': {
         'velocidad': 150

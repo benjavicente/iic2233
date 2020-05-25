@@ -20,6 +20,7 @@ class GameCore(QObject):
     signal_update_object = pyqtSignal(dict)
     signal_delete_object = pyqtSignal(dict)
     signal_stack_under = pyqtSignal(dict, dict)
+    signal_move_up = pyqtSignal(dict)
 
     signal_start_game_window = pyqtSignal(tuple)
     signal_update_cafe_stats = pyqtSignal(dict)
@@ -45,7 +46,7 @@ class GameCore(QObject):
     def __set_up(self) -> None:
         '''Crea objetos para el manejo del juego'''
         # Parámetros especiales
-        self._key_access_rate = 0.05  # En segundos
+        self._key_access_rate = 1/30  # En segundos
         self._remaining_clients = 0
         self.paused = False
         # Diccionario de acceso
@@ -56,7 +57,7 @@ class GameCore(QObject):
         }
         # Mapa
         self._map_size = (
-            int(PARAMETROS['mapa']['largo']), int(PARAMETROS['mapa']['ancho'])
+            int(PARAMETROS['mapa']['largo']), int(PARAMETROS['mapa']['alto'])
         )
         # Set de teclas precionadas
         self._pressed_keys = set()

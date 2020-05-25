@@ -207,7 +207,9 @@ class Player(GameObject):
         Mueve al jugador luego de probar que no colisionará en el core.
         '''
         self._x, self._y = pos
+        print(self.pos)
         self.update_object()
+        self.core.signal_move_up.emit(self.display_info)
 
 
 class Chef(GameObject):

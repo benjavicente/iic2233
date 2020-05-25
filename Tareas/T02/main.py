@@ -31,6 +31,7 @@ if __name__ == "__main__":
     GAME_CORE.signal_update_object.connect(GAME_WINDOW.update_object)
     GAME_CORE.signal_delete_object.connect(GAME_WINDOW.delete_object)
     GAME_CORE.signal_stack_under.connect(GAME_WINDOW.stack_under)
+    GAME_CORE.signal_move_up.connect(GAME_WINDOW.move_up)
 
     # Señales de control del interfaz y sus datos
     GAME_CORE.signal_start_game_window.connect(GAME_WINDOW.start)
