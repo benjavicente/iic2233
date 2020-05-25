@@ -121,7 +121,7 @@ if __name__ == "__main__":
 
     TEST = GameClock(
         event=EVENT,
-        interval=5000,
+        interval=5,
         rep=10,
         final_event=FINAL_EVENT,
         paused_event=PAUSE_EVENT,
