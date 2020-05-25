@@ -18,9 +18,10 @@ PARAMETROS = {
         "tamaño celda": 30,
         "largo": 750,
         "ancho": 450,  # creo que esta malo...
+        "reducción de hitbox": 0.4,
     },
     'personaje': {
-        'velocidad': 5
+        'velocidad': 150
     },
     "chef": {
         "niveles": {

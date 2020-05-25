@@ -29,23 +29,24 @@ class GameObject(QObject):
 
     _cell_size = int(PARAMETROS['mapa']['tamaño celda'])
     id_counter = generate_ids()
+    hitbox_reduction = float(PARAMETROS['mapa']['reducción de hitbox'])
 
     def __init__(self, core, x: int, y: int, width: int, height: int, initial_state: list):
         super().__init__()
-        self._id = str(next(GameObject.id_counter))
+        self.id = str(next(GameObject.id_counter))
         self._x = int(x)
         self._y = int(y)
         self.size = (int(width) * self._cell_size, int(height) * self._cell_size)
         self._object_state = [type(self).__name__.lower()] + initial_state
-        self.core = core
-        self.connect_to_core()
         self.clocks = list()
         self._animation_state = int()
         self._animation_cicle = list()
+        self.core = core
+        self.connect_to_core()
         self.core.signal_add_new_object.emit(self.display_info)
 
     def __repr__(self):
-        return type(self).__name__ + self._id
+        return type(self).__name__ + self.id
 
     def update_object(self):
         '''Actualiza el objeto en el ui.'''
@@ -60,6 +61,11 @@ class GameObject(QObject):
         self.core.signal_pause_objects.connect(self.object_clock_pause)
         self.core.signal_resume_objects.connect(self.object_clock_continue)
 
+    def disconnect_to_core(self):
+        '''Desconecta las señales del core asociado'''
+        self.core.signal_pause_objects.disconnect(self.object_clock_pause)
+        self.core.signal_resume_objects.disconnect(self.object_clock_continue)
+
     def object_clock_pause(self):
         '''Método para pausar los relojes del objeto'''
         for clock in self.clocks:
@@ -72,7 +78,6 @@ class GameObject(QObject):
 
     def animation(self):
         '''Animación/sprite siguiente'''
-        print(self, self._animation_cicle)
         act = self._animation_state
         self._animation_state = (self._animation_state + 1) % len(self._animation_cicle)
         return str(act)
@@ -80,8 +85,12 @@ class GameObject(QObject):
     @property
     def hit_box(self):
         '''Caja que detecta las colisiones'''
-        # TODO: ver variables que modifiquen el hit box
-        return (*self.pos, *self.size)
+        width, height = self.size
+        fact = self.hitbox_reduction
+        return (self._x + width * fact / 2,
+                self._y + height * fact / 2,
+                width * (1 - fact),
+                height * (1 - fact))
 
     @property
     def pos(self):
@@ -92,7 +101,7 @@ class GameObject(QObject):
     def display_info(self):
         '''Información que se manda al frontend'''
         return {
-            'id': self._id,
+            'id': self.id,
             'pos': self.pos,
             'size': self.size,
             'state': tuple(self._object_state),
@@ -164,24 +173,41 @@ class Player(GameObject):
         self.movemet_keys = {Qt.Key_W: 'up', Qt.Key_D: 'right', Qt.Key_S: 'down', Qt.Key_A: 'left'}
         self.orders = 0
 
-    def move(self, key) -> bool:
-        #! Este método debe re-implementarse.
-        #! La forma actual no puede detectar colisiones
-        #! y no es muy eficaz con la implementación nueva
-        #! de la obtención de teclas en GameCore.
-        '''
-        Mueve al jugador según la tecla `key`
-        Retorna si se pudo mover le jugador con esa tecla
-        '''
-        if key in self.movemet_keys:
+    def has_key(self, key: int) -> bool:
+        '''Ve si tiene la tecla entregada'''
+        return key in self.movemet_keys
+
+    def next_pos(self, keys: iter, time_period: float) -> tuple:
+        '''Retorna la siguiente posición del objeto luego de moverse'''
+        pos_x, pos_y = self._x, self._y
+        for key in keys:
             direction = self.movemet_keys[key]
             self._object_state[4] = direction
-            move_x, move_y = self._movemet_direction[direction]
-            self._x += move_x * self._movement_speed
-            self._y += move_y * self._movement_speed
-            return True
-        return False
+            direcion_x, direction_y = self._movemet_direction[direction]
+            pos_x += direcion_x * (time_period * self._movement_speed)
+            pos_y += direction_y * (time_period * self._movement_speed)
+        return pos_x, pos_y
 
+    def new_hitbox(self, next_pos: tuple) -> tuple:
+        '''Retorna la nueva posición del hitbox'''
+        width, height = self.size
+        pos_x, pos_y = next_pos
+        # No se considera la cabeza en el hitbox del jugador,
+        # por lo que se la posición y tamaño del hitbox
+        height /= 2
+        pos_y += height
+        fact = self.hitbox_reduction
+        return (pos_x + width * fact / 2,
+                pos_y + height * fact / 2,
+                width * (1 - fact),
+                height * (1 - fact))
+
+    def move(self, pos: tuple):
+        '''
+        Mueve al jugador luego de probar que no colisionará en el core.
+        '''
+        self._x, self._y = pos
+        self.update_object()
 
 
 class Chef(GameObject):
@@ -220,8 +246,18 @@ class Table(GameObject):
         self.customer = Customer(self.core, *self.pos, self, customer_type, wait_time)
         self.core.signal_stack_under.emit(self.customer.display_info, self.display_info)
         self.core.signal_stack_under.emit(self.table.display_info, self.customer.display_info)
-        print(f'Cliente {customer_type} asignado en la mesa con id {self._id}')
+        print(f'Cliente {customer_type} asignado en la mesa con id {self.id}')
         return self.customer
+
+    @property
+    def hit_box(self):
+        '''Overrite. Permite considada la silla como parte de la mesa'''
+        width, height = self.size
+        fact = self.hitbox_reduction
+        return (self._x + width * fact / 2,
+                (self._y - self._cell_size) + height * fact / 2,
+                width * (1 - fact),
+                (self._cell_size + height) * (1 - fact))
 
 
 class Chair(GameObject):
@@ -238,19 +274,21 @@ class Customer(GameObject):
         self.customer_type = customer_type
         self._animation_cicle = ['1', '2', '3']
         self._animation_state = 0
-        self.clock = GameClock(
+        self.wait_clock = GameClock(
             event=self.change_animation,
             interval=wait_time/3,
             final_event=self.exit_cafe,
             rep=3)
-        self.clocks.append(self.clock)
-        self.clock.start()
+        self.clocks.append(self.wait_clock)
+        self.wait_clock.start()
 
     def exit_cafe(self):
         '''Cliente se retira de la mesa'''
         print('me voy >:(')
         self.table.free = True
         self.table.customer = None
+        self.clocks.remove(self.wait_clock)
+        self.disconnect_to_core()
         self.delete_object()
 
     def change_animation(self):

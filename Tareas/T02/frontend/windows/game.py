@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import QLabel
 from frontend.paths import SPRITE_PATH
 from frontend.themes import GAME_THEME
 
+from config.parametros import PARAMETROS
 
 class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
     '''Ventana del juego'''
@@ -19,12 +20,14 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
 
     signal_pause_continue = pyqtSignal()
 
+    cell_size = PARAMETROS['mapa']['tamaño celda']
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.add_style()
-        # Offset de la decoración en el cuadro de juego
-        self.y_game_offset = 0
+        # Mapa
+        self.y_game_offset = self.cell_size * 4
         # Objetos del juego a mostrar en el cuadro de juego
         self.game_objects = dict()
         # Pausa/Continuar
@@ -46,10 +49,10 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         self.button_time.setCursor(QCursor(Qt.PointingHandCursor))
         self.setStyleSheet(GAME_THEME)
 
-    def start(self):
+    def start(self, map_size: tuple):
         '''Inicia el juego'''
         # TODO: música?
-        self.make_map()
+        self.make_map(map_size)
         self.grabKeyboard()
         self.show()
 
@@ -87,7 +90,8 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         '''Crea un nuevo objeto en el area de juego'''
         new_object = QLabel(self.game_area)
         new_object.setAttribute(Qt.WA_DeleteOnClose)
-        new_object.setGeometry(*obj['pos'], *obj['size'])
+        pos_x, pos_y = obj['pos']
+        new_object.setGeometry(pos_x, pos_y + self.y_game_offset, *obj['size'])
         new_object.setPixmap(QPixmap(SPRITE_PATH[obj['state']]))
         new_object.setScaledContents(True)
         new_object.show()
@@ -96,7 +100,8 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
     def update_object(self, obj: dict):
         '''Actualiza el sprite y la posición del objeto'''
         self.game_objects[obj['id']].setPixmap(QPixmap(SPRITE_PATH[obj['state']]))
-        self.game_objects[obj['id']].move(*obj['pos'])
+        pos_x, pos_y = obj['pos']
+        self.game_objects[obj['id']].move(pos_x, pos_y + self.y_game_offset)
 
     def delete_object(self, obj: dict):
         '''Elimina un objeto'''
@@ -107,8 +112,11 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         '''Mueve un objeto detrás de otro'''
         self.game_objects[obj_below['id']].stackUnder(self.game_objects[obj_above['id']])
 
-    def make_map(self, width: int = 750, height: int = 450, cell_size: int = 25):
+    def make_map(self, map_size: tuple):
         '''Crea el mapa del juego a partir de los mapámetros dados'''
+        # TODO: limpiar
+        width, height = map_size
+        cell_size = self.cell_size
         if width % cell_size or height % cell_size:
             raise ValueError('El tamaño de la celda no es factor del tamaño del mapa')
 

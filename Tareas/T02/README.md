@@ -14,6 +14,7 @@
 
 ## Importante :heavy_exclamation_mark:
 
+TODO
 
 ## Ejecución :computer:
 
@@ -40,9 +41,11 @@ T02
 
 El proceso que se realiza el juego es:
 
-1. Cada cierto tiempo establecido en `parametros.py` se genera un cliente en una mesa desocupada aleatoria.
+1. Cada cierto tiempo establecido en `parametros.py` se genera
+un cliente en una mesa desocupada aleatoria.
 2. El jugador interactúa con el chef para entregar un pedido.
-3. El chef prepara la orden que le ha sido entregada. Si falla en preparar la orden, el chef intenta nuevamente.
+3. El chef prepara la orden que le ha sido entregada. Si falla
+en preparar la orden, el chef intenta nuevamente.
 4. El jugador receive la orden preparada por el chef.
 5. El jugador entrega la orden al cliente.
 6. El cliente consume la orden y se va.

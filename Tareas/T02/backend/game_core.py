@@ -21,7 +21,7 @@ class GameCore(QObject):
     signal_delete_object = pyqtSignal(dict)
     signal_stack_under = pyqtSignal(dict, dict)
 
-    signal_start_game_window = pyqtSignal()
+    signal_start_game_window = pyqtSignal(tuple)
     signal_update_cafe_stats = pyqtSignal(dict)
 
     signal_pause_objects = pyqtSignal()
@@ -38,6 +38,9 @@ class GameCore(QObject):
         self._chefs = list()
         self._tables = list()
         self.__set_up()
+
+    def __iter__(self):
+        return iter(self._tables + self._chefs)
 
     def __set_up(self) -> None:
         '''Crea objetos para el manejo del juego'''
@@ -67,7 +70,10 @@ class GameCore(QObject):
             interval=self._key_access_rate,  # Frecuencia de obtención de teclas
         )
         # Posibilidades de tipos del cliente
-        #* El formato puede mejorar
+        # TODO: el cliente especial aparece una vez, con una probabilidad determinada
+        # TODO: y tiene un tiempo de espera aleatorio. Esto NO funciona con el método
+        # TODO: actual para crear los clientes. Puede ser mejor generalos a todos
+        # TODO: al comienzo de la ronda y no realizar este procedimiento aquí.
         self.posible_clients = list()
         client_types = {'relajado': 'hamster', 'apurado': 'dog', 'especial': 'special'}
         for c_name, c_info in PARAMETROS['clientes']['tipos'].items():
@@ -84,15 +90,14 @@ class GameCore(QObject):
 
     def add_key(self, key: int) -> None:
         '''Añade una tecla al las teclas precionadas'''
-        if key == Qt.Key_P:
-            pass
-        else:
-            self._pressed_keys.add(key)
+        self._pressed_keys.add(key)
+        # Pausa
+        if Qt.Key_P == key:
+            self.pause_continue_game()
 
     def remove_key(self, key: int) -> None:
         '''Remueve una tecla al las teclas precionadas'''
-        if key != Qt.Key_P: 
-            self._pressed_keys.remove(key)
+        self._pressed_keys.remove(key)
 
     def _check_keys(self) -> None:
         '''
@@ -100,20 +105,26 @@ class GameCore(QObject):
         Si es que hay, se revisa cuales y
         se se ejecutan las acciones asociadas.
         '''
-        # TODO
         if self._pressed_keys:
+            # Movimiento jugadores
             print(self._pressed_keys)
-            for key in self._pressed_keys:
-                for player in self._players:
-                    #! Aquí debe verse las colisiones del jugador
-                    if player.move(key):
-                        pass
-                    print(*self.__check_colision(player))
-                    self.signal_update_object.emit(player.display_info)
+            for player in self._players:
+                next_pos = player.next_pos(
+                    filter(lambda k, p=player: p.has_key(k), self._pressed_keys),
+                    self._key_access_rate
+                )
+                # TODO: los hitboxes son muy grandes
+                colision_list = self.__check_colision(player.id, player.new_hitbox(next_pos))
+                print(colision_list)
+                if colision_list:
+                    pass
+                    # TODO: do something
+                else:
+                    player.move(next_pos)
 
     def new_game(self) -> None:
         '''Carga un nuevo juego'''
-        self.signal_start_game_window.emit()
+        self.signal_start_game_window.emit(self._map_size)
         self._cafe.money = int(PARAMETROS['DCCafé']['inicial']['dinero'])
         self._cafe.rep = int(PARAMETROS['DCCafé']['inicial']['reputación'])
         self._cafe.clients = int(PARAMETROS['DCCafé']['inicial']['clientes'])
@@ -129,7 +140,7 @@ class GameCore(QObject):
 
     def load_game(self) -> None:
         '''Carga un juego'''
-        self.signal_start_game_window.emit()
+        self.signal_start_game_window.emit(self._map_size)
         data = get_last_game_data()
         self._cafe.money = int(data['money'])
         self._cafe.rep = int(data['rep'])
@@ -193,15 +204,15 @@ class GameCore(QObject):
                 return
         print('El cliente se ha ido por falta de mesas, volverá luego')
 
-    def __check_colision(self, moved_obj) -> list:
+    def __check_colision(self, moved_obj_id: str, moved_object_hitbox: tuple) -> list:
         '''
         Revisa si el objeto entregado colisiona con algo.
         Retorna una lista con los elementos que coliciona.
         '''
-        x1, y1, w1, h1 = moved_obj.hit_box
+        x1, y1, w1, h1 = moved_object_hitbox
         collied = list()
-        for game_object in self._tables + self._chefs + self._players:
-            if moved_obj is game_object:
+        for game_object in self:
+            if moved_obj_id == game_object.id:
                 continue
             x2, y2, w2, h2 = game_object.hit_box
             # Hay muchas páginas que mencionan como realizar
