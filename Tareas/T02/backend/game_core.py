@@ -27,37 +27,37 @@ class GameCore(QObject):
 
     def __init__(self):
         super().__init__()
-        self.cafe = Cafe()
-        self.players = list()
-        self.chefs = list()
-        self.tables = list()
-        self.set_up()
+        self._cafe = Cafe()
+        self._players = list()
+        self._chefs = list()
+        self._tables = list()
+        self.__set_up()
 
-    def set_up(self) -> None:
+    def __set_up(self) -> None:
         '''Crea objetos para el manejo del juego'''
         # Parámetros especiales
-        self.key_access_rate = 0.05  # En segundos
-        self.remaining_clients = 0
+        self._key_access_rate = 0.05  # En segundos
+        self._remaining_clients = 0
         # Diccionario de acceso
-        self.object_lists = {
-            'mesero': self.players,
-            'chef': self.chefs,
-            'mesa': self.tables
+        self._object_lists = {
+            'mesero': self._players,
+            'chef': self._chefs,
+            'mesa': self._tables
         }
         # Mapa
-        self.map_size = (
+        self._map_size = (
             int(PARAMETROS['mapa']['largo']), int(PARAMETROS['mapa']['ancho'])
         )
         # Set de teclas precionadas
-        self.pressed_keys = set()
+        self._pressed_keys = set()
         # Relojes de la simulación
-        self.clock_customer_spawn = GameClock(
-            event=self.new_customer,
+        self._clock_customer_spawn = GameClock(
+            event=self.__new_customer,
             interval=PARAMETROS['clientes']['periodo de llegada'],
         )
-        self.clock_check_keys = GameClock(
-            event=self.check_keys,
-            interval=self.key_access_rate,  # Frecuencia de obtención de teclas
+        self._clock_check_keys = GameClock(
+            event=self._check_keys,
+            interval=self._key_access_rate,  # Frecuencia de obtención de teclas
         )
         # Posibilidades de tipos del cliente
         #* El formato puede mejorar
@@ -77,34 +77,34 @@ class GameCore(QObject):
 
     def add_key(self, key: str) -> None:
         '''Añade una tecla al las teclas precionadas'''
-        self.pressed_keys.add(key)
+        self._pressed_keys.add(key)
 
     def remove_key(self, key: str) -> None:
         '''Remueve una tecla al las teclas precionadas'''
-        self.pressed_keys.remove(key)
+        self._pressed_keys.remove(key)
 
-    def check_keys(self) -> None:
+    def _check_keys(self) -> None:
         '''
         Revisa si hay teclas precionadas.
         Si es que hay, se revisa cuales y
         se se ejecutan las acciones asociadas.
         '''
         # TODO
-        if self.pressed_keys:
-            print(self.pressed_keys)
-            for key in self.pressed_keys:
-                for player in self.players:
+        if self._pressed_keys:
+            print(self._pressed_keys)
+            for key in self._pressed_keys:
+                for player in self._players:
                     #! Aquí debe verse las colisiones del jugador
                     if player.move(key):
                         pass
                     self.signal_update_object.emit(player.display_info)
 
-    def new_game(self) -> None:
+    def _new_game(self) -> None:
         '''Carga un nuevo juego'''
         self.signal_start_game_window.emit()
-        self.cafe.money = int(PARAMETROS['DCCafé']['inicial']['dinero'])
-        self.cafe.rep = int(PARAMETROS['DCCafé']['inicial']['reputación'])
-        self.cafe.clients = int(PARAMETROS['DCCafé']['inicial']['clientes'])
+        self._cafe.money = int(PARAMETROS['DCCafé']['inicial']['dinero'])
+        self._cafe.rep = int(PARAMETROS['DCCafé']['inicial']['reputación'])
+        self._cafe.clients = int(PARAMETROS['DCCafé']['inicial']['clientes'])
         # Creación de chefs aleatorias
         # TODO
         for _ in range(PARAMETROS['DCCafé']['inicial']['chefs']):
@@ -115,25 +115,20 @@ class GameCore(QObject):
             pass
         self.start_round()
 
-    def load_game(self) -> None:
+    def _load_game(self) -> None:
         '''Carga un juego'''
         self.signal_start_game_window.emit()
         data = get_last_game_data()
-        self.cafe.money = int(data['money'])
-        self.cafe.rep = int(data['rep'])
-        self.cafe.rounds = int(data['rounds'])
+        self._cafe.money = int(data['money'])
+        self._cafe.rep = int(data['rep'])
+        self._cafe.rounds = int(data['rounds'])
         for object_name, pos_x, pos_y in data['map']:
-            new_object = self.object_classes[object_name](pos_x, pos_y)
+            new_object = self.object_classes[object_name](self, int(pos_x), int(pos_y))
             if isinstance(new_object, Chef):
                 new_object.dishes = int(data['dishes'].pop(0))
             # TODO: ver si los objetos colisionan
-            self.object_lists[object_name].append(new_object)
-            self.signal_add_new_object.emit(new_object.display_info)
+            self._object_lists[object_name].append(new_object)
         self.start_round()
-
-    def load_objects(self) -> None:
-        # TODO: para evitar cargar los elementos al front end tanto en load como new game
-        pass
 
     def exit_game(self) -> None:
         '''Sale del juego'''
@@ -148,46 +143,45 @@ class GameCore(QObject):
     def pause_game(self) -> None:
         '''Pausa el juego'''
         # TODO
-        self.clock_customer_spawn.pause_()
-        self.clock_check_keys.stop()
+        self._clock_customer_spawn.pause_()
+        self._clock_check_keys.stop()
 
     def continue_game(self) -> None:
         '''Continua el juego'''
         # TODO
-        self.clock_customer_spawn.continue_()
-        self.clock_check_keys.start()
+        self._clock_customer_spawn.continue_()
+        self._clock_check_keys.start()
 
     def start_round(self) -> None:
         '''Empieza una ronda'''
-        self.signal_update_cafe_stats.emit(self.cafe.stats)
-        self.remaining_clients = self.cafe.round_clients
-        self.clock_customer_spawn.start()
-        self.clock_check_keys.start()
+        self.signal_update_cafe_stats.emit(self._cafe.stats)
+        self._remaining_clients = self._cafe.round_clients
+        self._clock_customer_spawn.start()
+        self._clock_check_keys.start()
 
-    def new_customer(self) -> None:
+    def __new_customer(self) -> None:
         '''Llega un cliente a la tienda. Si hay mesas, se sienta y espera un pedido'''
         print('Ha llegado un cliente!')
-        shuffle(self.tables)
+        shuffle(self._tables)
         #self.clock_customer_spawn.pause_()
-        for table in self.tables:
+        for table in self._tables:
             if table.free:
                 # Generar cliente
                 new_client_type, new_client_wait_time, _ = choices(
                     self.posible_clients,
                     weights=[x[-1] for x in self.posible_clients]
-                )[0]
+                )[0]  # El [0] es porque choices retorna una lista de largo 1
                 print(new_client_type, new_client_wait_time)
+                # Se añade el cliente a la mesa
                 customer = table.add_customer(new_client_type, new_client_wait_time)
-                #! TEST: funciona, pero el código es mejorable
-                customer.signal_delete_object.connect(self.signal_delete_object.emit)
-                self.signal_add_new_object.emit(customer.display_info)
-                self.remaining_clients -= 1
+                # Disminuye la cantidad de clientes restantes
+                self._remaining_clients -= 1
                 return
         else:
             print('El cliente se ha ido, volverá luego')
-        if not self.remaining_clients:
+        if not self._remaining_clients:
             print('Se han acabado los clientes!')
-            self.clock_customer_spawn.stop()
+            self._clock_customer_spawn.stop()
 
 
 def get_last_game_data() -> dict:

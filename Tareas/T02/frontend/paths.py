@@ -76,7 +76,8 @@ PATH = {
         'chef': join(_SPRITES, 'chef', 'meson_00.png'),
         'table': join(_SPRITES, 'mapa', 'accesorios', 'silla_mesa_roja.png')
     },
-    'table': join(_SPRITES, 'mapa', 'accesorios', 'silla_mesa_roja.png'),
+    'table': join(_SPRITES, 'mapa', 'accesorios', 'mesa_pequena.png'),
+    'chair': join(_SPRITES, 'mapa', 'accesorios', 'silla_cafe.png'),
     'player': {
         'a': {
             'free': {

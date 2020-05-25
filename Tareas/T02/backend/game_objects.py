@@ -27,21 +27,20 @@ class GameObject(QObject):
     mostrar el objeto en la pantalla.
     '''
 
-    signal_create_object = pyqtSignal(dict)
-    signal_update_object = pyqtSignal(dict)
-    signal_delete_object = pyqtSignal(dict)
-
-    _CELL_SIZE = PARAMETROS['mapa']['tamaño celda']
+    _cell_size = int(PARAMETROS['mapa']['tamaño celda'])
     id_counter = generate_ids()
 
-    def __init__(self, x: int, y: int, width: int, height: int, initial_state: list):
+
+    def __init__(self, core, x: int, y: int, width: int, height: int, initial_state: list):
         super().__init__()
+        self.core = core
         self.class_name = type(self).__name__.lower()
         self._id = str(next(GameObject.id_counter))
         self._x = int(x)
         self._y = int(y)
-        self.size = (int(width) * self._CELL_SIZE, int(height) * self._CELL_SIZE)
+        self.size = (int(width) * self._cell_size, int(height) * self._cell_size)
         self._object_state = [self.class_name] + initial_state
+        core.signal_add_new_object.emit(self.display_info)
 
     def __repr__(self):
         return self._id
@@ -121,10 +120,10 @@ class Player(GameObject):
     _movemet_direction = {'up': (0, -1), 'right': (1, 0), 'down': (0, 1), 'left': (-1, 0)}
     _movement_speed = PARAMETROS['personaje']['velocidad']
 
-    def __init__(self, x: int, y: int):
+    def __init__(self, core, x: int, y: int):
         # TODO: parametros de disfraz y teclas
         # estado = (jugador, disfraz, libre o ocupado, tipo movimiento, direc movimiento)
-        super().__init__(x, y, 1, 2, ['a', 'free', 'idle', 'down'])
+        super().__init__(core, x, y, 1, 2, ['a', 'free', 'idle', 'down'])
         self.movemet_keys = {Qt.Key_W: 'up', Qt.Key_D: 'right', Qt.Key_S: 'down', Qt.Key_A: 'left'}
         self.orders = 0
 
@@ -153,8 +152,8 @@ class Chef(GameObject):
     Preparan la comida.
     Tienen un nivel de experiencia relacionado con los platos preparador
     '''
-    def __init__(self, x: int, y: int):
-        super().__init__(x, y, 4, 4, ['idle'])
+    def __init__(self, core, x: int, y: int):
+        super().__init__(core, x, y, 4, 4, ['idle'])
         # TODO
         self._exp = int()
         self._dishes = int()
@@ -170,10 +169,35 @@ class Chef(GameObject):
         self._dishes = value
 
 
+class Table(GameObject):
+    '''Mesa donde se asignan los clientes'''
+    def __init__(self, core, x: int, y: int):
+        super().__init__(core, x, y + self._cell_size, 1, 1, [])
+        self.free = True
+        self.customer = None
+        self.table = Chair(core, self._x, self._y - self._cell_size)
+        # Overite del atributo size, para que tanto mesa como silla se
+        # consideren como un objeto único al detectar colisiones
+        self.size = (self.size[0], self.size[0] + self._cell_size)
+
+    def add_customer(self, customer_type: str, wait_time: int):
+        '''Añade un cliente a la mesa y lo retorna'''
+        self.free = False
+        self.customer = Customer(self.core, *self.position, self, customer_type, wait_time)
+        print(f'Cliente {customer_type} asignado en la mesa con id {self._id}')
+        #! La mesa debe encargarse del manejo del cliente, no el GameCore
+        return self.customer
+
+
+class Chair(GameObject):
+    '''Silla de los clientes'''
+    def __init__(self, core, x: int, y: int):
+        super().__init__(core, x, y, 1, 1, [])
+
 class Customer(GameObject):
     '''Cliente. Es asignado a una mesa aleatoria'''
-    def __init__(self, x: int, y: int, table, customer_type: str, wait_time: int):
-        super().__init__(x, y, 1, 2, [customer_type])
+    def __init__(self, core, x: int, y: int, table, customer_type: str, wait_time: int):
+        super().__init__(core, x, y - self._cell_size * 1.5, 1, 2, [customer_type])
         self.table = table
         self.wait_time = wait_time
         self.customer_type = customer_type
@@ -183,24 +207,6 @@ class Customer(GameObject):
     def exit_cafe(self):
         '''Cliente se retira de la mesa'''
         print('me voy >:(')
-        self.signal_delete_object.emit(self.display_info)
         self.table.free = True
         self.table.customer = None
-
-
-
-class Table(GameObject):
-    '''Mesa donde se pueden sentar los clientes'''
-    def __init__(self, x: int, y: int):
-        super().__init__(x, y, 1, 2, [])
-        self.free = True
-        self.customer = None
-
-    def add_customer(self, customer_type: str, wait_time: int) -> Customer:
-        '''Añade un cliente a la mesa y lo retorna'''
-        self.free = False
-        self.customer = Customer(*self.position, self, customer_type, wait_time)
-        print(f'Cliente {customer_type} asignado en la mesa {self._id}')
-        #! La mesa debe encargarse del manejo del cliente, no el GameCore
-        return self.customer
-
+        self.core.signal_delete_object.emit(self.display_info)
