@@ -39,6 +39,7 @@ class GameObject(QObject):
         self._object_state = [type(self).__name__.lower()] + initial_state
         self.core = core
         self.connect_to_core()
+        self.clocks = list()
 
     def __repr__(self):
         return self._id
@@ -51,13 +52,13 @@ class GameObject(QObject):
 
     def object_clock_pause(self):
         '''Método para pausar los relojes del objeto'''
-        # TODO
-        pass
+        for clock in self.clocks:
+            clock.pause_()
 
     def object_clock_continue(self):
         '''Método para pausar los relojes del objeto'''
-        # TODO
-        pass
+        for clock in self.clocks:
+            clock.continue_()
 
     @property
     def position(self):
@@ -216,6 +217,7 @@ class Customer(GameObject):
         self.wait_time = wait_time
         self.customer_type = customer_type
         self.clock = GameClock(interval=wait_time, final_event=self.exit_cafe, rep=1)
+        self.clocks.append(self.clock)
         self.clock.start()
 
     def exit_cafe(self):

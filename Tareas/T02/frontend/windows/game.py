@@ -69,14 +69,14 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         Pausa o continua el juego.
         Cambia el texto del botón.
         '''
-        if self.paused:
-            self.button_time.setText('Pausar')
-            self.signal_continue_game.emit()
-        else:
-            self.button_time.setText('Seguir')
-            self.signal_pause_game.emit()
         self.paused = not self.paused
         self.game_area.setDisabled(self.paused)
+        if self.paused:
+            self.signal_pause_game.emit()
+            self.button_time.setText('Seguir')
+        else:
+            self.signal_continue_game.emit()
+            self.button_time.setText('Pausar')
 
     def update_cafe_stats(self, stats: dict):
         '''Actualiza los datos del Café en la ventana'''
@@ -90,6 +90,7 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
     def add_new_object(self, obj: dict):
         '''Crea un nuevo objeto en el area de juego'''
         new_object = QLabel(self.game_area)
+        new_object.setAttribute(Qt.WA_DeleteOnClose)
         new_object.setGeometry(*obj['pos'], *obj['size'])
         new_object.setPixmap(QPixmap(SPRITE_PATH[obj['state']]))
         new_object.setScaledContents(True)
@@ -104,6 +105,7 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
     def delete_object(self, obj: dict):
         '''Elimina un objeto'''
         self.game_objects[obj['id']].close()
+        del self.game_objects[obj['id']]
 
     def stack_under(self, obj_below: dict, obj_above: dict):
         '''Mueve un objeto detrás de otro'''
@@ -120,14 +122,19 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
 
         area_grid = self.game_area.layout()
 
+        window = QPixmap(SPRITE_PATH['map', 'window'])
+        wall = QPixmap(SPRITE_PATH['map', 'wall'])
+        tile = QPixmap(SPRITE_PATH['map', 'tile'])
+        border = QPixmap(SPRITE_PATH['map', 'border'])
+
         # Se añade decoración
         for x_pos in range(0, grid_width, 2):
             decoration = QLabel(self.game_area)
             if x_pos % 4:
-                decoration.setPixmap(QPixmap(SPRITE_PATH['map', 'window']))
+                decoration.setPixmap(window)
                 decoration.setFixedSize(cell_size * 2, cell_size * 4)
             else:
-                decoration.setPixmap(QPixmap(SPRITE_PATH['map', 'wall']))
+                decoration.setPixmap(wall)
                 decoration.setFixedSize(cell_size * 2, cell_size * 4)
             decoration.setScaledContents(True)
             area_grid.addWidget(decoration, 0, x_pos, 1, 2)
@@ -136,10 +143,10 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         for x_pos in range(grid_width):
             for y_pos in range(grid_height):
                 if y_pos:
-                    pixmap = QPixmap(SPRITE_PATH['map', 'tile'])
+                    pixmap = tile
                 else:
                     rotation = QTransform().rotate(90)
-                    pixmap = QPixmap(SPRITE_PATH['map', 'border']).transformed(rotation)
+                    pixmap = border.transformed(rotation)
                 cell = QLabel(self.game_area)
                 cell.setFixedSize(cell_size, cell_size)
                 cell.setPixmap(pixmap)
