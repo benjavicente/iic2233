@@ -12,11 +12,11 @@ from frontend.themes import SUMMARY_THEME
 
 class SummaryWindow(QWidget):
     '''Ventana que muestra los el resumen de la ronda'''
-    def __init__(self, *args, **kwards):
-        super().__init__(*args, **kwards)
-        self.iniciar()
+    def __init__(self):
+        super().__init__()
+        self.load_ui()
 
-    def iniciar(self):
+    def load_ui(self):
         '''Inicia la ventana'''
         self.setWindowTitle('DCCafé - Resumen Ronda')
         self.setStyleSheet(SUMMARY_THEME)
@@ -24,113 +24,114 @@ class SummaryWindow(QWidget):
         main_layout = QGridLayout()
         self.setLayout(main_layout)
         # Bloque de información
-        layout_resumen = QVBoxLayout()
-        self.card_resumen = QFrame()
-        self.card_resumen.setLayout(layout_resumen)
-        self.card_resumen.setObjectName('bloque')
-        main_layout.addWidget(self.card_resumen, 1, 1)
+        layout_card = QVBoxLayout()
+        layout_card.addSpacing(30)
+        self.card_summary = QFrame()
+        self.card_summary.setLayout(layout_card)
+        self.card_summary.setObjectName('card_summary')
+        main_layout.addWidget(self.card_summary, 1, 1)
         # -> Título
-        self.titulo = QLabel(self)
-        self.titulo.setObjectName('titulo')
-        self.titulo.setText('Resumen')
-        self.titulo.setAlignment(Qt.AlignCenter)
-        layout_resumen.addWidget(self.titulo)
+        self.title = QLabel(self)
+        self.title.setObjectName('title')
+        self.title.setText('Resumen')
+        self.title.setAlignment(Qt.AlignCenter)
+        layout_card.addWidget(self.title)
         # -> Linea separadora
-        self.linea = QFrame()
-        self.linea.setObjectName('linea')
-        self.linea.setFixedHeight(5)
-        layout_resumen.addWidget(self.linea)
-        layout_resumen.addSpacing(50)
+        self.line = QFrame(self)
+        self.line.setObjectName('line')
+        self.line.setFixedHeight(5)
+        layout_card.addWidget(self.line)
+        layout_card.addSpacing(50)
         # -> Resultados
-        grid_resultado = QGridLayout()
-        grid_resultado.setColumnStretch(0, 3)
-        grid_resultado.setColumnStretch(1, 2)
-        grid_resultado.setContentsMargins(*[80, 0] * 2)
-        layout_resumen.addLayout(grid_resultado)
+        grid_results = QGridLayout()
+        grid_results.setColumnStretch(0, 3)
+        grid_results.setColumnStretch(1, 2)
+        grid_results.setContentsMargins(*[80, 0] * 2)
+        layout_card.addLayout(grid_results)
         # --> Clientes perdidos
         # label
-        self.label_perdidos = QLabel('Clientes Perdidos', self)
-        self.label_perdidos.setObjectName('label_pedidos')
-        self.label_perdidos.setAlignment(Qt.AlignRight)
-        grid_resultado.addWidget(self.label_perdidos, 0, 0)
+        self.label_failed = QLabel('Clientes Perdidos', self)
+        self.label_failed.setObjectName('label_failed')
+        self.label_failed.setAlignment(Qt.AlignRight)
+        grid_results.addWidget(self.label_failed, 0, 0)
         # valor
-        self.perdidos = QLabel('2', self)
-        self.perdidos.setObjectName('pedidos')
-        self.perdidos.setAlignment(Qt.AlignRight)
-        grid_resultado.addWidget(self.perdidos, 0, 1)
+        self.failed = QLabel('2', self)
+        self.failed.setObjectName('failed')
+        self.failed.setAlignment(Qt.AlignRight)
+        grid_results.addWidget(self.failed, 0, 1)
         # --> Clientes atendidos
         # label
-        self.label_atendidos = QLabel('Clientes Atendidos', self)
-        self.label_atendidos.setObjectName('label_atendidos')
-        self.label_atendidos.setAlignment(Qt.AlignRight)
-        grid_resultado.addWidget(self.label_atendidos, 1, 0)
+        self.label_completed = QLabel('Clientes Atendidos', self)
+        self.label_completed.setObjectName('label_completed')
+        self.label_completed.setAlignment(Qt.AlignRight)
+        grid_results.addWidget(self.label_completed, 1, 0)
         # valor
-        self.atendidos = QLabel('12', self)
-        self.atendidos.setObjectName('atendidos')
-        self.atendidos.setAlignment(Qt.AlignRight)
-        grid_resultado.addWidget(self.atendidos, 1, 1)
+        self.completed = QLabel('12', self)
+        self.completed.setObjectName('completed')
+        self.completed.setAlignment(Qt.AlignRight)
+        grid_results.addWidget(self.completed, 1, 1)
         # --> Dinero acumulado
         # label
-        self.label_dinero = QLabel('Dinero Acumulado', self)
-        self.label_dinero.setObjectName('label_dinero')
-        self.label_dinero.setAlignment(Qt.AlignRight)
-        grid_resultado.addWidget(self.label_dinero, 2, 0)
+        self.label_money = QLabel('Dinero Acumulado', self)
+        self.label_money.setObjectName('label_money')
+        self.label_money.setAlignment(Qt.AlignRight)
+        grid_results.addWidget(self.label_money, 2, 0)
         # valor
-        self.dinero = QLabel('$100000', self)
-        self.dinero.setObjectName('dinero')
-        self.dinero.setAlignment(Qt.AlignRight)
-        grid_resultado.addWidget(self.dinero, 2, 1)
+        self.money = QLabel('$100000', self)
+        self.money.setObjectName('money')
+        self.money.setAlignment(Qt.AlignRight)
+        grid_results.addWidget(self.money, 2, 1)
         # -> Reputación
-        self.label_reputacion = QLabel('Reputación', self)
-        self.label_reputacion.setObjectName('rep')
-        self.label_reputacion.setAlignment(Qt.AlignCenter)
-        layout_resumen.addSpacing(30)
-        layout_resumen.addWidget(self.label_reputacion)
+        self.label_rep = QLabel('Reputación', self)
+        self.label_rep.setObjectName('label_rep')
+        self.label_rep.setAlignment(Qt.AlignCenter)
+        layout_card.addSpacing(30)
+        layout_card.addWidget(self.label_rep)
         # --> Estrellas
-        fila_estrellas = QHBoxLayout()
-        fila_estrellas.setContentsMargins(30, 0, 30, 0)
-        self.estrella_llena = QPixmap(PATH['star']['filed'])
-        self.estrella_vacia = QPixmap(PATH['star']['empty'])
+        stars_layout = QHBoxLayout()
+        stars_layout.setContentsMargins(30, 0, 30, 0)
+        self.star_filed = QPixmap(PATH['star']['filed'])
+        self.star_empty = QPixmap(PATH['star']['empty'])
         self.estrellas = []
         for _ in range(5):
-            estrella = QLabel()
-            estrella.setFixedSize(40, 40)
-            estrella.setScaledContents(True)
-            fila_estrellas.addWidget(estrella)
-            self.estrellas.append(estrella)
-        layout_resumen.addLayout(fila_estrellas)
+            star = QLabel()
+            star.setFixedSize(40, 40)
+            star.setScaledContents(True)
+            stars_layout.addWidget(star)
+            self.estrellas.append(star)
+        layout_card.addLayout(stars_layout)
         # -> Botones
-        fila_botones = QHBoxLayout()
-        layout_resumen.addSpacing(50)
-        layout_resumen.addLayout(fila_botones)
+        button_layout = QHBoxLayout()
+        layout_card.addSpacing(50)
+        layout_card.addLayout(button_layout)
         # --> Salir
-        self.salir = QPushButton('Salir', self)
-        self.salir.setObjectName('salir')
-        self.salir.setCursor(QCursor(Qt.PointingHandCursor))
-        fila_botones.addWidget(self.salir)
+        self.quit = QPushButton('Salir', self)
+        self.quit.setObjectName('quit')
+        self.quit.setCursor(QCursor(Qt.PointingHandCursor))
+        button_layout.addWidget(self.quit)
         # --> Guardar
-        self.guardar = QPushButton('Guardar', self)
-        self.guardar.setObjectName('guardar')
-        self.guardar.setCursor(QCursor(Qt.PointingHandCursor))
-        fila_botones.addWidget(self.guardar)
+        self.safe = QPushButton('Guardar', self)
+        self.safe.setObjectName('safe')
+        self.safe.setCursor(QCursor(Qt.PointingHandCursor))
+        button_layout.addWidget(self.safe)
         # --> Continuar
-        self.continuar = QPushButton('Continuar', self)
-        self.continuar.setObjectName('continuar')
-        self.continuar.setCursor(QCursor(Qt.PointingHandCursor))
-        fila_botones.addWidget(self.continuar)
+        self.continue_ = QPushButton('Continuar', self)
+        self.continue_.setObjectName('continue_')
+        self.continue_.setCursor(QCursor(Qt.PointingHandCursor))
+        button_layout.addWidget(self.continue_)
         # -> Espacios
         main_layout.addItem(QSpacerItem(0, 0, vPolicy=QSizePolicy.Expanding), 0, 1)
         main_layout.addItem(QSpacerItem(0, 0, vPolicy=QSizePolicy.Expanding), 2, 1)
         main_layout.addItem(QSpacerItem(0, 0, hPolicy=QSizePolicy.Expanding), 1, 0)
         main_layout.addItem(QSpacerItem(0, 0, hPolicy=QSizePolicy.Expanding), 1, 2)
 
-    def titulo_ronda(self, n_ronda: int = 0) -> None:
+    def round_title(self, n_ronda: int = 0) -> None:
         '''Actualiza el título de la ronda'''
         if not isinstance(n_ronda, int):
             raise TypeError(f'El número de la ronda {n_ronda.__repr__()} no es valido')
-        self.titulo.setText(f'Resumen ronda {n_ronda}')
+        self.title.setText(f'Resumen ronda {n_ronda}')
 
-    def mostrar_reputacion(self, rep: int) -> None:
+    def show_rep(self, rep: int) -> None:
         '''Muestra la reputacion con estrellas'''
         if rep.isnumeric():
             rep = int(rep)
@@ -138,16 +139,16 @@ class SummaryWindow(QWidget):
             raise ValueError(f'La reputación {rep.__repr__()} no es un número entre 0 y 5')
         for indice in range(5):
             if rep > 0:
-                self.estrellas[indice].setPixmap(self.estrella_llena)
+                self.estrellas[indice].setPixmap(self.estar_filedstrella_llena)
             else:
-                self.estrellas[indice].setPixmap(self.estrella_vacia)
+                self.estrellas[indice].setPixmap(self.estar_emptystrella_vacia)
             rep -= 1
 
     def show_results(self, results: dict) -> None:
         '''Carga los resultados y muestra la ventana'''
-        self.titulo_ronda(int(results['round']))
-        self.mostrar_reputacion(results['rep'])
-        self.atendidos.setText(results['completed_orders'])
-        self.perdidos.setText(results['failed_orders'])
-        self.dinero.setText(results['money'])
+        self.round_title(int(results['round']))
+        self.show_rep(results['rep'])
+        self.completed.setText(results['completed_orders'])
+        self.failed.setText(results['failed_orders'])
+        self.money.setText(results['money'])
         self.show()
