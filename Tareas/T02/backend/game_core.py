@@ -33,6 +33,8 @@ class GameCore(QObject):
 
     signal_show_paused = pyqtSignal(bool)
 
+    signal_show_end_screen = pyqtSignal(dict)
+
     object_classes = {'mesero': Player, 'chef': Chef, 'mesa': Table}
 
     def __init__(self):
@@ -73,6 +75,9 @@ class GameCore(QObject):
         self._clock_check_keys = GameClock(
             event=self._check_keys,
             interval=self._key_access_rate,
+        )
+        self._clock_check_if_empty = GameClock(
+            event=self.check_if_empty
         )
         # Posibilidades de tipos del cliente
         client_real_types = {'relajado': 'hamster', 'apurado': 'dog', 'presidente': 'president'}
@@ -220,16 +225,17 @@ class GameCore(QObject):
         for table in self._tables:
             if table.free:
                 client = self.round_clients.pop()
-                if not self.round_clients:
-                    print('Se han acabado los clientes!')
-                    self.cafe.open = False
-                    self._clock_customer_spawn.stop()
                 if isinstance(client, self.special_tuple):
                     # Si es especial, se genera un tiempo de espera al azar
                     wait_time = randint(client.min, client.max)
                     table.add_customer('special', client.type, wait_time, client.rep)
                 else:
                     table.add_customer('basic', client.type, client.wait_time)
+                if not self.round_clients:
+                    print('Se han acabado los clientes!')
+                    self.cafe.open = False
+                    self._clock_check_if_empty.start()
+                    self._clock_customer_spawn.stop()
                 self.update_ui_information()
                 return  # Termina el método
 
@@ -250,6 +256,13 @@ class GameCore(QObject):
         if x1 < 0 or y1 < 0 or x1 + w1 > map_width or y1 + h1 > map_height:
             collied.append(True)
         return collied
+
+    def check_if_empty(self):
+        '''Revisa si se acabarón los clientes, para luego pausar la ronda'''
+        if all(map(lambda table: table.free, self._tables)):
+            self._clock_check_if_empty.stop()
+            self.pause_continue_game()
+            self.signal_show_end_screen.emit(self.cafe.stats)
 
 
 def check_colision(hitbox1, hitbox2) -> True:

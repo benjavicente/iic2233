@@ -1,17 +1,14 @@
-'''
-Ventana Posterior del juego
-'''
-
-import sys
+'''Ventana Posterior del juego'''
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor, QPixmap
-from PyQt5.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
-                             QLabel, QPushButton, QSizePolicy, QSpacerItem,
+from PyQt5.QtWidgets import (QFrame, QGridLayout, QHBoxLayout, QLabel,
+                             QPushButton, QSizePolicy, QSpacerItem,
                              QVBoxLayout, QWidget)
 
-from ..themes import SUMMARY_THEME
-from ..paths import PATH
+from frontend.paths import PATH
+from frontend.themes import SUMMARY_THEME
+
 
 class SummaryWindow(QWidget):
     '''Ventana que muestra los el resumen de la ronda'''
@@ -35,6 +32,7 @@ class SummaryWindow(QWidget):
         # -> Título
         self.titulo = QLabel(self)
         self.titulo.setObjectName('titulo')
+        self.titulo.setText('Resumen')
         self.titulo.setAlignment(Qt.AlignCenter)
         layout_resumen.addWidget(self.titulo)
         # -> Linea separadora
@@ -134,6 +132,8 @@ class SummaryWindow(QWidget):
 
     def mostrar_reputacion(self, rep: int) -> None:
         '''Muestra la reputacion con estrellas'''
+        if rep.isnumeric():
+            rep = int(rep)
         if not isinstance(rep, int) or not 0 <= rep <= 5:
             raise ValueError(f'La reputación {rep.__repr__()} no es un número entre 0 y 5')
         for indice in range(5):
@@ -142,3 +142,12 @@ class SummaryWindow(QWidget):
             else:
                 self.estrellas[indice].setPixmap(self.estrella_vacia)
             rep -= 1
+
+    def show_results(self, results: dict) -> None:
+        '''Carga los resultados y muestra la ventana'''
+        self.titulo_ronda(int(results['round']))
+        self.mostrar_reputacion(results['rep'])
+        self.atendidos.setText(results['completed_orders'])
+        self.perdidos.setText(results['failed_orders'])
+        self.dinero.setText(results['money'])
+        self.show()

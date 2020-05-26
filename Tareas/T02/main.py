@@ -10,7 +10,7 @@ from backend.game_core import GameCore
 from backend.game_objects import GameObject
 from frontend.windows.game import GameWindow
 from frontend.windows.initial import InitialWindow
-# from frontend.windows.summary import SummaryWindow  # TODO
+from frontend.windows.summary import SummaryWindow  # TODO
 
 if __name__ == "__main__":
     sys.__excepthook__ = lambda t, v, trace: print(t, v, trace, sep="\n")
@@ -19,6 +19,7 @@ if __name__ == "__main__":
 
     INITIAL_WINDOW = InitialWindow()
     GAME_WINDOW = GameWindow()
+    FINAL_WINDOW = SummaryWindow()
 
     GAME_CORE = GameCore()
 
@@ -44,6 +45,9 @@ if __name__ == "__main__":
     # Señales de pausa y resumir juego
     GAME_WINDOW.signal_pause_continue.connect(GAME_CORE.pause_continue_game)
     GAME_CORE.signal_show_paused.connect(GAME_WINDOW.paused_ui)
+
+    # Señales de ventana final
+    GAME_CORE.signal_show_end_screen.connect(FINAL_WINDOW.show_results)
 
     ################################
     INITIAL_WINDOW.show()
