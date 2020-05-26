@@ -33,52 +33,50 @@ class GameClock(QTimer):
         '''
         super().__init__()
         # Parámetros
-        self._counter = rep
-        self._interval = interval * 1000
-        self._remaining_time = False
+        self.counter = rep
+        self.interval = interval * 1000
+        self.__remaining_time = 0
         self.__started = False
+        self.__paused = False
         # Eventos
         self._event = event
         self._final_event = final_event
         self._paused_event = paused_event
         self._continue_event = continue_event
         # QTimer setup
-        self.setInterval(self._interval)
+        self.setInterval(self.interval)
         self.timeout.connect(self.__call_event)
+
+    def __repr__(self):
+        return f'GameClock object with {self._event, self._final_event}'
 
     def start(self, *args):
         '''Overrite de start. Ejecuta el evento si es que tiene uno.'''
-        if not self.__started and self._event:
+        if not self.__started:
             self.__started = True
-            self._event()
+            if self._event:
+                self._event()
         super().start(*args)
 
     def is_paused(self) -> bool:
         '''Verifica que si el reloj esta pausado'''
-        return not self._remaining_time
-
-    def set_rep(self, value: int) -> None:
-        '''Redefine el número de repeticiones que realiza el reloj'''
-        self._counter = value
+        return not self.__paused
 
     def pause_(self) -> None:
         '''Pausa el reloj'''
-        if not self.isActive():
-            raise GameClockError('El reloj está pausado o no ha empezado')
-        else:
-            self._remaining_time = self.remainingTime()
+        if self.isActive():
+            self.__remaining_time = self.remainingTime()
             if self._paused_event:
                 self._paused_event()
+            self.__paused = True
             self.stop()
 
     def continue_(self) -> None:
         '''Continua el reloj'''
-        if self.isActive():
-            raise GameClockError('El reloj ya está activo')
-        else:
+        if self.__paused:
             if self._continue_event:
                 self._continue_event()
-            self.start(self._remaining_time)
+            self.start(self.__remaining_time)
 
     def __call_event(self):
         '''
@@ -87,17 +85,17 @@ class GameClock(QTimer):
         limitación de iteraciones y poder llamar a un método final.
         '''
         # Disminuye el contador en uno si es que el contador es mayor que 0
-        if self._counter != -1:
-            self._counter -= 1
+        if self.counter != -1:
+            self.counter -= 1
         # Vuelve nuevamente al tiempo normal si es que se pausó
-        if self._remaining_time:
-            self.setInterval(self._interval)
-            self._remaining_time = False
+        if self.__remaining_time:
+            self.setInterval(self.interval)
+            self.__remaining_time = 0
         # Ejecuta el evento si es que existe
         if self._event:
             self._event()
         # Al terminar las repeticiones ejecuta el evento final si es que existe
-        if not self._counter:
+        if not self.counter:
             if self._final_event:
                 self._final_event()
             self.stop()

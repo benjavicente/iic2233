@@ -42,7 +42,6 @@ class GameObject(QObject):
         self._animation_cicle = list()
         self.core = core
         self.connect_to_core()
-        self.core.signal_add_new_object.emit(self.display_info)
 
     def __repr__(self):
         return type(self).__name__ + self.id
@@ -51,17 +50,15 @@ class GameObject(QObject):
         '''Actualiza el objeto en el ui.'''
         self.core.signal_update_object.emit(self.display_info)
 
-    def delete_object(self):
-        '''Elimina el objeto en el ui.'''
-        self.core.signal_delete_object.emit(self.display_info)
-
     def connect_to_core(self):
         '''Conecta las señales con su core asociado'''
+        self.core.signal_add_new_object.emit(self.display_info)
         self.core.signal_pause_objects.connect(self.object_clock_pause)
         self.core.signal_resume_objects.connect(self.object_clock_continue)
 
-    def disconnect_to_core(self):
-        '''Desconecta las señales del core asociado'''
+    def delete_object(self):
+        '''Elimina el objeto en el ui y desconecta sus señales'''
+        self.core.signal_delete_object.emit(self.display_info)
         self.core.signal_pause_objects.disconnect(self.object_clock_pause)
         self.core.signal_resume_objects.disconnect(self.object_clock_continue)
 
@@ -77,13 +74,12 @@ class GameObject(QObject):
 
     def animation(self):
         '''Animación/sprite siguiente'''
-        act = self._animation_state
-        self._animation_state = (self._animation_state + 1) % len(self._animation_cicle)
-        return self._animation_cicle[act]
 
     def update_animation(self, animation_index: int):
         '''Cambia la animación'''
-        self._object_state[animation_index] = self.animation()
+        act = self._animation_state % len(self._animation_cicle)
+        self._animation_state = (self._animation_state + 1) % len(self._animation_cicle)
+        self._object_state[animation_index] = self._animation_cicle[act]
         self.update_object()
 
     @property
@@ -194,18 +190,29 @@ class Player(GameObject):
         super().__init__(core, x, y, 1, 2, ['a', 'free', 'idle', 'down'])
         self.movemet_keys = self._keys.pop(0)
         self.orders = 0
+        self.current_order = None
         self.walked = True
         self._animation_cicle = ['rightfoot', 'idle', 'leftfoot', 'idle']
         self.clock_check_if_walking = GameClock(
             event=self.check_if_walking,
-            interval=0.1
+            interval=0.2
         )
         self.clock_check_if_walking.start()
         self.clocks.append(self.clock_check_if_walking)
 
-    def get_order_from_chef(self, order):
-        '''Obtine un snack'''
+    def get_order_from_chef(self, snack):
+        '''Obtiene un snack'''
         self._object_state[2] = 'snack'
+        self.current_order = snack
+        self.update_object()
+
+    def give_order_to_client(self):
+        '''Entrega un snack'''
+        snack = self.current_order
+        self._object_state[2] = 'free'
+        self.update_object()
+        self.current_order = None
+        return snack
 
     def has_key(self, key: int) -> bool:
         '''Ve si tiene la tecla entregada'''
@@ -266,6 +273,10 @@ class Chef(GameObject):
         self._dishes = int()
         self.order = None
         self.cooking = False
+        self.waiting = False
+        self.cook_clock = None  # Se defina el cocinar
+        self.wait_time = GameClock(final_event=self.clean, rep=1)
+        self.clocks.append(self.wait_time)
 
     @property
     def dishes(self):
@@ -286,11 +297,15 @@ class Chef(GameObject):
 
     def interact(self, player):
         '''Interación con jugadores'''
-        if not self.cooking:
+        if not self.cooking and not player.current_order:
             if self.order:
                 player.get_order_from_chef(self.order)
+                self.order = None
                 self._object_state[1] = 'idle'
-            else:
+                self.wait_time.start()
+                self.update_object()
+            elif player.orders:
+                player.orders -= 1
                 self.start_cooking()
                 self.cooking = True
 
@@ -320,21 +335,24 @@ class Chef(GameObject):
         beta = float(PARAMETROS['chef']['probabilidad fallar']['suma'])
         gamma = self.exp
         probability = (alpha)/(gamma + beta)
+        print(probability, alpha, beta, gamma)
         if random() > probability:
-            # EL chef fall y empieza de nuevo
-            self.start_cooking()
-            print('Receta fallida')
-        else:
             self.finish_order()
+        else:
+            self.start_cooking()
 
     def finish_order(self):
         '''Termina la orden y la deja en su mesa'''
+        self.clocks.remove(self.cook_clock)
         self.cooking = False
         self.dishes += 1
         self._object_state[1] = 'done'
         self.order = Snack(self.exp)
         self.update_object()
 
+    def clean(self):
+        '''El chef espera un poco antes de cocinar de nuevo'''
+        self.waiting = False
 
 
 class Table(GameObject):
@@ -364,6 +382,16 @@ class Table(GameObject):
                 width * (1 - fact),
                 (self._cell_size + height) * (1 - fact))
 
+    def interact(self, player):
+        '''Interactúa con el jugador'''
+        if not self.free:
+            if not self.customer.gave_order:
+                player.orders += 1
+                self.customer.gave_order = True
+            if player.current_order:
+                self.customer.get_order(player.give_order_to_client())
+                # self.show_snack()  # TODO
+
 
 class Chair(GameObject):
     '''Silla de los clientes'''
@@ -377,22 +405,33 @@ class Customer(GameObject):
         super().__init__(core, x, y - self._cell_size * 1.5, 1, 2, [customer_type, '1'])
         self.table = table
         self.wait_time = wait_time
+        self.gave_order = False
         self.customer_type = customer_type
         self._animation_cicle = ['0', '1', '2']
-        self._animation_state = 0
         self.wait_clock = GameClock(
             event=lambda: self.update_animation(2),
             interval=wait_time/3,
             final_event=self.exit_cafe,
             rep=3)
+        self.happy_clock = GameClock(
+            final_event=self.exit_cafe,
+            rep=1
+        )
         self.clocks.append(self.wait_clock)
+        self.clocks.append(self.happy_clock)
         self.wait_clock.start()
 
     def exit_cafe(self):
         '''Cliente se retira de la mesa'''
-        print('me voy >:(')
         self.table.free = True
         self.table.customer = None
-        self.clocks.remove(self.wait_clock)
-        self.disconnect_to_core()
+        self.clocks.clear()
         self.delete_object()
+
+    def get_order(self, snack):
+        '''El cliente recibe el bocadillo del jugador'''
+        # TODO: hacer algo al snack
+        self.wait_clock.stop()
+        self.happy_clock.start()
+        self._animation_cicle = ['H']
+        self.update_animation(2)

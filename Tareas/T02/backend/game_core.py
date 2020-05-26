@@ -119,10 +119,8 @@ class GameCore(QObject):
                 print(colision_list)
                 if colision_list:
                     for object_type in colision_list:
-                        if isinstance(object_type, Chef):
+                        if isinstance(object_type, (Chef, Table)):
                             object_type.interact(player)
-                        if isinstance(object_type, Table):
-                            pass # do something
                 else:
                     player.move(next_pos)
 
