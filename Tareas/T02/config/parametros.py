@@ -109,4 +109,8 @@ PARAMETROS = {
             "disponibilidad": True,
         },
     },
+    'trampas': {
+        'dinero': 500,
+        'reputación': 1,
+    }
 }

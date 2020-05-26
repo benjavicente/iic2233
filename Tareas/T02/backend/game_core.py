@@ -127,7 +127,7 @@ class GameCore(QObject):
             for player in moved_players:  # Movimiento jugadores
                 next_pos = player.next_pos(  # Usa solo las teclas del jugador
                     filter(lambda k, p=player: p.has_key(k), self._pressed_keys),
-                    self._key_access_rate  
+                    self._key_access_rate
                 )
                 colision_list = self.__check_colision(player.id, player.new_hitbox(next_pos))
                 if colision_list:  # Si colisiona, interactúa con objetos
@@ -136,6 +136,16 @@ class GameCore(QObject):
                             object_type.interact(player)
                 else:  # Si no es el caso, se mueve
                     player.move(next_pos)
+            # Ve las teclas trampas están
+            if all(key in self._pressed_keys for key in [Qt.Key_M, Qt.Key_O, Qt.Key_Y]):
+                self.cafe.money += PARAMETROS['trampas']['dinero']
+                self.update_ui_information()
+            if all(key in self._pressed_keys for key in [Qt.Key_F, Qt.Key_I, Qt.Key_N]):
+                self.round_clients.clear()
+            if all(key in self._pressed_keys for key in [Qt.Key_R, Qt.Key_T, Qt.Key_G]):
+                self.cafe.rep += PARAMETROS['trampas']['reputación']
+                self.update_ui_information()
+
 
     def new_game(self) -> None:
         '''Carga un nuevo juego'''
