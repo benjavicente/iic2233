@@ -126,18 +126,12 @@ PATH = {
         'idle': join(_SPRITES, 'chef', 'meson_01.png'),
         'done': join(_SPRITES, 'chef', 'meson_16.png'),
         'reading': join(_SPRITES, 'chef', 'meson_17.png'),
-        'cooking': {
-            '0': {
-                '0': join(_SPRITES, 'chef', 'meson_13.png'),
-                '1': join(_SPRITES, 'chef', 'meson_14.png'),
-                '2': join(_SPRITES, 'chef', 'meson_15.png'),
-            },
-            '1': {
-                '0': join(_SPRITES, 'chef', 'meson_07.png'),
-                '1': join(_SPRITES, 'chef', 'meson_08.png'),
-                '2': join(_SPRITES, 'chef', 'meson_09.png'),
-            },
-        },
+        'cookingA0': join(_SPRITES, 'chef', 'meson_13.png'),
+        'cookingA1': join(_SPRITES, 'chef', 'meson_14.png'),
+        'cookingA2': join(_SPRITES, 'chef', 'meson_15.png'),
+        'cookingB0': join(_SPRITES, 'chef', 'meson_07.png'),
+        'cookingB1': join(_SPRITES, 'chef', 'meson_08.png'),
+        'cookingB2': join(_SPRITES, 'chef', 'meson_09.png'),
     },
     'customer': {
         'dog': {

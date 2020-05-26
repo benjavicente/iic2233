@@ -1,8 +1,7 @@
-'''
-Clases del los objetos del juego DCCafé
-'''
+'''Clases del los objetos del juego DCCafé'''
 
 from math import floor
+from random import random, choice
 
 from PyQt5.QtCore import QObject, pyqtSignal, Qt
 
@@ -82,6 +81,11 @@ class GameObject(QObject):
         self._animation_state = (self._animation_state + 1) % len(self._animation_cicle)
         return self._animation_cicle[act]
 
+    def update_animation(self, animation_index: int):
+        '''Cambia la animación'''
+        self._object_state[animation_index] = self.animation()
+        self.update_object()
+
     @property
     def hit_box(self):
         '''Caja que detecta las colisiones'''
@@ -112,11 +116,9 @@ class Cafe(QObject):
     '''Café que se administra en el juego'''
     def __init__(self):
         super().__init__()
-        # Parámetros guardados
         self.money = int()
         self.rep = int()
         self.rounds = int()
-        # Parámetros de la ronda
         self.open = True
         self.completed_orders = 0
         self.total_orders = 0
@@ -156,6 +158,21 @@ class Cafe(QObject):
         return self.rep
 
 
+class Snack(QObject):
+    '''Bocadillo'''
+    def __init__(self, chef_exp: int):
+        super().__init__()
+        self.chef_exp = chef_exp
+
+    def tip_prob(self, wait_time: float):
+        '''Cálculo de la propina'''
+        min_value = PARAMETROS['bocadillos']['calculos']['calidad pedido']['mínimo']
+        base = PARAMETROS['bocadillos']['calculos']['calidad pedido']['base']
+        fact = PARAMETROS['bocadillos']['calculos']['calidad pedido']['factor']
+        div = PARAMETROS['bocadillos']['calculos']['calidad pedido']['divisor']
+
+
+
 # Game Objects
 
 class Player(GameObject):
@@ -163,6 +180,11 @@ class Player(GameObject):
     Jugador del juego que empeña el rol de mesero.
     Bonus: Dos jugadores al mismo tiempo.
     '''
+    _keys = [
+        {Qt.Key_W: 'up', Qt.Key_D: 'right', Qt.Key_S: 'down', Qt.Key_A: 'left'},
+        {Qt.Key_I: 'up', Qt.Key_L: 'right', Qt.Key_K: 'down', Qt.Key_J: 'left'}
+    ]
+
     _movemet_direction = {'up': (0, -1), 'right': (1, 0), 'down': (0, 1), 'left': (-1, 0)}
     _movement_speed = PARAMETROS['personaje']['velocidad']
 
@@ -170,7 +192,7 @@ class Player(GameObject):
         # TODO: parametros de disfraz y teclas
         # estado = (jugador, disfraz, libre o ocupado, tipo movimiento, direc movimiento)
         super().__init__(core, x, y, 1, 2, ['a', 'free', 'idle', 'down'])
-        self.movemet_keys = {Qt.Key_W: 'up', Qt.Key_D: 'right', Qt.Key_S: 'down', Qt.Key_A: 'left'}
+        self.movemet_keys = self._keys.pop(0)
         self.orders = 0
         self.walked = True
         self._animation_cicle = ['rightfoot', 'idle', 'leftfoot', 'idle']
@@ -180,6 +202,10 @@ class Player(GameObject):
         )
         self.clock_check_if_walking.start()
         self.clocks.append(self.clock_check_if_walking)
+
+    def get_order_from_chef(self, order):
+        '''Obtine un snack'''
+        self._object_state[2] = 'snack'
 
     def has_key(self, key: int) -> bool:
         '''Ve si tiene la tecla entregada'''
@@ -211,26 +237,20 @@ class Player(GameObject):
                 height * (1 - fact))
 
     def move(self, pos: tuple):
-        '''
-        Mueve al jugador luego de probar que no colisionará en el core.
-        '''
+        '''Mueve al jugador luego de probar que no colisionará en el core.'''
         self._x, self._y = pos
         self.update_object()
         self.core.signal_move_up.emit(self.display_info)
         self.walked = True
 
     def check_if_walking(self):
+        '''Revisa si el jugador camina para cambiar su animación'''
         if self.walked:
             self.walked = False
-            self.update_animation()
+            self.update_animation(3)
         else:
             self._object_state[3] = 'idle'
             self.update_object()
-
-    def update_animation(self):
-        '''Cambia la animación del cliente'''
-        self._object_state[3] = self.animation()
-        self.update_object()
 
 
 class Chef(GameObject):
@@ -238,11 +258,14 @@ class Chef(GameObject):
     Preparan la comida.
     Tienen un nivel de experiencia relacionado con los platos preparador
     '''
+    initial_level = PARAMETROS['chef']['nivel inicial']
+
     def __init__(self, core, x: int, y: int):
         super().__init__(core, x, y, 4, 4, ['idle'])
-        # TODO
-        self._exp = int()
+        self._level = self.initial_level
         self._dishes = int()
+        self.order = None
+        self.cooking = False
 
     @property
     def dishes(self):
@@ -251,8 +274,67 @@ class Chef(GameObject):
 
     @dishes.setter
     def dishes(self, value):
-        # TODO: condiciones de experiencia
         self._dishes = value
+        if value >= PARAMETROS['chef']['niveles'][self._level]['platos siguiente nivel']:
+            self._level = PARAMETROS['chef']['niveles'][self._level]['siguiente nivel']
+            print('el chef subió de nivel')
+
+    @property
+    def exp(self):
+        '''Experiencia del chef'''
+        return int(PARAMETROS['chef']['niveles'][self._level]['experiencia'])
+
+    def interact(self, player):
+        '''Interación con jugadores'''
+        if not self.cooking:
+            if self.order:
+                player.get_order_from_chef(self.order)
+                self._object_state[1] = 'idle'
+            else:
+                self.start_cooking()
+                self.cooking = True
+
+    def start_cooking(self):
+        '''El chef prepara un plato'''
+        animation_type = choice(['A', 'B'])
+        self._animation_cicle = [f'cooking{animation_type}{i}' for i in range(3)]
+        # Reloj de cocina
+        cooking_animation_time = 0.2
+        min_value = float(PARAMETROS['bocadillos']['calculos']['tiempo preparación']['mínimo'])
+        base = float(PARAMETROS['bocadillos']['calculos']['tiempo preparación']['base'])
+        fact = float(PARAMETROS['bocadillos']['calculos']['tiempo preparación']['factor'])
+        total_time = max(min_value, base - self.core.cafe.rep - self.exp * fact)
+        self.cook_clock = GameClock(
+            interval=cooking_animation_time,
+            rep=total_time//cooking_animation_time,
+            event=lambda: self.update_animation(1),
+            final_event=self.try_recipes
+        )
+        self.clocks.clear()
+        self.clocks.append(self.cook_clock)
+        self.cook_clock.start()
+
+    def try_recipes(self):
+        '''El chef prueba una receta, donde puede fallar'''
+        alpha = float(PARAMETROS['chef']['probabilidad fallar']['factor'])
+        beta = float(PARAMETROS['chef']['probabilidad fallar']['suma'])
+        gamma = self.exp
+        probability = (alpha)/(gamma + beta)
+        if random() > probability:
+            # EL chef fall y empieza de nuevo
+            self.start_cooking()
+            print('Receta fallida')
+        else:
+            self.finish_order()
+
+    def finish_order(self):
+        '''Termina la orden y la deja en su mesa'''
+        self.cooking = False
+        self.dishes += 1
+        self._object_state[1] = 'done'
+        self.order = Snack(self.exp)
+        self.update_object()
+
 
 
 class Table(GameObject):
@@ -288,6 +370,7 @@ class Chair(GameObject):
     def __init__(self, core, x: int, y: int):
         super().__init__(core, x, y, 1, 1, [])
 
+
 class Customer(GameObject):
     '''Cliente. Es asignado a una mesa aleatoria'''
     def __init__(self, core, x: int, y: int, table, customer_type: str, wait_time: int):
@@ -298,7 +381,7 @@ class Customer(GameObject):
         self._animation_cicle = ['0', '1', '2']
         self._animation_state = 0
         self.wait_clock = GameClock(
-            event=self.update_animation,
+            event=lambda: self.update_animation(2),
             interval=wait_time/3,
             final_event=self.exit_cafe,
             rep=3)
@@ -313,8 +396,3 @@ class Customer(GameObject):
         self.clocks.remove(self.wait_clock)
         self.disconnect_to_core()
         self.delete_object()
-
-    def update_animation(self):
-        '''Cambia la animación del cliente'''
-        self._object_state[2] = self.animation()
-        self.update_object()

@@ -34,14 +34,14 @@ class GameCore(QObject):
 
     def __init__(self):
         super().__init__()
-        self._cafe = Cafe()
+        self.cafe = Cafe()
         self._players = list()
         self._chefs = list()
         self._tables = list()
         self.__set_up()
 
     def __iter__(self):
-        return iter(self._tables + self._chefs)
+        return iter(self._tables + self._chefs + self._players)
 
     def __set_up(self) -> None:
         '''Crea objetos para el manejo del juego'''
@@ -118,17 +118,20 @@ class GameCore(QObject):
                 colision_list = self.__check_colision(player.id, player.new_hitbox(next_pos))
                 print(colision_list)
                 if colision_list:
-                    pass
-                    # TODO: do something
+                    for object_type in colision_list:
+                        if isinstance(object_type, Chef):
+                            object_type.interact(player)
+                        if isinstance(object_type, Table):
+                            pass # do something
                 else:
                     player.move(next_pos)
 
     def new_game(self) -> None:
         '''Carga un nuevo juego'''
         self.signal_start_game_window.emit(self._map_size)
-        self._cafe.money = int(PARAMETROS['DCCafé']['inicial']['dinero'])
-        self._cafe.rep = int(PARAMETROS['DCCafé']['inicial']['reputación'])
-        self._cafe.clients = int(PARAMETROS['DCCafé']['inicial']['clientes'])
+        self.cafe.money = int(PARAMETROS['DCCafé']['inicial']['dinero'])
+        self.cafe.rep = int(PARAMETROS['DCCafé']['inicial']['reputación'])
+        self.cafe.clients = int(PARAMETROS['DCCafé']['inicial']['clientes'])
         # Creación de chefs aleatorias
         # TODO
         for _ in range(PARAMETROS['DCCafé']['inicial']['chefs']):
@@ -143,9 +146,9 @@ class GameCore(QObject):
         '''Carga un juego'''
         self.signal_start_game_window.emit(self._map_size)
         data = get_last_game_data()
-        self._cafe.money = int(data['money'])
-        self._cafe.rep = int(data['rep'])
-        self._cafe.rounds = int(data['rounds'])
+        self.cafe.money = int(data['money'])
+        self.cafe.rep = int(data['rep'])
+        self.cafe.rounds = int(data['rounds'])
         for object_name, pos_x, pos_y in data['map']:
             new_object = self.object_classes[object_name](self, int(pos_x), int(pos_y))
             if isinstance(new_object, Chef):
@@ -179,8 +182,8 @@ class GameCore(QObject):
 
     def start_round(self) -> None:
         '''Empieza una ronda'''
-        self.signal_update_cafe_stats.emit(self._cafe.stats)
-        self._remaining_clients = self._cafe.round_clients
+        self.signal_update_cafe_stats.emit(self.cafe.stats)
+        self._remaining_clients = self.cafe.round_clients
         self._clock_customer_spawn.start()
         self._clock_check_keys.start()
 

@@ -16,7 +16,7 @@ cambiados en la pantalla de inicio
 PARAMETROS = {
     "mapa": {
         "tamaño celda": 30,
-        "alto": 450,  # creo que esta malo...
+        "alto": 450,  # creo que essta malo...
         "largo": 780,
         "reducción de hitbox": 0.2,
     },
@@ -24,6 +24,7 @@ PARAMETROS = {
         'velocidad': 150
     },
     "chef": {
+        "nivel inicial": "principiante",
         "niveles": {
             "principiante": {
                 "experiencia": 1,
