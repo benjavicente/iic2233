@@ -2,40 +2,55 @@
 .SummaryWindow{
     background-color: black;
 }
-#bloque {
+#card_summary {
     background-color: white;
     border-radius: 10px;
     padding: 20px 5px;
 }
-#titulo {
+#title {
     color: black;
     font-family: 'Rockwell';
     font-size: 38px;
 }
-#salir, #guardar, #continuar {
+#quit, #safe, #continue_ {
     margin: 2px;
     font-size: 20px;
     border-radius: 8px;
-    background-color: hsl(161, 98, 70);
+
     color: white;
     height: 35px;
     width: 120px;
 }
-#salir:hover, #guardar:hover, #continuar:hover {
-    background-color: hsl(161, 98, 100);
+#quit {
+    background: hsl(0, 98, 70);
 }
-#pedidos, #atendidos, #dinero {
+#quit:hover {
+    background: hsl(0, 98, 110);
+}
+#safe {
+    background: hsl(161, 98, 70);
+}
+#safe:hover {
+    background: hsl(161, 98, 100);
+}
+#continue_ {
+    background: hsl(200, 98, 70);
+}
+#continue_:hover{
+    background: hsl(200, 98, 100);
+}
+#failed, #completed, #money {
     font-family: consolas;
     font-size: 20px;
 }
-#label_pedidos, #label_atendidos, #label_dinero {
+#label_failed, #label_completed, #label_money {
     font-size: 20px;
 }
-#rep{
+#label_rep {
     font-family: 'Rockwell';
     font-size: 24px;
 }
-#linea{
+#line{
     background-color: hsl(161, 98, 70);
     border-radius: 2px;
     margin: 0px 30px 0px 30px;
