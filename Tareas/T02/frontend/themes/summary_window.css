@@ -12,7 +12,7 @@
     font-family: 'Rockwell';
     font-size: 38px;
 }
-#quit, #safe, #continue_ {
+#quit, #save, #continue_ {
     margin: 2px;
     font-size: 20px;
     border-radius: 8px;
@@ -27,10 +27,10 @@
 #quit:hover {
     background: hsl(0, 98, 110);
 }
-#safe {
+#save {
     background: hsl(161, 98, 70);
 }
-#safe:hover {
+#save:hover {
     background: hsl(161, 98, 100);
 }
 #continue_ {
