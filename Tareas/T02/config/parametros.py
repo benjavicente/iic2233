@@ -80,9 +80,9 @@ PARAMETROS = {
             "especiales": {
                 "presidente": { #TODO
                     "reputación": 2,
-                    "max": 15,
-                    "min": 25,
-                    "probabilidad": 0.1,
+                    "min": 15,
+                    "max": 25,
+                    "probabilidad": 0.9,
                 },
             },
         },

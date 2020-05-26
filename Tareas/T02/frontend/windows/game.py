@@ -44,6 +44,9 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         self.logo.setPixmap(QPixmap(SPRITE_PATH['logo']))
         self.chef_icon.setPixmap(QPixmap(SPRITE_PATH['shop', 'chef']))
         self.table_icon.setPixmap(QPixmap(SPRITE_PATH['shop', 'table']))
+        # Estrellas
+        self.filed_star_pixmap = QPixmap(SPRITE_PATH['star', 'filed'])
+        self.empty_star_pixmap = QPixmap(SPRITE_PATH['star', 'empty'])
         # Es raro que PointingHandCursor no este disponible en Designer...
         self.button_exit.setCursor(QCursor(Qt.PointingHandCursor))
         self.button_time.setCursor(QCursor(Qt.PointingHandCursor))
@@ -79,12 +82,25 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
 
     def update_cafe_stats(self, stats: dict):
         '''Actualiza los datos del Café en la ventana'''
-        self.rep.setText(stats['rep'])
-        self.money.setText(stats['money'])
-        self.round.setText(stats['round'])
-        self.completed_orders.setText(stats['completed_orders'])
-        self.total_orders.setText(stats['total_orders'])
-        self.failed_orders.setText(stats['failed_orders'])
+        for name, value in stats.items():
+            if name == 'rep':
+                value = int(value)
+                for i in range(5):
+                    if value:
+                        #! https://stackoverflow.com/questions/4065378/qt-get-children-from-layout
+                        self.stars_layout.itemAt(i).widget().setPixmap(self.filed_star_pixmap)
+                        value -= 1
+                    else:
+                        self.stars_layout.itemAt(i).widget().setPixmap(self.empty_star_pixmap)
+            # https://stackoverflow.com/a/611708
+            if name == 'round_clients':
+                self.day_progress.setMaximum(int(value))
+            elif name == 'remaining_clients':
+                self.day_progress.setValue(int(value))
+            else:
+                label = getattr(self, name, False)
+                if label:
+                    label.setText(str(value))
 
     def add_new_object(self, obj: dict):
         '''Crea un nuevo objeto en el area de juego'''

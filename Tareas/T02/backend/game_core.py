@@ -24,6 +24,7 @@ class GameCore(QObject):
     signal_move_up = pyqtSignal(dict)
 
     signal_start_game_window = pyqtSignal(tuple)
+
     signal_update_cafe_stats = pyqtSignal(dict)
 
     signal_pause_objects = pyqtSignal()
@@ -205,9 +206,18 @@ class GameCore(QObject):
         shuffle(self.round_clients)
         # Relojes
         self._clock_customer_spawn.start()
-        self.signal_update_cafe_stats.emit(self.cafe.stats)
         # Taclas
         self._clock_check_keys.start()
+        # TODO
+        self.update_ui_information(round_clients=len(self.round_clients))
+
+    def update_ui_information(self, **extras):
+        '''Actualiza los datos del ui'''
+        stats = {
+            **self.cafe.stats, **extras,
+            'remaining_clients': len(self.round_clients),
+        }
+        self.signal_update_cafe_stats.emit(stats)
 
     def __new_customer(self) -> None:
         '''Llega un cliente a la tienda. Si hay mesas, se sienta y espera un pedido'''
@@ -216,6 +226,7 @@ class GameCore(QObject):
             if table.free:
                 client = self.round_clients.pop()
                 if isinstance(client, self.special_tuple):
+                    # Si es especial, se genera un tiempo de espera al azar
                     wait_time = randint(client.min, client.max)
                     table.add_customer('special', client.type, wait_time, client.rep)
                 else:
@@ -244,7 +255,8 @@ class GameCore(QObject):
         return collied
 
 
-def check_colision(hitbox1, hitbox2):
+def check_colision(hitbox1, hitbox2) -> True:
+    '''Formula para calcular colisiones'''
     # Hay muchas páginas que mencionan como realizar
     # colisiones entre cuadrados. Mozilla tiene un ejemplo básico:
     # https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection

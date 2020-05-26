@@ -114,7 +114,7 @@ class Cafe(QObject):
         super().__init__()
         self.money = int()
         self.rep = int()
-        self.rounds = int()
+        self.round = int()
         self.open = True
         self.completed_orders = 0
         self.total_orders = 0
@@ -126,7 +126,7 @@ class Cafe(QObject):
             'money': str(self.money),
             'rep': str(self.rep),
             'round': str(self.rounds),
-            'open': str(self.open),
+            'cafe_state': 'Abierto' if self.open else 'Cerrado',
             'completed_orders': str(self.completed_orders),
             'total_orders': str(self.total_orders),
             'failed_orders': str(self.total_orders - self.completed_orders),
@@ -137,7 +137,7 @@ class Cafe(QObject):
         '''Clientes de la ronda'''
         alpha = int(PARAMETROS['DCCafé']['calculos']['clientes por ronda']['factor'])
         beta = int(PARAMETROS['DCCafé']['calculos']['clientes por ronda']['base'])
-        return alpha * (beta + self.rounds)
+        return alpha * (beta + self.round)
 
     def get_new_rep(self) -> int:
         '''
@@ -162,6 +162,7 @@ class Snack(QObject):
 
     def tip_prob(self, wait_time: float):
         '''Cálculo de la propina'''
+        # TODO
         min_value = PARAMETROS['bocadillos']['calculos']['calidad pedido']['mínimo']
         base = PARAMETROS['bocadillos']['calculos']['calidad pedido']['base']
         fact = PARAMETROS['bocadillos']['calculos']['calidad pedido']['factor']
