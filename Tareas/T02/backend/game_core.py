@@ -1,6 +1,7 @@
 '''Administrador del Juego'''
 
-from random import choices, shuffle
+from random import choices, shuffle, random, randint
+from functools import namedtuple
 
 from PyQt5.QtCore import QObject, Qt, pyqtSignal
 
@@ -45,10 +46,12 @@ class GameCore(QObject):
 
     def __set_up(self) -> None:
         '''Crea objetos para el manejo del juego'''
+        #######################################################################
         # Parámetros especiales
         self._key_access_rate = 1/30  # En segundos
-        self._remaining_clients = 0
+        self.round_clients = list()
         self.paused = False
+
         # Diccionario de acceso
         self._object_lists = {
             'mesero': self._players,
@@ -68,32 +71,40 @@ class GameCore(QObject):
         )
         self._clock_check_keys = GameClock(
             event=self._check_keys,
-            interval=self._key_access_rate,  # Frecuencia de obtención de teclas
+            interval=self._key_access_rate,
         )
         # Posibilidades de tipos del cliente
-        # TODO: el cliente especial aparece una vez, con una probabilidad determinada
-        # TODO: y tiene un tiempo de espera aleatorio. Esto NO funciona con el método
-        # TODO: actual para crear los clientes. Puede ser mejor generalos a todos
-        # TODO: al comienzo de la ronda y no realizar este procedimiento aquí.
-        self.posible_clients = list()
-        client_types = {'relajado': 'hamster', 'apurado': 'dog', 'especial': 'special'}
-        for c_name, c_info in PARAMETROS['clientes']['tipos'].items():
-            client_type = client_types[c_name]
-            wait_time = float(c_info['tiempo de espera'])
-            probability = float(c_info['probabilidad'])
-            self.posible_clients.append((client_type, wait_time, probability))
 
-    # 24/05
-    # La idea de usar sets para crear un _API_ de teclas apretadas
-    # está en multiples foros. Se menciona la aplicación de un event-filter,
-    # pero creo que no es compatible con la forma ehn que estoy modelando el
-    # backend y frontend.
+        client_real_types = {'relajado': 'hamster', 'apurado': 'dog', 'presidente': 'president'}
+
+        self.posible_clients = list()
+        self.client_tuple = namedtuple('PosibleClient', ['type', 'wait_time', 'prob'])
+
+        for c_name, c_info in PARAMETROS['clientes']['tipos']['básicos'].items():
+            self.posible_clients.append(self.client_tuple(
+                client_real_types[c_name],
+                int(c_info['tiempo de espera']),
+                float(c_info['probabilidad'])
+            ))
+
+        self.posible_specials = list()
+        self.special_tuple = namedtuple('PosibleSpecial', ['type', 'rep', 'max', 'min', 'prob'])
+
+        for c_name, c_info in PARAMETROS['clientes']['tipos']['especiales'].items():
+            self.posible_specials.append(self.special_tuple(
+                client_real_types[c_name],
+                int(c_info['reputación']),
+                int(c_info['max']),
+                int(c_info['min']),
+                float(c_info['probabilidad'])
+            ))
+        
+        #######################################################################
 
     def add_key(self, key: int) -> None:
         '''Añade una tecla al las teclas precionadas'''
         self._pressed_keys.add(key)
-        # Pausa
-        if Qt.Key_P == key:
+        if Qt.Key_P == key:  # Pausa
             self.pause_continue_game()
 
     def remove_key(self, key: int) -> None:
@@ -107,21 +118,22 @@ class GameCore(QObject):
         se se ejecutan las acciones asociadas.
         '''
         if self._pressed_keys:
-            # Movimiento jugadores
-            print(self._pressed_keys)
-            for player in self._players:
-                next_pos = player.next_pos(
+            # Filtra los jugadores con sus teclas apretadas
+            moved_players = filter(
+                lambda p: any(p.has_key(k) for k in self._pressed_keys),
+                self._players
+            )
+            for player in moved_players:  # Movimiento jugadores
+                next_pos = player.next_pos(  # Usa solo las teclas del jugador
                     filter(lambda k, p=player: p.has_key(k), self._pressed_keys),
-                    self._key_access_rate
+                    self._key_access_rate  
                 )
-                # TODO: los hitboxes son muy grandes
                 colision_list = self.__check_colision(player.id, player.new_hitbox(next_pos))
-                print(colision_list)
-                if colision_list:
+                if colision_list:  # Si colisiona, interactúa con objetos
                     for object_type in colision_list:
                         if isinstance(object_type, (Chef, Table)):
                             object_type.interact(player)
-                else:
+                else:  # Si no es el caso, se mueve
                     player.move(next_pos)
 
     def new_game(self) -> None:
@@ -180,31 +192,38 @@ class GameCore(QObject):
 
     def start_round(self) -> None:
         '''Empieza una ronda'''
-        self.signal_update_cafe_stats.emit(self.cafe.stats)
-        self._remaining_clients = self.cafe.round_clients
+        # Generación de clientes
+        self.round_clients.clear()
+        # Especiales
+        for pos_special in self.posible_specials:
+            if pos_special.prob > random():
+                self.round_clients.append(pos_special)
+        # Básicos
+        for _ in range(self.cafe.round_clients - len(self.round_clients)):
+            client = choices(self.posible_clients, [c.prob for c in self.posible_clients])[0]
+            self.round_clients.append(client)
+        shuffle(self.round_clients)
+        # Relojes
         self._clock_customer_spawn.start()
+        self.signal_update_cafe_stats.emit(self.cafe.stats)
+        # Taclas
         self._clock_check_keys.start()
 
     def __new_customer(self) -> None:
         '''Llega un cliente a la tienda. Si hay mesas, se sienta y espera un pedido'''
-        print('Ha llegado un cliente!')
         shuffle(self._tables)
         for table in self._tables:
             if table.free:
-                # Generar cliente
-                new_client_type, new_client_wait_time, _ = choices(
-                    self.posible_clients,
-                    weights=[x[-1] for x in self.posible_clients]
-                )[0]  # El [0] es porque choices retorna una lista de largo 1
-                # Se añade el cliente a la mesa
-                table.add_customer(new_client_type, new_client_wait_time)
-                # Disminuye la cantidad de clientes restantes
-                self._remaining_clients -= 1
-                if not self._remaining_clients:
+                client = self.round_clients.pop()
+                if isinstance(client, self.special_tuple):
+                    wait_time = randint(client.min, client.max)
+                    table.add_customer('special', client.type, wait_time, client.rep)
+                else:
+                    table.add_customer('basic', client.type, client.wait_time)
+                if not self.round_clients:
                     print('Se han acabado los clientes!')
                     self._clock_customer_spawn.stop()
                 return
-        print('El cliente se ha ido por falta de mesas, volverá luego')
 
     def __check_colision(self, moved_obj_id: str, moved_object_hitbox: tuple) -> list:
         '''

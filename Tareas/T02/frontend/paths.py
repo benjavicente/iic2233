@@ -134,23 +134,27 @@ PATH = {
         'cookingB2': join(_SPRITES, 'chef', 'meson_09.png'),
     },
     'customer': {
-        'dog': {
-            '0': join(_SPRITES, 'clientes', 'perro', 'perro_31.png'),
-            '1': join(_SPRITES, 'clientes', 'perro', 'perro_13.png'),
-            '2': join(_SPRITES, 'clientes', 'perro', 'perro_16.png'),
-            'H': join(_SPRITES, 'clientes', 'perro', 'perro_12.png'),
-        },
-        'hamster': {
-            '0': join(_SPRITES, 'clientes', 'hamster', 'hamster_01.png'),
-            '1': join(_SPRITES, 'clientes', 'hamster', 'hamster_26.png'),
-            '2': join(_SPRITES, 'clientes', 'hamster', 'hamster_18.png'),
-            'H': join(_SPRITES, 'clientes', 'hamster', 'hamster_17.png'),
+        'basic': {
+            'dog': {
+                '0': join(_SPRITES, 'clientes', 'perro', 'perro_31.png'),
+                '1': join(_SPRITES, 'clientes', 'perro', 'perro_13.png'),
+                '2': join(_SPRITES, 'clientes', 'perro', 'perro_16.png'),
+                'H': join(_SPRITES, 'clientes', 'perro', 'perro_12.png'),
+            },
+            'hamster': {
+                '0': join(_SPRITES, 'clientes', 'hamster', 'hamster_01.png'),
+                '1': join(_SPRITES, 'clientes', 'hamster', 'hamster_26.png'),
+                '2': join(_SPRITES, 'clientes', 'hamster', 'hamster_18.png'),
+                'H': join(_SPRITES, 'clientes', 'hamster', 'hamster_17.png'),
+            },
         },
         'special': {
-            '0': join(_SPRITES, 'bonus', 'presidente.png'),
-            '1': join(_SPRITES, 'bonus', 'presidente.png'),
-            '2': join(_SPRITES, 'bonus', 'presidente.png'),
-            'H': join(_SPRITES, 'bonus', 'presidente.png'),
+            'president': {
+                '0': join(_SPRITES, 'bonus', 'presidente.png'),
+                '1': join(_SPRITES, 'bonus', 'presidente.png'),
+                '2': join(_SPRITES, 'bonus', 'presidente.png'),
+                'H': join(_SPRITES, 'bonus', 'presidente.png'),
+            }
         },
     }
 }

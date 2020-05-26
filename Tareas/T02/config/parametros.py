@@ -67,21 +67,24 @@ PARAMETROS = {
         "periodo de llegada": 14,
         "propina": 200,
         "tipos": {
-            "relajado" : {
-                "tiempo de espera": 30,
-                "probabilidad": 0.35,
+            'básicos': {
+                "relajado" : {
+                    "tiempo de espera": 30,
+                    "probabilidad": 0.4,
+                },
+                "apurado": {
+                    "tiempo de espera": 20,
+                    "probabilidad": 0.6,
+                },
             },
-            "apurado": {
-                "tiempo de espera": 20,
-                "probabilidad": 0.6,
+            "especiales": {
+                "presidente": { #TODO
+                    "reputación": 2,
+                    "max": 15,
+                    "min": 25,
+                    "probabilidad": 0.1,
+                },
             },
-            "especial": { #TODO
-                "reputación": 2,
-                "max": 15,
-                "min": 25,
-                "tiempo de espera": 40,
-                "probabilidad": 0.05,
-            }
         },
     },
     "DCCafé": {

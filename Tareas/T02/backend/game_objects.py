@@ -185,8 +185,6 @@ class Player(GameObject):
     _movement_speed = PARAMETROS['personaje']['velocidad']
 
     def __init__(self, core, x: int, y: int):
-        # TODO: parametros de disfraz y teclas
-        # estado = (jugador, disfraz, libre o ocupado, tipo movimiento, direc movimiento)
         super().__init__(core, x, y, 1, 2, ['a', 'free', 'idle', 'down'])
         self.movemet_keys = self._keys.pop(0)
         self.orders = 0
@@ -233,8 +231,6 @@ class Player(GameObject):
         '''Retorna la nueva posición del hitbox'''
         width, height = self.size
         pos_x, pos_y = next_pos
-        # No se considera la cabeza en el hitbox del jugador,
-        # por lo que se la posición y tamaño del hitbox
         height /= 2
         pos_y += height
         fact = self.hitbox_reduction
@@ -335,7 +331,6 @@ class Chef(GameObject):
         beta = float(PARAMETROS['chef']['probabilidad fallar']['suma'])
         gamma = self.exp
         probability = (alpha)/(gamma + beta)
-        print(probability, alpha, beta, gamma)
         if random() > probability:
             self.finish_order()
         else:
@@ -363,13 +358,12 @@ class Table(GameObject):
         self.customer = None
         self.table = Chair(core, self._x, self._y - self._cell_size)
 
-    def add_customer(self, customer_type: str, wait_time: int):
+    def add_customer(self, *args):
         '''Añade un cliente a la mesa y lo retorna'''
         self.free = False
-        self.customer = Customer(self.core, *self.pos, self, customer_type, wait_time)
+        self.customer = Customer(self.core, *self.pos, self, *args)
         self.core.signal_stack_under.emit(self.customer.display_info, self.display_info)
         self.core.signal_stack_under.emit(self.table.display_info, self.customer.display_info)
-        print(f'Cliente {customer_type} asignado en la mesa con id {self.id}')
         return self.customer
 
     @property
@@ -401,15 +395,17 @@ class Chair(GameObject):
 
 class Customer(GameObject):
     '''Cliente. Es asignado a una mesa aleatoria'''
-    def __init__(self, core, x: int, y: int, table, customer_type: str, wait_time: int):
-        super().__init__(core, x, y - self._cell_size * 1.5, 1, 2, [customer_type, '1'])
+    def __init__(self, core, x: int, y: int, table, customer_type: str,
+                 customer_name: str, wait_time: int, influence: int = 0):
+        super().__init__(core, x, y - self._cell_size * 1.5, 1, 2,
+                         [customer_type, customer_name, '1'])
         self.table = table
         self.wait_time = wait_time
         self.gave_order = False
-        self.customer_type = customer_type
+        self.influence = influence
         self._animation_cicle = ['0', '1', '2']
         self.wait_clock = GameClock(
-            event=lambda: self.update_animation(2),
+            event=lambda: self.update_animation(3),
             interval=wait_time/3,
             final_event=self.exit_cafe,
             rep=3)
@@ -434,4 +430,4 @@ class Customer(GameObject):
         self.wait_clock.stop()
         self.happy_clock.start()
         self._animation_cicle = ['H']
-        self.update_animation(2)
+        self.update_animation(3)
