@@ -46,9 +46,15 @@ if __name__ == "__main__":
     GAME_WINDOW.signal_pause_continue.connect(GAME_CORE.pause_continue_game)
     GAME_CORE.signal_show_paused.connect(GAME_WINDOW.paused_ui)
 
-    # Señales de ventana final
+    # Señal para abrir la ventana final
     GAME_CORE.signal_show_end_screen.connect(FINAL_WINDOW.show_results)
+
+    # Señales de la ventana final
+    FINAL_WINDOW.signal_continue_game.connect(GAME_CORE.continue_game)
+    FINAL_WINDOW.signal_exit_game.connect(GAME_CORE.exit_game)
+    FINAL_WINDOW.signal_save_game.connect(GAME_CORE.save_game)
 
     ################################
     INITIAL_WINDOW.show()
+    FINAL_WINDOW.show()
     sys.exit(APP.exec_())

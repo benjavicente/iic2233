@@ -188,6 +188,10 @@ class GameCore(QObject):
         # TODO
         pass
 
+    def continue_game(self):
+        # TODO
+        pass
+
     def pause_continue_game(self) -> None:
         '''Pausa el juego'''
         if self.paused:

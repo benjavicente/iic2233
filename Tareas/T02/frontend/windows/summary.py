@@ -1,6 +1,6 @@
 '''Ventana Posterior del juego'''
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QCursor, QPixmap
 from PyQt5.QtWidgets import (QFrame, QGridLayout, QHBoxLayout, QLabel,
                              QPushButton, QSizePolicy, QSpacerItem,
@@ -11,6 +11,11 @@ from frontend.themes import SUMMARY_THEME
 
 
 class SummaryWindow(QWidget):
+
+    signal_save_game = pyqtSignal()
+    signal_continue_game = pyqtSignal()
+    signal_exit_game = pyqtSignal()
+
     '''Ventana que muestra los el resumen de la ronda'''
     def __init__(self):
         super().__init__()
@@ -108,16 +113,21 @@ class SummaryWindow(QWidget):
         self.quit = QPushButton('Salir', self)
         self.quit.setObjectName('quit')
         self.quit.setCursor(QCursor(Qt.PointingHandCursor))
+        self.quit.pressed.connect(self.signal_exit_game)
+        self.quit.pressed.connect(self.hide)
         button_layout.addWidget(self.quit)
         # --> Guardar
-        self.safe = QPushButton('Guardar', self)
-        self.safe.setObjectName('safe')
-        self.safe.setCursor(QCursor(Qt.PointingHandCursor))
-        button_layout.addWidget(self.safe)
+        self.save = QPushButton('Guardar', self)
+        self.save.setObjectName('save')
+        self.save.setCursor(QCursor(Qt.PointingHandCursor))
+        self.save.pressed.connect(self.signal_save_game)
+        button_layout.addWidget(self.save)
         # --> Continuar
         self.continue_ = QPushButton('Continuar', self)
         self.continue_.setObjectName('continue_')
         self.continue_.setCursor(QCursor(Qt.PointingHandCursor))
+        self.continue_.pressed.connect(self.hide)
+        self.continue_.pressed.connect(self.signal_continue_game)
         button_layout.addWidget(self.continue_)
         # -> Espacios
         main_layout.addItem(QSpacerItem(0, 0, vPolicy=QSizePolicy.Expanding), 0, 1)
