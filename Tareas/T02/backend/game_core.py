@@ -35,6 +35,8 @@ class GameCore(QObject):
 
     signal_show_end_screen = pyqtSignal(dict)
 
+    signal_close_game_screen = pyqtSignal()
+
     object_classes = {'mesero': Player, 'chef': Chef, 'mesa': Table}
 
     def __init__(self):
@@ -83,7 +85,6 @@ class GameCore(QObject):
         client_real_types = {'relajado': 'hamster', 'apurado': 'dog', 'presidente': 'president'}
         self.posible_clients = list()
         self.client_tuple = namedtuple('PosibleClient', ['type', 'wait_time', 'prob'])
-
         for c_name, c_info in PARAMETROS['clientes']['tipos']['básicos'].items():
             self.posible_clients.append(self.client_tuple(
                 client_real_types[c_name],
@@ -191,21 +192,27 @@ class GameCore(QObject):
             new_object = self.object_classes[object_name](self, int(pos_x), int(pos_y))
             if isinstance(new_object, Chef):
                 new_object.dishes = int(data['dishes'].pop(0))
-            # TODO: ver si los objetos colisionan
             self._object_lists[object_name].append(new_object)
         self.start_round()
 
     def exit_game(self) -> None:
         '''Sale del juego'''
-        # TODO
-        pass
+        self.signal_close_game_screen.emit()
 
     def save_game(self) -> None:
         '''Guarda el juego'''
-        # TODO
-        pass
+        game_data = [self.cafe.money, self.cafe.rep, self.cafe.round]
+        chef_dishes = [chef.dishes for chef in self._chefs]
+        map_data = []
+        # Reverse dictionary: https://stackoverflow.com/a/483833
+        clases_objects = {obj_c: name for name, obj_c in self.object_classes.items()}
+        for game_object in [self._players[0]] + self._tables + self._chefs:
+            # type() como indice de un diccionario lo encontré probando type('')(2)
+            map_data.append([clases_objects[type(game_object)], *game_object.pos])
+        save_game(game_data, chef_dishes, map_data)
 
     def continue_game(self):
+        '''Continua el juego. Se habilita la tienda'''
         # TODO
         pass
 
@@ -321,3 +328,14 @@ def get_last_game_data() -> dict:
         map_content = file.readlines()
     last_game_data['map'] = [line.split(',') for line in map_content]
     return last_game_data
+
+def save_game(game_data: list, chef_dishes: list, map_data: list):
+    '''Guarda la partida'''
+    # Guarda los datos del juego
+    game_data = '\n'.join([','.join(map(str, game_data)), ','.join(map(str, chef_dishes))])
+    with open(PATH_DATOS, 'w', encoding='utf-8') as file:
+        file.write(game_data)
+    # Guarda los datos del mapa
+    map_data = '\n'.join([','.join(map(str, x)) for x in map_data])
+    with open(PATH_MAPA, 'w', encoding='utf-8') as file:
+        file.write(map_data)

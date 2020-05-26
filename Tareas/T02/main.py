@@ -54,6 +54,9 @@ if __name__ == "__main__":
     FINAL_WINDOW.signal_exit_game.connect(GAME_CORE.exit_game)
     FINAL_WINDOW.signal_save_game.connect(GAME_CORE.save_game)
 
+    # Señal para terminar el juego
+    GAME_CORE.signal_close_game_screen.connect(GAME_WINDOW.close)
+
     ################################
     INITIAL_WINDOW.show()
     sys.exit(APP.exec_())
