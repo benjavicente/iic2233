@@ -6,7 +6,8 @@ from functools import namedtuple
 from PyQt5.QtCore import QObject, Qt, pyqtSignal
 
 from backend.clock import GameClock
-from backend.game_objects import Cafe, Chef, GameObject, Player, Table
+from backend.cafe import Cafe
+from backend.game_objects import Chef, Player, Table
 from backend.paths import PATH_DATOS, PATH_MAPA
 from config.parametros import PARAMETROS
 
@@ -52,7 +53,6 @@ class GameCore(QObject):
         self._key_access_rate = 1/30  # En segundos
         self.round_clients = list()
         self.paused = False
-
         # Diccionario de acceso
         self._object_lists = {
             'mesero': self._players,
@@ -75,9 +75,7 @@ class GameCore(QObject):
             interval=self._key_access_rate,
         )
         # Posibilidades de tipos del cliente
-
         client_real_types = {'relajado': 'hamster', 'apurado': 'dog', 'presidente': 'president'}
-
         self.posible_clients = list()
         self.client_tuple = namedtuple('PosibleClient', ['type', 'wait_time', 'prob'])
 
@@ -87,10 +85,8 @@ class GameCore(QObject):
                 int(c_info['tiempo de espera']),
                 float(c_info['probabilidad'])
             ))
-
         self.posible_specials = list()
         self.special_tuple = namedtuple('PosibleSpecial', ['type', 'rep', 'max', 'min', 'prob'])
-
         for c_name, c_info in PARAMETROS['clientes']['tipos']['especiales'].items():
             self.posible_specials.append(self.special_tuple(
                 client_real_types[c_name],
@@ -99,7 +95,6 @@ class GameCore(QObject):
                 int(c_info['min']),
                 float(c_info['probabilidad'])
             ))
-        
         #######################################################################
 
     def add_key(self, key: int) -> None:
@@ -204,12 +199,12 @@ class GameCore(QObject):
             client = choices(self.posible_clients, [c.prob for c in self.posible_clients])[0]
             self.round_clients.append(client)
         shuffle(self.round_clients)
+        # Se inicia la información del ui
+        self.update_ui_information(round_clients=len(self.round_clients))
         # Relojes
         self._clock_customer_spawn.start()
         # Taclas
         self._clock_check_keys.start()
-        # TODO
-        self.update_ui_information(round_clients=len(self.round_clients))
 
     def update_ui_information(self, **extras):
         '''Actualiza los datos del ui'''
@@ -225,16 +220,18 @@ class GameCore(QObject):
         for table in self._tables:
             if table.free:
                 client = self.round_clients.pop()
+                if not self.round_clients:
+                    print('Se han acabado los clientes!')
+                    self.cafe.open = False
+                    self._clock_customer_spawn.stop()
                 if isinstance(client, self.special_tuple):
                     # Si es especial, se genera un tiempo de espera al azar
                     wait_time = randint(client.min, client.max)
                     table.add_customer('special', client.type, wait_time, client.rep)
                 else:
                     table.add_customer('basic', client.type, client.wait_time)
-                if not self.round_clients:
-                    print('Se han acabado los clientes!')
-                    self._clock_customer_spawn.stop()
-                return
+                self.update_ui_information()
+                return  # Termina el método
 
     def __check_colision(self, moved_obj_id: str, moved_object_hitbox: tuple) -> list:
         '''

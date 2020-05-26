@@ -97,6 +97,8 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
                 self.day_progress.setMaximum(int(value))
             elif name == 'remaining_clients':
                 self.day_progress.setValue(int(value))
+            elif name == 'open':
+                self.open.setText('Abierto' if value else 'Cerrado')
             else:
                 label = getattr(self, name, False)
                 if label:
