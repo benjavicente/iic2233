@@ -129,7 +129,7 @@ class GameCore(QObject):
                     filter(lambda k, p=player: p.has_key(k), self._pressed_keys),
                     self._key_access_rate
                 )
-                colision_list = self.__check_colision(player.id, player.new_hitbox(next_pos))
+                colision_list = self.__check_colision(player.new_hitbox(next_pos), player.id)
                 if colision_list:  # Si colisiona, interactúa con objetos
                     for object_type in colision_list:
                         if isinstance(object_type, (Chef, Table)):
@@ -153,14 +153,31 @@ class GameCore(QObject):
         self.cafe.money = int(PARAMETROS['DCCafé']['inicial']['dinero'])
         self.cafe.rep = int(PARAMETROS['DCCafé']['inicial']['reputación'])
         self.cafe.clients = int(PARAMETROS['DCCafé']['inicial']['clientes'])
+        cell_size = PARAMETROS['mapa']['tamaño celda']
         # Creación de chefs aleatorias
-        # TODO
-        for _ in range(PARAMETROS['DCCafé']['inicial']['chefs']):
-            pass
+        remaining_chefs = PARAMETROS['DCCafé']['inicial']['chefs']
+        while remaining_chefs:
+            x_pos = randint(0, self._map_size[0] - 4 * cell_size)
+            y_pos = randint(0, self._map_size[1] - 4 * cell_size)
+            if not self.__check_colision((x_pos, y_pos, 4 * cell_size, 4 * cell_size)):
+                self._chefs.append(Chef(self, x_pos, y_pos))
+                remaining_chefs -= 1
         # Creación de mesas aleatorias
-        # TODO
-        for _ in range(PARAMETROS['DCCafé']['inicial']['mesas']):
-            pass
+        remaining_tables = PARAMETROS['DCCafé']['inicial']['mesas']
+        while remaining_tables:
+            x_pos = randint(0, self._map_size[0] - 1 * cell_size)
+            y_pos = randint(0, self._map_size[1] - 2 * cell_size)
+            if not self.__check_colision((x_pos, y_pos, 1 * cell_size, 2 * cell_size)):
+                self._tables.append(Table(self, x_pos, y_pos))
+                remaining_tables -= 1
+        # Creación del jugador
+        fit_player = True
+        while fit_player:
+            x_pos = randint(0, self._map_size[0] - 1 * cell_size)
+            y_pos = randint(0, self._map_size[1] - 2 * cell_size)
+            if not self.__check_colision((x_pos, y_pos, 1 * cell_size, 2 * cell_size)):
+                self._players.append(Player(self, x_pos, y_pos))
+                fit_player = False
         self.start_round()
 
     def load_game(self) -> None:
@@ -169,7 +186,7 @@ class GameCore(QObject):
         data = get_last_game_data()
         self.cafe.money = int(data['money'])
         self.cafe.rep = int(data['rep'])
-        self.cafe.rounds = int(data['rounds'])
+        self.cafe.round = int(data['round'])
         for object_name, pos_x, pos_y in data['map']:
             new_object = self.object_classes[object_name](self, int(pos_x), int(pos_y))
             if isinstance(new_object, Chef):
@@ -253,7 +270,7 @@ class GameCore(QObject):
                 self.update_ui_information()
                 return  # Termina el método
 
-    def __check_colision(self, moved_obj_id: str, moved_object_hitbox: tuple) -> list:
+    def __check_colision(self, moved_object_hitbox: tuple, moved_obj_id: str = '') -> list:
         '''
         Revisa si el objeto entregado colisiona con algo.
         Retorna una lista con los elementos que coliciona.
@@ -296,7 +313,7 @@ def get_last_game_data() -> dict:
     with open(PATH_DATOS, 'r', encoding='utf-8') as file:
         stats = file.readline()
         dishes = file.readline()
-    for key, value in zip(('money', 'rep', 'rounds'), stats.split(',')):
+    for key, value in zip(('money', 'rep', 'round'), stats.split(',')):
         last_game_data[key] = value
     last_game_data['dishes'] = dishes.split(',')
     # Cargar la información del mapa

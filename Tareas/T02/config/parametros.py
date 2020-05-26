@@ -16,7 +16,7 @@ cambiados en la pantalla de inicio
 PARAMETROS = {
     "mapa": {
         "tamaño celda": 30,
-        "alto": 450,  # creo que essta malo...
+        "alto": 450,
         "largo": 780,
         "reducción de hitbox": 0.2,
     },

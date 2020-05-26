@@ -14,7 +14,7 @@ class Cafe(QObject):
         super().__init__()
         self.money = int()
         self.__rep = int()
-        self.round = int()
+        self.round = 1
         self.open = True
         self._completed_orders = 0
         self._failed_orders = 0
@@ -51,11 +51,10 @@ class Cafe(QObject):
 
     @property
     def stats(self):
-        '''Estadísticas a mostrar en el interfaz'''
         return {
             'money': str(self.money),
             'rep': str(self.rep),
-            'round': str(self.rounds),
+            'round': str(self.round),
             'cafe_state': 'Abierto' if self.open else 'Cerrado',
             'completed_orders': str(self.completed_orders),
             'total_orders': str(self.total_orders),

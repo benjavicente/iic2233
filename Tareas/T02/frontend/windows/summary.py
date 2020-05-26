@@ -97,13 +97,13 @@ class SummaryWindow(QWidget):
         stars_layout.setContentsMargins(30, 0, 30, 0)
         self.star_filed = QPixmap(PATH['star']['filed'])
         self.star_empty = QPixmap(PATH['star']['empty'])
-        self.estrellas = []
+        self.star_list = []
         for _ in range(5):
             star = QLabel()
             star.setFixedSize(40, 40)
             star.setScaledContents(True)
             stars_layout.addWidget(star)
-            self.estrellas.append(star)
+            self.star_list.append(star)
         layout_card.addLayout(stars_layout)
         # -> Botones
         button_layout = QHBoxLayout()
@@ -148,11 +148,11 @@ class SummaryWindow(QWidget):
         if not isinstance(rep, int) or not 0 <= rep <= 5:
             raise ValueError(f'La reputación {rep.__repr__()} no es un número entre 0 y 5')
         for indice in range(5):
-            if rep > 0:
-                self.estrellas[indice].setPixmap(self.estar_filedstrella_llena)
+            if rep:
+                self.star_list[indice].setPixmap(self.star_filed)
+                rep -= 1
             else:
-                self.estrellas[indice].setPixmap(self.estar_emptystrella_vacia)
-            rep -= 1
+                self.star_list[indice].setPixmap(self.star_empty)
 
     def show_results(self, results: dict) -> None:
         '''Carga los resultados y muestra la ventana'''

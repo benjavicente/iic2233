@@ -56,5 +56,4 @@ if __name__ == "__main__":
 
     ################################
     INITIAL_WINDOW.show()
-    FINAL_WINDOW.show()
     sys.exit(APP.exec_())
