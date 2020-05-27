@@ -55,7 +55,7 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
     def start(self, map_size: tuple):
         '''Inicia el juego'''
         # TODO: música?
-        self.make_map(map_size)
+        self.make_map(*map_size)  # Como es tupla se puede separar
         self.grabKeyboard()
         self.show()
 
@@ -79,6 +79,16 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
             self.button_time.setText('Seguir')
         else:
             self.button_time.setText('Pausar')
+
+    def enable_disable_shop(self, enable: bool):
+        '''Desactiva o activa la tienda'''
+        # TODO
+        self.shop.setDisabled(enable)
+
+    def drag_and_drop(self):
+        # TODO
+        # Los QLabels chef_icon y table_icon son los que deben tener esta funcionalidad
+        pass
 
     def update_cafe_stats(self, stats: dict):
         '''Actualiza los datos del Café en la ventana'''
@@ -134,21 +144,18 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         '''Mueve el objeto hacia adelante'''
         self.game_objects[obj['id']].raise_()
 
-    def make_map(self, map_size: tuple):
+    def make_map(self, width: int, height: int):
         '''Crea el mapa del juego a partir de los mapámetros dados'''
-        # TODO: limpiar
-        width, height = map_size
-        cell_size = self.cell_size
-        if width % cell_size or height % cell_size:
+        if width % self.cell_size or height % self.cell_size:
             raise ValueError('El tamaño de la celda no es factor del tamaño del mapa')
 
-        grid_width = width // cell_size
-        grid_height = height // cell_size
+        grid_width = width // self.cell_size
+        grid_height = height // self.cell_size
 
         if grid_width % 2:
             raise ValueError('La cantidad de celdas en el eje X debe ser múltiplo de 2')
 
-        self.game_area.setFixedSize(width, height + cell_size * 4)
+        self.game_area.setFixedSize(width, height + self.y_game_offset)
 
         area_grid = self.game_area.layout()
 
@@ -157,30 +164,26 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         tile = QPixmap(SPRITE_PATH['map', 'tile'])
         border = QPixmap(SPRITE_PATH['map', 'border'])
 
-        print(grid_width)
-
         # Se añade decoración
         for x_pos in range(0, grid_width, 2):
             decoration = QLabel(self.game_area)
             if x_pos % 4:
                 decoration.setPixmap(window)
-                decoration.setFixedSize(cell_size * 2, cell_size * 4)
             else:
                 decoration.setPixmap(wall)
-                decoration.setFixedSize(cell_size * 2, cell_size * 4)
+            decoration.setFixedSize(self.cell_size * 2, self.cell_size * 4)
             decoration.setScaledContents(True)
             area_grid.addWidget(decoration, 0, x_pos, 1, 2)
 
         # Se crean las celdas y se añaden al grid del juego
         for x_pos in range(grid_width):
             for y_pos in range(grid_height):
+                cell = QLabel(self.game_area)
                 if y_pos:
-                    pixmap = tile
+                    cell.setPixmap(tile)
                 else:
                     rotation = QTransform().rotate(90)
-                    pixmap = border.transformed(rotation)
-                cell = QLabel(self.game_area)
-                cell.setFixedSize(cell_size, cell_size)
-                cell.setPixmap(pixmap)
+                    cell.setPixmap(border.transformed(rotation))
+                cell.setFixedSize(self.cell_size, self.cell_size)
                 cell.setScaledContents(True)
                 area_grid.addWidget(cell, y_pos + 1, x_pos, 1, 1)
