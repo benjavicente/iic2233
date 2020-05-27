@@ -153,7 +153,6 @@ class GameCore(QObject):
             x_pos, y_pos = randint_xy(max_x - 4 * cell_size, max_y - 4 * cell_size)
             x_pos = randint(0, self._map_size[0] - 4 * cell_size)
             y_pos = randint(0, self._map_size[1] - 4 * cell_size)
-            print('no')
             if not self.__check_colision((x_pos, y_pos, 4 * cell_size, 4 * cell_size)):
                 self._chefs.append(Chef(self, x_pos, y_pos))
                 remaining_chefs -= 1
