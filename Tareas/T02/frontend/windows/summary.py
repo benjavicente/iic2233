@@ -138,15 +138,15 @@ class SummaryWindow(QWidget):
     def round_title(self, n_ronda: int = 0) -> None:
         '''Actualiza el título de la ronda'''
         if not isinstance(n_ronda, int):
-            raise TypeError(f'El número de la ronda {n_ronda.__repr__()} no es valido')
+            raise TypeError(f'El número de la ronda {repr(n_ronda)} no es valido')
         self.title.setText(f'Resumen ronda {n_ronda}')
 
     def show_rep(self, rep: int) -> None:
         '''Muestra la reputacion con estrellas'''
-        if rep.isnumeric():
+        if rep.isnumeric():  # Para evitar el error cuando es str
             rep = int(rep)
         if not isinstance(rep, int) or not 0 <= rep <= 5:
-            raise ValueError(f'La reputación {rep.__repr__()} no es un número entre 0 y 5')
+            raise ValueError(f'La reputación {repr(rep)} no es un número entre 0 y 5')
         for indice in range(5):
             if rep:
                 self.star_list[indice].setPixmap(self.star_filed)

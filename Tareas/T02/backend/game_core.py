@@ -57,12 +57,6 @@ class GameCore(QObject):
         self._key_access_rate = 1/30  # En segundos
         self.round_clients = list()
         self.paused = False
-        # Diccionario de acceso
-        self._object_lists = {
-            'mesero': self._players,
-            'chef': self._chefs,
-            'mesa': self._tables
-        }
         # Mapa
         self._map_size = (
             int(PARAMETROS['mapa']['largo']), int(PARAMETROS['mapa']['alto'])
@@ -70,20 +64,14 @@ class GameCore(QObject):
         # Set de teclas precionadas
         self._pressed_keys = set()
         # Relojes de la simulación
-        self._clock_customer_spawn = GameClock(
-            event=self.__new_customer,
-            interval=PARAMETROS['clientes']['periodo de llegada'],
-        )
-        self._clock_check_keys = GameClock(
-            event=self._check_keys,
-            interval=self._key_access_rate,
-        )
-        self._clock_check_if_empty = GameClock(
-            event=self.check_if_empty
-        )
+        spawn_interval = PARAMETROS['clientes']['periodo de llegada']
+        self._clock_customer_spawn = GameClock(self.__new_customer, spawn_interval)
+        self._clock_check_keys = GameClock(self._check_keys, self._key_access_rate)
+        self._clock_check_special_keys = GameClock(self._check_special_keys)
+        self._clock_check_if_empty = GameClock(self.check_if_empty)
         # Posibilidades de tipos del cliente
         client_real_types = {'relajado': 'hamster', 'apurado': 'dog', 'presidente': 'president'}
-        self.posible_clients = list()
+        self.posible_clients = list()  # Clientes normales
         self.client_tuple = namedtuple('PosibleClient', ['type', 'wait_time', 'prob'])
         for c_name, c_info in PARAMETROS['clientes']['tipos']['básicos'].items():
             self.posible_clients.append(self.client_tuple(
@@ -91,7 +79,7 @@ class GameCore(QObject):
                 int(c_info['tiempo de espera']),
                 float(c_info['probabilidad'])
             ))
-        self.posible_specials = list()
+        self.posible_specials = list()  # Clientes especiales
         self.special_tuple = namedtuple('PosibleSpecial', ['type', 'rep', 'max', 'min', 'prob'])
         for c_name, c_info in PARAMETROS['clientes']['tipos']['especiales'].items():
             self.posible_specials.append(self.special_tuple(
@@ -101,6 +89,8 @@ class GameCore(QObject):
                 int(c_info['min']),
                 float(c_info['probabilidad'])
             ))
+        # Se inicia el reloj que revisa si se precionaron teclas especiales
+        self._clock_check_special_keys.start()
         #######################################################################
 
     def add_key(self, key: int) -> None:
@@ -114,13 +104,8 @@ class GameCore(QObject):
         self._pressed_keys.remove(key)
 
     def _check_keys(self) -> None:
-        '''
-        Revisa si hay teclas precionadas.
-        Si es que hay, se revisa cuales y
-        se se ejecutan las acciones asociadas.
-        '''
+        '''Revisa si hay teclas precionadas de  movimiento'''
         if self._pressed_keys:
-            # Filtra los jugadores con sus teclas apretadas
             moved_players = filter(
                 lambda p: any(p.has_key(k) for k in self._pressed_keys),
                 self._players
@@ -137,7 +122,10 @@ class GameCore(QObject):
                             object_type.interact(player)
                 else:  # Si no es el caso, se mueve
                     player.move(next_pos)
-            # Ve las teclas trampas están
+
+    def _check_special_keys(self) -> None:
+        '''Revisa si hay teclas especiales precionadas'''
+        if self._pressed_keys:
             if all(key in self._pressed_keys for key in [Qt.Key_M, Qt.Key_O, Qt.Key_Y]):
                 self.cafe.money += PARAMETROS['trampas']['dinero']
                 self.update_ui_information()
@@ -147,67 +135,73 @@ class GameCore(QObject):
                 self.cafe.rep += PARAMETROS['trampas']['reputación']
                 self.update_ui_information()
 
-
     def new_game(self, info: dict) -> None:
         '''Carga un nuevo juego'''
+        # Inicia la ventana
         self.signal_start_game_window.emit(self._map_size)
+        # Datos del Café
         self.cafe.money = int(PARAMETROS['DCCafé']['inicial']['dinero'])
         self.cafe.rep = int(PARAMETROS['DCCafé']['inicial']['reputación'])
         self.cafe.clients = int(PARAMETROS['DCCafé']['inicial']['clientes'])
+        # Parametros del mapa
+        max_x, max_y = self._map_size
         cell_size = PARAMETROS['mapa']['tamaño celda']
         # Creación de chefs aleatorias
         remaining_chefs = PARAMETROS['DCCafé']['inicial']['chefs']
         while remaining_chefs:
+            x_pos, y_pos = randint_xy(max_x - 4 * cell_size, max_y - 4 * cell_size)
             x_pos = randint(0, self._map_size[0] - 4 * cell_size)
             y_pos = randint(0, self._map_size[1] - 4 * cell_size)
+            print('no')
             if not self.__check_colision((x_pos, y_pos, 4 * cell_size, 4 * cell_size)):
                 self._chefs.append(Chef(self, x_pos, y_pos))
                 remaining_chefs -= 1
         # Creación de mesas aleatorias
         remaining_tables = PARAMETROS['DCCafé']['inicial']['mesas']
         while remaining_tables:
-            x_pos = randint(0, self._map_size[0] - 1 * cell_size)
-            y_pos = randint(0, self._map_size[1] - 2 * cell_size)
+            x_pos, y_pos = randint_xy(max_x - 1 * cell_size, max_y - 2 * cell_size)
             if not self.__check_colision((x_pos, y_pos, 1 * cell_size, 2 * cell_size)):
                 self._tables.append(Table(self, x_pos, y_pos))
                 remaining_tables -= 1
         # Creación del jugador
-        fit_player = info['players']
-        while fit_player:
-            x_pos = randint(0, self._map_size[0] - 1 * cell_size)
-            y_pos = randint(0, self._map_size[1] - 2 * cell_size)
-            if not self.__check_colision((x_pos, y_pos, 1 * cell_size, 2 * cell_size)):
-                self._players.append(Player(self, x_pos, y_pos))
-                fit_player -= 1
+        self.generate_players(info['players'], cell_size, max_x, max_y)
+        # Inicio del juego
         self.start_round()
 
     def load_game(self, info: dict) -> None:
         '''Carga un juego'''
+        # Inicia la ventana
         self.signal_start_game_window.emit(self._map_size)
+        # Obtención de los datos
         data = get_last_game_data()
+        # Datos del Café
         self.cafe.money = int(data['money'])
         self.cafe.rep = int(data['rep'])
         self.cafe.round = int(data['round'])
+        # Creación de entidades
+        object_lists = {'mesero': self._players, 'chef': self._chefs, 'mesa': self._tables}
         for object_name, pos_x, pos_y in data['map']:
             new_object = self.object_classes[object_name](self, int(pos_x), int(pos_y))
             if isinstance(new_object, Chef):
                 new_object.dishes = int(data['dishes'].pop(0))
-            self._object_lists[object_name].append(new_object)
+            object_lists[object_name].append(new_object)
         # Creación del jugador adicional (si es que hay)
         cell_size = PARAMETROS['mapa']['tamaño celda']
-        fit_player = info['players'] - 1
-        while fit_player:
-            x_pos = randint(0, self._map_size[0] - 1 * cell_size)
-            y_pos = randint(0, self._map_size[1] - 2 * cell_size)
-            if not self.__check_colision((x_pos, y_pos, 1 * cell_size, 2 * cell_size)):
-                self._players.append(Player(self, x_pos, y_pos))
-                fit_player -= 1
+        self.generate_players(info['players'] - 1, cell_size, *self._map_size)
+        # Inicio del juego
         self.start_round()
 
-        self.start_round()
+    def generate_players(self, players: int, cell_size: int, max_x: int, max_y: int):
+        '''Método para unir la generación de clientes en load_game y new_game'''
+        while players:
+            x_pos, y_pos = randint_xy(max_x - 1 * cell_size, max_y - 2 * cell_size)
+            if not self.__check_colision((x_pos, y_pos, 1 * cell_size, 2 * cell_size)):
+                self._players.append(Player(self, x_pos, y_pos))
+                players -= 1
 
     def exit_game(self) -> None:
         '''Sale del juego'''
+        #* Esto puede ser solo una señal si es que no se deben realizar otros procesos.
         self.signal_exit_game.emit()
 
     def save_game(self) -> None:
@@ -259,6 +253,7 @@ class GameCore(QObject):
         self._clock_customer_spawn.start()
         # Taclas
         self._clock_check_keys.start()
+        # Teclas especiales TODO
 
     def update_ui_information(self, **extras):
         '''Actualiza los datos del ui'''
@@ -286,7 +281,7 @@ class GameCore(QObject):
                     self._clock_check_if_empty.start()
                     self._clock_customer_spawn.stop()
                 self.update_ui_information()
-                return  # Termina el método
+                return  # Termina el método ya que se generó un cliente
 
     def __check_colision(self, moved_object_hitbox: tuple, moved_obj_id: str = '') -> list:
         '''
@@ -296,14 +291,14 @@ class GameCore(QObject):
         collied = list()
         for game_object in self:
             if moved_obj_id == game_object.id:
-                continue
+                continue  # Se omite las colisiones del objeto con si mismo
             if check_colision(moved_object_hitbox, game_object.hit_box):
                 collied.append(game_object)
         # Mapa del juego
         x1, y1, w1, h1 = moved_object_hitbox
         map_width, map_height = self._map_size
         if x1 < 0 or y1 < 0 or x1 + w1 > map_width or y1 + h1 > map_height:
-            collied.append(True)
+            collied.append('map')
         return collied
 
     def check_if_empty(self):
@@ -311,9 +306,11 @@ class GameCore(QObject):
         if all(map(lambda table: table.free, self._tables)):
             self._clock_check_if_empty.stop()
             self.cafe.get_new_rep()
-            self.pause_continue_game()
+            self.pause_continue_game()  # TODO: Cámbio a pre-ronda
             self.signal_show_end_screen.emit(self.cafe.stats)
 
+
+# Funciones de utilidad
 
 def check_colision(hitbox1, hitbox2) -> True:
     '''Formula para calcular colisiones'''
@@ -351,3 +348,7 @@ def save_game(game_data: list, chef_dishes: list, map_data: list):
     map_data = '\n'.join([','.join(map(str, x)) for x in map_data])
     with open(PATH_MAPA, 'w', encoding='utf-8') as file:
         file.write(map_data)
+
+def randint_xy(max_x, max_y):
+    '''Obtiene coordenadas aleatorias para x e y entre (0, max_x) y (0, max_y)'''
+    return (randint(0, max_x), randint(0, max_y))
