@@ -161,4 +161,9 @@ class SummaryWindow(QWidget):
         self.completed.setText(results['completed_orders'])
         self.failed.setText(results['failed_orders'])
         self.money.setText(results['money'])
+        if not int(results['rep']):
+            # Desconecta los botones de guardar y
+            # continuar si la reputación es 0
+            self.continue_.close()
+            self.save.close()
         self.show()
