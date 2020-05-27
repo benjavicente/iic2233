@@ -3,14 +3,15 @@ Ventana del Juego DCCafé
 '''
 
 from PyQt5 import uic
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QPixmap, QCursor, QKeyEvent, QTransform
-from PyQt5.QtWidgets import QLabel
+from PyQt5.QtCore import Qt, pyqtSignal, QMimeData
+from PyQt5.QtGui import QPixmap, QCursor, QTransform, QPainter, QDrag
+from PyQt5.QtWidgets import QLabel, QWidget, QFrame, QPushButton, QGridLayout
 
 from frontend.paths import SPRITE_PATH
 from frontend.themes import GAME_THEME
 
 from config.parametros import PARAMETROS
+
 
 class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
     '''Ventana del juego'''
@@ -25,6 +26,7 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.add_special_ui()
         self.add_style()
         # Mapa
         self.y_game_offset = self.cell_size * 4
@@ -40,10 +42,8 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         Se realiza en código ya que no se pudo realizar fácilmente en
         designer o porque permite cambios rápidos en algún path o estilo.
         '''
-        # Imágenes
+        # Logo
         self.logo.setPixmap(QPixmap(SPRITE_PATH['logo']))
-        self.chef_icon.setPixmap(QPixmap(SPRITE_PATH['shop', 'chef']))
-        self.table_icon.setPixmap(QPixmap(SPRITE_PATH['shop', 'table']))
         # Estrellas
         self.filed_star_pixmap = QPixmap(SPRITE_PATH['star', 'filed'])
         self.empty_star_pixmap = QPixmap(SPRITE_PATH['star', 'empty'])
@@ -51,6 +51,31 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         self.button_exit.setCursor(QCursor(Qt.PointingHandCursor))
         self.button_time.setCursor(QCursor(Qt.PointingHandCursor))
         self.setStyleSheet(GAME_THEME)
+
+    def add_special_ui(self):
+        '''Añade widgets especiales que no se pueden añadir en designer'''
+        # Habilitar Drop
+        game_grid = QGridLayout()
+        game_grid.setContentsMargins(*[0] * 4)
+        game_grid.setSpacing(0)
+        self.game_area = DropArea(self.game_frame)
+        self.game_area.setAcceptDrops(True)
+        self.game_area.setLayout(game_grid)
+        self.game_area.setObjectName('game_area')
+        self.game_frame.layout().addWidget(self.game_area)
+        # Habilitar Drag
+        # Chef
+        self.chef = DragItem(self.shop)
+        self.chef.setFixedSize(*[self.cell_size * 4] * 2)
+        self.chef.setObjectName('chef')
+        self.chef.setPixmap(QPixmap(SPRITE_PATH['shop', 'chef']))
+        self.chef_layout.addWidget(self.chef)
+        # Tabla
+        self.table = DragItem(self.shop)
+        self.table.setFixedSize(self.cell_size, self.cell_size * 2)
+        self.table.setObjectName('table')
+        self.table.setPixmap(QPixmap(SPRITE_PATH['shop', 'table']))
+        self.table_layout.addWidget(self.table)
 
     def start(self, map_size: tuple):
         '''Inicia el juego'''
@@ -81,14 +106,9 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
             self.button_time.setText('Pausar')
 
     def enable_disable_shop(self, enable: bool):
-        '''Desactiva o activa la tienda'''
-        # TODO
+        '''Desactiva o activa la tienda'''  # TODO
         self.shop.setDisabled(enable)
 
-    def drag_and_drop(self):
-        # TODO
-        # Los QLabels chef_icon y table_icon son los que deben tener esta funcionalidad
-        pass
 
     def update_cafe_stats(self, stats: dict):
         '''Actualiza los datos del Café en la ventana'''
@@ -189,3 +209,61 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
                 cell.setFixedSize(self.cell_size, self.cell_size)
                 cell.setScaledContents(True)
                 area_grid.addWidget(cell, y_pos + 1, x_pos, 1, 1)
+
+
+
+#! Esta parte fue realizada con la respuesta de David Wallace, que
+#! es una adaptación de la respuesta de Avaris, en StackOverflow
+#! https://stackoverflow.com/q/14395799
+#! https://stackoverflow.com/a/48203489
+
+class DragItem(QLabel):
+    '''QLabel con drag and drop'''
+    def __init__(self, *args, **kwards):
+        super().__init__(*args, **kwards)
+        self.setCursor(QCursor(Qt.OpenHandCursor))
+        self.setScaledContents(True)
+
+    def mouseMoveEvent(self, event):
+        '''Drag del objeto (Overrite)'''
+        # Infromación del label
+        mime_data = QMimeData()
+        mime_data.setText(','.join(map(str, [
+            self.objectName(), event.x(), event.y(), self.width(), self.height()
+        ])))
+        # Drag
+        drag = QDrag(self)
+        drag.setMimeData(mime_data)
+        drag.setPixmap(QWidget.grab(self))
+        drag.setHotSpot(event.pos())
+        drag.exec_()
+
+
+class DropArea(QFrame):
+    '''Área donde se puede recibir un drop'''
+    def dragEnterEvent(self, event):
+        '''Acepta los drops (Overrite)'''
+        event.accept()
+
+    def dropEvent(self, event):
+        '''Recibe los drops (Overrite)'''
+        # Datos del label
+        mime_data = event.mimeData().text().split(',')
+        name = mime_data[0]
+        relative_x, relative_y, size_x, size_y = map(int, mime_data[1:])
+        # Información del drop
+        drop_pos = event.pos()
+        drop_x, drop_y = map(int, [drop_pos.x(), drop_pos.y()])
+        # Ver si la posición final es válida
+        final_x = drop_x - relative_x
+        final_y = drop_y - relative_y
+        is_valid = all([
+            final_x > 0, final_y > 0,
+            final_x + size_x < self.width(),
+            final_y + size_y < self.height()
+        ])
+        print('hola')
+        if is_valid:
+            event.accept()
+            print('Válido:', name, final_x, final_y)
+            # Do something

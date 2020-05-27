@@ -46,3 +46,6 @@ QMainWindow::separator {
     font-family: 'Rockwell';
     font-size: 24px;
 }
+#chef, #table {
+    background: transparent
+}
