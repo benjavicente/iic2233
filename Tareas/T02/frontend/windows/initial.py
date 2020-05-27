@@ -18,11 +18,12 @@ from frontend.themes import INITIAL_THEME
 class InitialWindow(QWidget):
     '''Ventana que se abre al iniciar el programa'''
 
-    signal_load = pyqtSignal()
-    signal_new = pyqtSignal()
+    signal_load = pyqtSignal(dict)
+    signal_new = pyqtSignal(dict)
 
     def __init__(self):
         super().__init__()
+        self.amount_of_players = 1
         self.init_ui()
 
     def init_ui(self):
@@ -52,6 +53,12 @@ class InitialWindow(QWidget):
         self.info = QToolButton(self)
         self.info.setToolTip('Información')
         tool_bar.addWidget(self.info)
+        # -> Botón Información
+        self.players = QToolButton(self)
+        self.players.setToolTip('Jugadores')
+        self.players.setText(str(self.amount_of_players))
+        self.players.pressed.connect(self.change_players)
+        tool_bar.addWidget(self.players)
         # -> Botón Configuración
         self.config = QToolButton(self)
         self.config.setToolTip('Configuración')
@@ -112,10 +119,15 @@ class InitialWindow(QWidget):
 
     def load_game(self):
         '''Se carga un juego'''
-        self.signal_load.emit()
+        self.signal_load.emit({'players': self.amount_of_players})
         self.hide()
 
     def new_game(self):
         '''Se empieza un nuevo juego'''
-        self.signal_new.emit()
+        self.signal_new.emit({'players': self.amount_of_players})
         self.hide()
+
+    def change_players(self):
+        '''Cambia el número de jugadores'''
+        self.amount_of_players = self.amount_of_players % 2 + 1
+        self.players.setText(str(self.amount_of_players))

@@ -129,12 +129,13 @@ class Player(GameObject):
         {Qt.Key_W: 'up', Qt.Key_D: 'right', Qt.Key_S: 'down', Qt.Key_A: 'left'},
         {Qt.Key_I: 'up', Qt.Key_L: 'right', Qt.Key_K: 'down', Qt.Key_J: 'left'}
     ]
+    _skins = ['a', 'b']
 
     _movemet_direction = {'up': (0, -1), 'right': (1, 0), 'down': (0, 1), 'left': (-1, 0)}
     _movement_speed = PARAMETROS['personaje']['velocidad']
 
     def __init__(self, core, x: int, y: int):
-        super().__init__(core, x, y, 1, 2, ['a', 'free', 'idle', 'down'])
+        super().__init__(core, x, y, 1, 2, [self._skins.pop(0), 'free', 'idle', 'down'])
         self.movemet_keys = self._keys.pop(0)
         self.orders = 0
         self.current_order = None

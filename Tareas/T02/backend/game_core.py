@@ -148,7 +148,7 @@ class GameCore(QObject):
                 self.update_ui_information()
 
 
-    def new_game(self) -> None:
+    def new_game(self, info: dict) -> None:
         '''Carga un nuevo juego'''
         self.signal_start_game_window.emit(self._map_size)
         self.cafe.money = int(PARAMETROS['DCCafé']['inicial']['dinero'])
@@ -172,16 +172,16 @@ class GameCore(QObject):
                 self._tables.append(Table(self, x_pos, y_pos))
                 remaining_tables -= 1
         # Creación del jugador
-        fit_player = True
+        fit_player = info['players']
         while fit_player:
             x_pos = randint(0, self._map_size[0] - 1 * cell_size)
             y_pos = randint(0, self._map_size[1] - 2 * cell_size)
             if not self.__check_colision((x_pos, y_pos, 1 * cell_size, 2 * cell_size)):
                 self._players.append(Player(self, x_pos, y_pos))
-                fit_player = False
+                fit_player -= 1
         self.start_round()
 
-    def load_game(self) -> None:
+    def load_game(self, info: dict) -> None:
         '''Carga un juego'''
         self.signal_start_game_window.emit(self._map_size)
         data = get_last_game_data()
@@ -193,6 +193,17 @@ class GameCore(QObject):
             if isinstance(new_object, Chef):
                 new_object.dishes = int(data['dishes'].pop(0))
             self._object_lists[object_name].append(new_object)
+        # Creación del jugador adicional (si es que hay)
+        cell_size = PARAMETROS['mapa']['tamaño celda']
+        fit_player = info['players'] - 1
+        while fit_player:
+            x_pos = randint(0, self._map_size[0] - 1 * cell_size)
+            y_pos = randint(0, self._map_size[1] - 2 * cell_size)
+            if not self.__check_colision((x_pos, y_pos, 1 * cell_size, 2 * cell_size)):
+                self._players.append(Player(self, x_pos, y_pos))
+                fit_player -= 1
+        self.start_round()
+
         self.start_round()
 
     def exit_game(self) -> None:

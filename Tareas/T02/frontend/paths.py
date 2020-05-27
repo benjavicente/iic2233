@@ -121,6 +121,48 @@ PATH = {
                 },
             },
         },
+        'b': {
+            'free': {
+                'idle': {
+                    'up': join(_SPRITES, 'mesero', 'otros', 'mesera_up_02.png'),
+                    'right': join(_SPRITES, 'mesero', 'otros', 'mesera_right_02.png'),
+                    'down': join(_SPRITES, 'mesero', 'otros', 'mesera_down_02.png'),
+                    'left': join(_SPRITES, 'mesero', 'otros', 'mesera_left_03.png'),
+                },
+                'rightfoot': {
+                    'up': join(_SPRITES, 'mesero', 'otros', 'mesera_up_02.png'),
+                    'right': join(_SPRITES, 'mesero', 'otros', 'mesera_right_01.png'),
+                    'down': join(_SPRITES, 'mesero', 'otros', 'mesera_down_01.png'),
+                    'left': join(_SPRITES, 'mesero', 'otros', 'mesera_left_01.png'),
+                },
+                'leftfoot': {
+                    'up': join(_SPRITES, 'mesero', 'otros', 'mesera_up_03.png'),
+                    'right': join(_SPRITES, 'mesero', 'otros', 'mesera_right_03.png'),
+                    'down': join(_SPRITES, 'mesero', 'otros', 'mesera_down_03.png'),
+                    'left': join(_SPRITES, 'mesero', 'otros', 'mesera_left_01.png'),
+                },
+            },
+            'snack': {
+                'idle': {
+                    'up': join(_SPRITES, 'mesero', 'up_snack_02.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_snack_02.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_snack_02.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_snack_02.png'),
+                },
+                'rightfoot': {
+                    'up': join(_SPRITES, 'mesero', 'up_snack_01.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_snack_01.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_snack_01.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_snack_01.png'),
+                },
+                'leftfoot': {
+                    'up': join(_SPRITES, 'mesero', 'up_snack_03.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_snack_03.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_snack_03.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_snack_03.png'),
+                },
+            },
+        },
     },
     'chef': {
         'idle': join(_SPRITES, 'chef', 'meson_01.png'),
