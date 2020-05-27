@@ -98,8 +98,13 @@ Todas estas deben ser presionadas en conjunto por lo menos un segundo.
 
 ## Código externo utilizado :package:
 
-No usé código externo sobre 5 líneas.
-Donde usé código externo marqué que hace y de donde lo obtuve con `#!`.
+Usé [código de David Wallance](https://stackoverflow.com/a/48203489)
+(adaptación de [la respuesta de Avaris](https://stackoverflow.com/a/14410888) en
+la pregunta [PyQt4 - Drag and Drop](https://stackoverflow.com/q/14395799)
+de StackOverflow) para modelar el funcionamiento del drag and drop de la tienda.
+
+
+Donde usé código externo de menor extensión marqué que hace y de donde lo obtuve con `#!`.
 
 Por ejemplo:
 
@@ -117,8 +122,8 @@ Se implementó todo menos:
 
 De los bonús:
 
-- Clientes especiales (el presidente)
-- Multijugador (hasta 2 jugadores)
+- Presidente
+- Multijugador
 
 ## Notas adicionales :moyai:
 
