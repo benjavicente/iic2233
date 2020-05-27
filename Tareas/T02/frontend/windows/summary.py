@@ -166,4 +166,6 @@ class SummaryWindow(QWidget):
             # continuar si la reputación es 0
             self.continue_.close()
             self.save.close()
+        # https://stackoverflow.com/a/22414435
+        self.setWindowModality(Qt.ApplicationModal)
         self.show()

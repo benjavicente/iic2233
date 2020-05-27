@@ -35,7 +35,7 @@ class GameCore(QObject):
 
     signal_show_end_screen = pyqtSignal(dict)
 
-    signal_close_game_screen = pyqtSignal()
+    signal_exit_game = pyqtSignal()
 
     object_classes = {'mesero': Player, 'chef': Chef, 'mesa': Table}
 
@@ -208,7 +208,7 @@ class GameCore(QObject):
 
     def exit_game(self) -> None:
         '''Sale del juego'''
-        self.signal_close_game_screen.emit()
+        self.signal_exit_game.emit()
 
     def save_game(self) -> None:
         '''Guarda el juego'''
@@ -307,9 +307,10 @@ class GameCore(QObject):
         return collied
 
     def check_if_empty(self):
-        '''Revisa si se acabarón los clientes, para luego pausar la ronda'''
+        '''Revisa si se acabarón los clientes, para luego terminar la ronda'''
         if all(map(lambda table: table.free, self._tables)):
             self._clock_check_if_empty.stop()
+            self.cafe.get_new_rep()
             self.pause_continue_game()
             self.signal_show_end_screen.emit(self.cafe.stats)
 

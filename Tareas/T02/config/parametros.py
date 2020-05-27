@@ -78,11 +78,11 @@ PARAMETROS = {
                 },
             },
             "especiales": {
-                "presidente": { #TODO
+                "presidente": {
                     "reputación": 2,
                     "min": 15,
                     "max": 25,
-                    "probabilidad": 0.9,
+                    "probabilidad": 0.1,
                 },
             },
         },
@@ -96,7 +96,7 @@ PARAMETROS = {
                 "resta": 2,
             },
             "clientes por ronda": {
-                "factor": 5,
+                "factor": 1,
                 "base": 1,
             },
         },

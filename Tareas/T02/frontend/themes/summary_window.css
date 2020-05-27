@@ -21,22 +21,22 @@
     height: 35px;
     width: 120px;
 }
-#quit {
+#quit:enabled {
     background: hsl(0, 98, 70);
 }
-#quit:hover {
+#quit:hover:enabled {
     background: hsl(0, 98, 110);
 }
-#save {
+#save:enabled {
     background: hsl(161, 98, 70);
 }
-#save:hover {
+#save:hover:enabled {
     background: hsl(161, 98, 100);
 }
-#continue_ {
+#continue_:enabled {
     background: hsl(200, 98, 70);
 }
-#continue_:hover{
+#continue_:hover:enabled{
     background: hsl(200, 98, 100);
 }
 #failed, #completed, #money {
