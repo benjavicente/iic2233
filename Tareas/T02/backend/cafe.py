@@ -51,6 +51,7 @@ class Cafe(QObject):
 
     @property
     def stats(self):
+        '''Estadísticas del cafe'''
         return {
             'money': str(self.money),
             'rep': str(self.rep),

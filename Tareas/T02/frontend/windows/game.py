@@ -97,12 +97,12 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
                 value = int(value)
                 for i in range(5):
                     if value:
-                        #! https://stackoverflow.com/questions/4065378/qt-get-children-from-layout
+                        #! Obtener un widget de un layout
+                        #! https://stackoverflow.com/a/16707157
                         self.stars_layout.itemAt(i).widget().setPixmap(self.filed_star_pixmap)
                         value -= 1
                     else:
                         self.stars_layout.itemAt(i).widget().setPixmap(self.empty_star_pixmap)
-            # https://stackoverflow.com/a/611708
             if name == 'round_clients':
                 self.day_progress.setMaximum(int(value))
             elif name == 'remaining_clients':
@@ -110,6 +110,8 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
             elif name == 'open':
                 self.open.setText('Abierto' if value else 'Cerrado')
             else:
+                #! Obtener un atributo sin causar error
+                #! https://stackoverflow.com/a/611708
                 label = getattr(self, name, False)
                 if label:
                     label.setText(str(value))

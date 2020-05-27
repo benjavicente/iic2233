@@ -1,6 +1,5 @@
 '''Clases del los objetos del juego DCCafé'''
 
-from math import floor
 from random import random, choice
 from time import time
 

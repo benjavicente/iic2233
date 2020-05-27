@@ -64,12 +64,12 @@ PARAMETROS = {
         },
     },
     "clientes": {
-        "periodo de llegada": 14,
+        "periodo de llegada": 10,
         "propina": 200,
         "tipos": {
             'básicos': {
                 "relajado" : {
-                    "tiempo de espera": 30,
+                    "tiempo de espera": 35,
                     "probabilidad": 0.4,
                 },
                 "apurado": {
@@ -80,8 +80,8 @@ PARAMETROS = {
             "especiales": {
                 "presidente": {
                     "reputación": 2,
-                    "min": 15,
-                    "max": 25,
+                    "min": 20,
+                    "max": 40,
                     "probabilidad": 0.1,
                 },
             },
@@ -96,16 +96,16 @@ PARAMETROS = {
                 "resta": 2,
             },
             "clientes por ronda": {
-                "factor": 1,
-                "base": 1,
+                "factor": 10,
+                "base": 2,
             },
         },
         "inicial": {
             "dinero": 500,
             "reputación": 2,
             "clientes": 5,
-            "chefs": 1,
-            "mesas": 2,
+            "chefs": 3,
+            "mesas": 6,
             "disponibilidad": True,
         },
     },

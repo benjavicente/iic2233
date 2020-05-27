@@ -130,8 +130,9 @@ class GameCore(QObject):
                 self.cafe.money += PARAMETROS['trampas']['dinero']
                 self.update_ui_information()
             if all(key in self._pressed_keys for key in [Qt.Key_F, Qt.Key_I, Qt.Key_N]):
-                self.round_clients.clear()
-            if all(key in self._pressed_keys for key in [Qt.Key_R, Qt.Key_T, Qt.Key_G]):
+                self._clock_customer_spawn.stop()
+                self._clock_check_if_empty.start()
+            if all(key in self._pressed_keys for key in [Qt.Key_B, Qt.Key_T, Qt.Key_G]):
                 self.cafe.rep += PARAMETROS['trampas']['reputación']
                 self.update_ui_information()
 
@@ -209,7 +210,8 @@ class GameCore(QObject):
         game_data = [self.cafe.money, self.cafe.rep, self.cafe.round]
         chef_dishes = [chef.dishes for chef in self._chefs]
         map_data = []
-        # Reverse dictionary: https://stackoverflow.com/a/483833
+        #! Invertir un diccionario
+        #! https://stackoverflow.com/a/483833
         clases_objects = {obj_c: name for name, obj_c in self.object_classes.items()}
         for game_object in [self._players[0]] + self._tables + self._chefs:
             # type() como indice de un diccionario lo encontré probando type('')(2)
