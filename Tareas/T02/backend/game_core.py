@@ -51,9 +51,9 @@ class GameCore(QObject):
         self._players = list()
         self._chefs = list()
         self._tables = list()
-        self.__set_up()
         self.paused = False
         self._key_access_rate = 1/30  # En segundos
+        self.__set_up()
 
     def __set_up(self) -> None:
         '''Crea objetos para el manejo del juego'''
