@@ -7,6 +7,10 @@ Clase GameClock que permite manejar el tiempo del juego.
 from PyQt5.QtCore import QTimer
 
 
+# Luego de realizar mi implementación, encontré este
+# foro que tiene otra implementación similar
+# https://python-forum.io/Thread-QTimer-with-pause-resume-functions
+
 class GameClockError(Exception):
     '''Error mostrado en el mal manejo del reloj'''
 
