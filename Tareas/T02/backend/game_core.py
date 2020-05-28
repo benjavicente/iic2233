@@ -214,7 +214,8 @@ class GameCore(QObject):
         clases_objects = {obj_c: name for name, obj_c in self.object_classes.items()}
         for game_object in [self._players[0]] + self._tables + self._chefs:
             # type() como indice de un diccionario lo encontré probando type('')(2)
-            map_data.append([clases_objects[type(game_object)], *game_object.pos])
+            pos_x, pos_y = game_object.pos
+            map_data.append([clases_objects[type(game_object)], int(pos_x), int(pos_y)])
         save_game(game_data, chef_dishes, map_data)
 
     def continue_game(self):
@@ -268,7 +269,6 @@ class GameCore(QObject):
         self._clock_customer_spawn.start()
         # Taclas
         self._clock_check_keys.start()
-        # Teclas especiales TODO
 
     def update_ui_information(self, **extras):
         '''Actualiza los datos del ui'''

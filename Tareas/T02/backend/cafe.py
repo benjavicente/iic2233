@@ -89,3 +89,4 @@ class Cafe(QObject):
         self._completed_orders = 0
         self._failed_orders = 0
         self.total_orders = 0
+        self.round += 1
