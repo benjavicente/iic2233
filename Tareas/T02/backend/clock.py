@@ -19,7 +19,7 @@ class GameClock(QTimer):
 
     El evento principal también es llamado al iniciar el reloj.
     '''
-    def __init__(self, event=None, interval: int = 1, rep: int = -1,
+    def __init__(self, parent, event=None, interval: int = 1, rep: int = -1,
                  final_event=None, paused_event=None, continue_event=None):
         '''
         Parámetros:
@@ -31,10 +31,10 @@ class GameClock(QTimer):
         Repeticiones que realiza el reloj.
         Por defecto se repite indefinidamente
         '''
-        super().__init__()
+        super().__init__(parent)
         # Parámetros
-        self.counter = rep
-        self.interval = interval * 1000
+        self.counter = int(rep)
+        self.interval = int(interval * 1000) # De segundos a milisegundos
         self.__remaining_time = 0
         self.__started = False
         self.__paused = False
@@ -59,13 +59,10 @@ class GameClock(QTimer):
         super().start(*args)
 
     def stop(self, *args):
+        '''Overrite de stop. Revisa si se pauso o paró el reloj'''
         if not self.__paused:
             self.__started = False
         super().stop(*args)
-
-    def is_paused(self) -> bool:
-        '''Verifica que si el reloj esta pausado'''
-        return not self.__paused
 
     def pause_(self) -> None:
         '''Pausa el reloj'''
@@ -122,6 +119,7 @@ if __name__ == "__main__":
     CONTINUE_EVENT = lambda: print('Aquí volví')
 
     TEST = GameClock(
+        APP,
         event=EVENT,
         interval=5,
         rep=10,

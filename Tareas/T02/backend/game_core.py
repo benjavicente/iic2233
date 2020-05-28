@@ -70,10 +70,10 @@ class GameCore(QObject):
         self._pressed_keys = set()
         # Relojes de la simulación
         spawn_interval = PARAMETROS['clientes']['periodo de llegada']
-        self._clock_customer_spawn = GameClock(self.__new_customer, spawn_interval)
-        self._clock_check_keys = GameClock(self._check_movement_keys, self._key_access_rate)
-        self._clock_check_special_keys = GameClock(self._check_special_keys)
-        self._clock_check_if_empty = GameClock(self.check_if_empty)
+        self._clock_customer_spawn = GameClock(self, self.__new_customer, spawn_interval)
+        self._clock_check_keys = GameClock(self, self._check_movement_keys, self._key_access_rate)
+        self._clock_check_special_keys = GameClock(self, self._check_special_keys)
+        self._clock_check_if_empty = GameClock(self, self.check_if_empty)
         # Posibilidades de tipos del cliente, en referencia al archivo parámetros y paths
         client_real_types = {'relajado': 'hamster', 'apurado': 'dog', 'presidente': 'president'}
         self.posible_clients = list()  # Clientes normales

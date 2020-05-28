@@ -141,6 +141,7 @@ class Player(GameObject):
         self.walked = True
         self._animation_cicle = ['rightfoot', 'idle', 'leftfoot', 'idle']
         self.clock_check_if_walking = GameClock(
+            self,
             event=self.check_if_walking,
             interval=0.2
         )
@@ -215,7 +216,7 @@ class Chef(GameObject):
         self._dishes = int()
         self.order = None
         self.cooking = False
-        self.cook_clock = GameClock()  # Se define el cocinar
+        self.cook_clock = GameClock(self)  # Se define el cocinar
 
     @property
     def dishes(self):
@@ -267,6 +268,7 @@ class Chef(GameObject):
         # Reloj de cocina
         cooking_animation_time = 0.2
         self.cook_clock = GameClock(
+            self,
             interval=cooking_animation_time,
             rep=total_time//cooking_animation_time,
             event=lambda: self.update_animation(1),
@@ -353,11 +355,13 @@ class Customer(GameObject):
         self.influence = influence
         self._animation_cicle = ['0', '1', '2']
         self.wait_clock = GameClock(
+            self,
             event=lambda: self.update_animation(3),
             interval=wait_time/3,
             final_event=self.exit_cafe,
             rep=3)
         self.happy_clock = GameClock(
+            self,
             final_event=self.exit_cafe,
             rep=1
         )
