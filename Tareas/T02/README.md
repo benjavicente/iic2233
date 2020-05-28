@@ -13,7 +13,8 @@
 
 ## Importante :heavy_exclamation_mark:
 
-TODO
+Cambiar los parámetros del mapa entre partidas guardadas puede causar problemas en la
+ubicación del los objetos.
 
 ## Ejecución :computer:
 
@@ -26,6 +27,7 @@ mismo nivel que `main.py`, de modo que el directorio quede de la siguiente maner
 T02
 ├── backend
 ├── config
+├── extras
 ├── frontend
 ├── sprites    <--
 ├── README.md
@@ -44,28 +46,28 @@ un cliente en una mesa desocupada aleatoria
 3. El jugador interactúa con el chef para entregar un pedido
 4. El chef prepara la orden que le ha sido entregada, si falla
 en prepararla, intenta nuevamente
-5. El jugador receive la orden preparada por el chef
-6. El jugador entrega la orden al cliente
+5. El jugador interactúa con el chef y receive la orden preparada
+6. El jugador interactúa con el cliente y le entrega la orden
 7. El cliente consume la orden y se va, pagando el pedido, con la propina añadida.
 
 **Es importante que:**
 
 - Cada cliente genera un único pedido, pero puede recibir cualquier pedido
 - Si cliente se retira y no ha recibido, el pedido no se elimina
+- Las interacciones son con colisiones
 
 **Las _teclas trampa_ son:**
 
-- `M` + `O` + `Y`: dinero
-- `B` + `T` + `G`: reputación
-- `F` + `I` + `N`: termina la ronda, espera la salida de los clientes
+- `M` + `O` + `Y`: aumenta el dinero
+- `B` + `T` + `G`: aumenta la reputación
+- `F` + `I` + `N`: cierra el café, espera la salida de los clientes
 
 Todas estas deben ser presionadas en conjunto por lo menos un segundo.
 
-**En el menú principal hay 3 botones**:
+**En el menú principal hay 2 botones en la esquina superior derecha**:
 
 - Información: TODO
 - Jugadores: número de jugadores, al presionarlo aumenta la cantidad
-- Configuración: TODO 
 
 
 ## Librerías :books:
@@ -116,9 +118,7 @@ clases_objects = {obj_c: name for name, obj_c in self.object_classes.items()}
 
 ## Características implementadas :wrench:
 
-Se implementó todo menos:
-
-- El menú pre-ronda
+Se implementó todo :tada:
 
 De los bonús:
 
@@ -127,6 +127,22 @@ De los bonús:
 
 ## Notas adicionales :moyai:
 
-Algunas animaciones de Qt pueden no funcionar correctamente en un monitor adicional (Windows).
+**Errores existentes:**
 
-Disfrute el programa :tada:
+- Al mantener `P` se alterna entre reanudar y pausar rápidamente.
+- Algunas animaciones de Qt pueden no funcionar correctamente en un monitor adicional (Windows).
+
+_**QThreads?**_ En el código no se usé threads ya que son poco
+eficientes en la simulación de entidades (por lo menos en este tipo
+de simulación). Además requieren el uso de _locks_ asociados a cada
+entidad, tiempos de espera (_sleep_) e implementar un método _run_,
+aumentando la complejidad del código para su funcionamiento correcto.
+Para manejar las entidadesCreé una clase _GameClock<sup>TM</sup>_,
+que hereda de _QTimer_, el cual utiliza el ciclo principal de thead
+actual. Llegué a esa implementación por
+[esta respuesta en SO](https://stackoverflow.com/a/42311174).
+En comparación, la AY08 (que ocupa _QThreads_) ocupa 35% de mi CPU
+con 4 entidades, mientras mi tarea ocupa como máximo 0.1% con
+70 entidades.
+
+**Disfrute el programa :tada:**
