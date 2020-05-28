@@ -15,15 +15,29 @@
     background: hsl(161, 98, 100);
 }
 #card {
+    padding-top: 10px;
+    padding-bottom: 10px;
     background: white;
     border-radius: 8px;
     margin: 10px;
 }
 #message {
     font-size: 24px;
+    padding-left: 24px;
+    padding-right: 24px;
 }
 #developer {
     color: rgb(133, 133, 133);
     font-size: 14px;
     font-family: consolas
+}
+#info, #players {
+    background-color: rgba(255, 255, 255, 0.411);
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    font-family: consolas;
+}
+#info:hover, #players:hover {
+    background-color: rgba(255, 255, 255, 0.61);
 }

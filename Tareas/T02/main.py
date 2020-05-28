@@ -3,7 +3,9 @@ Simulador del DCCafé
 '''
 
 import sys
+from os.path import join
 
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
 
 from backend.game_core import GameCore
@@ -15,6 +17,8 @@ from frontend.windows.summary import SummaryWindow  # TODO
 if __name__ == "__main__":
     sys.__excepthook__ = lambda t, v, trace: print(t, v, trace, sep="\n")
     APP = QApplication(sys.argv)
+    # Se añade el icono a la aplicación
+    APP.setWindowIcon(QIcon(join('extras', 'app_icon.png')))
     ################################
 
     INITIAL_WINDOW = InitialWindow()

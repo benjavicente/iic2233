@@ -2,14 +2,13 @@
 Ventana inicial del juego
 '''
 
-import sys
+from random import choice
 
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QCursor, QIcon, QPixmap
-from PyQt5.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
-                             QLabel, QPushButton, QSizePolicy, QSpacerItem,
-                             QToolButton, QVBoxLayout, QWidget, QToolTip)
-
+from PyQt5.QtGui import QCursor, QPixmap
+from PyQt5.QtWidgets import (QFrame, QGridLayout, QHBoxLayout, QLabel,
+                             QPushButton, QSizePolicy, QSpacerItem,
+                             QToolButton, QVBoxLayout, QWidget)
 
 from frontend.paths import PATH
 from frontend.themes import INITIAL_THEME
@@ -51,18 +50,19 @@ class InitialWindow(QWidget):
         tool_bar.addItem(QSpacerItem(0, 0, hPolicy=QSizePolicy.Expanding))
         # -> Botón Información
         self.info = QToolButton(self)
+        self.info.setObjectName('info')
         self.info.setToolTip('Información')
+        self.info.setText('i')
+        self.info.setCursor(QCursor(Qt.PointingHandCursor))
         tool_bar.addWidget(self.info)
         # -> Botón Información
         self.players = QToolButton(self)
+        self.players.setObjectName('players')
         self.players.setToolTip('Jugadores')
         self.players.setText(str(self.amount_of_players))
         self.players.pressed.connect(self.change_players)
+        self.players.setCursor(QCursor(Qt.PointingHandCursor))
         tool_bar.addWidget(self.players)
-        # -> Botón Configuración
-        self.config = QToolButton(self)
-        self.config.setToolTip('Configuración')
-        tool_bar.addWidget(self.config)
 
         # ---------------- #
         # Cuadro principal #
@@ -79,19 +79,22 @@ class InitialWindow(QWidget):
         self.logo.setScaledContents(True)
         # Añadilo al cuadro
         card_layout.addWidget(self.logo)
+        card_layout.addSpacing(30)
 
         # -> Texto de bienvenida
-        # TODO: esto podría estar en parámetros
-        text = ('Hola! Bienvenido al DCCafé! '
-                 'No está completamente listo para su apertura aún')
+        text = choice([
+            'Del creador de DCCahuín y DCCriaturas mágicas',
+            'Nada mejor que un DCCafé por la mañana',
+        ])
         self.message = QLabel(text, self)
         self.message.setWordWrap(True)
         self.message.setObjectName('message')
         self.message.setAlignment(Qt.AlignCenter)
+        self.message.setFixedHeight(100)
         # Añadirlo al cuadro
         card_layout.addWidget(self.message)
         # Añadir espacio
-        card_layout.addSpacing(50)
+        card_layout.addSpacing(80)
 
         # -> Botones
         button_layout = QHBoxLayout()
