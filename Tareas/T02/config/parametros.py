@@ -64,7 +64,7 @@ PARAMETROS = {
         },
     },
     "clientes": {
-        "periodo de llegada": 10,
+        "periodo de llegada": 5,
         "propina": 200,
         "tipos": {
             'básicos': {
@@ -96,7 +96,7 @@ PARAMETROS = {
                 "resta": 2,
             },
             "clientes por ronda": {
-                "factor": 10,
+                "factor": 5,
                 "base": 2,
             },
         },

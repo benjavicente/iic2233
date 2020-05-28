@@ -44,11 +44,44 @@ QMainWindow::separator {
 /* Shop */
 #shop_label{
     font-family: 'Rockwell';
-    font-size: 24px;
+    font-size: 28px;
 }
 #chef, #table {
     background: transparent
 }
+#table_price, #chef_price {
+            font-family: 'Rockwell';
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
 #start_round {
     background: hsl(161, 98, 70);
+}
+/* Game info */
+#day_progress {
+    border-radius: 10px;
+    background: hsl(200, 0, 200);
+}
+#day_progress::chunk {
+    border-radius: 10px;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #00a800, stop:1 #03533a);
+}
+#clients_info *{
+    font-size: 18px;
+}
+#completed_orders, #failed_orders, #total_orders {
+    font-family: consolas;
+}
+#round_and_money *{
+    font-family: 'Rockwell';
+    font-size: 24px;
+}
+#stars{
+    border-radius: 10px;
+    background-color: rgb(94, 45, 0);
+    margin: 5px;
+}
+#open{
+    font-family: 'Rockwell';
+    font-size: 30px;
 }
