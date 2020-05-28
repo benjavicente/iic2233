@@ -35,9 +35,15 @@ class GameCore(QObject):
 
     signal_show_end_screen = pyqtSignal(dict)
 
+    signal_shop_enable = pyqtSignal(bool)
+
     signal_exit_game = pyqtSignal()
 
     object_classes = {'mesero': Player, 'chef': Chef, 'mesa': Table}
+    shop_prices = {
+        'table_price': PARAMETROS['tienda']['mesa'],
+        'chef_price': PARAMETROS['tienda']['chef']}
+    shop_names = {'table': Table, 'chef': Chef}
 
     def __init__(self):
         super().__init__()
@@ -46,9 +52,6 @@ class GameCore(QObject):
         self._chefs = list()
         self._tables = list()
         self.__set_up()
-
-    def __iter__(self):
-        return iter(self._tables + self._chefs + self._players)
 
     def __set_up(self) -> None:
         '''Crea objetos para el manejo del juego'''
@@ -151,8 +154,6 @@ class GameCore(QObject):
         remaining_chefs = PARAMETROS['DCCafé']['inicial']['chefs']
         while remaining_chefs:
             x_pos, y_pos = randint_xy(max_x - 4 * cell_size, max_y - 4 * cell_size)
-            x_pos = randint(0, self._map_size[0] - 4 * cell_size)
-            y_pos = randint(0, self._map_size[1] - 4 * cell_size)
             if not self.__check_colision((x_pos, y_pos, 4 * cell_size, 4 * cell_size)):
                 self._chefs.append(Chef(self, x_pos, y_pos))
                 remaining_chefs -= 1
@@ -201,8 +202,7 @@ class GameCore(QObject):
 
     def exit_game(self) -> None:
         '''Sale del juego'''
-        #* Esto puede ser solo una señal si es que no se deben realizar otros procesos.
-        self.signal_exit_game.emit()
+        self.signal_exit_game.emit() #* Esto puede ser solo una señal
 
     def save_game(self) -> None:
         '''Guarda el juego'''
@@ -219,8 +219,15 @@ class GameCore(QObject):
 
     def continue_game(self):
         '''Continua el juego. Se habilita la tienda'''
-        # TODO
-        pass
+        self.signal_shop_enable.emit(True)
+
+    def reset_round(self):
+        '''Elimina cualquier proceso de la ronda pasada'''
+        for player in self._players:
+            player.give_order_to_client()  # Bota el bocadillo
+            player.orders = 0  # Elimina las ordenes pendientes
+        for chef in self._chefs:
+            chef.stop_cooking()  # Reinicia el estado del chef
 
     def pause_continue_game(self) -> None:
         '''Pausa el juego'''
@@ -237,8 +244,12 @@ class GameCore(QObject):
 
     def start_round(self) -> None:
         '''Empieza una ronda'''
+        # Se cierra la tienda
+        self.signal_shop_enable.emit(False)
         # Generación de clientes
         self.round_clients.clear()
+        # Café: reinicio de los datos de la ronda
+        self.cafe.new_round_values()
         # Especiales
         for pos_special in self.posible_specials:
             if pos_special.prob > random():
@@ -249,7 +260,10 @@ class GameCore(QObject):
             self.round_clients.append(client)
         shuffle(self.round_clients)
         # Se inicia la información del ui
-        self.update_ui_information(round_clients=len(self.round_clients))
+        self.update_ui_information(
+            round_clients=len(self.round_clients),
+            **self.shop_prices
+        )
         # Relojes
         self._clock_customer_spawn.start()
         # Taclas
@@ -278,7 +292,6 @@ class GameCore(QObject):
                     table.add_customer('basic', client.type, client.wait_time)
                 if not self.round_clients:
                     print('Se han acabado los clientes!')
-                    self.cafe.open = False
                     self._clock_check_if_empty.start()
                     self._clock_customer_spawn.stop()
                 self.update_ui_information()
@@ -290,7 +303,7 @@ class GameCore(QObject):
         Retorna una lista con los elementos que coliciona.
         '''
         collied = list()
-        for game_object in self:
+        for game_object in self._players + self._tables + self._chefs:
             if moved_obj_id == game_object.id:
                 continue  # Se omite las colisiones del objeto con si mismo
             if check_colision(moved_object_hitbox, game_object.hit_box):
@@ -304,11 +317,41 @@ class GameCore(QObject):
 
     def check_if_empty(self):
         '''Revisa si se acabarón los clientes, para luego terminar la ronda'''
+        self.cafe.open = False
+        self.update_ui_information()
         if all(map(lambda table: table.free, self._tables)):
             self._clock_check_if_empty.stop()
             self.cafe.get_new_rep()
-            self.pause_continue_game()  # TODO: Cámbio a pre-ronda
+            self.reset_round()
             self.signal_show_end_screen.emit(self.cafe.stats)
+
+    def buy_object(self, info: dict):
+        '''Se compra un objeto y se añade al juego'''
+        if not self.__check_colision((*info['pos'], *info['size'])):
+            name = info['type']
+            if self.shop_prices[name + '_price'] <= self.cafe.money:
+                self.cafe.money -= self.shop_prices[name + '_price']
+                new_object = self.shop_names[name](self, *info['pos'])
+                if isinstance(new_object, Chef):
+                    self._chefs.append(new_object)
+                else:
+                    self._tables.append(new_object)
+            self.update_ui_information()
+
+    def sell_object(self, pos: tuple):
+        '''Se vende el objeto en la posición entregada'''
+        for game_object in self.__check_colision((*pos, 0, 0)):
+            if isinstance(game_object, Chef):
+                self.cafe.money += self.shop_prices['chef_price']
+                self._chefs.remove(game_object)
+            elif isinstance(game_object, Table):
+                self.cafe.money += self.shop_prices['table_price']
+                self._tables.remove(game_object)
+                game_object.chair.delete_object()
+            else:
+                return  # Si no es ni mesa ni chef, termina el método
+            game_object.delete_object()
+            self.update_ui_information()
 
 
 # Funciones de utilidad

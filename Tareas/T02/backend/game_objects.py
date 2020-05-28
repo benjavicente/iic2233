@@ -215,7 +215,7 @@ class Chef(GameObject):
         self._dishes = int()
         self.order = None
         self.cooking = False
-        self.cook_clock = None  # Se define el cocinar
+        self.cook_clock = GameClock()  # Se define el cocinar
 
     @property
     def dishes(self):
@@ -233,6 +233,14 @@ class Chef(GameObject):
     def exp(self):
         '''Experiencia del chef'''
         return int(PARAMETROS['chef']['niveles'][self._level]['experiencia'])
+
+    def stop_cooking(self):
+        '''Termina todo lo que está haciendo. Llamado al terminar la ronda'''
+        self.order = None
+        self.cooking = False
+        self.cook_clock.stop()
+        self._object_state[1] = 'idle'
+        self.update_object()
 
     def interact(self, player):
         '''Interación con jugadores'''
@@ -295,14 +303,14 @@ class Table(GameObject):
         super().__init__(core, x, y + self._cell_size, 1, 1, [])
         self.free = True
         self.customer = None
-        self.table = Chair(core, self._x, self._y - self._cell_size)
+        self.chair = Chair(core, self._x, self._y - self._cell_size)
 
     def add_customer(self, *args):
         '''Añade un cliente a la mesa y lo retorna'''
         self.free = False
         self.customer = Customer(self.core, *self.pos, self, *args)
         self.core.signal_stack_under.emit(self.customer.display_info, self.display_info)
-        self.core.signal_stack_under.emit(self.table.display_info, self.customer.display_info)
+        self.core.signal_stack_under.emit(self.chair.display_info, self.customer.display_info)
         return self.customer
 
     @property

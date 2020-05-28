@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>772</width>
-    <height>682</height>
+    <width>1043</width>
+    <height>670</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -77,9 +77,6 @@
         <width>200</width>
         <height>100</height>
        </size>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
       </property>
       <layout class="QGridLayout" name="main_game_grid">
        <property name="leftMargin">
@@ -213,7 +210,7 @@
          <layout class="QHBoxLayout" name="chef_layout"/>
         </item>
         <item row="7" column="0">
-         <widget class="QLabel" name="precio_mesa">
+         <widget class="QLabel" name="table_price">
           <property name="text">
            <string>precio mesa</string>
           </property>
@@ -223,14 +220,14 @@
          </widget>
         </item>
         <item row="8" column="0">
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="start_round">
           <property name="text">
            <string>Continuar</string>
           </property>
          </widget>
         </item>
         <item row="2" column="0">
-         <widget class="QLabel" name="precio_tienda">
+         <widget class="QLabel" name="chef_price">
           <property name="text">
            <string>precio oso</string>
           </property>
@@ -329,6 +326,12 @@
      </item>
      <item>
       <widget class="QWidget" name="widget_4" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
          <layout class="QHBoxLayout" name="stars_layout">
@@ -381,6 +384,19 @@
         </item>
        </layout>
       </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item>
       <widget class="QWidget" name="widget_2" native="true">
@@ -606,17 +622,33 @@
       </widget>
      </item>
      <item>
-      <widget class="QWidget" name="widget_3" native="true">
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>TextLabel</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
+      <spacer name="horizontalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Maximum</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>400</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_3">

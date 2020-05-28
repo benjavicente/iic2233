@@ -4,8 +4,8 @@ Ventana del Juego DCCafé
 
 from PyQt5 import uic
 from PyQt5.QtCore import Qt, pyqtSignal, QMimeData
-from PyQt5.QtGui import QPixmap, QCursor, QTransform, QPainter, QDrag
-from PyQt5.QtWidgets import QLabel, QWidget, QFrame, QPushButton, QGridLayout
+from PyQt5.QtGui import QPixmap, QCursor, QTransform, QDrag
+from PyQt5.QtWidgets import QLabel, QWidget, QFrame, QGridLayout, QSizePolicy
 
 from frontend.paths import SPRITE_PATH
 from frontend.themes import GAME_THEME
@@ -21,20 +21,28 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
 
     signal_pause_continue = pyqtSignal()
 
+    signal_buy_object = pyqtSignal(dict)  # Tipo & pos
+    signal_sell_object = pyqtSignal(tuple) # pos
+
+    signal_start_round = pyqtSignal()
+
     cell_size = PARAMETROS['mapa']['tamaño celda']
 
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.add_special_ui()
-        self.add_style()
         # Mapa
         self.y_game_offset = self.cell_size * 4
+        # SetUp
+        self.add_special_ui()
+        self.add_style()
         # Objetos del juego a mostrar en el cuadro de juego
         self.game_objects = dict()
         # Pausa/Continuar
         self.paused = False
         self.button_time.pressed.connect(self.signal_pause_continue.emit)
+        # Continuar de pre-fase
+        self.start_round.pressed.connect(self.signal_start_round.emit)
 
     def add_style(self):
         '''
@@ -50,6 +58,7 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         # Es raro que PointingHandCursor no este disponible en Designer...
         self.button_exit.setCursor(QCursor(Qt.PointingHandCursor))
         self.button_time.setCursor(QCursor(Qt.PointingHandCursor))
+        self.start_round.setCursor(QCursor(Qt.PointingHandCursor))
         self.setStyleSheet(GAME_THEME)
 
     def add_special_ui(self):
@@ -58,10 +67,16 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         game_grid = QGridLayout()
         game_grid.setContentsMargins(*[0] * 4)
         game_grid.setSpacing(0)
-        self.game_area = DropArea(self.game_frame)
+        self.game_area = DropArea(
+            self.game_frame,
+            y_offset=self.y_game_offset,
+            drop_signal=self.signal_buy_object,
+            double_click_signal=self.signal_sell_object
+        )
         self.game_area.setAcceptDrops(True)
         self.game_area.setLayout(game_grid)
         self.game_area.setObjectName('game_area')
+        self.game_area.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.game_frame.layout().addWidget(self.game_area)
         # Habilitar Drag
         # Chef
@@ -105,10 +120,12 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         else:
             self.button_time.setText('Pausar')
 
-    def enable_disable_shop(self, enable: bool):
-        '''Desactiva o activa la tienda'''  # TODO
-        self.shop.setDisabled(enable)
-
+    def enable_shop(self, enable: bool):
+        '''Desactiva o activa la tienda'''  #* Puede ser desactivar mejor
+        self.chef.setDisabled(not enable)
+        self.table.setDisabled(not enable)
+        self.start_round.setHidden(not enable)
+        self.game_area.set_disable_double_clicks(not enable)
 
     def update_cafe_stats(self, stats: dict):
         '''Actualiza los datos del Café en la ventana'''
@@ -127,8 +144,6 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
                 self.day_progress.setMaximum(int(value))
             elif name == 'remaining_clients':
                 self.day_progress.setValue(int(value))
-            elif name == 'open':
-                self.open.setText('Abierto' if value else 'Cerrado')
             else:
                 #! Obtener un atributo sin causar error
                 #! https://stackoverflow.com/a/611708
@@ -139,7 +154,6 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
     def add_new_object(self, obj: dict):
         '''Crea un nuevo objeto en el area de juego'''
         new_object = QLabel(self.game_area)
-        new_object.setAttribute(Qt.WA_DeleteOnClose)
         pos_x, pos_y = obj['pos']
         new_object.setGeometry(pos_x, pos_y + self.y_game_offset, *obj['size'])
         new_object.setPixmap(QPixmap(SPRITE_PATH[obj['state']]))
@@ -155,7 +169,8 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
 
     def delete_object(self, obj: dict):
         '''Elimina un objeto'''
-        self.game_objects[obj['id']].close()
+        self.game_objects[obj['id']].hide()
+        self.game_objects[obj['id']].deleteLater()
         del self.game_objects[obj['id']]
 
     def stack_under(self, obj_below: dict, obj_above: dict):
@@ -177,7 +192,7 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         if grid_width % 2:
             raise ValueError('La cantidad de celdas en el eje X debe ser múltiplo de 2')
 
-        self.game_area.setFixedSize(width, height + self.y_game_offset)
+        self.game_frame.setFixedSize(width, height + self.y_game_offset)
 
         area_grid = self.game_area.layout()
 
@@ -219,8 +234,8 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
 
 class DragItem(QLabel):
     '''QLabel con drag and drop'''
-    def __init__(self, *args, **kwards):
-        super().__init__(*args, **kwards)
+    def __init__(self, *args):
+        super().__init__(*args)
         self.setCursor(QCursor(Qt.OpenHandCursor))
         self.setScaledContents(True)
 
@@ -241,6 +256,22 @@ class DragItem(QLabel):
 
 class DropArea(QFrame):
     '''Área donde se puede recibir un drop'''
+    def __init__(self, *args, y_offset, drop_signal, double_click_signal):
+        super().__init__(*args)
+        self.y_offset = y_offset
+        self.drop_signal = drop_signal
+        self.double_click_signal = double_click_signal
+        self.accept_double_clicks = True  # Para borrar objetos en preronda
+
+    def set_disable_double_clicks(self, value):
+        '''Establece el valor de accept_double_clicks'''
+        self.accept_double_clicks = not value
+
+    def mouseDoubleClickEvent(self, event):
+        '''Permite ver donde se realizó un double-click (Overrite)'''
+        if self.accept_double_clicks:
+            self.double_click_signal.emit((event.x(), event.y() - self.y_offset))
+
     def dragEnterEvent(self, event):
         '''Acepta los drops (Overrite)'''
         event.accept()
@@ -256,14 +287,16 @@ class DropArea(QFrame):
         drop_x, drop_y = map(int, [drop_pos.x(), drop_pos.y()])
         # Ver si la posición final es válida
         final_x = drop_x - relative_x
-        final_y = drop_y - relative_y
+        final_y = drop_y - relative_y - self.y_offset
         is_valid = all([
             final_x > 0, final_y > 0,
             final_x + size_x < self.width(),
-            final_y + size_y < self.height()
+            final_y + size_y < self.height()  - self.y_offset
         ])
-        print('hola')
         if is_valid:
             event.accept()
-            print('Válido:', name, final_x, final_y)
-            # Do something
+            self.drop_signal.emit({
+                'type': name,
+                'pos': (final_x, final_y),
+                'size': (size_x, size_y)
+            })

@@ -53,13 +53,13 @@ class Cafe(QObject):
     def stats(self):
         '''Estadísticas del cafe'''
         return {
-            'money': str(self.money),
-            'rep': str(self.rep),
-            'round': str(self.round),
-            'cafe_state': 'Abierto' if self.open else 'Cerrado',
-            'completed_orders': str(self.completed_orders),
-            'total_orders': str(self.total_orders),
-            'failed_orders': str(self.total_orders - self.completed_orders),
+            'money': self.money,
+            'rep': self.rep,
+            'round': self.round,
+            'open': 'Abierto' if self.open else 'Cerrado',
+            'completed_orders': self.completed_orders,
+            'total_orders': self.total_orders,
+            'failed_orders': self.total_orders - self.completed_orders,
         }
 
     @property
@@ -82,3 +82,10 @@ class Cafe(QObject):
         expr = self.rep + floor(alpha * self.completed_orders/self.total_orders - beta)
         self.rep = max(min_value, min(max_value, expr))
         return self.rep
+
+    def new_round_values(self) -> None:
+        '''Reinicia los valores de la ronda'''
+        self.open = True
+        self._completed_orders = 0
+        self._failed_orders = 0
+        self.total_orders = 0

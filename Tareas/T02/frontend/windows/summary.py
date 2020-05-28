@@ -137,14 +137,10 @@ class SummaryWindow(QWidget):
 
     def round_title(self, n_ronda: int = 0) -> None:
         '''Actualiza el título de la ronda'''
-        if not isinstance(n_ronda, int):
-            raise TypeError(f'El número de la ronda {repr(n_ronda)} no es valido')
         self.title.setText(f'Resumen ronda {n_ronda}')
 
     def show_rep(self, rep: int) -> None:
         '''Muestra la reputacion con estrellas'''
-        if rep.isnumeric():  # Para evitar el error cuando es str
-            rep = int(rep)
         if not isinstance(rep, int) or not 0 <= rep <= 5:
             raise ValueError(f'La reputación {repr(rep)} no es un número entre 0 y 5')
         for indice in range(5):
@@ -156,12 +152,12 @@ class SummaryWindow(QWidget):
 
     def show_results(self, results: dict) -> None:
         '''Carga los resultados y muestra la ventana'''
-        self.round_title(int(results['round']))
+        self.round_title(results['round'])
         self.show_rep(results['rep'])
-        self.completed.setText(results['completed_orders'])
-        self.failed.setText(results['failed_orders'])
-        self.money.setText(results['money'])
-        if not int(results['rep']):
+        self.completed.setText(str(results['completed_orders']))
+        self.failed.setText(str(results['failed_orders']))
+        self.money.setText(str(results['money']))
+        if not results['rep']:
             # Desconecta los botones de guardar y
             # continuar si la reputación es 0
             self.continue_.close()

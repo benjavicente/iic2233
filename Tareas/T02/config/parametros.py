@@ -112,5 +112,9 @@ PARAMETROS = {
     'trampas': {
         'dinero': 500,
         'reputación': 1,
+    },
+    "tienda": {
+        'chef': 500,
+        'mesa': 200,
     }
 }

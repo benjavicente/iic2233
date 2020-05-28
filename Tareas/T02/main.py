@@ -58,6 +58,14 @@ if __name__ == "__main__":
     GAME_CORE.signal_exit_game.connect(GAME_WINDOW.close)
     GAME_CORE.signal_exit_game.connect(APP.quit)
 
+    # Señaled de la tienda
+    GAME_CORE.signal_shop_enable.connect(GAME_WINDOW.enable_shop)
+    GAME_WINDOW.signal_buy_object.connect(GAME_CORE.buy_object)
+    GAME_WINDOW.signal_sell_object.connect(GAME_CORE.sell_object)
+
+    # Iniciar ronda
+    GAME_WINDOW.signal_start_round.connect(GAME_CORE.start_round)
+
     ################################
     INITIAL_WINDOW.show()
     sys.exit(APP.exec_())
