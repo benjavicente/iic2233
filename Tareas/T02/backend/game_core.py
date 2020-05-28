@@ -52,14 +52,14 @@ class GameCore(QObject):
         self._chefs = list()
         self._tables = list()
         self.__set_up()
+        self.paused = False
+        self._key_access_rate = 1/30  # En segundos
 
     def __set_up(self) -> None:
         '''Crea objetos para el manejo del juego'''
         #######################################################################
-        # Parámetros especiales
-        self._key_access_rate = 1/30  # En segundos
+        # Lista que almacena los clientes de la ronda
         self.round_clients = list()
-        self.paused = False
         # Mapa
         self._map_size = (
             int(PARAMETROS['mapa']['largo']), int(PARAMETROS['mapa']['alto'])
@@ -69,10 +69,10 @@ class GameCore(QObject):
         # Relojes de la simulación
         spawn_interval = PARAMETROS['clientes']['periodo de llegada']
         self._clock_customer_spawn = GameClock(self.__new_customer, spawn_interval)
-        self._clock_check_keys = GameClock(self._check_keys, self._key_access_rate)
+        self._clock_check_keys = GameClock(self._check_movement_keys, self._key_access_rate)
         self._clock_check_special_keys = GameClock(self._check_special_keys)
         self._clock_check_if_empty = GameClock(self.check_if_empty)
-        # Posibilidades de tipos del cliente
+        # Posibilidades de tipos del cliente, en referencia al archivo parámetros y paths
         client_real_types = {'relajado': 'hamster', 'apurado': 'dog', 'presidente': 'president'}
         self.posible_clients = list()  # Clientes normales
         self.client_tuple = namedtuple('PosibleClient', ['type', 'wait_time', 'prob'])
@@ -99,25 +99,21 @@ class GameCore(QObject):
     def add_key(self, key: int) -> None:
         '''Añade una tecla al las teclas precionadas'''
         self._pressed_keys.add(key)
-        if Qt.Key_P == key:  # Pausa
+        if Qt.Key_P == key:  # Pausa el juego
             self.pause_continue_game()
 
     def remove_key(self, key: int) -> None:
         '''Remueve una tecla al las teclas precionadas'''
         self._pressed_keys.remove(key)
 
-    def _check_keys(self) -> None:
+    def _check_movement_keys(self) -> None:
         '''Revisa si hay teclas precionadas de  movimiento'''
         if self._pressed_keys:
-            moved_players = filter(
-                lambda p: any(p.has_key(k) for k in self._pressed_keys),
-                self._players
-            )
-            for player in moved_players:  # Movimiento jugadores
-                next_pos = player.next_pos(  # Usa solo las teclas del jugador
-                    filter(lambda k, p=player: p.has_key(k), self._pressed_keys),
-                    self._key_access_rate
-                )
+            for player in self._players:  # Movimiento jugadores
+                valid_keys = filter(lambda k, p=player: k in p.movemet_keys, self._pressed_keys)
+                if not valid_keys:
+                    continue # Las teclas precionadas no son del jugador, se continua
+                next_pos = player.next_pos(valid_keys, self._key_access_rate)
                 colision_list = self.__check_colision(player.new_hitbox(next_pos), player.id)
                 if colision_list:  # Si colisiona, interactúa con objetos
                     for object_type in colision_list:
@@ -173,7 +169,7 @@ class GameCore(QObject):
         '''Carga un juego'''
         # Inicia la ventana
         self.signal_start_game_window.emit(self._map_size)
-        # Obtención de los datos
+        # Obtención de los datos guardados
         data = get_last_game_data()
         # Datos del Café
         self.cafe.money = int(data['money'])
@@ -192,7 +188,7 @@ class GameCore(QObject):
         # Inicio del juego
         self.start_round()
 
-    def generate_players(self, players: int, cell_size: int, max_x: int, max_y: int):
+    def generate_players(self, players: int, cell_size: int, max_x: int, max_y: int) -> None:
         '''Método para unir la generación de clientes en load_game y new_game'''
         while players:
             x_pos, y_pos = randint_xy(max_x - 1 * cell_size, max_y - 2 * cell_size)
@@ -213,16 +209,17 @@ class GameCore(QObject):
         #! https://stackoverflow.com/a/483833
         clases_objects = {obj_c: name for name, obj_c in self.object_classes.items()}
         for game_object in [self._players[0]] + self._tables + self._chefs:
-            # type() como indice de un diccionario lo encontré probando type('')(2)
             pos_x, pos_y = game_object.pos
+            # Se guarda el nombre del objeto con su posición
             map_data.append([clases_objects[type(game_object)], int(pos_x), int(pos_y)])
-        save_game(game_data, chef_dishes, map_data)
+        save_game(game_data, chef_dishes, map_data)  # Función externa
 
-    def continue_game(self):
+    def continue_game(self) -> None:
         '''Continua el juego. Se habilita la tienda'''
         self.signal_shop_enable.emit(True)
+        self._clock_check_keys.start()
 
-    def reset_round(self):
+    def reset_round(self) -> None:
         '''Elimina cualquier proceso de la ronda pasada'''
         for player in self._players:
             player.give_order_to_client()  # Bota el bocadillo
@@ -247,40 +244,32 @@ class GameCore(QObject):
         '''Empieza una ronda'''
         # Se cierra la tienda
         self.signal_shop_enable.emit(False)
+        # Se reinician los valores de la ronda
+        self.cafe.new_round_values()
         # Generación de clientes
         self.round_clients.clear()
-        # Café: reinicio de los datos de la ronda
-        self.cafe.new_round_values()
-        # Especiales
-        for pos_special in self.posible_specials:
+        for pos_special in self.posible_specials:  # Especiales
             if pos_special.prob > random():
                 self.round_clients.append(pos_special)
-        # Básicos
-        for _ in range(self.cafe.round_clients - len(self.round_clients)):
+        for _ in range(self.cafe.round_clients - len(self.round_clients)):  # Básicos
             client = choices(self.posible_clients, [c.prob for c in self.posible_clients])[0]
             self.round_clients.append(client)
-        shuffle(self.round_clients)
+        shuffle(self.round_clients)  # Se revuelve, de modo que el especial no quede primero
         # Se inicia la información del ui
-        self.update_ui_information(
-            round_clients=len(self.round_clients),
-            **self.shop_prices
-        )
-        # Relojes
+        self.update_ui_information(round_clients=len(self.round_clients), **self.shop_prices)
+        # Se inicia el spawn de clientes
         self._clock_customer_spawn.start()
-        # Taclas
+        # Se habilita el movimiento si es que no está activado
         self._clock_check_keys.start()
 
-    def update_ui_information(self, **extras):
+    def update_ui_information(self, **extras) -> None:
         '''Actualiza los datos del ui'''
-        stats = {
-            **self.cafe.stats, **extras,
-            'remaining_clients': len(self.round_clients),
-        }
+        stats = {**self.cafe.stats, **extras, 'remaining_clients': len(self.round_clients)}
         self.signal_update_cafe_stats.emit(stats)
 
     def __new_customer(self) -> None:
         '''Llega un cliente a la tienda. Si hay mesas, se sienta y espera un pedido'''
-        shuffle(self._tables)
+        shuffle(self._tables)  # Cambia el orden de las mesas
         for table in self._tables:
             if table.free:
                 client = self.round_clients.pop()
@@ -288,12 +277,14 @@ class GameCore(QObject):
                     # Si es especial, se genera un tiempo de espera al azar
                     wait_time = randint(client.min, client.max)
                     table.add_customer('special', client.type, wait_time, client.rep)
-                else:
+                elif isinstance(client, self.client_tuple):
+                    # Si es básico, solo se añaden los atributos
                     table.add_customer('basic', client.type, client.wait_time)
+                # Ahora se revisa si quedan clientes
                 if not self.round_clients:
                     print('Se han acabado los clientes!')
-                    self._clock_check_if_empty.start()
-                    self._clock_customer_spawn.stop()
+                    self._clock_check_if_empty.start()  # Cada segundo chekea si está vació
+                    self._clock_customer_spawn.stop()  # Se para el generador
                 self.update_ui_information()
                 return  # Termina el método ya que se generó un cliente
 
@@ -308,14 +299,14 @@ class GameCore(QObject):
                 continue  # Se omite las colisiones del objeto con si mismo
             if check_colision(moved_object_hitbox, game_object.hit_box):
                 collied.append(game_object)
-        # Mapa del juego
-        x1, y1, w1, h1 = moved_object_hitbox
+        # Colición con el bode del mapa del juego
+        obj_x, obj_y, obj_w, obj_h = moved_object_hitbox
         map_width, map_height = self._map_size
-        if x1 < 0 or y1 < 0 or x1 + w1 > map_width or y1 + h1 > map_height:
+        if obj_x < 0 or obj_y < 0 or obj_x + obj_w > map_width or obj_y + obj_h > map_height:
             collied.append('map')
         return collied
 
-    def check_if_empty(self):
+    def check_if_empty(self) -> None:
         '''Revisa si se acabarón los clientes, para luego terminar la ronda'''
         self.cafe.open = False
         self.update_ui_information()
@@ -323,28 +314,31 @@ class GameCore(QObject):
             self._clock_check_if_empty.stop()
             self.cafe.get_new_rep()
             self.reset_round()
+            self._clock_check_keys.stop()
             self.signal_show_end_screen.emit(self.cafe.stats)
 
-    def buy_object(self, info: dict):
+    def buy_object(self, info: dict) -> None:
         '''Se compra un objeto y se añade al juego'''
         if not self.__check_colision((*info['pos'], *info['size'])):
             name = info['type']
+            # Se reviza que alcance el dinero
             if self.shop_prices[name + '_price'] <= self.cafe.money:
                 self.cafe.money -= self.shop_prices[name + '_price']
                 new_object = self.shop_names[name](self, *info['pos'])
                 if isinstance(new_object, Chef):
                     self._chefs.append(new_object)
-                else:
+                elif isinstance(new_object, Table):
                     self._tables.append(new_object)
-            self.update_ui_information()
+                self.update_ui_information()
 
-    def sell_object(self, pos: tuple):
+    def sell_object(self, pos: tuple) -> None:
         '''Se vende el objeto en la posición entregada'''
         for game_object in self.__check_colision((*pos, 0, 0)):
-            if isinstance(game_object, Chef):
+            # En el caso que quede un elemento, no se vende
+            if isinstance(game_object, Chef) and len(self._chefs) > 1:
                 self.cafe.money += self.shop_prices['chef_price']
                 self._chefs.remove(game_object)
-            elif isinstance(game_object, Table):
+            elif isinstance(game_object, Table) and len(self._tables) > 1:
                 self.cafe.money += self.shop_prices['table_price']
                 self._tables.remove(game_object)
                 game_object.chair.delete_object()
@@ -361,9 +355,9 @@ def check_colision(hitbox1, hitbox2) -> True:
     # Hay muchas páginas que mencionan como realizar
     # colisiones entre cuadrados. Mozilla tiene un ejemplo básico:
     # https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
-    x1, y1, w1, h1 = hitbox1
-    x2, y2, w2, h2 = hitbox2
-    return x1 + w1 > x2 and x1 < x2 + w2 and y1 + h1 > y2 and y1 < y2 + h2
+    x_1, y_1, w_1, h_1 = hitbox1
+    x_2, y_2, w_2, h_2 = hitbox2
+    return all([x_1 + w_1 > x_2, x_1 < x_2 + w_2, y_1 + h_1 > y_2, y_1 < y_2 + h_2])
 
 
 def get_last_game_data() -> dict:
@@ -381,6 +375,7 @@ def get_last_game_data() -> dict:
         map_content = file.readlines()
     last_game_data['map'] = [line.split(',') for line in map_content]
     return last_game_data
+
 
 def save_game(game_data: list, chef_dishes: list, map_data: list):
     '''Guarda la partida'''
