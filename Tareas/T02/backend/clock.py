@@ -58,6 +58,11 @@ class GameClock(QTimer):
                 self._event()
         super().start(*args)
 
+    def stop(self, *args):
+        if not self.__paused:
+            self.__started = False
+        super().stop(*args)
+
     def is_paused(self) -> bool:
         '''Verifica que si el reloj esta pausado'''
         return not self.__paused

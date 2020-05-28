@@ -45,6 +45,8 @@ class GameCore(QObject):
         'chef_price': PARAMETROS['tienda']['chef']}
     shop_names = {'table': Table, 'chef': Chef}
 
+    cell_size = PARAMETROS['mapa']['tamaño celda']
+
     def __init__(self):
         super().__init__()
         self.cafe = Cafe()
@@ -145,23 +147,22 @@ class GameCore(QObject):
         self.cafe.clients = int(PARAMETROS['DCCafé']['inicial']['clientes'])
         # Parametros del mapa
         max_x, max_y = self._map_size
-        cell_size = PARAMETROS['mapa']['tamaño celda']
         # Creación de chefs aleatorias
         remaining_chefs = PARAMETROS['DCCafé']['inicial']['chefs']
         while remaining_chefs:
-            x_pos, y_pos = randint_xy(max_x - 4 * cell_size, max_y - 4 * cell_size)
-            if not self.__check_colision((x_pos, y_pos, 4 * cell_size, 4 * cell_size)):
+            x_pos, y_pos = randint_xy(max_x - 4 * self.cell_size, max_y - 4 * self.cell_size)
+            if not self.__check_colision((x_pos, y_pos, 4 * self.cell_size, 4 * self.cell_size)):
                 self._chefs.append(Chef(self, x_pos, y_pos))
                 remaining_chefs -= 1
         # Creación de mesas aleatorias
         remaining_tables = PARAMETROS['DCCafé']['inicial']['mesas']
         while remaining_tables:
-            x_pos, y_pos = randint_xy(max_x - 1 * cell_size, max_y - 2 * cell_size)
-            if not self.__check_colision((x_pos, y_pos, 1 * cell_size, 2 * cell_size)):
+            x_pos, y_pos = randint_xy(max_x - 1 * self.cell_size, max_y - 2 * self.cell_size)
+            if not self.__check_colision((x_pos, y_pos, 1 * self.cell_size, 2 * self.cell_size)):
                 self._tables.append(Table(self, x_pos, y_pos))
                 remaining_tables -= 1
         # Creación del jugador
-        self.generate_players(info['players'], cell_size, max_x, max_y)
+        self.generate_players(info['players'], self.cell_size, max_x, max_y)
         # Inicio del juego
         self.start_round()
 
@@ -183,8 +184,7 @@ class GameCore(QObject):
                 new_object.dishes = int(data['dishes'].pop(0))
             object_lists[object_name].append(new_object)
         # Creación del jugador adicional (si es que hay)
-        cell_size = PARAMETROS['mapa']['tamaño celda']
-        self.generate_players(info['players'] - 1, cell_size, *self._map_size)
+        self.generate_players(info['players'] - 1, self.cell_size, *self._map_size)
         # Inicio del juego
         self.start_round()
 
@@ -210,6 +210,8 @@ class GameCore(QObject):
         clases_objects = {obj_c: name for name, obj_c in self.object_classes.items()}
         for game_object in [self._players[0]] + self._tables + self._chefs:
             pos_x, pos_y = game_object.pos
+            if isinstance(game_object, Table):
+                pos_y -= self.cell_size
             # Se guarda el nombre del objeto con su posición
             map_data.append([clases_objects[type(game_object)], int(pos_x), int(pos_y)])
         save_game(game_data, chef_dishes, map_data)  # Función externa
