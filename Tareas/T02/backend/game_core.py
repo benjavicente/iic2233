@@ -282,12 +282,12 @@ class GameCore(QObject):
                 elif isinstance(client, self.client_tuple):
                     # Si es básico, solo se añaden los atributos
                     table.add_customer('basic', client.type, client.wait_time)
+                self.update_ui_information()
                 # Ahora se revisa si quedan clientes
                 if not self.round_clients:
                     print('Se han acabado los clientes!')
                     self._clock_check_if_empty.start()  # Cada segundo chekea si está vació
                     self._clock_customer_spawn.stop()  # Se para el generador
-                self.update_ui_information()
                 return  # Termina el método ya que se generó un cliente
 
     def __check_colision(self, moved_object_hitbox: tuple, moved_obj_id: str = '') -> list:
@@ -310,8 +310,9 @@ class GameCore(QObject):
 
     def check_if_empty(self) -> None:
         '''Revisa si se acabarón los clientes, para luego terminar la ronda'''
-        self.cafe.open = False
-        self.update_ui_information()
+        if self.cafe.open:
+            self.cafe.open = False
+            self.update_ui_information()
         if all(map(lambda table: table.free, self._tables)):
             self._clock_check_if_empty.stop()
             self.cafe.get_new_rep()
