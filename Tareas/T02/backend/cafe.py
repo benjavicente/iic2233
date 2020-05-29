@@ -27,6 +27,7 @@ class Cafe(QObject):
 
     @rep.setter
     def rep(self, value):
+        # La reputación puede cambiar de 3 maneras distintas
         self.__rep = max(0, min(5, value))
 
     @property

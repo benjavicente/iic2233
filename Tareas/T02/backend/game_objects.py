@@ -31,7 +31,7 @@ class GameObject(QObject):
     hitbox_reduction = float(PARAMETROS['mapa']['reducción de hitbox'])
 
     def __init__(self, core, x: int, y: int, width: int, height: int, initial_state: list):
-        super().__init__()
+        super().__init__(core)  # QObject toma como argumento el QObject padre
         self.id = str(next(GameObject.id_counter))
         self._x = int(x)
         self._y = int(y)
@@ -111,6 +111,8 @@ class Snack(QObject):
         super().__init__()
         self.chef_exp = chef_exp
 
+    # El calculo del tiempo de preparación dr realiza en el chef
+
     def quality(self, wait_time: float):
         '''Cálculo de la calidad'''
         min_value = PARAMETROS['bocadillos']['calculos']['calidad pedido']['mínimo']
@@ -138,15 +140,14 @@ class Player(GameObject):
         self.movemet_keys = self._keys.pop(0)
         self.orders = 0
         self.current_order = None
-        self.walked = True
+        self.walked = False
         self._animation_cicle = ['rightfoot', 'idle', 'leftfoot', 'idle']
         self.clock_check_if_walking = GameClock(
-            self,
-            event=self.check_if_walking,
-            interval=0.2
+            self, interval=0.2,
+            event=self.check_if_walking
         )
-        self.clock_check_if_walking.start()
         self.clocks.append(self.clock_check_if_walking)
+        self.clock_check_if_walking.start()
 
     def get_order_from_chef(self, snack) -> None:
         '''Obtiene un snack'''
@@ -181,13 +182,12 @@ class Player(GameObject):
         '''Retorna la nueva posición del hitbox'''
         width, height = self.size
         pos_x, pos_y = next_pos
-        height /= 2
-        pos_y += height
-        fact = self.hitbox_reduction
-        return (pos_x + width * fact / 2,
-                pos_y + height * fact / 2,
-                width * (1 - fact),
-                height * (1 - fact))
+        height /= 2      # Se modifica el alto y la posición
+        pos_y += height  # para crear un hitbox menor y más natural
+        return (pos_x + width * self.hitbox_reduction / 2,
+                pos_y + height * self.hitbox_reduction / 2,
+                width * (1 - self.hitbox_reduction),
+                height * (1 - self.hitbox_reduction))
 
     def move(self, pos: tuple) -> None:
         '''Mueve al jugador luego de probar que no colisionará en el core.'''
@@ -228,7 +228,7 @@ class Chef(GameObject):
         self._dishes = value
         if value >= PARAMETROS['chef']['niveles'][self._level]['platos siguiente nivel']:
             self._level = PARAMETROS['chef']['niveles'][self._level]['siguiente nivel']
-            print('el chef subió de nivel a', self._level)
+            print(f'El chef subió de nivel a {self._level} ({value})')
 
     @property
     def exp(self):
@@ -333,7 +333,6 @@ class Table(GameObject):
                 self.customer.gave_order = True
             if player.current_order:
                 self.customer.get_order(player.give_order_to_client())
-                #* se puede mostrar el snack, aunque no lo creo necesario
 
 
 class Chair(GameObject):
@@ -355,15 +354,13 @@ class Customer(GameObject):
         self.influence = influence
         self._animation_cicle = ['0', '1', '2']
         self.wait_clock = GameClock(
-            self,
+            self, rep=3, interval=wait_time/3,
             event=lambda: self.update_animation(3),
-            interval=wait_time/3,
-            final_event=self.exit_cafe,
-            rep=3)
+            final_event=self.exit_cafe
+        )
         self.happy_clock = GameClock(
-            self,
-            final_event=self.exit_cafe,
-            rep=1
+            self, rep=1,
+            final_event=self.exit_cafe
         )
         self.clocks.append(self.wait_clock)
         self.clocks.append(self.happy_clock)
@@ -373,12 +370,9 @@ class Customer(GameObject):
         '''Cliente se retira de la mesa'''
         if self.received_order:
             self.core.cafe.completed_orders += 1
-            if self.influence:
-                self.core.cafe.rep += self.influence
         else:
             self.core.cafe.failed_orders += 1
-            if self.influence:
-                self.core.cafe.rep -= self.influence
+        self.core.cafe.rep += self.influence * (2 * self.received_order - 1)
         self.table.free = True
         self.table.customer = None
         self.clocks.clear()

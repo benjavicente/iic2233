@@ -32,7 +32,7 @@ T02
 ├── sprites    <--
 ├── README.md
 ├── main.py
-├── mapa.py    <--
+├── mapa.csv    <--
 └── datos.csv  <--
 ```
 
@@ -62,6 +62,9 @@ en prepararla, intenta nuevamente
 - `B` + `T` + `G`: aumenta la reputación
 - `F` + `I` + `N`: cierra el café, espera la salida de los clientes
 
+En enunciado se pide que la ronda termine inmediatamente,
+pero esto puede causar una división por cero al calcular la reputación.
+
 Todas estas deben ser presionadas en conjunto por lo menos un segundo.
 
 **En el menú principal hay 2 botones en la esquina superior derecha**:
@@ -83,7 +86,9 @@ Todas estas deben ser presionadas en conjunto por lo menos un segundo.
 - **`random`**
   - Funciones `random`, `randint`, `choice` y `shuffle`.
 - **`functools`**
-  - Función `namedtuple`
+  - Función `namedtuple`.
+- **`time`**
+  - Función `time`.
 
 ### Librerías propias :pencil:
 
@@ -129,8 +134,8 @@ De los bonús:
 
 **Errores existentes:**
 
-- Al mantener `P` se alterna entre reanudar y pausar rápidamente.
-- Algunas animaciones de Qt pueden no funcionar correctamente en un monitor adicional (Windows).
+- Al mantener `P` se alterna entre reanudar y pausar rápidamente
+- Algunas animaciones de Qt pueden no funcionar correctamente en un monitor adicional (Windows)
 
 _**QThreads?**_ En el código no se usé threads ya que son poco
 eficientes en la simulación de entidades (por lo menos en este tipo

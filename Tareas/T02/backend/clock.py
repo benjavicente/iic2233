@@ -11,9 +11,6 @@ from PyQt5.QtCore import QTimer
 # foro que tiene otra implementación similar
 # https://python-forum.io/Thread-QTimer-with-pause-resume-functions
 
-class GameClockError(Exception):
-    '''Error mostrado en el mal manejo del reloj'''
-
 
 class GameClock(QTimer):
     '''
