@@ -60,18 +60,20 @@ en prepararla, intenta nuevamente
 
 - `M` + `O` + `Y`: aumenta el dinero
 - `B` + `T` + `G`: aumenta la reputación
-- `F` + `I` + `N`: cierra el café, espera la salida de los clientes
-
-En enunciado se pide que la ronda termine inmediatamente,
-pero esto puede causar una división por cero al calcular la reputación.
+- `F` + `I` + `N`: cierra el café, hecha a todos los clientes
 
 Todas estas deben ser presionadas en conjunto por lo menos un segundo.
+
+**Los objetos tienen diferentes hit-boxes:**
+
+- Al comprar un objeto por _drag and drop_, el hit-box es su tamaño original
+- Ya dentro del juego, tienen un hit-box reducido por `reducción de hitbox` en `parametros.py`
+- Los jugadores tienen al moverse solo la mitad inferior como hit-box
 
 **En el menú principal hay 2 botones en la esquina superior derecha**:
 
 - Información: TODO
 - Jugadores: número de jugadores, al presionarlo aumenta la cantidad
-
 
 ## Librerías :books:
 
@@ -110,7 +112,6 @@ Usé [código de David Wallance](https://stackoverflow.com/a/48203489)
 la pregunta [PyQt4 - Drag and Drop](https://stackoverflow.com/q/14395799)
 de StackOverflow) para modelar el funcionamiento del drag and drop de la tienda.
 
-
 Donde usé código externo de menor extensión marqué que hace y de donde lo obtuve con `#!`.
 
 Por ejemplo:
@@ -134,8 +135,10 @@ De los bonús:
 
 **Errores existentes:**
 
-- Al mantener `P` se alterna entre reanudar y pausar rápidamente
+- Al mantener `P` se alterna entre reanudar y pausar rápidamente. Esto puede causar errores
+en las animaciones.
 - Algunas animaciones de Qt pueden no funcionar correctamente en un monitor adicional (Windows)
+- El manejo de la memoria no es óptimo. Los objetos no se eliminan siempre del programa.
 
 _**QThreads?**_ En el código no se usé threads ya que son poco
 eficientes en la simulación de entidades (por lo menos en este tipo
@@ -147,7 +150,7 @@ que hereda de _QTimer_, el cual utiliza el ciclo principal de thead
 actual. Llegué a esa implementación por
 [esta respuesta en SO](https://stackoverflow.com/a/42311174).
 En comparación, la AY08 (que ocupa _QThreads_) ocupa 35% de mi CPU
-con 4 entidades, mientras mi tarea ocupa como máximo 0.1% con
+con 4 entidades, mientras mi tarea ocupa como máximo 1.5% con
 70 entidades.
 
 **Disfrute el programa :tada:**

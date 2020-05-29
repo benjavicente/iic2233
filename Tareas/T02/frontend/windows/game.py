@@ -1,6 +1,4 @@
-'''
-Ventana del Juego DCCafé
-'''
+'''Ventana del Juego DCCafé'''
 
 from PyQt5 import uic
 from PyQt5.QtCore import Qt, pyqtSignal, QMimeData
@@ -122,6 +120,7 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
 
     def enable_shop(self, enable: bool):
         '''Desactiva o activa la tienda'''  #* Puede ser desactivar mejor
+        self.raise_() # Muestra la ventana si es que esta se tapó
         self.chef.setDisabled(not enable)
         self.table.setDisabled(not enable)
         self.start_round.setHidden(not enable)

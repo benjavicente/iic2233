@@ -132,6 +132,8 @@ class GameCore(QObject):
                 self.update_ui_information()
             if all(key in self._pressed_keys for key in [Qt.Key_F, Qt.Key_I, Qt.Key_N]):
                 self._clock_customer_spawn.stop()
+                for table in filter(lambda t: not t.free, self._tables):
+                    table.customer.exit_cafe()
                 self._clock_check_if_empty.start()
             if all(key in self._pressed_keys for key in [Qt.Key_B, Qt.Key_T, Qt.Key_G]):
                 self.cafe.rep += PARAMETROS['trampas']['reputación']
@@ -172,7 +174,6 @@ class GameCore(QObject):
         self.signal_start_game_window.emit(self._map_size)
         # Obtención de los datos guardados
         data = get_last_game_data()
-        # Datos del Café
         self.cafe.money = int(data['money'])
         self.cafe.rep = int(data['rep'])
         self.cafe.round = int(data['round'])
@@ -198,7 +199,7 @@ class GameCore(QObject):
 
     def exit_game(self) -> None:
         '''Sale del juego'''
-        self.signal_exit_game.emit() #* Esto puede ser solo una señal
+        self.signal_exit_game.emit()
 
     def save_game(self) -> None:
         '''Guarda el juego'''
@@ -272,23 +273,22 @@ class GameCore(QObject):
     def __new_customer(self) -> None:
         '''Llega un cliente a la tienda. Si hay mesas, se sienta y espera un pedido'''
         shuffle(self._tables)  # Cambia el orden de las mesas
-        for table in self._tables:
-            if table.free:
-                client = self.round_clients.pop()
-                if isinstance(client, self.special_tuple):
-                    # Si es especial, se genera un tiempo de espera al azar
-                    wait_time = randint(client.min, client.max)
-                    table.add_customer('special', client.type, wait_time, client.rep)
-                elif isinstance(client, self.client_tuple):
-                    # Si es básico, solo se añaden los atributos
-                    table.add_customer('basic', client.type, client.wait_time)
-                self.update_ui_information()
-                # Ahora se revisa si quedan clientes
-                if not self.round_clients:
-                    print('Se han acabado los clientes!')
-                    self._clock_check_if_empty.start()  # Cada segundo chekea si está vació
-                    self._clock_customer_spawn.stop()  # Se para el generador
-                return  # Termina el método ya que se generó un cliente
+        for table in filter(lambda t: t.free, self._tables):
+            client = self.round_clients.pop()
+            if isinstance(client, self.special_tuple):
+                # Si es especial, se genera un tiempo de espera al azar
+                wait_time = randint(client.min, client.max)
+                table.add_customer('special', client.type, wait_time, client.rep)
+            elif isinstance(client, self.client_tuple):
+                # Si es básico, solo se añaden los atributos
+                table.add_customer('basic', client.type, client.wait_time)
+            self.update_ui_information()
+            # Ahora se revisa si quedan clientes
+            if not self.round_clients:
+                print('Se han acabado los clientes!')
+                self._clock_check_if_empty.start()  # Cada segundo chekea si está vació
+                self._clock_customer_spawn.stop()  # Se para el generador
+            return  # Termina el método ya que se generó un cliente
 
     def __check_colision(self, moved_object_hitbox: tuple, moved_obj_id: str = '') -> list:
         '''
@@ -313,11 +313,12 @@ class GameCore(QObject):
         if self.cafe.open:
             self.cafe.open = False
             self.update_ui_information()
-        if all(map(lambda table: table.free, self._tables)):
+        if all(map(lambda t: t.free, self._tables)) and self._clock_check_if_empty.isActive():
             self._clock_check_if_empty.stop()
             self.cafe.get_new_rep()
             self.reset_round()
             self._clock_check_keys.stop()
+            self.update_ui_information()
             self.signal_show_end_screen.emit(self.cafe.stats)
 
     def buy_object(self, info: dict) -> None:
@@ -353,7 +354,7 @@ class GameCore(QObject):
 
 # Funciones de utilidad
 
-def check_colision(hitbox1, hitbox2) -> True:
+def check_colision(hitbox1: tuple, hitbox2: tuple) -> True:
     '''Formula para calcular colisiones'''
     # Hay muchas páginas que mencionan como realizar
     # colisiones entre cuadrados. Mozilla tiene un ejemplo básico:
@@ -380,7 +381,7 @@ def get_last_game_data() -> dict:
     return last_game_data
 
 
-def save_game(game_data: list, chef_dishes: list, map_data: list):
+def save_game(game_data: list, chef_dishes: list, map_data: list) -> None:
     '''Guarda la partida'''
     # Guarda los datos del juego
     game_data = '\n'.join([','.join(map(str, game_data)), ','.join(map(str, chef_dishes))])
@@ -391,6 +392,6 @@ def save_game(game_data: list, chef_dishes: list, map_data: list):
     with open(PATH_MAPA, 'w', encoding='utf-8') as file:
         file.write(map_data)
 
-def randint_xy(max_x, max_y):
+def randint_xy(max_x: int, max_y: int) -> tuple:
     '''Obtiene coordenadas aleatorias para x e y entre (0, max_x) y (0, max_y)'''
     return (randint(0, max_x), randint(0, max_y))

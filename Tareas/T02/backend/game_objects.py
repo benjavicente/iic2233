@@ -46,33 +46,34 @@ class GameObject(QObject):
     def __repr__(self):
         return type(self).__name__ + self.id
 
-    def update_object(self):
+    def update_object(self) -> None:
         '''Actualiza el objeto en el ui.'''
         self.core.signal_update_object.emit(self.display_info)
 
-    def connect_to_core(self):
+    def connect_to_core(self) -> None:
         '''Conecta las señales con su core asociado'''
         self.core.signal_add_new_object.emit(self.display_info)
         self.core.signal_pause_objects.connect(self.object_clock_pause)
         self.core.signal_resume_objects.connect(self.object_clock_continue)
 
-    def delete_object(self):
+    def delete_object(self) -> None:
         '''Elimina el objeto en el ui y desconecta sus señales'''
         self.core.signal_delete_object.emit(self.display_info)
         self.core.signal_pause_objects.disconnect(self.object_clock_pause)
         self.core.signal_resume_objects.disconnect(self.object_clock_continue)
+        self.deleteLater()  # No se si esto tiene efecto
 
-    def object_clock_pause(self):
+    def object_clock_pause(self) -> None:
         '''Método para pausar los relojes del objeto'''
         for clock in self.clocks:
             clock.pause_()
 
-    def object_clock_continue(self):
+    def object_clock_continue(self) -> None:
         '''Método para pausar los relojes del objeto'''
         for clock in self.clocks:
             clock.continue_()
 
-    def update_animation(self, animation_index: int):
+    def update_animation(self, animation_index: int) -> None:
         '''Cambia la animación'''
         act = self._animation_state % len(self._animation_cicle)
         self._animation_state = (self._animation_state + 1) % len(self._animation_cicle)
@@ -113,7 +114,7 @@ class Snack(QObject):
 
     # El calculo del tiempo de preparación dr realiza en el chef
 
-    def quality(self, wait_time: float):
+    def quality(self, wait_time: float) -> int:
         '''Cálculo de la calidad'''
         min_value = PARAMETROS['bocadillos']['calculos']['calidad pedido']['mínimo']
         base = PARAMETROS['bocadillos']['calculos']['calidad pedido']['base']
@@ -135,7 +136,7 @@ class Player(GameObject):
     _movemet_direction = {'up': (0, -1), 'right': (1, 0), 'down': (0, 1), 'left': (-1, 0)}
     _movement_speed = PARAMETROS['personaje']['velocidad']
 
-    def __init__(self, core, x: int, y: int):
+    def __init__(self, core: object, x: int, y: int):
         super().__init__(core, x, y, 1, 2, [self._skins.pop(0), 'free', 'idle', 'down'])
         self.movemet_keys = self._keys.pop(0)
         self.orders = 0
@@ -149,13 +150,13 @@ class Player(GameObject):
         self.clocks.append(self.clock_check_if_walking)
         self.clock_check_if_walking.start()
 
-    def get_order_from_chef(self, snack) -> None:
+    def get_order_from_chef(self, snack: object) -> None:
         '''Obtiene un snack'''
         self._object_state[2] = 'snack'
         self.current_order = snack
         self.update_object()
 
-    def give_order_to_client(self) -> Snack:
+    def give_order_to_client(self) -> object:
         '''Entrega un snack'''
         snack = self.current_order
         self._object_state[2] = 'free'
@@ -210,7 +211,7 @@ class Chef(GameObject):
     '''Preparan la comida'''
     initial_level = PARAMETROS['chef']['nivel inicial']
 
-    def __init__(self, core, x: int, y: int):
+    def __init__(self, core: object, x: int, y: int):
         super().__init__(core, x, y, 4, 4, ['idle'])
         self._level = self.initial_level
         self._dishes = int()
@@ -235,7 +236,7 @@ class Chef(GameObject):
         '''Experiencia del chef'''
         return int(PARAMETROS['chef']['niveles'][self._level]['experiencia'])
 
-    def stop_cooking(self):
+    def stop_cooking(self) -> None:
         '''Termina todo lo que está haciendo. Llamado al terminar la ronda'''
         self.order = None
         self.cooking = False
@@ -243,7 +244,7 @@ class Chef(GameObject):
         self._object_state[1] = 'idle'
         self.update_object()
 
-    def interact(self, player):
+    def interact(self, player: object):
         '''Interación con jugadores'''
         if not self.cooking and not player.current_order:
             if self.order:
@@ -256,7 +257,7 @@ class Chef(GameObject):
                 self.start_cooking()
                 self.cooking = True
 
-    def start_cooking(self):
+    def start_cooking(self) -> None:
         '''El chef prepara un plato'''
         animation_type = choice(['A', 'B'])
         self._animation_cicle = [f'cooking{animation_type}{i}' for i in range(3)]
@@ -278,7 +279,7 @@ class Chef(GameObject):
         self.clocks.append(self.cook_clock)
         self.cook_clock.start()
 
-    def try_recipes(self):
+    def try_recipes(self) -> None:
         '''El chef prueba una receta, donde puede fallar'''
         alpha = float(PARAMETROS['chef']['probabilidad fallar']['factor'])
         beta = float(PARAMETROS['chef']['probabilidad fallar']['suma'])
@@ -289,7 +290,7 @@ class Chef(GameObject):
         else:
             self.finish_order()
 
-    def finish_order(self):
+    def finish_order(self) -> None:
         '''Termina la orden y la deja en su mesa'''
         self.clocks.remove(self.cook_clock)
         self.cooking = False
@@ -307,7 +308,7 @@ class Table(GameObject):
         self.customer = None
         self.chair = Chair(core, self._x, self._y - self._cell_size)
 
-    def add_customer(self, *args):
+    def add_customer(self, *args) -> object:
         '''Añade un cliente a la mesa y lo retorna'''
         self.free = False
         self.customer = Customer(self.core, *self.pos, self, *args)
@@ -316,7 +317,7 @@ class Table(GameObject):
         return self.customer
 
     @property
-    def hit_box(self):
+    def hit_box(self) -> tuple:
         '''Overrite. Permite considada la silla como parte de la mesa'''
         width, height = self.size
         fact = self.hitbox_reduction
@@ -325,7 +326,7 @@ class Table(GameObject):
                 width * (1 - fact),
                 (self._cell_size + height) * (1 - fact))
 
-    def interact(self, player):
+    def interact(self, player: object) -> None:
         '''Interactúa con el jugador'''
         if not self.free:
             if not self.customer.gave_order:
@@ -337,13 +338,13 @@ class Table(GameObject):
 
 class Chair(GameObject):
     '''Silla de los clientes'''
-    def __init__(self, core, x: int, y: int):
+    def __init__(self, core: object, x: int, y: int):
         super().__init__(core, x, y, 1, 1, [])
 
 
 class Customer(GameObject):
     '''Cliente. Es asignado a una mesa aleatoria'''
-    def __init__(self, core, x: int, y: int, table, customer_type: str,
+    def __init__(self, core: object, x: int, y: int, table, customer_type: str,
                  customer_name: str, wait_time: int, influence: int = 0):
         super().__init__(core, x, y - self._cell_size * 1.5, 1, 2,
                          [customer_type, customer_name, '1'])
@@ -366,7 +367,7 @@ class Customer(GameObject):
         self.clocks.append(self.happy_clock)
         self.wait_clock.start()
 
-    def exit_cafe(self):
+    def exit_cafe(self) -> None:
         '''Cliente se retira de la mesa'''
         if self.received_order:
             self.core.cafe.completed_orders += 1
@@ -374,15 +375,17 @@ class Customer(GameObject):
             self.core.cafe.failed_orders += 1
         self.core.cafe.rep += self.influence * (2 * self.received_order - 1)
         self.table.free = True
-        self.table.customer = None
-        self.clocks.clear()
         self.delete_object()
+        self.wait_clock.stop()  # En el caso que no se paró
+        self.clocks.clear()
         self.core.update_ui_information()
+        self.table.customer = None  # Elimina la referencia en la mesa
 
-    def get_order(self, snack):
+    def get_order(self, snack: object) -> None:
         '''El cliente recibe el bocadillo del jugador'''
         self.received_order = True
         prob_tip = snack.quality(time() - self.initial_time)
+        del snack  # Se come el snack
         payment = int(PARAMETROS['bocadillos']['precio'])
         if prob_tip > random():
             payment += int(PARAMETROS['clientes']['propina'])

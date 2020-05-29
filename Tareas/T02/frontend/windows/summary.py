@@ -166,3 +166,8 @@ class SummaryWindow(QWidget):
         #! https://stackoverflow.com/a/22414435
         self.setWindowModality(Qt.ApplicationModal)
         self.show()
+
+    def closeEvent(self, *args):
+        '''Overrite de closeEvent. Cierra la aplicación al cerrar el popup'''
+        del args
+        self.signal_exit_game.emit()

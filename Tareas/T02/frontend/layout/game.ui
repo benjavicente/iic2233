@@ -190,6 +190,9 @@
      <item>
       <widget class="QWidget" name="shop_area" native="true">
        <layout class="QGridLayout" name="gridLayout_8">
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item row="0" column="0">
          <widget class="QLabel" name="shop_label">
           <property name="sizePolicy">

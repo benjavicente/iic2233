@@ -1,6 +1,4 @@
-'''
-Paths de los archivos del UI
-'''
+'''Paths de los archivos del UI'''
 
 from os.path import join
 from os import getcwd
@@ -74,7 +72,7 @@ PATH = {
     },
     'shop': {
         'chef': join(_SPRITES, 'chef', 'meson_00.png'),
-        'table': join(_SPRITES, 'mapa', 'accesorios', 'silla_mesa_roja.png')
+        'table': join(_SPRITES, 'mapa', 'accesorios', 'silla_mesa_amarilla.png')
     },
     'table': join(_SPRITES, 'mapa', 'accesorios', 'mesa_pequena.png'),
     'chair': join(_SPRITES, 'mapa', 'accesorios', 'silla_cafe.png'),
