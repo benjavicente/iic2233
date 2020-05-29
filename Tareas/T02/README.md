@@ -38,6 +38,9 @@ T02
 └── datos.csv  <--
 ```
 
+Debe existir los archivos `mapa.csv` y `datos.csv` al continuar un juego, pero
+pueden ser omitidos si es que solo se crean juegos (y luego estos se guardan).
+
 ## Supuestos, aclaraciones y consideraciones :thinking:
 
 **El proceso que se realiza el juego es:**
