@@ -380,7 +380,7 @@
         <item>
          <widget class="QLabel" name="open">
           <property name="text">
-           <string>Abiero</string>
+           <string>Abierto</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
