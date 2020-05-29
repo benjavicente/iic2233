@@ -1,5 +1,7 @@
 # Tarea 02: DCCafé :coffee:
 
+![logo](extras/readme.png)
+
 - [Tarea 02: DCCafé :coffee:](#tarea-02-dccafé-️)
   - [Importante :heavy_exclamation_mark:](#importante-️)
   - [Ejecución :computer:](#ejecución-)
