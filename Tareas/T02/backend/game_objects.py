@@ -46,6 +46,31 @@ class GameObject(QObject):
     def __repr__(self):
         return type(self).__name__ + self.id
 
+    @property
+    def hit_box(self):
+        '''Caja que detecta las colisiones'''
+        width, height = self.size
+        fact = self.hitbox_reduction
+        return (self._x + width * fact / 2,
+                self._y + height * fact / 2,
+                width * (1 - fact),
+                height * (1 - fact))
+
+    @property
+    def pos(self):
+        '''Posición del objeto'''
+        return (self._x, self._y)
+
+    @property
+    def display_info(self):
+        '''Información que se manda al frontend'''
+        return {
+            'id': self.id,
+            'pos': self.pos,
+            'size': self.size,
+            'state': tuple(self._object_state),
+        }
+
     def update_object(self) -> None:
         '''Actualiza el objeto en el ui.'''
         self.core.signal_update_object.emit(self.display_info)
@@ -79,31 +104,6 @@ class GameObject(QObject):
         self._animation_state = (self._animation_state + 1) % len(self._animation_cicle)
         self._object_state[animation_index] = self._animation_cicle[act]
         self.update_object()
-
-    @property
-    def hit_box(self):
-        '''Caja que detecta las colisiones'''
-        width, height = self.size
-        fact = self.hitbox_reduction
-        return (self._x + width * fact / 2,
-                self._y + height * fact / 2,
-                width * (1 - fact),
-                height * (1 - fact))
-
-    @property
-    def pos(self):
-        '''Posición del objeto'''
-        return (self._x, self._y)
-
-    @property
-    def display_info(self):
-        '''Información que se manda al frontend'''
-        return {
-            'id': self.id,
-            'pos': self.pos,
-            'size': self.size,
-            'state': tuple(self._object_state),
-        }
 
 
 class Snack(QObject):
@@ -244,7 +244,7 @@ class Chef(GameObject):
         self._object_state[1] = 'idle'
         self.update_object()
 
-    def interact(self, player: object):
+    def interact(self, player: object) -> None:
         '''Interación con jugadores'''
         if not self.cooking and not player.current_order:
             if self.order:

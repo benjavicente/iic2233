@@ -158,4 +158,4 @@ En comparación, la AY08 (que ocupa _QThreads_) ocupa 35% de mi CPU
 con 4 entidades, mientras mi tarea ocupa como máximo 1.5% con
 70 entidades.
 
-**Disfrute el programa :tada:**
+**Disfrute el ~~programa~~ juego :tada:**

@@ -1,17 +1,10 @@
-'''
-Parámetros del backend de DCCafé
-# TODO
-Una vez ejecutado el problema, pueden ser
-cambiados en la pantalla de inicio
-'''
+'''Parámetros del backend de DCCafé'''
 
 
 # El tamaño de la celda dicta el tamaño de
 # las entidades, por lo que modificarla puede
 # modificar como quedan las entidades en el mapa.
-# Se al ubicar las entidades ocurre una colición,
-# se entregará un mensaje de error
-# y se terminará el programa (no se mostrará el menú de juego)
+
 
 PARAMETROS = {
     "mapa": {
@@ -64,7 +57,7 @@ PARAMETROS = {
         },
     },
     "clientes": {
-        "periodo de llegada": 5,
+        "periodo de llegada": 3,
         "propina": 200,
         "tipos": {
             'básicos': {
