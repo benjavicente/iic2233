@@ -57,6 +57,9 @@ QMainWindow::separator {
 #start_round {
     background: hsl(161, 98, 70);
 }
+#start_round:hover {
+    background: hsl(161, 98, 100);
+}
 /* Game info */
 #day_progress {
     border-radius: 10px;
