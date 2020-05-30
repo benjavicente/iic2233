@@ -144,6 +144,9 @@ De los bonús:
 en las animaciones.
 - Algunas animaciones de Qt pueden no funcionar correctamente en un monitor adicional (Windows)
 - El manejo de la memoria no es óptimo. Los objetos no se eliminan siempre del programa.
+- Si entre presionar y soltar una tecla se realiza otra acción (como mover la ventana, usar drag and drop)
+la tecla puede mantenerse como presionadas sin estarlo. Para arreglar esto, hay que presionar y soltar
+las teclas que estaban presionadas durante la acción.
 
 _**QThreads?**_ En el código no se usé threads ya que son poco
 eficientes en la simulación de entidades (por lo menos en este tipo
