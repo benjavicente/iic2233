@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import (QFrame, QGridLayout, QHBoxLayout, QLabel,
                              QPushButton, QSizePolicy, QSpacerItem,
                              QVBoxLayout, QWidget)
 
-from frontend.paths import PATH
+from frontend.paths import SPRITE_PATH
 from frontend.themes import SUMMARY_THEME
 
 
@@ -95,8 +95,8 @@ class SummaryWindow(QWidget):
         # --> Estrellas
         stars_layout = QHBoxLayout()
         stars_layout.setContentsMargins(30, 0, 30, 0)
-        self.star_filed = QPixmap(PATH['star']['filed'])
-        self.star_empty = QPixmap(PATH['star']['empty'])
+        self.star_filed = QPixmap(SPRITE_PATH['star', 'filed'])
+        self.star_empty = QPixmap(SPRITE_PATH['star', 'empty'])
         self.star_list = []
         for _ in range(5):
             star = QLabel()

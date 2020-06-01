@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (QFrame, QGridLayout, QHBoxLayout, QLabel,
                              QPushButton, QSizePolicy, QSpacerItem,
                              QToolButton, QVBoxLayout, QWidget)
 
-from frontend.paths import PATH
+from frontend.paths import SPRITE_PATH
 from frontend.themes import INITIAL_THEME
 
 
@@ -29,8 +29,6 @@ class InitialWindow(QWidget):
         '''Inicia la ventana'''
         self.setWindowTitle('DCCafé - Inicio')
         self.setStyleSheet(INITIAL_THEME)
-        # TODO: Ver lo de los íconos
-        #self.setWindowIcon(QIcon(QPixmap(RUTA_LOGO)))
 
         # Crear un Grid de 5x3
         main_layout = QGridLayout()
@@ -75,7 +73,7 @@ class InitialWindow(QWidget):
         # -> Logo
         self.logo = QLabel(self)
         self.logo.setFixedSize(520, 200)
-        self.logo.setPixmap(QPixmap(PATH['logo']))
+        self.logo.setPixmap(QPixmap(SPRITE_PATH['logo']))
         self.logo.setScaledContents(True)
         # Añadilo al cuadro
         card_layout.addWidget(self.logo)

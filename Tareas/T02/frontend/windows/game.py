@@ -79,13 +79,14 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
         # Habilitar Drag
         # Chef
         self.chef = DragItem(self.shop)
-        self.chef.setFixedSize(*[self.cell_size * 4] * 2)
+        self.chef.setFixedSize(*[self.cell_size * PARAMETROS['tamaño']['chef']] * 2)
         self.chef.setObjectName('chef')
         self.chef.setPixmap(QPixmap(SPRITE_PATH['shop', 'chef']))
         self.chef_layout.addWidget(self.chef)
-        # Tabla
+        # Mesa
         self.table = DragItem(self.shop)
-        self.table.setFixedSize(self.cell_size, self.cell_size * 2)
+        self.table.setFixedSize(self.cell_size * PARAMETROS['tamaño']['mesa'],
+                                self.cell_size * PARAMETROS['tamaño']['mesa'] * 2)
         self.table.setObjectName('table')
         self.table.setPixmap(QPixmap(SPRITE_PATH['shop', 'table']))
         self.table_layout.addWidget(self.table)

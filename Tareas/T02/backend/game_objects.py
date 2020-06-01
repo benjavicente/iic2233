@@ -137,7 +137,8 @@ class Player(GameObject):
     _movement_speed = PARAMETROS['personaje']['velocidad']
 
     def __init__(self, core: object, x: int, y: int):
-        super().__init__(core, x, y, 1, 2, [self._skins.pop(0), 'free', 'idle', 'down'])
+        size = PARAMETROS['tamaño']['mesero']
+        super().__init__(core, x, y, size, 2 * size, [self._skins.pop(0), 'free', 'idle', 'down'])
         self.movemet_keys = self._keys.pop(0)
         self.orders = 0
         self.current_order = None
@@ -212,7 +213,8 @@ class Chef(GameObject):
     initial_level = PARAMETROS['chef']['nivel inicial']
 
     def __init__(self, core: object, x: int, y: int):
-        super().__init__(core, x, y, 4, 4, ['idle'])
+        size = PARAMETROS['tamaño']['chef']
+        super().__init__(core, x, y, size, size, ['idle'])
         self._level = self.initial_level
         self._dishes = int()
         self.order = None
@@ -303,7 +305,8 @@ class Chef(GameObject):
 class Table(GameObject):
     '''Mesa donde se asignan los clientes'''
     def __init__(self, core, x: int, y: int):
-        super().__init__(core, x, y + self._cell_size, 1, 1, [])
+        size = PARAMETROS['tamaño']['mesa']
+        super().__init__(core, x, y + self._cell_size, size, size, [])
         self.free = True
         self.customer = None
         self.chair = Chair(core, self._x, self._y - self._cell_size)
@@ -339,14 +342,16 @@ class Table(GameObject):
 class Chair(GameObject):
     '''Silla de los clientes'''
     def __init__(self, core: object, x: int, y: int):
-        super().__init__(core, x, y, 1, 1, [])
+        size = PARAMETROS['tamaño']['mesa']
+        super().__init__(core, x, y, size, size, [])
 
 
 class Customer(GameObject):
     '''Cliente. Es asignado a una mesa aleatoria'''
     def __init__(self, core: object, x: int, y: int, table, customer_type: str,
                  customer_name: str, wait_time: int, influence: int = 0):
-        super().__init__(core, x, y - self._cell_size * 1.5, 1, 2,
+        size = PARAMETROS['tamaño']['mesa']
+        super().__init__(core, x, y - self._cell_size * 1.5, size, size * 2,
                          [customer_type, customer_name, '1'])
         self.initial_time = time()
         self.table = table
@@ -354,15 +359,9 @@ class Customer(GameObject):
         self.received_order = False
         self.influence = influence
         self._animation_cicle = ['0', '1', '2']
-        self.wait_clock = GameClock(
-            self, rep=3, interval=wait_time/3,
-            event=lambda: self.update_animation(3),
-            final_event=self.exit_cafe
-        )
-        self.happy_clock = GameClock(
-            self, rep=1,
-            final_event=self.exit_cafe
-        )
+        self.wait_clock = GameClock(self, lambda: self.update_animation(3),
+                                    wait_time/3, 3, self.exit_cafe)
+        self.happy_clock = GameClock(self, rep=1, final_event=self.exit_cafe)
         self.clocks.append(self.wait_clock)
         self.clocks.append(self.happy_clock)
         self.wait_clock.start()

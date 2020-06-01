@@ -8,8 +8,8 @@ from PyQt5.QtCore import QObject, Qt, pyqtSignal
 from backend.clock import GameClock
 from backend.cafe import Cafe
 from backend.game_objects import Chef, Player, Table
-from backend.paths import PATH_DATOS, PATH_MAPA
-from config.parametros import PARAMETROS
+
+from config.parametros import PARAMETROS, PATH_DATOS, PATH_MAPA
 
 
 class GameCore(QObject):
@@ -17,34 +17,29 @@ class GameCore(QObject):
     Objeto que se encarga de conctar todo el backend con el frontend
     Almacena todos los objetos del backend
     '''
-
+     # Señales de las entidades
     signal_add_new_object = pyqtSignal(dict)
     signal_update_object = pyqtSignal(dict)
     signal_delete_object = pyqtSignal(dict)
     signal_stack_under = pyqtSignal(dict, dict)
     signal_move_up = pyqtSignal(dict)
-
+    # Señales de la ventana de juego
     signal_start_game_window = pyqtSignal(tuple)
-
     signal_update_cafe_stats = pyqtSignal(dict)
-
+    # Señales de pausa y continuar
     signal_pause_objects = pyqtSignal()
     signal_resume_objects = pyqtSignal()
-
     signal_show_paused = pyqtSignal(bool)
-
+    # Señales adicioneles
     signal_show_end_screen = pyqtSignal(dict)
-
     signal_shop_enable = pyqtSignal(bool)
-
     signal_exit_game = pyqtSignal()
-
+    # Parametros de utilidad
     object_classes = {'mesero': Player, 'chef': Chef, 'mesa': Table}
     shop_prices = {
         'table_price': PARAMETROS['tienda']['mesa'],
         'chef_price': PARAMETROS['tienda']['chef']}
     shop_names = {'table': Table, 'chef': Chef}
-
     cell_size = PARAMETROS['mapa']['tamaño celda']
 
     def __init__(self):
@@ -151,16 +146,21 @@ class GameCore(QObject):
         max_x, max_y = self._map_size
         # Creación de chefs aleatorias
         remaining_chefs = PARAMETROS['DCCafé']['inicial']['chefs']
+        size = PARAMETROS['tamaño']['chef']
         while remaining_chefs:
-            x_pos, y_pos = randint_xy(max_x - 4 * self.cell_size, max_y - 4 * self.cell_size)
-            if not self.__check_colision((x_pos, y_pos, 4 * self.cell_size, 4 * self.cell_size)):
+            x_pos, y_pos = randint_xy(max_x - size * self.cell_size, max_y - size * self.cell_size)
+            if not self.__check_colision((x_pos, y_pos, size * self.cell_size,
+                                          size * self.cell_size)):
                 self._chefs.append(Chef(self, x_pos, y_pos))
                 remaining_chefs -= 1
         # Creación de mesas aleatorias
         remaining_tables = PARAMETROS['DCCafé']['inicial']['mesas']
+        size = PARAMETROS['tamaño']['chef']
         while remaining_tables:
-            x_pos, y_pos = randint_xy(max_x - 1 * self.cell_size, max_y - 2 * self.cell_size)
-            if not self.__check_colision((x_pos, y_pos, 1 * self.cell_size, 2 * self.cell_size)):
+            x_pos, y_pos = randint_xy(max_x - size * self.cell_size,
+                                      max_y - size * 2 * self.cell_size)
+            if not self.__check_colision((x_pos, y_pos, size * self.cell_size,
+                                          size * 2 * self.cell_size)):
                 self._tables.append(Table(self, x_pos, y_pos))
                 remaining_tables -= 1
         # Creación del jugador
@@ -191,9 +191,10 @@ class GameCore(QObject):
 
     def generate_players(self, players: int, cell_size: int, max_x: int, max_y: int) -> None:
         '''Método para unir la generación de clientes en load_game y new_game'''
+        size = PARAMETROS['tamaño']['mesero']
         while players:
-            x_pos, y_pos = randint_xy(max_x - 1 * cell_size, max_y - 2 * cell_size)
-            if not self.__check_colision((x_pos, y_pos, 1 * cell_size, 2 * cell_size)):
+            x_pos, y_pos = randint_xy(max_x - size * cell_size, max_y - 2 * size * cell_size)
+            if not self.__check_colision((x_pos, y_pos, size * cell_size, 2 * size * cell_size)):
                 self._players.append(Player(self, x_pos, y_pos))
                 players -= 1
 

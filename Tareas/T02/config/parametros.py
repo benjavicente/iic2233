@@ -1,16 +1,32 @@
-'''Parámetros del backend de DCCafé'''
+'''Todos los parámetors'''
 
 
-# El tamaño de la celda dicta el tamaño de
-# las entidades, por lo que modificarla puede
-# modificar como quedan las entidades en el mapa.
+from os.path import join
+from os import getcwd
 
+# Inicialmente tenia separado los diferentes tipos de parámetros
+# (parámetros del juego, paths de datos y paths de sprites), pero
+# se pide que todos estos estén en un mismo archivo :/
+
+
+#Paths del backend
+
+PATH_MAPA = 'mapa.csv'
+PATH_DATOS = 'datos.csv'
+
+
+# Parámetros del backend de DCCafé
 
 PARAMETROS = {
+    "tamaño": { # Se considera el tamaño horizontal como referencia
+        "mesa": 1,
+        "mesero": 1,
+        "chef": 4,
+    },
     "mapa": {
-        "tamaño celda": 30,
-        "alto": 450,
-        "largo": 780,
+        "tamaño celda": 10,
+        "alto": 500,
+        "largo": 1000,
         "reducción de hitbox": 0.2,
     },
     'personaje': {
@@ -57,7 +73,7 @@ PARAMETROS = {
         },
     },
     "clientes": {
-        "periodo de llegada": 3,
+        "periodo de llegada": 0.02,
         "propina": 200,
         "tipos": {
             'básicos': {
@@ -89,16 +105,16 @@ PARAMETROS = {
                 "resta": 2,
             },
             "clientes por ronda": {
-                "factor": 5,
-                "base": 2,
+                "factor": 1,
+                "base": 500,
             },
         },
         "inicial": {
             "dinero": 500,
             "reputación": 2,
             "clientes": 5,
-            "chefs": 3,
-            "mesas": 6,
+            "chefs": 49,
+            "mesas": 200,
             "disponibilidad": True,
         },
     },
@@ -109,5 +125,154 @@ PARAMETROS = {
     "tienda": {
         'chef': 500,
         'mesa': 200,
+    }
+}
+
+
+# Paths del frontend
+
+_SPRITES = join(getcwd(), 'sprites')
+
+SPRITE_PATH_DICT = {
+    'ui': {
+        'game_window': join('frontend', 'layout', 'game.ui')
+    },
+    'logo': join(_SPRITES, 'otros', 'logo_blanco.png'),
+    'star': {
+        'filed': join(_SPRITES, 'otros', 'estrella_amarilla.png'),
+        'empty': join(_SPRITES, 'otros', 'estrella_blanca.png'),
+    },
+    'map': {
+        'window': join(_SPRITES, 'mapa', 'mapa_2_parte_01.png'),
+        'tile': join(_SPRITES, 'mapa', 'mapa_2_parte_02.png'),
+        'wall': join(_SPRITES, 'mapa', 'mapa_2_parte_03.png'),
+        'border': join(_SPRITES, 'mapa', 'mapa_2_parte_04.png'),
+    },
+    'shop': {
+        'chef': join(_SPRITES, 'chef', 'meson_00.png'),
+        'table': join(_SPRITES, 'mapa', 'accesorios', 'silla_mesa_amarilla.png')
+    },
+    'table': join(_SPRITES, 'mapa', 'accesorios', 'mesa_pequena.png'),
+    'chair': join(_SPRITES, 'mapa', 'accesorios', 'silla_cafe.png'),
+    'player': {
+        'a': {
+            'free': {
+                'idle': {
+                    'up': join(_SPRITES, 'mesero', 'up_02.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_02.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_02.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_02.png'),
+                },
+                'rightfoot': {
+                    'up': join(_SPRITES, 'mesero', 'up_01.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_01.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_01.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_01.png'),
+                },
+                'leftfoot': {
+                    'up': join(_SPRITES, 'mesero', 'up_03.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_03.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_03.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_03.png'),
+                },
+            },
+            'snack': {
+                'idle': {
+                    'up': join(_SPRITES, 'mesero', 'up_snack_02.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_snack_02.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_snack_02.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_snack_02.png'),
+                },
+                'rightfoot': {
+                    'up': join(_SPRITES, 'mesero', 'up_snack_01.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_snack_01.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_snack_01.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_snack_01.png'),
+                },
+                'leftfoot': {
+                    'up': join(_SPRITES, 'mesero', 'up_snack_03.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_snack_03.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_snack_03.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_snack_03.png'),
+                },
+            },
+        },
+        'b': {
+            'free': {
+                'idle': {
+                    'up': join(_SPRITES, 'mesero', 'otros', 'mesera_up_02.png'),
+                    'right': join(_SPRITES, 'mesero', 'otros', 'mesera_right_02.png'),
+                    'down': join(_SPRITES, 'mesero', 'otros', 'mesera_down_02.png'),
+                    'left': join(_SPRITES, 'mesero', 'otros', 'mesera_left_03.png'),
+                },
+                'rightfoot': {
+                    'up': join(_SPRITES, 'mesero', 'otros', 'mesera_up_02.png'),
+                    'right': join(_SPRITES, 'mesero', 'otros', 'mesera_right_01.png'),
+                    'down': join(_SPRITES, 'mesero', 'otros', 'mesera_down_01.png'),
+                    'left': join(_SPRITES, 'mesero', 'otros', 'mesera_left_01.png'),
+                },
+                'leftfoot': {
+                    'up': join(_SPRITES, 'mesero', 'otros', 'mesera_up_03.png'),
+                    'right': join(_SPRITES, 'mesero', 'otros', 'mesera_right_03.png'),
+                    'down': join(_SPRITES, 'mesero', 'otros', 'mesera_down_03.png'),
+                    'left': join(_SPRITES, 'mesero', 'otros', 'mesera_left_01.png'),
+                },
+            },
+            'snack': {
+                'idle': {
+                    'up': join(_SPRITES, 'mesero', 'up_snack_02.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_snack_02.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_snack_02.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_snack_02.png'),
+                },
+                'rightfoot': {
+                    'up': join(_SPRITES, 'mesero', 'up_snack_01.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_snack_01.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_snack_01.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_snack_01.png'),
+                },
+                'leftfoot': {
+                    'up': join(_SPRITES, 'mesero', 'up_snack_03.png'),
+                    'right': join(_SPRITES, 'mesero', 'right_snack_03.png'),
+                    'down': join(_SPRITES, 'mesero', 'down_snack_03.png'),
+                    'left': join(_SPRITES, 'mesero', 'left_snack_03.png'),
+                },
+            },
+        },
+    },
+    'chef': {
+        'idle': join(_SPRITES, 'chef', 'meson_01.png'),
+        'done': join(_SPRITES, 'chef', 'meson_16.png'),
+        'reading': join(_SPRITES, 'chef', 'meson_17.png'),
+        'cookingA0': join(_SPRITES, 'chef', 'meson_13.png'),
+        'cookingA1': join(_SPRITES, 'chef', 'meson_14.png'),
+        'cookingA2': join(_SPRITES, 'chef', 'meson_15.png'),
+        'cookingB0': join(_SPRITES, 'chef', 'meson_07.png'),
+        'cookingB1': join(_SPRITES, 'chef', 'meson_08.png'),
+        'cookingB2': join(_SPRITES, 'chef', 'meson_09.png'),
+    },
+    'customer': {
+        'basic': {
+            'dog': {
+                '0': join(_SPRITES, 'clientes', 'perro', 'perro_31.png'),
+                '1': join(_SPRITES, 'clientes', 'perro', 'perro_13.png'),
+                '2': join(_SPRITES, 'clientes', 'perro', 'perro_16.png'),
+                'H': join(_SPRITES, 'clientes', 'perro', 'perro_12.png'),
+            },
+            'hamster': {
+                '0': join(_SPRITES, 'clientes', 'hamster', 'hamster_01.png'),
+                '1': join(_SPRITES, 'clientes', 'hamster', 'hamster_26.png'),
+                '2': join(_SPRITES, 'clientes', 'hamster', 'hamster_18.png'),
+                'H': join(_SPRITES, 'clientes', 'hamster', 'hamster_17.png'),
+            },
+        },
+        'special': {
+            'president': {
+                '0': join(_SPRITES, 'bonus', 'presidente.png'),
+                '1': join(_SPRITES, 'bonus', 'presidente.png'),
+                '2': join(_SPRITES, 'bonus', 'presidente.png'),
+                'H': join(_SPRITES, 'bonus', 'presidente.png'),
+            }
+        },
     }
 }
