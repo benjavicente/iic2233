@@ -155,7 +155,7 @@ class GameCore(QObject):
                 remaining_chefs -= 1
         # Creación de mesas aleatorias
         remaining_tables = PARAMETROS['DCCafé']['inicial']['mesas']
-        size = PARAMETROS['tamaño']['chef']
+        size = PARAMETROS['tamaño']['mesa']
         while remaining_tables:
             x_pos, y_pos = randint_xy(max_x - size * self.cell_size,
                                       max_y - size * 2 * self.cell_size)
