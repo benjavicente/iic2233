@@ -93,18 +93,15 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
 
     def start(self, map_size: tuple):
         '''Inicia el juego'''
-        # TODO: música?
-        self.make_map(*map_size)  # Como es tupla se puede separar
+        self.make_map(*map_size)
         self.grabKeyboard()
         self.show()
 
     def keyPressEvent(self, key_event):
-        # TODO: ver como implementar sin método los eventos
         '''Entrega las teclas apretadas al backend'''
         self.signal_key_press.emit(key_event.key())
 
     def keyReleaseEvent(self, key_event):
-        # TODO: ver como implementar sin método los eventos
         '''Entrega las teclas soltadas al backend'''
         self.signal_key_relase.emit(key_event.key())
 
@@ -120,7 +117,7 @@ class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
             self.button_time.setText('Pausar')
 
     def enable_shop(self, enable: bool):
-        '''Desactiva o activa la tienda'''  #* Puede ser desactivar mejor
+        '''Desactiva o activa la tienda'''
         self.raise_() # Muestra la ventana si es que esta se tapó
         self.chef.setDisabled(not enable)
         self.table.setDisabled(not enable)
