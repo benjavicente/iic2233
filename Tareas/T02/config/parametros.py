@@ -26,7 +26,7 @@ PARAMETROS = {
     "mapa": {
         "tamaño celda": 10,
         "alto": 500,
-        "largo": 1000,
+        "largo": 800,
         "reducción de hitbox": 0.2,
     },
     'personaje': {
@@ -114,7 +114,7 @@ PARAMETROS = {
             "reputación": 2,
             "clientes": 5,
             "chefs": 49,
-            "mesas": 200,
+            "mesas": 450,
             "disponibilidad": True,
         },
     },
