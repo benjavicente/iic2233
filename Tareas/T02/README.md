@@ -65,7 +65,7 @@ en prepararla, intenta nuevamente
 
 - `M` + `O` + `Y`: aumenta el dinero
 - `B` + `T` + `G`: aumenta la reputación
-- `F` + `I` + `N`: cierra el café, hecha a todos los clientes
+- `F` + `I` + `N`: cierra el café, hecha a todos los clientes y calcula la nueva reputación.
 
 Todas estas deben ser presionadas en conjunto por lo menos un segundo.
 
@@ -142,11 +142,14 @@ De los bonús:
 
 - Al mantener `P` se alterna entre reanudar y pausar rápidamente. Esto puede causar errores
 en las animaciones.
-- Algunas animaciones de Qt pueden no funcionar correctamente en un monitor adicional (Windows)
+- Algunas animaciones de Qt pueden no funcionar correctamente en un monitor adicional (Windows).
 - El manejo de la memoria no es óptimo. Los objetos no se eliminan siempre del programa.
 - Si entre presionar y soltar una tecla se realiza otra acción (como mover la ventana, usar drag and drop)
 la tecla puede mantenerse como presionadas sin estarlo. Para arreglar esto, hay que presionar y soltar
 las teclas que estaban presionadas durante la acción.
+- Mantener la combinación de teclas `F` + `I` + `N` sobre un segundo puede causar que la ronda termine multiples
+veces, por lo que a reputación se calculará multiples veces. Para arreglar la reputación, se puede aumentar la
+reputación con `B` + `T` + `G` y luego usar `F` + `I` + `N`.
 
 _**QThreads?**_ En el código no se usé threads ya que son poco
 eficientes en la simulación de entidades (por lo menos en este tipo
@@ -158,7 +161,7 @@ que hereda de _QTimer_, el cual utiliza el ciclo principal de thead
 actual. Llegué a esa implementación por
 [esta respuesta en SO](https://stackoverflow.com/a/42311174).
 En comparación, la AY08 (que ocupa _QThreads_) ocupa 35% de mi CPU
-con 4 entidades, mientras mi tarea ocupa como máximo 1.5% con
-70 entidades.
+con 4 entidades, mientras mi tarea ocupa como máximo 18% con
+500 entidades.
 
 **Disfrute el ~~programa~~ juego :tada:**
