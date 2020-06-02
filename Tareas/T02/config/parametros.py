@@ -91,7 +91,7 @@ PARAMETROS = {
                     "reputación": 2,
                     "min": 20,
                     "max": 40,
-                    "probabilidad": 0.1,
+                    "probabilidad": 0.5,
                 },
             },
         },
@@ -272,9 +272,9 @@ SPRITE_PATH_DICT = {
         'special': {
             'president': {
                 '0': join(_SPRITES, 'bonus', 'presidente.png'),
-                '1': join(_SPRITES, 'bonus', 'presidente.png'),
-                '2': join(_SPRITES, 'bonus', 'presidente.png'),
-                'H': join(_SPRITES, 'bonus', 'presidente.png'),
+                '1': join('extras', 'presidente_impaciente.png'),
+                '2': join('extras', 'presidente_rojo.png'),
+                'H': join('extras', 'presidente_feliz.png'),
             }
         },
     }
