@@ -83,6 +83,7 @@ class InitialWindow(QWidget):
         text = choice([
             'Del creador de DCCahuín y DCCriaturas mágicas',
             'Nada mejor que un DCCafé por la mañana',
+            '¡DCCorre a 60fps!'
         ])
         self.message = QLabel(text, self)
         self.message.setWordWrap(True)
