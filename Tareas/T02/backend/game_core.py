@@ -166,6 +166,7 @@ class GameCore(QObject):
         # Creación del jugador
         self.generate_players(info['players'], self.cell_size, max_x, max_y)
         # Inicio del juego
+        self.save_game()
         self.start_round()
 
     def load_game(self, info: dict) -> None:
@@ -261,9 +262,8 @@ class GameCore(QObject):
         shuffle(self.round_clients)  # Se revuelve, de modo que el especial no quede primero
         # Se inicia la información del ui
         self.update_ui_information(round_clients=len(self.round_clients), **self.shop_prices)
-        # Se inicia el spawn de clientes
+        # Se inicia los relojes
         self._clock_customer_spawn.start()
-        # Se habilita el movimiento si es que no está activado
         self._clock_check_keys.start()
 
     def update_ui_information(self, **extras) -> None:
