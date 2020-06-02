@@ -141,7 +141,7 @@ def info():
     print(
         '┌───────────────────────────┐',
         '│        info DCCafé        │',
-        '├───────────────────────────│',
+        '├───────────────────────────┤',
         '│ - Para habilitar el modo  │',
         '│ multijugador, apretar el  │',
         '│ segundo botón, el número  │',
