@@ -652,6 +652,12 @@
         </item>
         <item row="2" column="2">
          <widget class="QLabel" name="total_orders">
+          <property name="minimumSize">
+           <size>
+            <width>30</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="text">
            <string>0</string>
           </property>
@@ -659,6 +665,12 @@
         </item>
         <item row="1" column="2">
          <widget class="QLabel" name="failed_orders">
+          <property name="minimumSize">
+           <size>
+            <width>30</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="text">
            <string>0</string>
           </property>
@@ -671,6 +683,12 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>30</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="text">
            <string>0</string>
