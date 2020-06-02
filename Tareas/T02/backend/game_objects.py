@@ -248,7 +248,7 @@ class Chef(GameObject):
 
     def interact(self, player: object) -> None:
         '''Interación con jugadores'''
-        if not self.cooking and not player.current_order:
+        if not self.cooking:
             if self.order:
                 player.get_order_from_chef(self.order)
                 self.order = None
