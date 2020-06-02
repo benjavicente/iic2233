@@ -248,6 +248,7 @@ class GameCore(QObject):
         self.signal_shop_enable.emit(False)
         # Se reinician los valores de la ronda
         self.cafe.new_round_values()
+        print(f'Clientes de la ronda: {self.cafe.round_clients}')
         # Generación de clientes
         self.round_clients.clear()
         for pos_special in self.posible_specials:  # Especiales

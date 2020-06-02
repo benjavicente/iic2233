@@ -76,7 +76,7 @@ Todas estas deben ser presionadas en conjunto por lo menos un segundo.
 
 **En el menú principal hay 2 botones en la esquina superior derecha**:
 
-- Información: TODO
+- Información: Muestra información importante en la consola.
 - Jugadores: número de jugadores, al presionarlo aumenta la cantidad
 
 ## Librerías :books:

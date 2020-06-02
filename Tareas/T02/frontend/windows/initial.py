@@ -51,6 +51,7 @@ class InitialWindow(QWidget):
         self.info.setObjectName('info')
         self.info.setToolTip('Información')
         self.info.setText('i')
+        self.info.pressed.connect(info)
         self.info.setCursor(QCursor(Qt.PointingHandCursor))
         tool_bar.addWidget(self.info)
         # -> Botón Información
@@ -133,3 +134,29 @@ class InitialWindow(QWidget):
         '''Cambia el número de jugadores'''
         self.amount_of_players = self.amount_of_players % 2 + 1
         self.players.setText(str(self.amount_of_players))
+
+
+def info():
+    '''Información'''
+    print(
+        '┌───────────────────────────┐',
+        '│        info DCCafé        │',
+        '├───────────────────────────│',
+        '│ - Para habilitar el modo  │',
+        '│ multijugador, apretar el  │',
+        '│ segundo botón, el número  │',
+        '│ indica los jugadores      │',
+        '│ actuales.                 │',
+        '│ - Los datos que no se     │',
+        '│ muestran en el UI son     │',
+        '│ mostrados en la consola,  │',
+        '│ como por ejemplo, cuando  │',
+        '│ los chef suben de nivel   │',
+        '│ - Si el juego se queda    │',
+        '│ pegado, usar `Ctrl` + `C` │',
+        '| en la consola             │',
+        '|                           │',
+        '│    ¡Disfrute el Juego!    │',
+        '└───────────────────────────┘',
+        sep='\n', end='\n'*2
+    )
