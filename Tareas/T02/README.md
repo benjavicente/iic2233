@@ -79,6 +79,10 @@ Todas estas deben ser presionadas en conjunto por lo menos un segundo.
 - Información: Muestra información importante en la consola.
 - Jugadores: número de jugadores, al presionarlo aumenta la cantidad
 
+**Otras consideraciones:**
+
+- Los clientes tienen 4 estados en vez de 2: alegre, molesto, enojado y atendido.
+
 ## Librerías :books:
 
 ### Librerías externas utilizadas :clipboard:
