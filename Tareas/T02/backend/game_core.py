@@ -54,13 +54,10 @@ class GameCore(QObject):
 
     def __set_up(self) -> None:
         '''Crea objetos para el manejo del juego'''
-        #######################################################################
         # Lista que almacena los clientes de la ronda
         self.round_clients = list()
         # Mapa
-        self._map_size = (
-            int(PARAMETROS['mapa']['largo']), int(PARAMETROS['mapa']['alto'])
-        )
+        self._map_size = (int(PARAMETROS['mapa']['largo']), int(PARAMETROS['mapa']['alto']))
         # Set de teclas precionadas
         self._pressed_keys = set()
         # Relojes de la simulación
@@ -91,7 +88,6 @@ class GameCore(QObject):
             ))
         # Se inicia el reloj que revisa si se precionaron teclas especiales
         self._clock_check_special_keys.start()
-        #######################################################################
 
     def add_key(self, key: int) -> None:
         '''Añade una tecla al las teclas precionadas'''
@@ -222,6 +218,7 @@ class GameCore(QObject):
     def continue_game(self) -> None:
         '''Continua el juego. Se habilita la tienda'''
         self.signal_shop_enable.emit(True)
+        self._clock_check_special_keys.start()
         self._clock_check_keys.start()
 
     def reset_round(self) -> None:
@@ -319,6 +316,7 @@ class GameCore(QObject):
             self.cafe.get_new_rep()
             self.reset_round()
             self._clock_check_keys.stop()
+            self._clock_check_special_keys.stop()
             self.update_ui_information()
             self.signal_show_end_screen.emit(self.cafe.stats)
 
