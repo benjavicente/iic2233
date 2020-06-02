@@ -34,29 +34,28 @@ T02
 ├── sprites    <--
 ├── README.md
 ├── main.py
-├── mapa.csv    <--
+├── mapa.csv   <--
 └── datos.csv  <--
 ```
 
 Debe existir los archivos `mapa.csv` y `datos.csv` al continuar un juego, pero
-pueden ser omitidos si es que solo se crean juegos (y luego estos se guardan).
+pueden ser omitidos si es que solo se crean juegos.
 
 ## Supuestos, aclaraciones y consideraciones :thinking:
 
 **El proceso que se realiza el juego es:**
 
-1. Cada cierto tiempo se genera
-un cliente en una mesa desocupada aleatoria
+1. Cada cierto tiempo se genera un cliente en una mesa desocupada aleatoria
 2. El jugador interactúa con el cliente y recibe un pedido
 3. El jugador interactúa con el chef para entregar un pedido
-4. El chef prepara la orden que le ha sido entregada, si falla
-en prepararla, intenta nuevamente
+4. El chef prepara la orden que le ha sido entregada, si falla en prepararla, intenta nuevamente
 5. El jugador interactúa con el chef y receive la orden preparada
 6. El jugador interactúa con el cliente y le entrega la orden
 7. El cliente consume la orden y se va, pagando el pedido, con la propina añadida.
 
 **Es importante que:**
 
+- El jugador puede tomar multiples pedidos a la vez
 - Cada cliente genera un único pedido, pero puede recibir cualquier pedido
 - Si cliente se retira y no ha recibido, el pedido no se elimina
 - Las interacciones son con colisiones
@@ -72,7 +71,7 @@ Todas estas deben ser presionadas en conjunto por lo menos un segundo.
 **Los objetos tienen diferentes hit-boxes:**
 
 - Al comprar un objeto por _drag and drop_, el hit-box es su tamaño original
-- Ya dentro del juego, tienen un hit-box reducido por `reducción de hitbox` en `parametros.py`
+- Ya dentro del juego, tienen un hit-box reducido por `reducción de hitbox` definido en `parametros.py`
 - Los jugadores tienen al moverse solo la mitad inferior como hit-box
 
 **En el menú principal hay 2 botones en la esquina superior derecha**:
@@ -104,11 +103,12 @@ Todas estas deben ser presionadas en conjunto por lo menos un segundo.
   - `clock.py`: clase `GameClock` (los relojes del juego)
   - `game_core.py`: clase `GameCore`, _cerebro_ del programa
   - `cafe.py`: clase `Cafe`, que almacena los datos de la partida
-  - `paths.py`: paths de los archivos de datos
 - **frontend**
   - _windows_: ventanas del juego (`initial.py`, `game.py` y `summary.py`)
-  - `paths.py`: Clase `SpritePath` y paths de los sprites
-  - `themes.py`: Lee los archivos `css` y los guarda para las ventanas
+  - `paths.py`: clase `SpritePath`, que ayuda en la obtención de los sprites
+  - `themes.py`: lee los archivos `css` y los guarda para los estilos de las ventanas
+- **config**
+  - `parametros`: todos los parámetros y los paths
 
 ## Código externo utilizado :package:
 
@@ -147,9 +147,6 @@ en las animaciones.
 - Si entre presionar y soltar una tecla se realiza otra acción (como mover la ventana, usar drag and drop)
 la tecla puede mantenerse como presionadas sin estarlo. Para arreglar esto, hay que presionar y soltar
 las teclas que estaban presionadas durante la acción.
-- Mantener la combinación de teclas `F` + `I` + `N` sobre un segundo puede causar que la ronda termine multiples
-veces, por lo que a reputación se calculará multiples veces. Para arreglar la reputación, se puede aumentar la
-reputación con `B` + `T` + `G` y luego usar `F` + `I` + `N`.
 
 _**QThreads?**_ En el código no se usé threads ya que son poco
 eficientes en la simulación de entidades (por lo menos en este tipo
