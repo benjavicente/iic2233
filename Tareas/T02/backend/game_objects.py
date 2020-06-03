@@ -361,7 +361,8 @@ class Customer(GameObject):
         self._animation_cicle = ['0', '1', '2']
         self.wait_clock = GameClock(self, lambda: self.update_animation(3),
                                     wait_time/3, 3, self.exit_cafe)
-        self.happy_clock = GameClock(self, rep=1, final_event=self.exit_cafe)
+        self.happy_clock = GameClock(self, rep=1, final_event=self.exit_cafe,
+                                     interval=PARAMETROS['clientes']['tiempo de salida'])
         self.clocks.append(self.wait_clock)
         self.clocks.append(self.happy_clock)
         self.wait_clock.start()

@@ -74,6 +74,7 @@ PARAMETROS = {
     },
     "clientes": {
         "periodo de llegada": 0.02,
+        "tiempo de salida": 5,
         "propina": 200,
         "tipos": {
             'básicos': {
