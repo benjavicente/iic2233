@@ -24,13 +24,13 @@ PARAMETROS = {
         "chef": 4,
     },
     "mapa": {
-        "tamaño celda": 10,
-        "alto": 500,
-        "largo": 800,
-        "reducción de hitbox": 0.2,
+        "tamaño celda": 30,
+        "alto": 420,
+        "largo": 840,
+        "reducción de hitbox": 0.1,
     },
     'personaje': {
-        'velocidad': 150
+        'velocidad': 7  # Celdas por segundo
     },
     "chef": {
         "nivel inicial": "principiante",
@@ -64,7 +64,7 @@ PARAMETROS = {
                 "base": 15,
                 "factor": 2,
             },
-            "calidad pedido": {
+            "calidad pedido": {  # Prob de propina
                 "mínimo": 0,
                 "base": 1,
                 "factor": 0.05,
@@ -111,11 +111,11 @@ PARAMETROS = {
             },
         },
         "inicial": {
-            "dinero": 500,
-            "reputación": 2,
+            "dinero": 1000,
+            "reputación": 3,
             "clientes": 5,
-            "chefs": 49,
-            "mesas": 450,
+            "chefs": 2,
+            "mesas": 8,
             "disponibilidad": True,
         },
     },
