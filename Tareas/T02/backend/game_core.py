@@ -103,9 +103,9 @@ class GameCore(QObject):
         if self._pressed_keys:
             for player in self._players:  # Movimiento jugadores
                 keys = set(filter(lambda k, p=player: k in p.movemet_keys, self._pressed_keys))
-                if not keys:
-                    continue # Las teclas precionadas no son del jugador, se continua
                 next_pos = player.next_pos(keys, self._key_access_rate)
+                if next_pos == player.pos:
+                    continue  # El jugador no se movió, continua
                 colision_list = self.__check_colision(player.new_hitbox(next_pos), player.id)
                 if colision_list:  # Si colisiona, interactúa con objetos
                     for object_type in colision_list:
