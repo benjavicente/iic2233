@@ -79,6 +79,8 @@ class GameClock(QTimer):
         if self.__paused:
             if self._continue_event:
                 self._continue_event()
+            if not self.__remaining_time:  # Si se pauso justo en 0
+                self.__remaining_time = self.interval
             self.start(self.__remaining_time)
 
     def __call_event(self):
