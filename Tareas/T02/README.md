@@ -82,6 +82,7 @@ Todas estas deben ser presionadas en conjunto por lo menos un segundo.
 **Otras consideraciones del juego:**
 
 - Los clientes tienen 4 estados en vez de 2: alegre, molesto, enojado y atendido.
+- Para eliminar Chefs o Mesas en el periodo pre-ronda se debe utilizar doble-click.
 
 **Sobre el código:**
 
@@ -97,9 +98,11 @@ y son aplicados gracias a la librería propia `themes.py`.
 - **`PyQt`**
   - Encargada del interfaz gráfica.
 - **`sys`**
-  - Función `exit` para cerrar el programa al cerrar el UI.
+  - Función `exit`.
+- **`os`**
+  - Función `getcwd` y el módulo `path`.
 - **`math`**
-  - Operaciones matemáticas como la función `floor`.
+  - Función `floor`.
 - **`random`**
   - Funciones `random`, `randint`, `choice` y `shuffle`.
 - **`functools`**
