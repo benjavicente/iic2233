@@ -216,8 +216,7 @@ class Chef(GameObject):
         self._dishes = int()
         self.order = None
         self.cooking = False
-        self.cook_clock = GameClock(self)  # Se define el cocinar
-        self.clocks.append(self.cook_clock)
+        self.cook_clock = None
 
     @property
     def dishes(self):
@@ -268,6 +267,7 @@ class Chef(GameObject):
         total_time = max(min_value, base - self.core.cafe.rep - self.exp * fact)
         # Reloj de cocina
         cooking_animation_time = 0.2
+        self.clocks.clear()
         self.cook_clock = GameClock(
             self,
             interval=cooking_animation_time,
@@ -275,6 +275,7 @@ class Chef(GameObject):
             event=lambda: self.update_animation(1),
             final_event=self.try_recipes
         )
+        self.clocks.append(self.cook_clock)
         self.cook_clock.start()
 
     def try_recipes(self) -> None:
