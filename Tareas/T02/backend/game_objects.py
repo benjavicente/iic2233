@@ -220,6 +220,7 @@ class Chef(GameObject):
         self.order = None
         self.cooking = False
         self.cook_clock = GameClock(self)  # Se define el cocinar
+        self.clocks.append(self.cook_clock)
 
     @property
     def dishes(self):
@@ -277,8 +278,6 @@ class Chef(GameObject):
             event=lambda: self.update_animation(1),
             final_event=self.try_recipes
         )
-        self.clocks.clear()
-        self.clocks.append(self.cook_clock)
         self.cook_clock.start()
 
     def try_recipes(self) -> None:
@@ -295,7 +294,6 @@ class Chef(GameObject):
 
     def finish_order(self) -> None:
         '''Termina la orden y la deja en su mesa'''
-        self.clocks.remove(self.cook_clock)
         self.cooking = False
         self.dishes += 1
         self._object_state[1] = 'done'
