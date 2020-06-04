@@ -207,7 +207,7 @@ class GameCore(QObject):
         #! Invertir un diccionario
         #! https://stackoverflow.com/a/483833
         clases_objects = {obj_c: name for name, obj_c in self.object_classes.items()}
-        for game_object in [self._players[0]] + self._tables + self._chefs:
+        for game_object in [self._players[0]] + self._chefs + self._tables:
             pos_x, pos_y = game_object.pos
             if isinstance(game_object, Table):
                 pos_y -= self.cell_size
