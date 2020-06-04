@@ -79,9 +79,16 @@ Todas estas deben ser presionadas en conjunto por lo menos un segundo.
 - Información: Muestra información importante en la consola.
 - Jugadores: número de jugadores, al presionarlo aumenta la cantidad
 
-**Otras consideraciones:**
+**Otras consideraciones del juego:**
 
 - Los clientes tienen 4 estados en vez de 2: alegre, molesto, enojado y atendido.
+
+**Sobre el código:**
+
+- Utilicé `css` para añadirle estilo a las ventanas. Se encuentran en la carpeta `themes`
+y son aplicados gracias a la librería propia `themes.py`.
+- Gran parte de mi código está documentado con _typing_ y _docstring_.
+- Existen _prints_ cuando suceden eventos que no son reflejados por el UI.
 
 ## Librerías :books:
 
@@ -108,7 +115,7 @@ Todas estas deben ser presionadas en conjunto por lo menos un segundo.
   - `game_core.py`: clase `GameCore`, _cerebro_ del programa
   - `cafe.py`: clase `Cafe`, que almacena los datos de la partida
 - **frontend**
-  - _windows_: ventanas del juego (`initial.py`, `game.py` y `summary.py`)
+  - `initial.py`, `game.py` y `summary.py`: ventanas del juego
   - `paths.py`: clase `SpritePath`, que ayuda en la obtención de los sprites
   - `themes.py`: lee los archivos `css` y los guarda para los estilos de las ventanas
 - **config**
