@@ -27,7 +27,7 @@ PARAMETROS = {
         "tamaño celda": 30,
         "alto": 420,
         "largo": 840,
-        "reducción de hitbox": 0.1,
+        "reducción de hitbox": 0.2,
     },
     'personaje': {
         'velocidad': 7  # Celdas por segundo
@@ -52,7 +52,7 @@ PARAMETROS = {
             },
         },
         "probabilidad fallar": {
-            "factor": 0.3,
+            "factor": 0.25,
             "suma": 1,
         },
     },
@@ -73,9 +73,9 @@ PARAMETROS = {
         },
     },
     "clientes": {
-        "periodo de llegada": 0.02,
-        "tiempo de salida": 5,
-        "propina": 200,
+        "periodo de llegada": 6,
+        "tiempo de salida": 2,
+        "propina": 150,
         "tipos": {
             'básicos': {
                 "relajado" : {
@@ -106,8 +106,8 @@ PARAMETROS = {
                 "resta": 2,
             },
             "clientes por ronda": {
-                "factor": 1,
-                "base": 500,
+                "factor": 2,
+                "base": 3,
             },
         },
         "inicial": {
@@ -115,7 +115,7 @@ PARAMETROS = {
             "reputación": 3,
             "clientes": 5,
             "chefs": 2,
-            "mesas": 8,
+            "mesas": 3,
             "disponibilidad": True,
         },
     },
