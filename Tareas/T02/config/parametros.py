@@ -207,7 +207,7 @@ SPRITE_PATH_DICT = {
                     'left': join(_SPRITES, 'mesero', 'otros', 'mesera_left_03.png'),
                 },
                 'rightfoot': {
-                    'up': join(_SPRITES, 'mesero', 'otros', 'mesera_up_02.png'),
+                    'up': join(_SPRITES, 'mesero', 'otros', 'mesera_up_01.png'),
                     'right': join(_SPRITES, 'mesero', 'otros', 'mesera_right_01.png'),
                     'down': join(_SPRITES, 'mesero', 'otros', 'mesera_down_01.png'),
                     'left': join(_SPRITES, 'mesero', 'otros', 'mesera_left_01.png'),
@@ -216,7 +216,7 @@ SPRITE_PATH_DICT = {
                     'up': join(_SPRITES, 'mesero', 'otros', 'mesera_up_03.png'),
                     'right': join(_SPRITES, 'mesero', 'otros', 'mesera_right_03.png'),
                     'down': join(_SPRITES, 'mesero', 'otros', 'mesera_down_03.png'),
-                    'left': join(_SPRITES, 'mesero', 'otros', 'mesera_left_01.png'),
+                    'left': join(_SPRITES, 'mesero', 'otros', 'mesera_left_02.png'),
                 },
             },
             'snack': {
