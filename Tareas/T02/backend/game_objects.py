@@ -144,10 +144,7 @@ class Player(GameObject):
         self.current_order = None
         self.walked = False
         self._animation_cicle = ['rightfoot', 'idle', 'leftfoot', 'idle']
-        self.clock_check_if_walking = GameClock(
-            self, interval=0.2,
-            event=self.check_if_walking
-        )
+        self.clock_check_if_walking = GameClock(self, self.check_if_walking, 0.15)
         self.clocks.append(self.clock_check_if_walking)
         self.clock_check_if_walking.start()
 
