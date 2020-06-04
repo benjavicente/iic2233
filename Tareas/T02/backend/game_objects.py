@@ -258,7 +258,7 @@ class Chef(GameObject):
 
     def start_cooking(self) -> None:
         '''El chef prepara un plato'''
-        animation_type = choice(['A', 'B', 'C'])
+        animation_type = choice(['A', 'B', 'C', 'D'])
         self._animation_cicle = [f'cooking{animation_type}{i}' for i in range(3)]
         # Calculo del tiempo de preparación
         min_value = float(PARAMETROS['bocadillos']['calculos']['tiempo preparación']['mínimo'])

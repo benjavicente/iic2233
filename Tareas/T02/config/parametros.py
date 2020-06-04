@@ -254,6 +254,9 @@ SPRITE_PATH_DICT = {
         'cookingC0': join(_SPRITES, 'chef', 'meson_10.png'),
         'cookingC1': join(_SPRITES, 'chef', 'meson_11.png'),
         'cookingC2': join(_SPRITES, 'chef', 'meson_12.png'),
+        'cookingD0': join(_SPRITES, 'chef', 'meson_06.png'),
+        'cookingD1': join(_SPRITES, 'chef', 'meson_06.png'),
+        'cookingD2': join(_SPRITES, 'chef', 'meson_06.png'),
     },
     'customer': {
         'basic': {
