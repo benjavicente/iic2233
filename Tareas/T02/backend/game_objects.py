@@ -231,7 +231,7 @@ class Chef(GameObject):
         self._dishes = value
         if value >= PARAMETROS['chef']['niveles'][self._level]['platos siguiente nivel']:
             self._level = PARAMETROS['chef']['niveles'][self._level]['siguiente nivel']
-            print(f'El chef subió de nivel a {self._level} ({value})')
+            print(f'El chef con id {self.id} subió de nivel a {self._level} ({value})')
 
     @property
     def exp(self):
@@ -288,7 +288,8 @@ class Chef(GameObject):
         gamma = self.exp
         probability = (alpha)/(gamma + beta)
         if probability > random():
-            self.start_cooking()  # Falló el pedido, inicia nuevamente
+            print(f'El chef con id {self.id} falló su pedido')
+            self.start_cooking()
         else:
             self.finish_order()
 
