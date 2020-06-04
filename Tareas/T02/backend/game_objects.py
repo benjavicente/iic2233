@@ -134,7 +134,7 @@ class Player(GameObject):
     _skins = ['a', 'b']
 
     _movemet_direction = {'up': (0, -1), 'right': (1, 0), 'down': (0, 1), 'left': (-1, 0)}
-    _movement_speed = PARAMETROS['personaje']['velocidad']
+    _movement_speed = PARAMETROS['personaje']['velocidad'] * GameObject._cell_size
 
     def __init__(self, core: object, x: int, y: int):
         size = PARAMETROS['tamaño']['mesero']
