@@ -1,6 +1,6 @@
 '''Ventana del Juego DCCafé'''
 
-from PyQt5 import uic
+from PyQt5.uic import loadUiType
 from PyQt5.QtCore import Qt, pyqtSignal, QMimeData
 from PyQt5.QtGui import QPixmap, QCursor, QTransform, QDrag
 from PyQt5.QtWidgets import QLabel, QWidget, QFrame, QGridLayout, QSizePolicy
@@ -11,7 +11,7 @@ from frontend.themes import GAME_THEME
 from config.parametros import PARAMETROS
 
 
-class GameWindow(*uic.loadUiType(SPRITE_PATH['ui', 'game_window'])):
+class GameWindow(*loadUiType(SPRITE_PATH['ui', 'game_window'])):
     '''Ventana del juego'''
 
     signal_key_press = pyqtSignal(int)
