@@ -36,9 +36,8 @@ class GameCore(QObject):
     signal_exit_game = pyqtSignal()
     # Parametros de utilidad
     object_classes = {'mesero': Player, 'chef': Chef, 'mesa': Table}
-    shop_prices = {
-        'table_price': PARAMETROS['tienda']['mesa'],
-        'chef_price': PARAMETROS['tienda']['chef']}
+    shop_prices = {'table_price': PARAMETROS['tienda']['mesa'],
+                   'chef_price': PARAMETROS['tienda']['chef']}
     shop_names = {'table': Table, 'chef': Chef}
     cell_size = PARAMETROS['mapa']['tamaño celda']
 
@@ -181,6 +180,8 @@ class GameCore(QObject):
             if isinstance(new_object, Chef):
                 new_object.dishes = int(data['dishes'].pop(0))
             object_lists[object_name].append(new_object)
+            if self.__check_colision(new_object.hit_box, new_object.id):
+                raise ValueError('Los objectos cargados colisionan')
         # Creación del jugador adicional (si es que hay)
         self.generate_players(info['players'] - 1, self.cell_size, *self._map_size)
         # Inicio del juego
