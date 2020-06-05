@@ -105,6 +105,14 @@ class SummaryWindow(QWidget):
             stars_layout.addWidget(star)
             self.star_list.append(star)
         layout_card.addLayout(stars_layout)
+        # Mensaje de clausura
+        self.game_over_message = QLabel('Lo siento, el DCCafé ha sido clausurado', self)
+        self.game_over_message.setAlignment(Qt.AlignCenter)
+        self.game_over_message.setWordWrap(True)
+        self.game_over_message.hide()
+        self.game_over_message.setObjectName('game_over_message')
+        layout_card.addSpacing(20)
+        layout_card.addWidget(self.game_over_message)
         # -> Botones
         button_layout = QHBoxLayout()
         layout_card.addSpacing(50)
@@ -159,9 +167,11 @@ class SummaryWindow(QWidget):
         self.money.setText(str(results['money']))
         if not results['rep']:
             # Desconecta los botones de guardar y
-            # continuar si la reputación es 0
-            self.continue_.close()
-            self.save.close()
+            # continuar si la reputación es 0,
+            # terminando el juego
+            self.continue_.hide()
+            self.save.hide()
+            self.game_over_message.show()
         #! Bloquear el resto de las ventanas
         #! https://stackoverflow.com/a/22414435
         self.setWindowModality(Qt.ApplicationModal)
