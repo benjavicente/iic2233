@@ -239,7 +239,9 @@ class Chef(GameObject):
         '''Termina todo lo que está haciendo. Llamado al terminar la ronda'''
         self.order = None
         self.cooking = False
-        self.cook_clock.stop()
+        if self.cook_clock:
+            self.cook_clock.stop()
+            self.cook_clock = None
         self._object_state[1] = 'idle'
         self.update_object()
 
@@ -293,6 +295,8 @@ class Chef(GameObject):
     def finish_order(self) -> None:
         '''Termina la orden y la deja en su mesa'''
         self.cooking = False
+        self.clocks.clear()
+        self.cook_clock = None
         self.dishes += 1
         self._object_state[1] = 'done'
         self.order = Snack(self.exp)
