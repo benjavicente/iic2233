@@ -220,7 +220,8 @@ class GameCore(QObject):
         '''Continua el juego. Se habilita la tienda'''
         self.signal_shop_enable.emit(True)
         self._clock_check_special_keys.start()
-        self._clock_check_keys.start()
+        if self.paused:
+            self.pause_continue_game()
 
     def reset_round(self) -> None:
         '''Elimina cualquier proceso de la ronda pasada'''
@@ -231,7 +232,7 @@ class GameCore(QObject):
             chef.stop_cooking()  # Reinicia el estado del chef
 
     def pause_continue_game(self) -> None:
-        '''Pausa el juego'''
+        '''Pausa o continua el juego'''
         if self.paused:
             self._clock_customer_spawn.continue_()
             self._clock_check_keys.start()
@@ -245,8 +246,10 @@ class GameCore(QObject):
 
     def start_round(self) -> None:
         '''Empieza una ronda'''
+        # Se para la pausa
+        if self.paused:
+            self.pause_continue_game()
         # Se cierra la tienda
-        self.signal_show_paused.emit(False)
         self.signal_shop_enable.emit(False)
         # Se reinician los valores de la ronda
         self.cafe.new_round_values()
@@ -318,7 +321,6 @@ class GameCore(QObject):
             self._clock_check_if_empty.stop()
             self.cafe.get_new_rep()
             self.reset_round()
-            self._clock_check_keys.stop()
             self._clock_check_special_keys.stop()
             self.update_ui_information()
             self.signal_show_end_screen.emit(self.cafe.stats)
