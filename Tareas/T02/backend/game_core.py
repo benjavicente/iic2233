@@ -246,6 +246,7 @@ class GameCore(QObject):
     def start_round(self) -> None:
         '''Empieza una ronda'''
         # Se cierra la tienda
+        self.signal_show_paused.emit(False)
         self.signal_shop_enable.emit(False)
         # Se reinician los valores de la ronda
         self.cafe.new_round_values()
@@ -364,7 +365,6 @@ def check_colision(hitbox1: tuple, hitbox2: tuple) -> True:
     x_2, y_2, w_2, h_2 = hitbox2
     return all([x_1 + w_1 > x_2, x_1 < x_2 + w_2, y_1 + h_1 > y_2, y_1 < y_2 + h_2])
 
-
 def get_last_game_data() -> dict:
     '''Obtiene en un diccionario la información de la partida guardada'''
     last_game_data = {}
@@ -380,7 +380,6 @@ def get_last_game_data() -> dict:
         map_content = file.readlines()
     last_game_data['map'] = [line.split(',') for line in map_content]
     return last_game_data
-
 
 def save_game(game_data: list, chef_dishes: list, map_data: list) -> None:
     '''Guarda la partida'''
