@@ -60,10 +60,12 @@ class GameClock(QTimer):
                 self._event()
         super().start(*args)
 
-    def stop(self, *args):
+    def stop(self, *args, **kwards):
         '''Overrite de stop. Revisa si se pauso o paró el reloj'''
         if not self.__paused:
             self.__started = False
+        elif 'pausing' not in kwards:
+            self.__paused = False
         super().stop(*args)
 
     def pause_(self) -> None:
@@ -73,7 +75,7 @@ class GameClock(QTimer):
             if self._paused_event:
                 self._paused_event()
             self.__paused = True
-            self.stop()
+            self.stop(pausing=True)
 
     def continue_(self) -> None:
         '''Continua el reloj'''
