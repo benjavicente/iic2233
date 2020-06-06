@@ -18,7 +18,7 @@ PATH_DATOS = 'datos.csv'
 # Parámetros del backend de DCCafé
 
 PARAMETROS = {
-    "tamaño": { # Se considera el tamaño horizontal como referencia
+    "tamaño": {  # Se considera el tamaño horizontal como referencia
         "mesa": 1,
         "mesero": 1,
         "chef": 4,
@@ -75,7 +75,7 @@ PARAMETROS = {
     "clientes": {
         "periodo de llegada": 6,
         "tiempo de salida": 2,
-        "propina": 150,
+        "propina": 70,  # Idealmente un número distinto a el precio del bocadillo
         "tipos": {
             'básicos': {
                 "relajado" : {
