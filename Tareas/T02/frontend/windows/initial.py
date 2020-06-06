@@ -1,6 +1,4 @@
-﻿'''
-Ventana inicial del juego
-'''
+﻿'''Ventana inicial del juego'''
 
 from random import choice
 

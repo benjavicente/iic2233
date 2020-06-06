@@ -1,11 +1,9 @@
-'''
-Clase GameClock que permite manejar el tiempo del juego.
-'''
-# Es más eficiente QTimer que QThread ya que *no es un thread aparte*,
-# se ejecuta junto al main loop del programa. Además, el uso es más sencillo.
+'''Clase GameClock que permite manejar el tiempo del juego.'''
 
 from PyQt5.QtCore import QTimer
 
+# Es más eficiente QTimer que QThread ya que *no es un thread aparte*,
+# se ejecuta junto al main loop del programa. Además, el uso es más sencillo.
 
 # Luego de realizar mi implementación, encontré este
 # foro que tiene otra implementación similar
@@ -120,7 +118,7 @@ if __name__ == "__main__":
     sys.__excepthook__ = lambda t, v, trace: print(t, v, trace, sep="\n")
     APP = QApplication(sys.argv)
 
-    EVENT = lambda: print('Hola! Terminé un ciclo de 5 segundos')
+    EVENT = lambda: print('Hola!')
     FINAL_EVENT = lambda: print('Me voy')
     PAUSE_EVENT = lambda: print('Esperando...')
     CONTINUE_EVENT = lambda: print('Aquí volví')

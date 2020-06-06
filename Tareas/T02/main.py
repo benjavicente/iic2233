@@ -1,6 +1,4 @@
-'''
-Simulador del DCCafé
-'''
+'''Simulador del DCCafé'''
 
 import sys
 from os.path import join
@@ -9,10 +7,11 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
 
 from backend.game_core import GameCore
-from backend.game_objects import GameObject
+
 from frontend.windows.game import GameWindow
 from frontend.windows.initial import InitialWindow
-from frontend.windows.summary import SummaryWindow  # TODO
+from frontend.windows.summary import SummaryWindow
+
 
 if __name__ == "__main__":
     sys.__excepthook__ = lambda t, v, trace: print(t, v, trace, sep="\n")

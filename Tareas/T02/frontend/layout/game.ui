@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- ¿Qué haces aquí? -->
 <ui version="4.0">
  <class>ventana_juego</class>
  <widget class="QMainWindow" name="ventana_juego">
@@ -289,6 +290,12 @@
      <item>
       <widget class="QLabel" name="logo">
        <property name="enabled">
+        <!-- Hoy mi psicóloga me dijo: "Cuando fue la última vez que te autolesionaste?"
+         Le dije "Esta mañana dibuje todo lo que sentía en un "papel", cojí mi "pincel"
+         y no paré de dibujar lo que sentía" Me dijo "Oh qué buena forma de desahogarse"
+         fue cuando le explique que la hoja era mi T02 y el pincel git commit + git push,
+         me dijo "wow, creí que..." Le dije "Podrás ser psicóloga y todo, pero no entiendes
+         lo que es tener Progra Avanzada..." -->
         <bool>true</bool>
        </property>
        <property name="maximumSize">
