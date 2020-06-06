@@ -39,31 +39,32 @@ T02
 ```
 
 Debe existir los archivos `mapa.csv` y `datos.csv` al continuar un juego, pero
-pueden ser omitidos si es que solo se crean juegos.
+pueden ser omitidos si es que solo se crean juegos. Los archivos de entregados
+como ejemplos son compatibles.
 
 ## Supuestos, aclaraciones y consideraciones :thinking:
 
 **El proceso que se realiza el juego es:**
 
-1. Cada cierto tiempo se genera un cliente en una mesa desocupada aleatoria
-2. El jugador interactúa con el cliente y recibe un pedido
-3. El jugador interactúa con el chef para entregar un pedido
-4. El chef prepara la orden que le ha sido entregada, si falla en prepararla, intenta nuevamente
-5. El jugador interactúa con el chef y receive la orden preparada
-6. El jugador interactúa con el cliente y le entrega la orden
+1. Cada cierto tiempo se genera un cliente en una mesa desocupada aleatoria.
+2. El jugador interactúa con el cliente y recibe un pedido.
+3. El jugador interactúa con el chef para entregar un pedido.
+4. El chef prepara la orden que le ha sido entregada, si falla en prepararla, intenta nuevamente.
+5. El jugador interactúa con el chef y receive la orden preparada.
+6. El jugador interactúa con el cliente y le entrega la orden.
 7. El cliente consume la orden y se va, pagando el pedido, con la propina añadida.
 
 **Es importante que:**
 
-- El jugador puede tomar multiples pedidos a la vez
-- Cada cliente genera un único pedido, pero puede recibir cualquier pedido
-- Si cliente se retira y no ha recibido, el pedido no se elimina
-- Las interacciones son con colisiones
+- El jugador puede tomar multiples pedidos a la vez.
+- Cada cliente genera un único pedido, pero puede recibir cualquier pedido.
+- Si cliente se retira y no ha recibido, el pedido no se elimina.
+- Las interacciones son con colisiones.
 
 **Las _teclas trampa_ son:**
 
-- `M` + `O` + `Y`: aumenta el dinero
-- `B` + `T` + `G`: aumenta la reputación
+- `M` + `O` + `Y`: aumenta el dinero.
+- `B` + `T` + `G`: aumenta la reputación.
 - `F` + `I` + `N`: cierra el café, hecha a todos los clientes y calcula la nueva reputación.
 
 Todas estas deben ser presionadas en conjunto por lo menos un segundo.
@@ -71,13 +72,13 @@ Todas estas deben ser presionadas en conjunto por lo menos un segundo.
 **Los objetos tienen diferentes hit-boxes:**
 
 - Al comprar un objeto por _drag and drop_, el hit-box es su tamaño original
-- Ya dentro del juego, tienen un hit-box reducido por `reducción de hitbox` definido en `parametros.py`
-- Los jugadores tienen al moverse solo la mitad inferior como hit-box
+- Ya dentro del juego, tienen un hit-box reducido por `reducción de hitbox` definido en `parametros.py`.
+- Los jugadores tienen al moverse solo la mitad inferior como hit-box.
 
 **En el menú principal hay 2 botones en la esquina superior derecha**:
 
 - Información: Muestra información importante en la consola.
-- Jugadores: número de jugadores, al presionarlo aumenta la cantidad
+- Jugadores: número de jugadores, al presionarlo aumenta la cantidad.
 
 **Otras consideraciones del juego:**
 
@@ -90,6 +91,7 @@ Todas estas deben ser presionadas en conjunto por lo menos un segundo.
 y son aplicados gracias a la librería propia `themes.py`.
 - Gran parte de mi código está documentado con _typing_ y _docstring_.
 - Existen _prints_ cuando suceden eventos que no son reflejados por el UI.
+- `parametros.py` se encuentra en la carpeta `config`.
 
 ## Librerías :books:
 
@@ -113,16 +115,16 @@ y son aplicados gracias a la librería propia `themes.py`.
 ### Librerías propias :pencil:
 
 - **backend**
-  - `game_objects.py`: clases de los objetos visuales del juego
-  - `clock.py`: clase `GameClock` (los relojes del juego)
-  - `game_core.py`: clase `GameCore`, _cerebro_ del programa
-  - `cafe.py`: clase `Cafe`, que almacena los datos de la partida
+  - `game_objects.py`: clases de los objetos visuales del juego.
+  - `clock.py`: clase `GameClock` (los relojes del juego).
+  - `game_core.py`: clase `GameCore`, _cerebro_ del programa.
+  - `cafe.py`: clase `Cafe`, que almacena los datos de la partida.
 - **frontend**
-  - `initial.py`, `game.py` y `summary.py`: ventanas del juego
-  - `paths.py`: clase `SpritePath`, que ayuda en la obtención de los sprites
-  - `themes.py`: lee los archivos `css` y los guarda para los estilos de las ventanas
+  - `initial.py`, `game.py` y `summary.py`: ventanas del juego.
+  - `paths.py`: clase `SpritePath`, que ayuda en la obtención de los sprites.
+  - `themes.py`: lee los archivos `css` y los guarda para los estilos de las ventanas.
 - **config**
-  - `parametros`: todos los parámetros y los paths
+  - `parametros`: todos los parámetros y los paths.
 
 ## Código externo utilizado :package:
 
