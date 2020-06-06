@@ -24,13 +24,13 @@ PARAMETROS = {
         "chef": 4,
     },
     "mapa": {
-        "tamaño celda": 15,
+        "tamaño celda": 30,
         "alto": 600,   # Tanto alto como largo son unidades en pixeles que deben ser divisibles por
         "largo": 900,  # el tamaño de la celda. Tabmien, largo//celdas tiene que ser multiplo de 2.
         "reducción de hitbox": 0.2,
     },
     'personaje': {
-        'velocidad': 7  # Celdas por segundo
+        'velocidad': 8  # Celdas por segundo
     },
     "chef": {
         "nivel inicial": "principiante",
