@@ -84,6 +84,7 @@ Todas estas deben ser presionadas en conjunto por lo menos un segundo.
 
 - Los clientes tienen 4 estados en vez de 2: alegre, molesto, enojado y atendido.
 - Para eliminar Chefs o Mesas en el periodo pre-ronda se debe utilizar doble-click.
+- El menú de la tienda se muestra siempre pero es deshabilitado cuando corresponde.
 
 **Sobre el código:**
 
@@ -133,7 +134,7 @@ Usé [código de David Wallance](https://stackoverflow.com/a/48203489)
 la pregunta [PyQt4 - Drag and Drop](https://stackoverflow.com/q/14395799)
 de StackOverflow) para modelar el funcionamiento del drag and drop de la tienda.
 
-Donde usé código externo de menor extensión marqué que hace y de donde lo obtuve con `#!`.
+Donde usé código externo de menor extensión (1 o 2 lineas) marqué que hace y de donde lo obtuve con `#!`.
 
 Por ejemplo:
 
@@ -180,3 +181,5 @@ con 4 entidades, mientras mi tarea ocupa como máximo 18% con
 500 entidades.
 
 **Disfrute el ~~programa~~ juego :tada:**
+
+![oso](extras/oso.png)
