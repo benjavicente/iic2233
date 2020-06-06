@@ -24,9 +24,9 @@ PARAMETROS = {
         "chef": 4,
     },
     "mapa": {
-        "tamaño celda": 30,
-        "alto": 420,
-        "largo": 840,
+        "tamaño celda": 15,
+        "alto": 600,   # Tanto alto como largo son unidades en pixeles que deben ser divisibles por
+        "largo": 900,  # el tamaño de la celda. Tabmien, largo//celdas tiene que ser multiplo de 2.
         "reducción de hitbox": 0.2,
     },
     'personaje': {
@@ -100,8 +100,8 @@ PARAMETROS = {
     "DCCafé": {
         "calculos": {
             "reputación": {
-                "mínimo": 0,
-                "máximo": 5,
+                "mínimo": 0,  # Aunque el backend soporte el cambio de estos parámetros,
+                "máximo": 5,  # en el frontend no serán mostrados adecuadamente
                 "factor": 4,
                 "resta": 2,
             },
