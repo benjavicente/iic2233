@@ -172,7 +172,7 @@ en las animaciones.
 - Si entre presionar y soltar una tecla se realiza otra acción (como mover la ventana, usar drag and drop)
 la tecla puede mantenerse como presionadas sin estarlo. Para arreglar esto, hay que presionar y soltar
 las teclas que estaban presionadas durante la acción.
-- El sprite de los meseros es el mismo para cada uno. Además, al ir hacia los lados con un
+- El sprite de los meseros con un bocadillo es el mismo para cada uno. Además, al ir hacia los lados con un
 snack, el sprite no se expande hacia la dirección  del movimiento.
 
 _**QThreads?**_ En el código no se usé threads ya que son poco
