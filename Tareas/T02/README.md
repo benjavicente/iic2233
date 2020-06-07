@@ -44,6 +44,14 @@ como ejemplos son compatibles.
 
 ## Supuestos, aclaraciones y consideraciones :thinking:
 
+**Asumo que:**
+
+- No es necesario mostrar un bocadillo, el cliente solo espera y se va.
+- La reputación minima y máxima son siempre 0 y 5 respectivamente.
+- Al terminar el juego, el jugador solo puede salir.
+- El jugador se puede mover en cualquier etapa del juego.
+- El tiempo de espera es en segundos y no es porcentual.
+
 **El proceso que se realiza el juego es:**
 
 1. Cada cierto tiempo se genera un cliente en una mesa desocupada aleatoria.
@@ -99,7 +107,7 @@ y son aplicados gracias a la librería propia `themes.py`.
 ### Librerías externas utilizadas :clipboard:
 
 - **`PyQt`**
-  - Encargada del interfaz gráfica.
+  - Encargada del interfaz.
 - **`sys`**
   - Función `exit`.
 - **`os`**
