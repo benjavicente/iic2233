@@ -2,16 +2,16 @@
 
 ![logo](extras/readme.png)
 
-- [Tarea 02: DCCafé :coffee:](#tarea-02-dccafé-️)
-  - [Importante :heavy_exclamation_mark:](#importante-️)
-  - [Ejecución :computer:](#ejecución-)
-  - [Supuestos, aclaraciones y consideraciones :thinking:](#supuestos-aclaraciones-y-consideraciones-)
-  - [Librerías :books:](#librerías-)
-    - [Librerías externas utilizadas :clipboard:](#librerías-externas-utilizadas-)
-    - [Librerías propias :pencil:](#librerías-propias-)
-  - [Código externo utilizado :package:](#código-externo-utilizado-)
-  - [Características implementadas :wrench:](#características-implementadas-)
-  - [Notas adicionales :moyai:](#notas-adicionales-)
+- [Tarea 02: DCCafé :coffee:](#tarea-02-dccafé-️coffee)
+  - [Importante :heavy_exclamation_mark:](#importante-️heavy_exclamation_mark)
+  - [Ejecución :computer:](#ejecución-computer)
+  - [Supuestos, aclaraciones y consideraciones :thinking:](#supuestos-aclaraciones-y-consideraciones-thinking)
+  - [Librerías :books:](#librerías-books)
+    - [Librerías externas utilizadas :clipboard:](#librerías-externas-utilizadas-clipboard)
+    - [Librerías propias :pencil:](#librerías-propias-pencil)
+  - [Código externo utilizado :package:](#código-externo-utilizado-package)
+  - [Características implementadas :wrench:](#características-implementadas-wrench)
+  - [Notas adicionales :moyai:](#notas-adicionales-moyai)
 
 ## Importante :heavy_exclamation_mark:
 
