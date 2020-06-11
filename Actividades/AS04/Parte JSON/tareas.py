@@ -1,6 +1,4 @@
 import json
-import os
-
 
 def desencriptar(string):
     letras = list('arquetipos')
@@ -26,21 +24,21 @@ class AyudanteTareo:
 
     def __repr__(self):
         return (f'| {self.usuario:16s} | {self.cargo:13s} | {self.pokemon:10s} |'
-            f' {self.pizza:12s} | {self.serie:19s} |')
+                f' {self.pizza:12s} | {self.serie:19s} |')
 
 
 def hook_ayudantes(dic_encriptado):
-    return [AyudanteTareo(desencriptar(n), *list(map(desencriptar, v)))
-            for n, v in dic_encriptado.items()]
+    # Se desencripta y se retorna los ayudantes ( oneliner ;) )
+    return [AyudanteTareo(*map(desencriptar, [n, *v])) for n, v in dic_encriptado.items()]
 
 def cargar_ayudantes(ruta):
+    # Se cargan los ayudantes
     with open(ruta, 'r', encoding='utf-8') as file:
         return json.load(file, object_hook=hook_ayudantes)
-
 
 
 if __name__ == '__main__':
     print(f'| {"Usuario":16s} | {"Cargo":13s} | {"Pokemon":10s} | {"Pizza":12s} | {"Serie":19s} |')
     print('--------------------------------------------------------------------------------------')
-    for ayudante in cargar_ayudantes(os.path.join('tareas.json')):
+    for ayudante in cargar_ayudantes('tareas.json'):
         print(ayudante)
