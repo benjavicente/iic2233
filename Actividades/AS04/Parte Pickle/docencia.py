@@ -1,9 +1,6 @@
-from decodificador_docencia import cargar_instancia, guardar_instancia, Ayudante
-from decodificador_docencia import AyudanteJefe, EquipoDocencia
-import sys
-import os
 import traceback
 import pickle
+from decodificador_docencia import cargar_instancia, guardar_instancia
 
 
 def chequeo_estado_ayudantes_docente(objeto_ayudantes):
@@ -43,16 +40,13 @@ def chequeo_estado_ayudante_jefe(objeto_ayudante_jefe):
 
 
 if __name__ == "__main__":
-
     print("--------------Parte Pickle de la actividad-------------")
     try:
         # Se carga el archivo con la instancia de la clase EquipoDocencia
         ayudantes_todo = cargar_instancia("equipo_docencia.bin")
-
         # Se hace chequeo de la instancia de la clase EquipoDocencia
         if chequeo_estado_ayudantes_docente(ayudantes_todo):
             print("El estado de EquipoDocencia es el que corresponde")
-
             # Se hace el chequeo de la instancia AyudanteJefe
             ayudante_jefe = ayudantes_todo.ayudante_jefe
             jefe_serializado = pickle.dumps(ayudante_jefe)
@@ -73,10 +67,8 @@ if __name__ == "__main__":
         else:
             print("La clase EquipoDocencia no tiene el estado requerido")
     except Exception as error:
-        nombre_archivo = "decodificador_docencia.py"
         print("Este mensaje te dará un poco de información de tu error:")
         print(f"No haz iniciado esta parte o tuvo un error y habría dejado de funcionar.")
-        print(f"Recuerda, TODO error comienza en el archivo {nombre_archivo}, no en docencia.py.")
+        print(f"Recuerda, TODO error comienza en el archivo decodificador_docencia.py, no en docencia.py.")
         print(f"Los datos del error: {traceback.format_exc()}")
-
     print("----------Fin Parte Pickle de la actividad-------------")
