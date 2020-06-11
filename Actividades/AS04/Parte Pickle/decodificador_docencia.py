@@ -1,16 +1,14 @@
 import pickle
 
 
-# ETAPA DE CARGA #
 class EquipoDocencia:
     def __init__(self):
         self.ayudantes_normales = []
         self.ayudante_jefe = None
 
-    # Aquí se filtra la lista del objeto al deserializarlo
     def __setstate__(self, estado):
-        # Completar
         self.__dict__ = estado
+        # Se completa la clase, filtrando los ayudantes
         for ayudante in self.ayudantes_normales:
             if ayudante.cargo == 'Jefe':
                 self.ayudantes_normales.remove(ayudante)
@@ -18,13 +16,12 @@ class EquipoDocencia:
                 break
 
 
-# Aquí se carga la instancia de EquipoDocencia
 def cargar_instancia(ruta):
+    # Carga el contenido
     with open(ruta, 'rb') as file:
         return pickle.load(file)
 
 
-# ETAPA DE GUARDADO #
 class Ayudante:
     def __init__(self, cargo, usuario_github, pokemon_favorito, pizza_favorita):
         self.cargo = cargo
@@ -43,8 +40,8 @@ class AyudanteJefe(Ayudante):
         self.experto = experto
         self.carrera = carrera
 
-    # Aquí se definen cambios que sólo se afectan a AyudanteJefe
     def __getstate__(self):
+        # Se completa la clase ayudante Jefe, modificando sus atributos
         state = self.__dict__.copy()
         state.update({
             'pizza_favorita': None,
@@ -53,8 +50,9 @@ class AyudanteJefe(Ayudante):
         })
         return state
 
-# Aquí se guarda instancia de EquipoDocencia
+
 def guardar_instancia(ruta, instancia_equipo_docencia):
+    # Se serializa la instancia y se retorna True
     with open(ruta, 'wb') as file:
         pickle.dump(instancia_equipo_docencia, file)
     return True
