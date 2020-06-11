@@ -29,9 +29,14 @@ class AyudanteTareo:
             f' {self.pizza:12s} | {self.serie:19s} |')
 
 
+def hook_ayudantes(dic_encriptado):
+    return [AyudanteTareo(desencriptar(n), *list(map(desencriptar, v)))
+            for n, v in dic_encriptado.items()]
+
 def cargar_ayudantes(ruta):
-    # Completa esta función
-    pass
+    with open(ruta, 'r', encoding='utf-8') as file:
+        return json.load(file, object_hook=hook_ayudantes)
+
 
 
 if __name__ == '__main__':
