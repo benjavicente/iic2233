@@ -44,6 +44,6 @@ if __name__ == '__main__':
     for ayudante in cargar_ayudantes('tareas.json'):
         print(ayudante)
         if ayudante.usuario == 'lily416':
-            respuesta = f"La contraseña de lily416 es '{ayudante.pokemon}#{ayudante.serie}''"
+            respuesta = f"La contraseña de lily416 es '{ayudante.pokemon}#{ayudante.serie}'"
     print('╚══════════════════╧═══════════════╧════════════╧══════════════╧═════════════════════╝')
     print(respuesta.center(86))

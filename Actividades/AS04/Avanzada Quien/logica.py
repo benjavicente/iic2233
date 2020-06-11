@@ -19,6 +19,7 @@ class AdivinaQuien(QObject):
         self.data = [x.split(',') for x in data]
 
     def revisar_usuario(self, usuario, clave):
+        # Esto podría usar diccionarios como switch cases (。_。)
         if usuario == self.data[0][0]:
             if clave == self.data[0][1]:
                 path = os.path.join('sprites', 'dani.png')
