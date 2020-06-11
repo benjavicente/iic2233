@@ -10,15 +10,18 @@ class EquipoDocencia:
     # Aquí se filtra la lista del objeto al deserializarlo
     def __setstate__(self, estado):
         # Completar
-
-        pass
+        self.__dict__ = estado
+        for ayudante in self.ayudantes_normales:
+            if ayudante.cargo == 'Jefe':
+                self.ayudantes_normales.remove(ayudante)
+                self.ayudante_jefe = ayudante
+                break
 
 
 # Aquí se carga la instancia de EquipoDocencia
 def cargar_instancia(ruta):
-    # Completar
-
-    pass
+    with open(ruta, 'rb') as file:
+        return pickle.load(file)
 
 
 # ETAPA DE GUARDADO #
@@ -30,8 +33,7 @@ class Ayudante:
         self.pizza_favorita = pizza_favorita
 
     def __repr__(self):
-        mensaje = f"¡Hola! soy {self.usuario_github} y tengo el cargo de {self.cargo}"
-        return mensaje
+        return f"¡Hola! soy {self.usuario_github} y tengo el cargo de {self.cargo}"
 
 
 class AyudanteJefe(Ayudante):
@@ -43,12 +45,16 @@ class AyudanteJefe(Ayudante):
 
     # Aquí se definen cambios que sólo se afectan a AyudanteJefe
     def __getstate__(self):
-        # Completar
-
-        pass
+        state = self.__dict__.copy()
+        state.update({
+            'pizza_favorita': None,
+            'trabajo_restante': 'Nada',
+            'experto': 'TortugaNinja'
+        })
+        return state
 
 # Aquí se guarda instancia de EquipoDocencia
-def guardar_instancia(ruta, instancia_equipo_docencia): 
-    # Completar
-
-    pass
+def guardar_instancia(ruta, instancia_equipo_docencia):
+    with open(ruta, 'wb') as file:
+        pickle.dump(instancia_equipo_docencia, file)
+    return True
