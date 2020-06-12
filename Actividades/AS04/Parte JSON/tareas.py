@@ -23,8 +23,8 @@ class AyudanteTareo:
         self.serie = serie
 
     def __repr__(self):
-        return (f'| {self.usuario:16s} | {self.cargo:13s} | {self.pokemon:10s} |'
-                f' {self.pizza:12s} | {self.serie:19s} |')
+        return (f'║ {self.usuario:16s} │ {self.cargo:13s} │ {self.pokemon:10s} │'
+                f' {self.pizza:12s} │ {self.serie:19s} ║')
 
 
 def hook_ayudantes(dic_encriptado):
@@ -38,7 +38,12 @@ def cargar_ayudantes(ruta):
 
 
 if __name__ == '__main__':
-    print(f'| {"Usuario":16s} | {"Cargo":13s} | {"Pokemon":10s} | {"Pizza":12s} | {"Serie":19s} |')
-    print('--------------------------------------------------------------------------------------')
+    print('╔══════════════════╤═══════════════╤════════════╤══════════════╤═════════════════════╗')
+    print(f'║ {"Usuario":16s} │ {"Cargo":13s} │ {"Pokemon":10s} │ {"Pizza":12s} │ {"Serie":19s} ║')
+    print('╟──────────────────┼───────────────┼────────────┼──────────────┼─────────────────────╢')
     for ayudante in cargar_ayudantes('tareas.json'):
         print(ayudante)
+        if ayudante.usuario == 'lily416':
+            respuesta = f"La contraseña de lily416 es '{ayudante.pokemon}#{ayudante.serie}'"
+    print('╚══════════════════╧═══════════════╧════════════╧══════════════╧═════════════════════╝')
+    print(respuesta.center(86))

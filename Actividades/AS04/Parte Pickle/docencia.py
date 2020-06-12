@@ -59,7 +59,7 @@ if __name__ == "__main__":
                     parte_1 = jefe_deserializado.carrera
                     parte_2 = jefe_deserializado.pokemon_favorito
                     print(f"El usuario para el jefe de docencia es: {usuario}")
-                    print(f"La contreseña para el jefe de docencia es: {parte_1}+{parte_2}")
+                    print(f"La contraseña para el jefe de docencia es: '{parte_1}+{parte_2}'")
                 else:
                     print("No has retornado True al guardar la instancia")
             else:
