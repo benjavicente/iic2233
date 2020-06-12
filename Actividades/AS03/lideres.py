@@ -8,10 +8,10 @@ from cargar_tweets import cargar_tweets
 from parametros import ENOJO_INICIAL, PROBABILIDAD_DESAPARECER, PROBABILIDAD_HACKEO
 
 # Lock para evitar que lideres se manden tweets al mismo tiempo
-lock_tweet_lideres = Lock()
 
 
 class LiderMundial(Thread):
+    lock_tweet_lideres = Lock()
 
     def __init__(self, nombre, tweets, enojo, reloj):
         # Completar
@@ -43,7 +43,7 @@ class LiderMundial(Thread):
 
     def twitear(self):
         # Completar o modificar si es necesario
-        with lock_tweet_lideres:
+        with self.lock_tweet_lideres:
             tweet = random.choice(self.tweets)  # Named tuple
             print(f'{self.nombre}: {tweet.texto}')
             self.enojo += tweet.enojo
@@ -65,12 +65,12 @@ class Hacker(LiderMundial, Thread):
         while self.reloj.quedan_lideres:
             # Completar
             if PROBABILIDAD_HACKEO > random.random() and self.trumpzini.puede_twitear:
-                with lock_tweet_lideres:
+                with self.trumpzini.lock_tweet_lideres:
                     self.trumpzini.puede_twitear = False
                     print(f'{self.nombre} ha hackeado el teléfono de Trumpzini!')
                     print('Trumpzini ya no podrá seguir twiteando :(')
             if PROBABILIDAD_DESAPARECER > random.random() and self.dr_pinto.puede_twitear:
-                with lock_tweet_lideres:
+                with self.dr_pinto.lock_tweet_lideres:
                     self.dr_pinto.puede_twitear = False
                     print(f'{self.nombre} ha boicoteado la cirugía de Dr. Pin Tong-Um!')
                     print('Dr. Pin Tong-Um ya no podrá seguir twiteando :(')
