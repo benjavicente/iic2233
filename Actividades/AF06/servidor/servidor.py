@@ -3,8 +3,6 @@ import json
 import socket
 from color_canvas import Canvas
 
-import random
-
 class Servidor:
 
     def __init__(self, host, port):
@@ -48,7 +46,7 @@ class Servidor:
         Permite que el servidor maneje un solo cliente durante su ejecución.
         """
         # ============================= COMPLETAR =============================
-        socket_cliente, direc = self.socket_server.accept()
+        socket_cliente, (ip, direc) = self.socket_server.accept()
         self.sockets_clientes[direc] = socket_cliente
         print('un cliente se ha conectado!')
         self.escuchar_cliente(socket_cliente, direc)
@@ -62,35 +60,30 @@ class Servidor:
         Debes procesar el mensaje enviado y generar una respuesta que
         posteriormente será enviada.
         """
-        random_id = random.random()
-        print(random_id, 'step 0')
         try:
             # =========================== COMPLETAR ===========================
-            data = socket_cliente.recv(5)
-            largo_restante = int.from_bytes(data, byteorder='little')
-            mensaje = bytearray()
-            while largo_restante > 0:
-                largo = min(largo_restante, 128)
-                mensaje += self.sockets_clientes[id_cliente].recv(largo)
-                largo_restante -= 128
-            info = json.loads(mensaje)
-            if info['comando'] == "nuevo":
-                tablero = self.canvas.obtener_tablero()
-                self.enviar_respuesta(socket_cliente, tablero)
-                print(random_id, 'step 1')
-                # > Recuerda que return termina la ejecución de una función,
-                # > por lo tanto, no podrás llegar al finally.
-                return  # hmm
-            elif info['comando'] == "pintar":
-                self.canvas.pintar_pixel(info)
-                return
-            elif info['comando'] == "cerrar":
-                pass
+            while True:
+                data = socket_cliente.recv(5)
+                largo_restante = int.from_bytes(data, byteorder='little')
+                mensaje = bytearray()
+                while largo_restante > 0:
+                    largo = min(largo_restante, 128)
+                    mensaje += self.sockets_clientes[id_cliente].recv(largo)
+                    largo_restante -= 128
+                info = json.loads(mensaje.decode('utf-8'))
+                if info['comando'] == "nuevo":
+                    tablero = self.canvas.obtener_tablero()
+                    self.enviar_respuesta(socket_cliente, tablero)
+                elif info['comando'] == "pintar":
+                    self.canvas.pintar_pixel(info)
+                    tablero = self.canvas.obtener_tablero()
+                    self.enviar_respuesta(socket_cliente, tablero)
+                elif info['comando'] == "cerrar":
+                    break
             # =================================================================
         except ConnectionResetError:
             print("Error de conexión con el cliente!")
         finally:
-            print(random_id, 'step 2')  # terminado?
             mensaje = {"cerrar" : True}
             self.enviar(socket_cliente, mensaje)
             socket_cliente.close()

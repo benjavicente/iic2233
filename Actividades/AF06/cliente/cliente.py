@@ -57,14 +57,15 @@ class Cliente(QObject):
         try:
             # =========================== COMPLETAR ===========================
             print('escuchando')
-            largo_restante = int.from_bytes(self.socket_cliente.recv(5), byteorder='little')
-            mensaje = bytearray()
-            while largo_restante > 0:
-                lago_chunk = min(largo_restante, 128)
-                mensaje += self.socket_cliente.recv(lago_chunk)
-                largo_restante -= 128
-            info = json.loads(mensaje)
-            self.senal_a_interfaz.emit(info)
+            while True:
+                largo_restante = int.from_bytes(self.socket_cliente.recv(5), byteorder='little')
+                mensaje = bytearray()
+                while largo_restante > 0:
+                    lago_chunk = min(largo_restante, 128)
+                    mensaje += self.socket_cliente.recv(lago_chunk)
+                    largo_restante -= 128
+                info = json.loads(mensaje)
+                self.senal_a_interfaz.emit(info)
             # =================================================================
         except (ConnectionResetError, json.JSONDecodeError):
             # En caso de un error en la conexión se informa y se cierra la
