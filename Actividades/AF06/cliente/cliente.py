@@ -56,9 +56,15 @@ class Cliente(QObject):
         """
         try:
             # =========================== COMPLETAR ===========================
-
-            pass
-
+            print('escuchando')
+            largo_restante = int.from_bytes(self.socket_cliente.recv(5, byteorder='little'))
+            mensaje = bytearray()
+            while largo_restante > 0:
+                lago_chunk = min(largo_restante, 128)
+                mensaje += self.socket_cliente.recv(lago_chunk)
+                largo_restante -= 128
+            info = json.loads(mensaje)
+            self.senal_a_interfaz(info)
             # =================================================================
         except (ConnectionResetError, json.JSONDecodeError):
             # En caso de un error en la conexión se informa y se cierra la
@@ -76,9 +82,10 @@ class Cliente(QObject):
         El diccionario debe ser codificado y enviado al servidor.
         """
         # ============================== COMPLETAR ============================
-
-        pass
-
+        codificado = mensaje.encode()
+        largo = len(mensaje).to_bytes(byteorder="little")
+        self.socket_cliente.send(largo)
+        self.socket_cliente.send(codificado)
         # =====================================================================
 
     def enviar_a_servidor(self, dict_):
