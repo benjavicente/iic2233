@@ -128,16 +128,13 @@ class Servidor:
         """
         # ============================= COMPLETAR =============================
         while True:
-            print('esperando clientes')
             socket_cliente, (ip, direc) = self.socket_server.accept()
-            print('cliente conectado', direc)
             self.sockets_clientes[direc] = socket_cliente
             thread_extra = threading.Thread(
                 target=self.escuchar_cliente,
                 args=[socket_cliente, direc]
             )
             thread_extra.start()
-            print('thread aparte')
         # =====================================================================
 
     def enviar_a_todos(self, mensaje):
