@@ -78,17 +78,19 @@ class Servidor:
                 tablero = self.canvas.obtener_tablero()
                 self.enviar_respuesta(socket_cliente, tablero)
                 print(random_id, 'step 1')
-                return
+                # > Recuerda que return termina la ejecución de una función,
+                # > por lo tanto, no podrás llegar al finally.
+                return  # hmm
             elif info['comando'] == "pintar":
                 self.canvas.pintar_pixel(info)
                 return
             elif info['comando'] == "cerrar":
-                self.sockets_clientes[id_cliente].close()
+                pass
             # =================================================================
         except ConnectionResetError:
             print("Error de conexión con el cliente!")
         finally:
-            print(random_id, 'step 2')
+            print(random_id, 'step 2')  # terminado?
             mensaje = {"cerrar" : True}
             self.enviar(socket_cliente, mensaje)
             socket_cliente.close()

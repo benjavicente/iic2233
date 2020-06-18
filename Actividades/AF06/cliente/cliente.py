@@ -64,7 +64,7 @@ class Cliente(QObject):
                 mensaje += self.socket_cliente.recv(lago_chunk)
                 largo_restante -= 128
             info = json.loads(mensaje)
-            self.senal_a_interfaz(info)
+            self.senal_a_interfaz.emit(info)
             # =================================================================
         except (ConnectionResetError, json.JSONDecodeError):
             # En caso de un error en la conexión se informa y se cierra la
