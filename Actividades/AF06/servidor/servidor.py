@@ -3,6 +3,7 @@ import json
 import socket
 from color_canvas import Canvas
 
+import random
 
 class Servidor:
 
@@ -61,9 +62,10 @@ class Servidor:
         Debes procesar el mensaje enviado y generar una respuesta que
         posteriormente será enviada.
         """
+        random_id = random.random()
+        print(random_id, 'step 0')
         try:
             # =========================== COMPLETAR ===========================
-            print('step 0')
             data = socket_cliente.recv(5)
             largo_restante = int.from_bytes(data, byteorder='little')
             mensaje = bytearray()
@@ -75,11 +77,10 @@ class Servidor:
             if info['comando'] == "nuevo":
                 tablero = self.canvas.obtener_tablero()
                 self.enviar_respuesta(socket_cliente, tablero)
-                print('step 1')
+                print(random_id, 'step 1')
                 return
             elif info['comando'] == "pintar":
                 self.canvas.pintar_pixel(info)
-                print('step 1')
                 return
             elif info['comando'] == "cerrar":
                 self.sockets_clientes[id_cliente].close()
@@ -87,7 +88,7 @@ class Servidor:
         except ConnectionResetError:
             print("Error de conexión con el cliente!")
         finally:
-            print('step 2')
+            print(random_id, 'step 2')
             mensaje = {"cerrar" : True}
             self.enviar(socket_cliente, mensaje)
             socket_cliente.close()
