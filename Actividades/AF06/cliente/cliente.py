@@ -57,7 +57,7 @@ class Cliente(QObject):
         try:
             # =========================== COMPLETAR ===========================
             print('escuchando')
-            largo_restante = int.from_bytes(self.socket_cliente.recv(5, byteorder='little'))
+            largo_restante = int.from_bytes(self.socket_cliente.recv(5), byteorder='little')
             mensaje = bytearray()
             while largo_restante > 0:
                 lago_chunk = min(largo_restante, 128)
@@ -82,8 +82,8 @@ class Cliente(QObject):
         El diccionario debe ser codificado y enviado al servidor.
         """
         # ============================== COMPLETAR ============================
-        codificado = mensaje.encode()
-        largo = len(mensaje).to_bytes(byteorder="little")
+        codificado = json.dumps(mensaje).encode('utf-8')
+        largo = len(codificado).to_bytes(5, byteorder="little")
         self.socket_cliente.send(largo)
         self.socket_cliente.send(codificado)
         # =====================================================================

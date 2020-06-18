@@ -47,9 +47,10 @@ class Servidor:
         Permite que el servidor maneje un solo cliente durante su ejecución.
         """
         # ============================= COMPLETAR =============================
-        
-        pass
-
+        socket_cliente, direc = self.socket_server.accept()
+        self.sockets_clientes[direc] = socket_cliente
+        print('un cliente se ha conectado!')
+        self.escuchar_cliente(socket_cliente, direc)
         # =====================================================================
 
     def escuchar_cliente(self, socket_cliente, id_cliente=0):
@@ -62,13 +63,31 @@ class Servidor:
         """
         try:
             # =========================== COMPLETAR ===========================
-            
-            pass
-            
+            print('step 0')
+            data = socket_cliente.recv(5)
+            largo_restante = int.from_bytes(data, byteorder='little')
+            mensaje = bytearray()
+            while largo_restante > 0:
+                largo = min(largo_restante, 128)
+                mensaje += self.sockets_clientes[id_cliente].recv(largo)
+                largo_restante -= 128
+            info = json.loads(mensaje)
+            if info['comando'] == "nuevo":
+                tablero = self.canvas.obtener_tablero()
+                self.enviar_respuesta(socket_cliente, tablero)
+                print('step 1')
+                return
+            elif info['comando'] == "pintar":
+                self.canvas.pintar_pixel(info)
+                print('step 1')
+                return
+            elif info['comando'] == "cerrar":
+                self.sockets_clientes[id_cliente].close()
             # =================================================================
         except ConnectionResetError:
             print("Error de conexión con el cliente!")
         finally:
+            print('step 2')
             mensaje = {"cerrar" : True}
             self.enviar(socket_cliente, mensaje)
             socket_cliente.close()
@@ -98,9 +117,10 @@ class Servidor:
         y enviado al socket.
         """
         # ============================= COMPLETAR =============================
-        
-        pass
-
+        codificado = json.dumps(mensaje).encode('utf-8')
+        largo = len(codificado).to_bytes(5, byteorder='little')
+        socket_cliente.send(largo)
+        socket_cliente.send(codificado)
         # =====================================================================
 
     # =========================================================================
