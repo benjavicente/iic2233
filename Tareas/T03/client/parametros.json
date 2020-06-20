@@ -1,5 +1,5 @@
 {
-    "host": 45743,
-    "port": "Pavillon-Benja",
+    "host": "Pavilion-Benja",
+    "port": 45743,
     "sprites": "simple"
 }

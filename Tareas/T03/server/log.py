@@ -5,7 +5,7 @@ class Log:
     size_entity = 15
     size_event = 20
     size_details = 60
-    print_kwargs = {}
+    print_kwargs = {'flush': True}
 
     def __init__(self):
         print('Iniciando log')
@@ -21,14 +21,15 @@ class Log:
         )
         print(title, h_bar, sep='\n', **self.print_kwargs)
 
-    def add(self, event: str, entity: str = 'server', details: str = '') -> None:
+    def __call__(self, event: str, entity: str = 'server', details: str = '') -> None:
         '''
         Muestra en la consola información
         acciones registradas por el servidor
         '''
+        # TODO: ver si se puede usar format
         mesage = (
-            ' ' + entity.ljust(self.size_entity)
-            + '│ ' + event.ljust(self.size_event)
-            + '│ ' + details.ljust(self.size_details)
+            ' ' + str(entity).ljust(self.size_entity)
+            + '│ ' + str(event).ljust(self.size_event)
+            + '│ ' + str(details).ljust(self.size_details)
         )
         print(mesage, **self.print_kwargs)
