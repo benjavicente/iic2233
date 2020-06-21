@@ -7,6 +7,7 @@ from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QLineEdit,
                              QMainWindow, QPushButton, QVBoxLayout, QWidget)
+from PyQt5.uic import loadUi
 
 
 class Game(QApplication):
@@ -16,11 +17,11 @@ class Game(QApplication):
         super().__init__(sys.argv)
         # Pixelmaps
         self.logo = QPixmap(path.join(*paths['logo']))
-        # Crea las ventanas con un tamaño adecuado
-        screen = self.primaryScreen()
-        window_size = screen.availableSize() / 2
-        self.initial_window = InitialWindow(window_size, self.logo)
-        self.game_window = GameWindow(window_size, self.logo)
+        # Paths
+        ui_path = path.join(*paths['ui'])
+        # Crea las ventanas
+        self.initial_window = InitialWindow(self.logo)
+        self.game_window = GameWindow(ui_path)
         # Aplica el estilo a las ventanas
         with open(path.join(*paths['theme'])) as theme_file:
             theme = theme_file.read()
@@ -33,27 +34,15 @@ class Game(QApplication):
 
 
 
-class Window(QMainWindow):
-    '''Clase abstractas para las ventanas'''
-    def __init__(self, name, size, pix_logo):
-        super().__init__()
-        self.setMaximumSize(size)
-        self.setObjectName(type(self).__name__)
-        self.setWindowTitle(name)
-        self.pix_logo = pix_logo
-        self._set_up()
-
-    def _set_up(self):
-        raise NotImplementedError
-
-
-
-class InitialWindow(Window):
+class InitialWindow(QMainWindow):
     '''Ventana que se muestra al iniciar el programa'''
     signal_join = pyqtSignal(dict)
-
-    def __init__(self, *args):
-        super().__init__('Ventana Inicial', *args)
+    def __init__(self, pix_logo):
+        super().__init__()
+        self.setObjectName(type(self).__name__)
+        self.setWindowTitle('Ventana Inicial')
+        self.pix_logo = pix_logo
+        self._set_up()
 
     def _set_up(self):
         '''Agrega los elementos gráficos a la ventana'''
@@ -114,22 +103,25 @@ class InitialWindow(Window):
         layout = self.centralWidget().layout()
         layout.addWidget(self.wait_label, alignment=Qt.AlignCenter)
         players_layout = QVBoxLayout()
+        # TODO
 
 
 
-class GameWindow(Window):
+class GameWindow(QMainWindow):
     '''Ventana principal dell juego'''
-    def __init__(self, *args):
-        super().__init__('DCCuadrado', *args)
+    def __init__(self, ui_path):
+        super().__init__()
+        loadUi(ui_path, self)
 
     def _set_up(self):
         pass
 
 
 if __name__ == "__main__":
+    # Debe ejecutarse a nivel de client
     import json
 
-    with open('../parametros.json') as file:
+    with open('parametros.json') as file:
         content = json.load(file)
     DCC = Game(content['paths'])
     DCC.run()

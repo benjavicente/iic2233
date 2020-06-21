@@ -3,6 +3,7 @@
     "port": 45743,
     "paths": {
         "logo": ["frontend", "logo.png"],
-        "theme":  ["frontend", "theme.css"]
+        "theme": ["frontend", "theme.css"],
+        "ui": ["frontend", "game_window.ui"]
     }
 }

@@ -1,3 +1,4 @@
+/* Pantalla inicial */
 #InitialWindow{
     background: black;
 }
@@ -8,4 +9,39 @@
 #wait_label{
     color: white;
     font-size: 30px;
+}
+
+/* Pantalla del juego */
+#GameWindow{
+    background: black;
+}
+#Player0Frame,
+#Player1Frame,
+#Player2Frame,
+#Player3Frame{
+    background: rgb(37, 37, 37);
+}
+#GameInfoFrame{
+    background: rgb(37, 37, 37);
+}
+#CardDeck,
+#CardPool{
+    background: rgb(131, 131, 131);
+}
+#Chat{
+    color: rgb(182, 182, 182);
+    background: transparent;
+    border: 0;
+}
+#Chat QScrollBar{
+    background: black;
+    width: 10px;
+    border: 0;
+    margin: 0;
+    border-radius: 5px;
+}
+#Chat QScrollBar::handle{
+    background: rgb(95, 95, 95);
+    color: red;
+    border-radius: 5px;
 }

@@ -1,3 +1,5 @@
+'''Jugador de DCCuadrádo'''
+
 import json
 
 from backend.client import Client
@@ -11,5 +13,7 @@ GAME = Game(data['paths'])
 CLIENT = Client(data['host'], data['port'])
 
 GAME.initial_window.signal_join.connect(CLIENT.send)
+CLIENT.connect()
+GAME.game_window.show()  #! Temporal
 
 GAME.run()

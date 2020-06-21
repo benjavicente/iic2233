@@ -14,9 +14,15 @@ class Client(QObject):
         super().__init__()
         # Creación del socket
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # Se conecta al servidor
+        # Datos del servidor
+        self.host = host
+        self.port = port
+        self.connected = False
+
+    def connect(self):
+        '''Se conecta al servidor'''
         try:
-            self.socket.connect((host, port))
+            self.socket.connect((self.host, self.port))
             # Se empieza a escuchar al servidor
             thread = threading.Thread(target=self.listen, daemon=True)
             self.connected = True
