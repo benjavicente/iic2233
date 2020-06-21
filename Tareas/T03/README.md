@@ -2,17 +2,17 @@
 
 ![DCCuadrado](.readme/logo.png)
 
-- [Importante :heavy_exclamation_mark:](#importante-%e2%9d%97%ef%b8%8f)
-- [Ejecución :computer:](#ejecuci%c3%b3n-%f0%9f%92%bb)
-- [Supuestos, aclaraciones y consideraciones :thinking:](#supuestos-aclaraciones-y-consideraciones-%f0%9f%a4%94)
-  - [Envío de información hacia el servidor :penguin:](#env%c3%ado-de-informaci%c3%b3n-hacia-el-servidor-%f0%9f%90%a7)
-  - [Envío de información hacia el cliente :computer:](#env%c3%ado-de-informaci%c3%b3n-hacia-el-cliente-%f0%9f%92%bb)
-- [Librerías :books:](#librer%c3%adas-%f0%9f%93%9a)
-  - [Librerías externas utilizadas :clipboard:](#librer%c3%adas-externas-utilizadas-%f0%9f%93%8b)
-  - [Librerías propias :pencil:](#librer%c3%adas-propias-%f0%9f%93%9d)
-- [Código externo utilizado :package:](#c%c3%b3digo-externo-utilizado-%f0%9f%93%a6)
-- [Características implementadas :wrench:](#caracter%c3%adsticas-implementadas-%f0%9f%94%a7)
-- [Notas adicionales :moyai:](#notas-adicionales-%f0%9f%97%bf)
+- [Importante :heavy_exclamation_mark:](#Importante-%E2%9D%97%EF%B8%8F)
+- [Ejecución :computer:](#Ejecuci%C3%B3n-%F0%9F%92%BB)
+- [Supuestos, aclaraciones y consideraciones :thinking:](#Supuestos-aclaraciones-y-consideraciones-%F0%9F%A4%94)
+  - [Envío de información hacia el servidor :penguin:](#Env%C3%ADo-de-informaci%C3%B3n-hacia-el-servidor-%F0%9F%90%A7)
+  - [Envío de información hacia el cliente :computer:](#Env%C3%ADo-de-informaci%C3%B3n-hacia-el-cliente-%F0%9F%92%BB)
+- [Librerías :books:](#Librer%C3%ADas-%F0%9F%93%9A)
+  - [Librerías externas utilizadas :clipboard:](#Librer%C3%ADas-externas-utilizadas-%F0%9F%93%8B)
+  - [Librerías propias :pencil:](#Librer%C3%ADas-propias-%F0%9F%93%9D)
+- [Código externo utilizado :package:](#C%C3%B3digo-externo-utilizado-%F0%9F%93%A6)
+- [Características implementadas :wrench:](#Caracter%C3%ADsticas-implementadas-%F0%9F%94%A7)
+- [Notas adicionales :moyai:](#Notas-adicionales-%F0%9F%97%BF)
 
 ## Importante :heavy_exclamation_mark:
 
@@ -24,10 +24,8 @@ Los archivos a ejecutar son para cliente y servidor son
 
 ## Supuestos, aclaraciones y consideraciones :thinking:
 
-### Envío de información hacia el servidor :penguin:
-
-Al enviar información desde el servidor, se envía un
-`json` serializado con el siguiente formato:
+Al enviar información desde el servidor y hacia el servidor,
+se envía un `json` serializado con el siguiente formato:
 
 ```py
 n_obj + (id_obj1 + largo_obj1 + obj_1) + (id_obj2 + largo_obj2 + obj_2) + ...
@@ -42,17 +40,38 @@ El cual se almacena como:
 }
 ```
 
-donde los ids corresponden a:
+`n_obj` es un `int` de 2 bytes, `id_objX` un `int` de 4 bytes,
+`largo_objX` un `int = L` de 4 bytes y `obj_X` un objeto de L bytes.
 
-| id | tipo objecto    | objeto  |uso     |
+### Envío de información del servidor al cliente :penguin:
+
+| id | tipo objecto    | objeto  | uso     |
 | -: | :-------------: | :-----: | :------ |
-|  0 | tipo de acción  | `int`   | siempre |
+|  0 | tipo de acción  | `str`   | siempre |
 |  1 | color de carta  | `str`   | al actualizar un mazo, al robar o actualizar el pozo |
 |  2 | número de carta | `str`   | al actualizar un mazo, al robar o actualizar el pozo |
 |  3 | imagen de carta | ?       | al actualizar un mazo, al robar o actualizar el pozo |
-|  4 | jugador         | `dict`  | al entrar un jugador, añadiéndolo en el cliente  |
+|  4 | info jugadores  | `dict`  | al entrar un jugador, añadiéndolo en el cliente  |
 
-### Envío de información hacia el cliente :computer:
+El tipo de acción puede ser:
+
+<!-- TODO -->
+1. Un jugador jugó una carta, actualizándose el pozo.
+
+### Envío de información del cliente al servidor :computer:
+
+| id | tipo objecto       | objeto  | uso     |
+| -: | :----------------: | :-----: | :------ |
+|  0 | tipo de acción     | `str`   | siempre |
+|  1 | nombre del jugador | `str`   | al unirse |
+|  2 | carta seleccionada | `str`   | al elegir carta en el turno |
+
+<!-- TODO -->
+El tipo de acción puede ser:
+
+1. El jugador jugó una carta.
+2. El jugador entró al juego, entregando al servidor su información.
+
 
 ## Librerías :books:
 

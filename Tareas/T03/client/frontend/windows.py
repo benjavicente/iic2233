@@ -1,6 +1,7 @@
 '''Ventanas del juego'''
 
 import sys
+from os import path
 
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap
@@ -14,14 +15,14 @@ class Game(QApplication):
         sys.__excepthook__ = lambda t, v, trace: print(t, v, trace, sep="\n")
         super().__init__(sys.argv)
         # Pixelmaps
-        self.logo = QPixmap(paths['logo'])
+        self.logo = QPixmap(path.join(*paths['logo']))
         # Crea las ventanas con un tamaño adecuado
         screen = self.primaryScreen()
         window_size = screen.availableSize() / 2
         self.initial_window = InitialWindow(window_size, self.logo)
         self.game_window = GameWindow(window_size, self.logo)
         # Aplica el estilo a las ventanas
-        with open('theme.css') as theme_file:
+        with open(path.join(*paths['theme'])) as theme_file:
             theme = theme_file.read()
         self.setStyleSheet(theme)
 
@@ -82,7 +83,7 @@ class InitialWindow(Window):
         self.join = QPushButton(self.name_entry)
         self.join.setText('Entrar')
         self.join.setObjectName('join')
-        self.join.clicked.connect(self.action_join)
+        self.join.clicked.connect(self.action_joining)
         entry_layout.addWidget(self.join)
 
         #--> Sala de espera
@@ -90,20 +91,19 @@ class InitialWindow(Window):
         self.wait_label = QLabel('Jugadores conectados')
         self.wait_label.setObjectName('wait_label')
 
-    def action_join(self):
+    def action_joining(self):
         '''Acción al entrar al servidor'''
         # TODO verificación de usuario
         self.signal_join.emit(
             {
-                'name': self.name.text()
+                0: 'joining',
+                1: self.name.text()
             }
         )
         self.name_entry.deleteLater()
         self.setWindowTitle('Entrando a la sala')
-        #! TEMOPAL
-        self.action_wait()
 
-    def action_wait(self, *args):
+    def action_waiting(self, *args):
         '''Acción que muestra la sala de espera'''
         # TODO: debe actualizarse los nombres de los labels
         #* Podría entregarse un diccionario con la cantidad e jugadores

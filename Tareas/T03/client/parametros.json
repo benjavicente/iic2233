@@ -2,6 +2,7 @@
     "host": "Pavilion-Benja",
     "port": 45743,
     "paths": {
-        "logo": "logo.png"
+        "logo": ["frontend", "logo.png"],
+        "theme":  ["frontend", "theme.css"]
     }
 }

@@ -1,7 +1,9 @@
 '''Módulo que maneja los logs del servidor'''
 
 class Log:
-    '''Clase que administra los logs'''
+    '''
+    Clase que administra los logs
+    '''
     size_entity = 15
     size_event = 20
     size_details = 60
