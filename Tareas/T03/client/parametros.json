@@ -1,5 +1,7 @@
 {
     "host": "Pavilion-Benja",
     "port": 45743,
-    "sprites": "simple"
+    "paths": {
+        "logo": "logo.png"
+    }
 }

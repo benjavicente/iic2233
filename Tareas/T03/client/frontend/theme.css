@@ -1,0 +1,11 @@
+#InitialWindow{
+    background: black;
+}
+#join{
+    color: yellow;
+    background: red;
+}
+#wait_label{
+    color: white;
+    font-size: 30px;
+}
