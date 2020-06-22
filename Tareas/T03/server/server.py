@@ -9,15 +9,20 @@ from protocol import recv_data, send_data
 class Server:
     '''El servidor del juego'''
     def __init__(self, host, port):
+        self.host = host
+        self.port = port
         # Se crea un socket
         self.socket = Socket(IPv4, TCP)
-        # Se abre el socket
-        self.socket.bind((host, port))
-        self.socket.listen()
         # Se crea un Log
         self.log = Log()
         # Se crea un diccionario para almacenar jugadores
-        self.players = dict()
+        self.clients = dict()
+
+    def run(self):
+        '''Corre el servidor'''
+        # Se abre el socket
+        self.socket.bind((self.host, self.port))
+        self.socket.listen()
         # Se empieza a aceptar conesciones
         thread = Thread(target=self.listen_new, daemon=True)
         thread.start()
@@ -33,7 +38,7 @@ class Server:
             self.log('esperando conexión')
             client, (ip, direc) = self.socket.accept()
             self.log('conectado con cliente', details=f'id del cliente: {direc}')
-            self.players[direc] = {'socket': client}
+            self.clients[direc] = {'socket': client}
             thread = Thread(target=self.listen_active, daemon=True, args=(client, direc))
             thread.start()
 
@@ -45,7 +50,7 @@ class Server:
                 self.log('datos recibidos', id_, f'Acción a realizar: {data[0]}')
                 # Se toman las acciones necesarias
                 if data[0] == 'joining':
-                    self.players[id_]['name'] = data[4]
+                    self.clients[id_]['name'] = data[4]
                     self.log(data[0], id_, f'se ha unido {data[4]}')
 
         except ConnectionError:
@@ -63,7 +68,7 @@ class Server:
         Manda un json serializado a todos los jugadores
         Puede excluirse a un jugador
         '''
-        for id_, client_socket in self.players.values():
+        for id_, client_socket in self.clients.values():
             if exclude and id_ != exclude:
                 self.send(client_socket, data, id_)
 
