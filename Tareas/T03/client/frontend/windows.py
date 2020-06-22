@@ -96,7 +96,7 @@ class InitialWindow(QMainWindow):
         self.signal_join.emit(
             {
                 0: 'joining',
-                1: self.name.text()
+                4: self.name.text()
             }
         )
         self.setWindowTitle('Cargando')
@@ -134,7 +134,6 @@ class GameWindow(QMainWindow):
 if __name__ == "__main__":
     # Debe ejecutarse a nivel de client
     import json
-
     with open('parametros.json') as file:
         content = json.load(file)
     DCC = Game(content['paths'])

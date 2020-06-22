@@ -52,6 +52,6 @@ if __name__ == "__main__":
     import json
     with open('client\\parametros.json', encoding='utf-8') as file:
         LOADED_DATA = json.load(file)
-    CLIENT = Client(**LOADED_DATA)
+    CLIENT = Client(LOADED_DATA['host'], LOADED_DATA['port'])
     while True:  # Este ciclo debe estar integrado con QApplication
         time.sleep(60)

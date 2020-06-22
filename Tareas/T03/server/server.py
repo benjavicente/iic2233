@@ -46,7 +46,7 @@ class Server:
                 # Se toman las acciones necesarias
                 if data[0] == 'joining':
                     self.players[id_]['name'] = data[4]
-                    self.log(data[4], id_, f'se ha unido {data[4]}')
+                    self.log(data[0], id_, f'se ha unido {data[4]}')
 
         except ConnectionError:
             print(f'Error en la coneción del cliente {id_}')
@@ -73,6 +73,6 @@ if __name__ == "__main__":
     import json
     with open('parametros.json', encoding='utf-8') as file:
         LOADED_DATA = json.load(file)
-    SERVER = Server(**LOADED_DATA)
+    SERVER = Server(LOADED_DATA['host'], LOADED_DATA['port'])
     while True:  # Este ciclo debe estar integrado con QApplication
         time.sleep(60)

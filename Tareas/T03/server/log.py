@@ -5,7 +5,7 @@ class Log:
     Clase que administra los logs
     '''
     size_entity = 15
-    size_event = 20
+    size_event = 25
     size_details = 60
     print_kwargs = {'flush': True}
 
