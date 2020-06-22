@@ -1,18 +1,16 @@
 '''Módulo que posee la clase Server que administra el servidor'''
 
-import socket
-import threading
-import json
-import pickle
+from socket import socket as Socket, AF_INET as IPv4, SOCK_STREAM as TCP
+from threading import Thread
 
 from log import Log
 from protocol import recv_data, send_data
 
 class Server:
     '''El servidor del juego'''
-    def __init__(self, host, port, **kwargs):
+    def __init__(self, host, port):
         # Se crea un socket
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket = Socket(IPv4, TCP)
         # Se abre el socket
         self.socket.bind((host, port))
         self.socket.listen()
@@ -21,7 +19,7 @@ class Server:
         # Se crea un diccionario para almacenar jugadores
         self.players = dict()
         # Se empieza a aceptar conesciones
-        thread = threading.Thread(target=self.listen_new, daemon=True)
+        thread = Thread(target=self.listen_new, daemon=True)
         thread.start()
 
     def __del__(self):
@@ -35,21 +33,12 @@ class Server:
             self.log('esperando conexión')
             client, (ip, direc) = self.socket.accept()
             self.log('conectado con cliente', details=f'id del cliente: {direc}')
-            #* Por lo que tengo entendido, direc es garantizado
-            #* de ser único en una red local (puedo probar con el ip también)
-            self.players[direc] = {
-                'socket': client
-            }
-            thread = threading.Thread(
-                target=self.listen_active,
-                daemon=True, args=(client, direc)
-            )
-            self._update_players()
+            self.players[direc] = {'socket': client}
+            thread = Thread(target=self.listen_active, daemon=True, args=(client, direc))
             thread.start()
 
     def listen_active(self, client_socket, id_: int = 0):
         '''Escucha activamente a un socket dl servidor'''
-        l_socket = client_socket
         try:
             while True:  # Parte igual client.py
                 data = recv_data(client_socket)
@@ -78,13 +67,10 @@ class Server:
             if exclude and id_ != exclude:
                 self.send(client_socket, data, id_)
 
-    def _update_players(self):
-        '''Actualiza la información de los jugadores en tódos los clientes'''
-        pass
-
 
 if __name__ == "__main__":
     import time
+    import json
     with open('parametros.json', encoding='utf-8') as file:
         LOADED_DATA = json.load(file)
     SERVER = Server(**LOADED_DATA)

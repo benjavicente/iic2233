@@ -1,21 +1,21 @@
 '''Módulo que posee la Client que administra la coneción con el servidor'''
 
-import socket
-import threading
+from socket import socket as Socket, AF_INET as IPv4, SOCK_STREAM as TCP
+from threading import Thread
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
-from backend.protocol import recv_data, send_data
+from backend.protocol import recv_data, send_data  # Tira error en el lint...
 
 
 class Client(QObject):
     '''Cliente del servidor'''
     signal_update = pyqtSignal(dict)
 
-    def __init__(self, host, port, **kwargs):
+    def __init__(self, host, port):
         super().__init__()
         # Creación del socket
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket = Socket(IPv4, TCP)
         # Datos del servidor
         self.host = host
         self.port = port
@@ -25,7 +25,7 @@ class Client(QObject):
         try:
             self.socket.connect((self.host, self.port))
             # Se empieza a escuchar al servidor
-            thread = threading.Thread(target=self.listen, daemon=True)
+            thread = Thread(target=self.listen, daemon=True)
             thread.start()
         except ConnectionError:
             print('Error al iniciar la coneción')
@@ -49,6 +49,7 @@ class Client(QObject):
 
 if __name__ == "__main__":
     import time
+    import json
     with open('client\\parametros.json', encoding='utf-8') as file:
         LOADED_DATA = json.load(file)
     CLIENT = Client(**LOADED_DATA)

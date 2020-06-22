@@ -128,7 +128,7 @@ class GameWindow(QMainWindow):
 
     def _set_up(self):
         self.setWindowTitle('DCCuadrado')
-        self.ActionUNO.pressed.connect(signal_UNO.emit)
+        self.ActionUNO.pressed.connect(self.signal_UNO.emit)
 
 
 if __name__ == "__main__":
