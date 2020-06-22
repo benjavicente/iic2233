@@ -36,7 +36,9 @@ class Game(QApplication):
 
 class InitialWindow(QMainWindow):
     '''Ventana que se muestra al iniciar el programa'''
+
     signal_join = pyqtSignal(dict)
+
     def __init__(self, pix_logo):
         super().__init__()
         self.setObjectName(type(self).__name__)
@@ -71,14 +73,22 @@ class InitialWindow(QMainWindow):
         # Botón para unirse
         self.join = QPushButton(self.name_entry)
         self.join.setText('Entrar')
-        self.join.setObjectName('join')
+        self.join.setObjectName('JoinButton')
         self.join.clicked.connect(self.action_joining)
         entry_layout.addWidget(self.join)
 
         #--> Sala de espera
         # Etiqueta
         self.wait_label = QLabel('Jugadores conectados')
-        self.wait_label.setObjectName('wait_label')
+        self.wait_label.setObjectName('WaitLabel')
+        layout.addWidget(self.wait_label)
+        self.wait_label.hide()  # Se oculta hasta que sea necesario
+        # Cuadro de jugadores en espera
+        self.players_frame = QWidget(self)
+        layout.addWidget(self.players_frame)
+        self.players_frame.hide()
+        self.players_layout = QVBoxLayout()
+        self.players_frame.setLayout(self.players_layout)
 
     def action_joining(self):
         '''Acción al entrar al servidor'''
@@ -89,32 +99,36 @@ class InitialWindow(QMainWindow):
                 1: self.name.text()
             }
         )
-        self.name_entry.deleteLater()
-        self.setWindowTitle('Entrando a la sala')
+        self.setWindowTitle('Cargando')
 
-    def action_waiting(self, *args):
+    def action_waiting(self, players: list):
         '''Acción que muestra la sala de espera'''
         # TODO: debe actualizarse los nombres de los labels
-        #* Podría entregarse un diccionario con la cantidad e jugadores
-        #* esperados y los jugadores ya ingresados.
-        #* Debe existir una función que actualice los labels a medida que
-        #* salgan y entren jugadores
-        # Etiqueta de jugadores conectados
-        layout = self.centralWidget().layout()
-        layout.addWidget(self.wait_label, alignment=Qt.AlignCenter)
-        players_layout = QVBoxLayout()
-        # TODO
+        self.windowTitle('Sala de espera')
+        if self.wait_label.isHidden():
+            self.wait_label.show()
+            self.players_frame.show()
+            for ply in players:
+                self.players_layout.addWidget(QWidget(ply, ))
 
+        else:
+            for i, ply in enumerate(players):
+                self.players_layout.itemAt(i).text(ply)
 
 
 class GameWindow(QMainWindow):
     '''Ventana principal dell juego'''
+
+    signal_UNO = pyqtSignal()
+
     def __init__(self, ui_path):
         super().__init__()
         loadUi(ui_path, self)
+        self._set_up()
 
     def _set_up(self):
-        pass
+        self.setWindowTitle('DCCuadrado')
+        self.ActionUNO.pressed.connect(signal_UNO.emit)
 
 
 if __name__ == "__main__":

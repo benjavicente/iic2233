@@ -2,11 +2,11 @@
 #InitialWindow{
     background: black;
 }
-#join{
+#JoinButton{
     color: yellow;
     background: red;
 }
-#wait_label{
+#WaitLabel{
     color: white;
     font-size: 30px;
 }
