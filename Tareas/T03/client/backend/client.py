@@ -35,7 +35,9 @@ class Client(QObject):
         'Escucha activamente a un socket del servidor'
         try:
             while True:
+                print('esperando datos')
                 data = recv_data(self.socket)
+                print(f'recibiendo {data[0]}')
                 self.signal_response.emit(data)
         except ConnectionError:
             print(f'Error en la coneción')

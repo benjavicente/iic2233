@@ -5,7 +5,7 @@ from json import load
 from server import Server
 # from game import Game
 
-# TODO
+# TODO: Tengo que empezar a implementar una clase que administra el flujo del juego
 
 with open('parametros.json', encoding='utf-8') as file:
     PARAMETERS = load(file)

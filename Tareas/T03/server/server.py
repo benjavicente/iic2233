@@ -74,7 +74,7 @@ class Server:
         if data[0] == 'join':
             for client_info in self.clients.values():
                 if 'name' in client_info and client_info['name'] == data[4]:
-                    self.send(client_info['socket'], id_, {
+                    self.send(self.clients[id_]['socket'], id_, {
                         0: 'join failed',
                         16: {
                             'why': 'name used by another player',

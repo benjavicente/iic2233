@@ -3,7 +3,7 @@
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QLineEdit, QMainWindow,
-                             QPushButton, QVBoxLayout, QWidget)
+                             QPushButton, QVBoxLayout, QWidget, QMessageBox)
 from PyQt5.uic import loadUi
 
 
@@ -74,6 +74,7 @@ class InitialWindow(QMainWindow):
     def state_joining_failed(self):
         '''Estado que se muestra al fallar entrar al servidor'''
         self.setWindowTitle('Ventana Inicial')
+        QMessageBox.information(self, 'Error', 'Nombre ya ocupado')
         self.join.setDisabled(False)
 
     def action_waiting(self, players: list):
