@@ -71,10 +71,10 @@ class InitialWindow(QMainWindow):
         self.signal_join.emit(self.name.text())
         self.setWindowTitle('Cargando')
 
-    def state_joining_failed(self):
+    def state_joining_failed(self, error: dict):
         '''Estado que se muestra al fallar entrar al servidor'''
         self.setWindowTitle('Ventana Inicial')
-        QMessageBox.information(self, 'Error', 'Nombre ya ocupado')
+        QMessageBox.information(self, 'Error', error['display'])
         self.join.setDisabled(False)
 
     def action_waiting(self, players: list):

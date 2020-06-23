@@ -45,7 +45,7 @@ class Application(QApplication):
     def _manage_response(self, response: dict):
         print('manejando respuesta del servidor')
         if   response[0] == 'join failed':
-            self.initial_window.state_joining_failed()
+            self.initial_window.state_joining_failed(response[16])
         elif response[0] == 'players':
             self.initial_window.action_waiting(response[8])
 
