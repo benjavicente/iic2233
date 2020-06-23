@@ -8,9 +8,10 @@ from PyQt5.QtCore import QObject, pyqtSignal
 from backend.protocol import recv_data, send_data  # Tira error en el lint...
 
 
+
 class Client(QObject):
-    '''Cliente del servidor'''
-    signal_update = pyqtSignal(dict)
+    'Cliente del servidor'
+    signal_response = pyqtSignal(dict)
 
     def __init__(self, host, port):
         super().__init__()
@@ -21,7 +22,7 @@ class Client(QObject):
         self.port = port
 
     def connect(self):
-        '''Se conecta al servidor'''
+        'Se conecta al servidor'
         try:
             self.socket.connect((self.host, self.port))
             # Se empieza a escuchar al servidor
@@ -31,11 +32,11 @@ class Client(QObject):
             print('Error al iniciar la coneción')
 
     def listen(self):
-        '''Escucha activamente a un socket del servidor'''
+        'Escucha activamente a un socket del servidor'
         try:
             while True:
                 data = recv_data(self.socket)
-                # TODO: do something
+                self.signal_response.emit(data)
         except ConnectionError:
             print(f'Error en la coneción')
             #* Aquí puede mandarse una señal a la ventana
@@ -43,15 +44,6 @@ class Client(QObject):
             self.socket.close()
 
     def send(self, data):
+        'Manda el diccionario al servidor siguiendo el protocolo establecido'
         send_data(self.socket, data)
         print(f'el cliente ha enviado información ({data[0]})')
-
-
-if __name__ == "__main__":
-    import time
-    import json
-    with open('client\\parametros.json', encoding='utf-8') as file:
-        LOADED_DATA = json.load(file)
-    CLIENT = Client(LOADED_DATA['host'], LOADED_DATA['port'])
-    while True:  # Este ciclo debe estar integrado con QApplication
-        time.sleep(60)

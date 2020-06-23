@@ -48,15 +48,16 @@ El cual se almacena como:
 Los tipos de objetos (`str`, `list`, `dict`, `object`) están agrupados
 por ids en intervalos de 8.
 
-| id | de                  | tipo objecto       | objeto   | uso
-| -: | :-----------------: |:-----------------: | :------: | :-  
-|  0 | :computer::penguin: | tipo de acción     | `str`    | siempre
-|  1 |           :penguin: | color de carta     | `str`    | al actualizar un mazo, al robar o actualizar el pozo
-|  3 |           :penguin: | tipo de carta      | `str`    | al actualizar un mazo, al robar o actualizar el pozo
-|  4 | :computer:          | nombre del jugador | `str`    | al unirse
-|  5 | :computer:          | carta seleccionada | `str`    | al elegir carta en el turno
-|  8 |           :penguin: | jugadores          | `list`   | al entrar un jugador, añadiéndolo en el cliente
-| 24 |           :penguin: | imagen de carta    | `object` | al actualizar un mazo, al robar o actualizar el pozo
+| id | de                  | tipo objecto         | objeto   | uso
+| -: | :-----------------: |:-------------------: | :------: | :-  
+|  0 | :computer::penguin: | tipo de acción       | `str`    | siempre
+|  1 |           :penguin: | color de carta       | `str`    | al actualizar un mazo, al robar o actualizar el pozo
+|  3 |           :penguin: | tipo de carta        | `str`    | al actualizar un mazo, al robar o actualizar el pozo
+|  4 | :computer:          | nombre del jugador   | `str`    | al unirse
+|  5 | :computer:          | carta seleccionada   | `str`    | al elegir carta en el turno
+|  8 |           :penguin: | jugadores            | `list`   | al entrar un jugador, añadiéndolo en el cliente
+| 16 | :computer::penguin: | información de error | `dict`   | al no poderse realizar una acción
+| 24 |           :penguin: | imagen de carta      | `object` | al actualizar un mazo, al robar o actualizar el pozo
 
 Tanto en `str`,`list`, `dict` se usa `.decode('utf-8)`.
 Además en las `list` se usará `.split('\n')` y en los `dict` `json.load`.

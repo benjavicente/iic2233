@@ -6,7 +6,8 @@
     color: yellow;
     background: red;
 }
-#WaitLabel{
+#WaitLabel,
+#WaitingPlayer{
     color: white;
     font-size: 30px;
 }

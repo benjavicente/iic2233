@@ -3,17 +3,13 @@
 import json
 
 from backend.client import Client
-from frontend.windows import Game
+
+from application import Application
 
 
 with open('parametros.json') as file:
-    data = json.load(file)
+    CONFIG = json.load(file)
 
-GAME = Game(data['paths'])
-CLIENT = Client(data['host'], data['port'])
+GAME_APP = Application(**CONFIG)
 
-GAME.initial_window.signal_join.connect(CLIENT.send)
-CLIENT.connect()
-GAME.game_window.show()  #! Temporal
-
-GAME.run()
+GAME_APP.run()

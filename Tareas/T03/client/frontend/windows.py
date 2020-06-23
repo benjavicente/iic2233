@@ -1,43 +1,16 @@
 '''Ventanas del juego'''
 
-import sys
-from os import path
-
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QLineEdit,
-                             QMainWindow, QPushButton, QVBoxLayout, QWidget)
+from PyQt5.QtGui import QCursor
+from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QLineEdit, QMainWindow,
+                             QPushButton, QVBoxLayout, QWidget)
 from PyQt5.uic import loadUi
-
-
-class Game(QApplication):
-    '''Clase que conecta las ventanas del juego'''
-    def __init__(self, paths):
-        sys.__excepthook__ = lambda t, v, trace: print(t, v, trace, sep="\n")
-        super().__init__(sys.argv)
-        # Pixelmaps
-        self.logo = QPixmap(path.join(*paths['logo']))
-        # Paths
-        ui_path = path.join(*paths['ui'])
-        # Crea las ventanas
-        self.initial_window = InitialWindow(self.logo)
-        self.game_window = GameWindow(ui_path)
-        # Aplica el estilo a las ventanas
-        with open(path.join(*paths['theme'])) as theme_file:
-            theme = theme_file.read()
-        self.setStyleSheet(theme)
-
-    def run(self):
-        '''Core el juego'''
-        self.initial_window.show()
-        sys.exit(self.exec_())
-
 
 
 class InitialWindow(QMainWindow):
     '''Ventana que se muestra al iniciar el programa'''
 
-    signal_join = pyqtSignal(dict)
+    signal_join = pyqtSignal(str)  # trata de unirse
 
     def __init__(self, pix_logo):
         super().__init__()
@@ -74,6 +47,7 @@ class InitialWindow(QMainWindow):
         self.join = QPushButton(self.name_entry)
         self.join.setText('Entrar')
         self.join.setObjectName('JoinButton')
+        self.join.setCursor(QCursor(Qt.PointingHandCursor))
         self.join.clicked.connect(self.action_joining)
         entry_layout.addWidget(self.join)
 
@@ -93,33 +67,41 @@ class InitialWindow(QMainWindow):
     def action_joining(self):
         '''Acción al entrar al servidor'''
         # TODO verificación de usuario
-        self.signal_join.emit(
-            {
-                0: 'joining',
-                4: self.name.text()
-            }
-        )
+        self.join.setDisabled(True)
+        self.signal_join.emit(self.name.text())
         self.setWindowTitle('Cargando')
+
+    def state_joining_failed(self):
+        '''Estado que se muestra al fallar entrar al servidor'''
+        self.setWindowTitle('Ventana Inicial')
+        self.join.setDisabled(False)
 
     def action_waiting(self, players: list):
         '''Acción que muestra la sala de espera'''
         # TODO: debe actualizarse los nombres de los labels
-        self.windowTitle('Sala de espera')
+        self.setWindowTitle('Sala de espera')
         if self.wait_label.isHidden():
             self.wait_label.show()
             self.players_frame.show()
+            self.name_entry.hide()
             for ply in players:
-                self.players_layout.addWidget(QWidget(ply, ))
-
+                widget = QLabel(self)
+                widget.setText(ply)
+                widget.setObjectName('WaitingPlayer')
+                self.players_layout.addWidget(widget)
         else:
             for i, ply in enumerate(players):
-                self.players_layout.itemAt(i).text(ply)
+                self.players_layout.itemAt(i).widget().setText(ply)
+
 
 
 class GameWindow(QMainWindow):
     '''Ventana principal dell juego'''
 
-    signal_UNO = pyqtSignal()
+    signal_chat = pyqtSignal(str)  # manda un mensage
+    signal_call = pyqtSignal()     # llama DCCuadrádo
+    signal_draw = pyqtSignal()     # roba una carta
+    signal_drop = pyqtSignal(int)  # id de la carta seleccionada
 
     def __init__(self, ui_path):
         super().__init__()
@@ -128,13 +110,3 @@ class GameWindow(QMainWindow):
 
     def _set_up(self):
         self.setWindowTitle('DCCuadrado')
-        self.ActionUNO.pressed.connect(self.signal_UNO.emit)
-
-
-if __name__ == "__main__":
-    # Debe ejecutarse a nivel de client
-    import json
-    with open('parametros.json') as file:
-        content = json.load(file)
-    DCC = Game(content['paths'])
-    DCC.run()

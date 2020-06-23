@@ -67,7 +67,7 @@ def send_data(sender_socket: Socket, data: dict) -> None:
         elif isinstance(obj, list):  # id < 16
             serialized_obj = '\n'.join(obj).encode('utf-8')
         elif isinstance(obj, dict):  # id < 24
-            serialized_obj = _json_dumps(obj)
+            serialized_obj = _json_dumps(obj).encode('utf-8')
         elif isinstance(obj, object):  # id < 36
             serialized_obj = _pickle_dumps(obj)
         # Serialización del tamaño de objetos
