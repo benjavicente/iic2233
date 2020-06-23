@@ -23,7 +23,7 @@ class Client(QObject):
         self.port = port
 
     def connect(self):
-        'Se conecta al servidor'
+        'Se conecta al servidor (Al iniciar el programa)'
         try:
             self.socket.connect((self.host, self.port))
             # Se empieza a escuchar al servidor
@@ -37,17 +37,18 @@ class Client(QObject):
         'Escucha activamente a un socket del servidor'
         try:
             while True:
-                print('esperando datos')
                 data = recv_data(self.socket)
                 print(f'recibiendo {data[0]}')
                 self.signal_response.emit(data)
         except ConnectionError:
-            print(f'Error en la coneción')
             self.signal_connection_error.emit()
         finally:
             self.socket.close()
 
     def send(self, data):
         'Manda el diccionario al servidor siguiendo el protocolo establecido'
-        send_data(self.socket, data)
-        print(f'el cliente ha enviado información ({data[0]})')
+        try:
+            send_data(self.socket, data)
+            print(f'el cliente ha enviado información ({data[0]})')
+        except ConnectionError:
+            self.signal_connection_error.emit()

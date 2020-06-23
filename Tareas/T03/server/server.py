@@ -59,6 +59,8 @@ class Server:
             self.game.remove_player(self.clients_names[id_])
             del self.clients[id_]
             del self.clients_names[id_]
+            if not self.game.started:
+                self.send_all({0: 'players', 8: self.game.get_player_names()})
             client_socket.close()
 
     def send(self, client_socket, id_: int, data: dict):

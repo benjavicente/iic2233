@@ -65,5 +65,3 @@ class Application(QApplication):
             0: 'join',
             4: name
         })
-
-
