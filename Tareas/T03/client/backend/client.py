@@ -12,6 +12,7 @@ from backend.protocol import recv_data, send_data  # Tira error en el lint...
 class Client(QObject):
     'Cliente del servidor'
     signal_response = pyqtSignal(dict)
+    signal_connection_error = pyqtSignal()
 
     def __init__(self, host, port):
         super().__init__()
@@ -28,8 +29,9 @@ class Client(QObject):
             # Se empieza a escuchar al servidor
             thread = Thread(target=self.listen, daemon=True)
             thread.start()
+            return True
         except ConnectionError:
-            print('Error al iniciar la coneción')
+            return False
 
     def listen(self):
         'Escucha activamente a un socket del servidor'
@@ -41,7 +43,7 @@ class Client(QObject):
                 self.signal_response.emit(data)
         except ConnectionError:
             print(f'Error en la coneción')
-            #* Aquí puede mandarse una señal a la ventana
+            self.signal_connection_error.emit()
         finally:
             self.socket.close()
 

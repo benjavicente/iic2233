@@ -5,18 +5,21 @@ from threading import Thread
 
 from log import Log
 from protocol import recv_data, send_data
+from game import Game
 
 class Server:
     'El servidor del juego'
-    def __init__(self, host, port):
+    def __init__(self, host, port, **kwargs):
         self.host = host
         self.port = port
         # Se crea un socket
         self.socket = Socket(IPv4, TCP)
         # Se crea un Log
         self.log = Log()
-        # Se crea un diccionario para almacenar jugadores
+        # Se crea un diccionario para almacenar los sockets
         self.clients = dict()
+        # Entidad que maneja el juego
+        self.game = Game(**kwargs)
 
     def run(self):
         'Corre el servidor'
@@ -42,25 +45,26 @@ class Server:
             thread = Thread(target=self.listen_active, daemon=True, args=(client, direc))
             thread.start()
 
-    def listen_active(self, client_socket, id_):
+    def listen_active(self, client_socket, id_: int):
         'Escucha activamente a un socket dl servidor'
         try:
             while True:
                 data = recv_data(client_socket)
                 self.log('datos recibidos', id_, f'Acción a realizar: {data[0]}')
-                self.manage_response(data, id_)
+                self.manage_response(client_socket, id_, data)
         except ConnectionError:
             self.log('Error de conexión', id_)
         finally:
+            # TODO: Eliminar el nombre si es que se añadió
             del self.clients[id_]
             client_socket.close()
 
-    def send(self, client_socket, id_, data: dict):
+    def send(self, client_socket, id_: int, data: dict):
         'Manda el diccionario data al socket'
         send_data(client_socket, data)
         self.log('Se mandó información', id_, data[0])
 
-    def send_all(self, data, exclude=None, with_name=True):
+    def send_all(self, data: dict, exclude=None, with_name: bool = True):
         '''
         Manda un json serializado a todos los jugadores
         Puede excluirse a un jugador
@@ -69,36 +73,35 @@ class Server:
             if (not (exclude and id_ == exclude)) and (with_name and 'name' in values):
                 self.send(values['socket'], id_, data)
 
-    def manage_response(self, data, id_):
+    def manage_response(self, socket, id_: int, data: dict):
         'Maneja la respuesta del socket'
         if data[0] == 'join':
-            for client_info in self.clients.values():
-                if 'name' in client_info and client_info['name'] == data[4]:
-                    self.send(self.clients[id_]['socket'], id_, {
-                        0: 'join failed',
-                        16: {
-                            'why': 'name used by another player',
-                            'display': f'El nombre {data[4]} ya está ocupado'
-                        }
-                    })
-                    return  # Termina por error
-            # Se guarda el nombre del jugador
-            self.clients[id_]['name'] = data[4]
-            self.log(data[0], id_, f'se ha unido {data[4]}')
-            # Se envían los jugadores a los unidos
-            self.send_all({
-                0: 'players',
-                8: [v['name'] for v in self.clients.values() if 'name' in v]
-                # Falta agragr los espacios vacios al esperar jugadores
-            })
-            return
-
-
-if __name__ == "__main__":
-    import time
-    import json
-    with open('parametros.json', encoding='utf-8') as file:
-        LOADED_DATA = json.load(file)
-    SERVER = Server(LOADED_DATA['host'], LOADED_DATA['port'])
-    while True:  # Este ciclo debe estar integrado con QApplication
-        time.sleep(60)
+            name = data[4]
+            # El jugador trató de unirse con el el juego en desarrollo
+            if self.game.started:
+                self.send(socket, id_, {
+                    0: 'join failed',
+                    16: {
+                        'why': 'game already started',
+                        'display': f'El juego ya empezó'
+                    }
+                })
+            # El jugador se une con un nombre ya existente
+            elif not self.game.valid_name(name):
+                self.send(socket, id_, {
+                    0: 'join failed',
+                    16: {
+                        'why': 'invalid name',
+                        'display': f'El nombre {name} no es válido'
+                    }
+                })
+            # En jugador pudo ingresar
+            else:
+                # Se guarda el nombre del jugador
+                self.game.add_player(name)
+                self.log(data[0], id_, f'se ha unido {name}')
+                # Se envían los jugadores a los unidos
+                self.send_all({
+                    0: 'players',
+                    8: self.game.get_player_names()
+                })

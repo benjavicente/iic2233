@@ -3,7 +3,7 @@
 import sys
 from os import path
 
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5.QtGui import QPixmap
 
 from frontend.windows import InitialWindow, GameWindow
@@ -34,13 +34,22 @@ class Application(QApplication):
         self.initial_window.signal_join.connect(self._join)
 
         self.client.signal_response.connect(self._manage_response)
+        self.client.signal_connection_error.connect(self.error)
 
 
     def run(self):
         'Corre la aplicación'
-        self.initial_window.show()
-        self.client.connect()
-        sys.exit(self.exec_())
+        if self.client.connect():
+            self.initial_window.show()
+            sys.exit(self.exec_())
+        else:
+            self.error('No ser ha podido conectar con el servidor')
+
+    def error(self, info: str):
+        'Maneja un error de conexión'
+        error_box = QMessageBox(QMessageBox.Critical, 'Error', info)
+        error_box.exec()
+        self.closeAllWindows()
 
     def _manage_response(self, response: dict):
         print('manejando respuesta del servidor')
