@@ -6,10 +6,17 @@
     color: yellow;
     background: red;
 }
-#WaitLabel,
-#WaitingPlayer{
+#WaitLabel{
     color: white;
     font-size: 30px;
+}
+#WaitingPlayer{
+    color: rgb(231, 231, 231);
+    font-size: 20px;
+}
+#EmptyPlayer{
+    color: rgb(121, 121, 121);
+    font-size: 20px;
 }
 
 /* Pantalla del juego */

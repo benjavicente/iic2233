@@ -43,5 +43,5 @@ class Game:
     def get_player_names(self):  # Property?
         'Retorna una lista de los nombres para la sala de espera'
         names = [player.name for player in self.__players]
-        names.extend(['~~~' for _ in range(self.__max_players - len(self.__players))])
+        names.extend(['' for _ in range(self.__max_players - len(self.__players))])
         return names

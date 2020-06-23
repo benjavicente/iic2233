@@ -55,7 +55,7 @@ class InitialWindow(QMainWindow):
         # Etiqueta
         self.wait_label = QLabel('Jugadores conectados')
         self.wait_label.setObjectName('WaitLabel')
-        layout.addWidget(self.wait_label)
+        layout.addWidget(self.wait_label, alignment=Qt.AlignCenter)
         self.wait_label.hide()  # Se oculta hasta que sea necesario
         # Cuadro de jugadores en espera
         self.players_frame = QWidget(self)
@@ -80,19 +80,25 @@ class InitialWindow(QMainWindow):
     def action_waiting(self, players: list):
         '''Acción que muestra la sala de espera'''
         self.setWindowTitle('Sala de espera')
+        # Se crean los widgets
         if self.wait_label.isHidden():
             self.wait_label.show()
             self.players_frame.show()
             self.name_entry.hide()
-            for ply in players:
-                widget = QLabel(self)
-                widget.setText(ply)
+            for _ in range(len(players)):
+                self.players_layout.addWidget(QLabel(self.players_frame), alignment=Qt.AlignCenter)
+        # Se añaden los nombres
+        print(players)
+        for i, ply in enumerate(players):
+            widget = self.players_layout.itemAt(i).widget()
+            if ply:
                 widget.setObjectName('WaitingPlayer')
-                self.players_layout.addWidget(widget)
-        else:
-            for i, ply in enumerate(players):
-                self.players_layout.itemAt(i).widget().setText(ply)
-
+                widget.setText(ply)
+            else:
+                widget.setObjectName('EmptyPlayer')
+                widget.setText('~~~')
+            # https://stackoverflow.com/q/9066669
+            self.style().polish(widget)  # Es raro como se debe cambiar el estilo...
 
 
 class GameWindow(QMainWindow):
