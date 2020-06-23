@@ -79,7 +79,6 @@ class InitialWindow(QMainWindow):
 
     def action_waiting(self, players: list):
         '''Acción que muestra la sala de espera'''
-        # TODO: debe actualizarse los nombres de los labels
         self.setWindowTitle('Sala de espera')
         if self.wait_label.isHidden():
             self.wait_label.show()

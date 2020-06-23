@@ -18,6 +18,7 @@ class Server:
         self.log = Log()
         # Se crea un diccionario para almacenar los sockets
         self.clients = dict()
+        self.clients_names = dict()
         # Entidad que maneja el juego
         self.game = Game(**kwargs)
 
@@ -55,8 +56,9 @@ class Server:
         except ConnectionError:
             self.log('Error de conexión', id_)
         finally:
-            # TODO: Eliminar el nombre si es que se añadió
+            self.game.remove_player(self.clients_names[id_])
             del self.clients[id_]
+            del self.clients_names[id_]
             client_socket.close()
 
     def send(self, client_socket, id_: int, data: dict):
@@ -70,7 +72,7 @@ class Server:
         Puede excluirse a un jugador
         '''
         for id_, values in self.clients.items():
-            if (not (exclude and id_ == exclude)) and (with_name and 'name' in values):
+            if (not (exclude and id_ == exclude)) and (with_name and id_ in self.clients_names):
                 self.send(values['socket'], id_, data)
 
     def manage_response(self, socket, id_: int, data: dict):
@@ -99,6 +101,7 @@ class Server:
             else:
                 # Se guarda el nombre del jugador
                 self.game.add_player(name)
+                self.clients_names[id_] = name
                 self.log(data[0], id_, f'se ha unido {name}')
                 # Se envían los jugadores a los unidos
                 self.send_all({
