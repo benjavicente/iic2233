@@ -2,5 +2,6 @@
     "host": "localhost",
     "port": 45743,
     "jugadores_partida": 4,
-    "max_cartas": 10
+    "maximo_cartas": 10,
+    "cartas_iniciales": 8
 }

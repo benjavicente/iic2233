@@ -38,9 +38,9 @@ class Server:
 
     def listen_new(self):
         'Escucha nuevas conexiones'
-        while True:  #* Esta condición puede cambiar
+        while True:
             self.log('esperando conexión')
-            client, (ip, direc) = self.socket.accept()
+            client, (_, direc) = self.socket.accept()  # ip, direc
             self.log('conectado con cliente', details=f'id del cliente: {direc}')
             self.clients[direc] = {'socket': client}
             thread = Thread(target=self.listen_active, daemon=True, args=(client, direc))
@@ -56,6 +56,7 @@ class Server:
         except ConnectionError:
             self.log('Error de conexión', id_)
         finally:
+            # Se elimina el cliente
             self.game.remove_player(self.clients_names[id_])
             del self.clients[id_]
             del self.clients_names[id_]
@@ -110,3 +111,9 @@ class Server:
                     0: 'players',
                     8: self.game.get_player_names()
                 })
+                if self.game.started:
+                    pass
+                    # Se tiene que enviar un json con información
+                    # suficiente para que cada cliente pueda mostrar sus cartas
+                    # y los demás jugadores al rededor de él, siguiendo el orden
+                    # de los turnos

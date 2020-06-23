@@ -26,7 +26,7 @@ class Application(QApplication):
         # Establece el estilo de la aplicación
         with open(path.join(*paths['theme'])) as theme_file:
             self.setStyleSheet(theme_file.read())
-    
+
         # Crea el cliente
         self.client = Client(kwargs['host'], kwargs['port'])
 
