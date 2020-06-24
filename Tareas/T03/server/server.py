@@ -111,7 +111,7 @@ class Server:
         if isinstance(card_type, tuple):
             card_type = '_'.join(card_type)
         with open(path.join('sprites', self.game.theme, card_type + '.png'), 'rb') as file:
-            return file.read()
+            return = file.read()
 
     def manage_response(self, socket, id_: int, data: dict):
         'Maneja la respuesta del socket'

@@ -6,7 +6,6 @@ siguiendo el protocolo definido en el Enunciado y el README
 '''
 
 from socket import SocketType as Socket
-from pickle import loads as _pickle_loads, dumps as _pickle_dumps
 from json import loads as _json_loads, dumps as _json_dumps
 
 def recv_data(receiver_socket: Socket, chunk_size=128) -> dict:
@@ -39,8 +38,8 @@ def recv_data(receiver_socket: Socket, chunk_size=128) -> dict:
             content = object_content.decode('utf-8').split('\n')
         elif object_id < 0b011000:  # dict
             content = _json_loads(object_content.decode('utf-8'))
-        elif object_id < 0b100000:  # objetc
-            content = _pickle_loads(object_content, encoding='utf-8')
+        elif object_id < 0b100000:  # bytearray
+            content = object_content
         else:
             raise IndexError(f"Valor de id inválido ({object_id})")
         # Se guarda en un diccionario
@@ -64,16 +63,16 @@ def send_data(sender_socket: Socket, data: dict) -> None:
         # Serialización del ID
         serialized_data += id_.to_bytes(4, 'big')
         # Serialización de objectos
-        if   isinstance(obj, str):     # id < 8
+        if   isinstance(obj, str):                 # id < 8
             serialized_obj = obj.encode('utf-8')
-        elif isinstance(obj, list):    # id < 16
+        elif isinstance(obj, list):                # id < 16
             serialized_obj = '\n'.join(obj).encode('utf-8')
-        elif isinstance(obj, dict):    # id < 24
+        elif isinstance(obj, dict):                # id < 24
             serialized_obj = _json_dumps(obj).encode('utf-8')
-        elif isinstance(obj, object):  # id < 36
-            serialized_obj = _pickle_dumps(obj)
+        elif isinstance(obj, (bytearray, bytes)):  # id < 36
+            serialized_obj = obj
         else:
-            raise TypeError(f'Tipo de objeto con id {id_} inváilido') 
+            raise TypeError(f'Tipo de objeto con id {id_} inváilido')
         # Serialización del tamaño de objetos
         serialized_data += len(serialized_obj).to_bytes(4, 'big')
         # Envío de objeto
