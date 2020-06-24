@@ -1,7 +1,6 @@
 '''Módulo que administra la lógica del juego'''
 
 from generador_de_mazos import sacar_cartas as get_cards
-from pprint import pprint
 
 
 class Player:
@@ -114,5 +113,4 @@ class Game:
             }
             position -= 1
             remaining -= 1
-        pprint(data)
         return data

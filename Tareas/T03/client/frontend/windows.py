@@ -120,6 +120,20 @@ class GameWindow(QMainWindow):
         self.CardPool.setFixedSize(self.card_size)
         self.CardDeck.setFixedSize(self.card_size)
         self.ActionUNO.setCursor(QCursor(Qt.PointingHandCursor))
+        self.ChatInput.returnPressed.connect(self.send_chat)
+
+    def send_chat(self) -> None:
+        'Manda un mensaje al chat'
+        mesaje = self.ChatInput.text()
+        if mesaje:
+            self.signal_chat.emit(mesaje)
+            self.ChatInput.clear()
+    
+    def add_chat_mesaje(self, mesaje: str) -> None:
+        'Recibe un mensaje'
+        before = self.Chat.toMarkdown()
+        after = before + '\n' + mesaje
+        self.Chat.setMarkdown(after.strip())
 
     def set_reverse_card(self, card_pixmap: object) -> None:
         'Establece el reverso de la carta'
@@ -140,8 +154,12 @@ class GameWindow(QMainWindow):
 
     def add_card(self, c_color: str, c_type: str, c_pixmap: object) -> None:
         'Añade la carta al jugador. Sigue lo establecido en el Enunciado'
-
+        pass
 
     def update_pool(self, c_color: str, c_type: str, c_pixmap: object) -> None:
         'Añade la carta al pozo. Sigue lo establecido en el Enunciado'
+        # No se para que será necesario que el cliente tenga el tipo...
         self.ActiveColor.setText(c_color)
+        pixmap = QPixmap()
+        pixmap.loadFromData(c_pixmap)
+        self.CardPool.setPixmap(pixmap)

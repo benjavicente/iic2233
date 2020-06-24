@@ -36,6 +36,7 @@ class Application(QApplication):
         self.client.signal_response.connect(self._manage_response)
         self.client.signal_connection_error.connect(self.error)
 
+        self.game_window.signal_chat.connect(self._send_chat)
 
     def run(self):
         'Corre la aplicación'
@@ -62,11 +63,31 @@ class Application(QApplication):
             self.game_window.set_reverse_card(response[24])
             self.game_window.setup_players(response[17])
             self.game_window.show()
-
+        elif response[0] == 'add_card':
+            self.game_window.add_card(
+                c_color=response[1],
+                c_type=response[2],
+                c_pixmap=response[3]
+            )
+        elif response[0] == 'update_pool':
+            self.game_window.update_pool(
+                c_color=response[1],
+                c_type=response[2],
+                c_pixmap=response[3]
+            )
+        elif response[0] == 'chat':
+            self.game_window.add_chat_mesaje(response[6])
 
     def _join(self, name: str):
         'Manda al servidor la solicitud para unirse'
         self.client.send({
             0: 'join',
             4: name
+        })
+
+    def _send_chat(self, mesaje: str):
+        'Manda un mensaje al chat'
+        self.client.send({
+            0: 'chat',
+            6: mesaje
         })
