@@ -28,6 +28,8 @@ sin tener que repetir múltiples comandos (Windows). Al ejecutar `run`
 se abre el servidor y un número de clientes, definido en el mismo
 archivo.
 
+Es conveniente cerrar el servidor antes que los clientes, ya que cada
+cliente mostrará una alerta con un botón para salir en la misma posición.
 
 ## Supuestos, aclaraciones y consideraciones :thinking:
 
@@ -52,7 +54,7 @@ El cual se almacena como:
 `n_obj` es un `int` de 2 bytes, `id_objX` un `int` de 4 bytes,
 `largo_objX` un `int = L` de 4 bytes y `obj_X` un objeto de L bytes.
 
-Los tipos de objetos (`str`, `list`, `dict`, `object`) están agrupados
+Los tipos de objetos (`str`, `list`, `dict`, `bytes`) están agrupados
 por ids en intervalos de 8 (a excepción de 3, establecido en el enunciado).
 
 | id | de                  | tipo objecto         | objeto   | uso
@@ -60,18 +62,19 @@ por ids en intervalos de 8 (a excepción de 3, establecido en el enunciado).
 |  0 | :computer::penguin: | tipo de acción       | `str`    | siempre
 |  1 |           :penguin: | color de carta       | `str`    | al actualizar el mazo o el pozo $^1$ **(no implementado)**
 |  2 |           :penguin: | tipo de carta        | `str`    | al actualizar el mazo o el pozo $^1$ **(no implementado)**
-|  3 |           :penguin: | imagen de carta      | `object` | al actualizar el mazo o el pozo $^1$ **(no implementado)**
+|  3 |           :penguin: | imagen de carta      | `bytes`  | al actualizar el mazo o el pozo $^1$ **(no implementado)**
 |  4 | :computer:          | nombre del jugador   | `str`    | al unirse
 |  5 | :computer:          | carta seleccionada   | `str`    | en la sala de juego **(no implementado)**
 |  6 | :computer::penguin: | chat                 | `str`    | al enviar y recibir un chat
 |  8 |           :penguin: | jugadores            | `list`   | al entrar un jugador, añadiéndolo en el cliente
 | 16 | :computer::penguin: | información de error | `dict`   | al no poderse realizar una acción
 | 17 |           :penguin: | detalles jugadores   | `dict`   | al iniciar la sala de juego
-| 24 |           :penguin: | reverso de la carta  | `object` | al iniciar la sala de juego
+| 24 |           :penguin: | reverso de la carta  | `bytes`  | al iniciar la sala de juego
 
 Tanto en `str`,`list`, `dict` se usa `.decode('utf-8)`.
 Además en las `list` se usará `.split('\n')` y en los `dict` `json.load`.
-Pará `object` se usará `pickle.loads(content, encoding='utf-8')`.
+
+Para ver donde se usa cada una se puede buscar ` {id_}: `.
 
 - \[1\]: Establecido en el enunciado
 
@@ -93,6 +96,7 @@ Pará `object` se usará `pickle.loads(content, encoding='utf-8')`.
   - `Lock`
 - `os`
   - `path`
+- `json`
 
 ### Librerías propias :pencil:
 
@@ -134,6 +138,12 @@ En desarrollo:
 Bonus:
 
 - Chat (con soporte _básico_ de **MarkDown**)
+
+Posibles bonus:
+
+- Selector de mazos
+- Tiempo límite
+- Relámpago
 
 ## Notas adicionales :moyai:
 
