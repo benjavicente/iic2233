@@ -19,7 +19,7 @@ class InitialWindow(QMainWindow):
         self.pix_logo = pix_logo
         self._set_up()
 
-    def _set_up(self):
+    def _set_up(self) -> None:
         '''Agrega los elementos gráficos a la ventana'''
         main = QWidget()
         self.setCentralWidget(main)
@@ -64,20 +64,20 @@ class InitialWindow(QMainWindow):
         self.players_layout = QVBoxLayout()
         self.players_frame.setLayout(self.players_layout)
 
-    def action_joining(self):
+    def action_joining(self) -> None:
         '''Acción al entrar al servidor'''
         # TODO verificación de usuario
         self.join.setDisabled(True)
         self.signal_join.emit(self.name.text())
         self.setWindowTitle('Cargando')
 
-    def state_joining_failed(self, error: dict):
+    def state_joining_failed(self, error: dict) -> None:
         '''Estado que se muestra al fallar entrar al servidor'''
         self.setWindowTitle('Ventana Inicial')
         QMessageBox.information(self, 'Error', error['display'])
         self.join.setDisabled(False)
 
-    def action_waiting(self, players: list):
+    def action_waiting(self, players: list) -> None:
         '''Acción que muestra la sala de espera'''
         self.setWindowTitle('Sala de espera')
         # Se crean los widgets
@@ -116,28 +116,32 @@ class GameWindow(QMainWindow):
         self.reverse_card = None
         self._set_up()
 
-    def _set_up(self):
-        self.setWindowTitle('DCCuadrado')
+    def _set_up(self) -> None:
         self.CardPool.setFixedSize(self.card_size)
         self.CardDeck.setFixedSize(self.card_size)
-        self.CardPool.setScaledContents(True)
-        self.CardDeck.setScaledContents(True)
         self.ActionUNO.setCursor(QCursor(Qt.PointingHandCursor))
 
-    def set_reverse_card(self, card: object):
+    def set_reverse_card(self, card_pixmap: object) -> None:
         'Establece el reverso de la carta'
         pixmap = QPixmap()
-        pixmap.loadFromData(card)
+        pixmap.loadFromData(card_pixmap)
         self.reverse_card = pixmap
-        self.CardPool.setPixmap(pixmap)
+        self.CardDeck.setPixmap(pixmap)
 
-    def setup_players(self, game_info: dict):
+    def setup_players(self, game_info: dict) -> None:
         'Prepara el interfaz de juego'
         self.ActivePlayer.setText(game_info['active_player'])
-        self.ActiveColor.setText(game_info['active_color'])
         for i in map(str, range(4)):
             name_label = getattr(self, f'Player{i}Name', None)
             if i in game_info:
                 name_label.setText(game_info[i]['name'])
             else:
                 name_label.clear()
+
+    def add_card(self, c_color: str, c_type: str, c_pixmap: object) -> None:
+        'Añade la carta al jugador. Sigue lo establecido en el Enunciado'
+
+
+    def update_pool(self, c_color: str, c_type: str, c_pixmap: object) -> None:
+        'Añade la carta al pozo. Sigue lo establecido en el Enunciado'
+        self.ActiveColor.setText(c_color)
