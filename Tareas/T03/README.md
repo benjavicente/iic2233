@@ -16,14 +16,17 @@
 
 ## Importante :heavy_exclamation_mark:
 
+Tener una versión de PyQt5 menor a 5.14 causa un pequeño error.
+
 ## Ejecución :computer:
 
 Los archivos a ejecutar son para cliente y servidor son
 `main.py` en los directorios `client` y `server` respectivamente.
 
 Cree un archivo `run.cmd` para simplifica el abrir todas las consolas
-sin tener que repetir múltiples comandos (Windows). Abre el servidor
-y un número de clientes, cantidad que puede ser cambiada en el mismo archivo.
+sin tener que repetir múltiples comandos (Windows). Al ejecutar `run`
+se abre el servidor y un número de clientes, definido en el mismo
+archivo.
 
 
 ## Supuestos, aclaraciones y consideraciones :thinking:
@@ -60,6 +63,7 @@ por ids en intervalos de 8 (a excepción de 3, establecido en el enunciado).
 |  3 |           :penguin: | imagen de carta      | `object` | al actualizar el mazo o el pozo $^1$ **(no implementado)**
 |  4 | :computer:          | nombre del jugador   | `str`    | al unirse
 |  5 | :computer:          | carta seleccionada   | `str`    | en la sala de juego **(no implementado)**
+|  6 | :computer::penguin: | chat                 | `str`    | al enviar y recibir un chat
 |  8 |           :penguin: | jugadores            | `list`   | al entrar un jugador, añadiéndolo en el cliente
 | 16 | :computer::penguin: | información de error | `dict`   | al no poderse realizar una acción
 | 17 |           :penguin: | detalles jugadores   | `dict`   | al iniciar la sala de juego
@@ -73,13 +77,37 @@ Pará `object` se usará `pickle.loads(content, encoding='utf-8')`.
 
 ## Librerías :books:
 
+<!-- Falta una pequeña descripción -->
+
 ### Librerías externas utilizadas :clipboard:
 
-<!-- TODO -->
+- `PyQt5`
+
+- `sys`
+- `socket`
+  - `socket as Socket`
+  - `AF_INET as IPv4`
+  - `SOCK_STREAM as TPC`
+- `threading`
+  - `Thread`
+  - `Lock`
+- `os`
+  - `path`
 
 ### Librerías propias :pencil:
 
-<!-- TODO -->
+- `protocol`
+
+- `application`
+- frontend
+  - `windows`
+- backend
+  - `client`
+
+- `log`
+- `game`
+- `generador_de_mazos`
+- `server`
 
 ## Código externo utilizado :package:
 
@@ -93,12 +121,19 @@ Listo:
 - Conexión servidor-clientes
 - Sala de entrada
 - Sala de espera
+- Lógica inicial del juego
 
 En desarrollo:
 
 - Lógica del juego
-- Sala de juego
 - Envío de cartas
+- Seleccionar cartas
+- Conexión de botones (DCCuadrádo!)
+- Sala de espera
+
+Bonus:
+
+- Chat (con soporte _básico_ de **MarkDown**)
 
 ## Notas adicionales :moyai:
 
