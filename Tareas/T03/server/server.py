@@ -58,17 +58,18 @@ class Server:
         try:
             while True:
                 data = recv_data(client_socket)
-                self.log('datos recibidos', id_, f'Acción a realizar: {data[0]}')
                 log_from = self.clients_names[id_] if id_ in self.clients_names else id_
-                self.manage_response(client_socket, log_from, data)
+                self.log('datos recibidos', log_from, f'Acción a realizar: {data[0]}')
+                self.manage_response(client_socket, id_, data)
         except ConnectionError:
             self.log('Error de conexión', id_)
         finally:
             # Se elimina el cliente
             with self.lock_edit_client:
-                self.game.remove_player(self.clients_names[id_])
                 del self.clients[id_]
-                del self.clients_names[id_]
+                if id_ in self.clients_names:
+                    self.game.remove_player(self.clients_names[id_])
+                    del self.clients_names[id_]
             if not self.game.started:
                 self.send_all({
                     0: 'players',
@@ -150,4 +151,11 @@ class Server:
                 if self.game.started:
                     self.setup_game()
 
-        # El jugador trata de ...
+        # El jugador trata de mandar un chat
+        if data[0] == 'chat':
+            name = self.clients_names[id_]
+            formated_mesaje = f'{name}: {data[6]}'
+            self.send_all({
+                0: 'chat',
+                6: formated_mesaje
+            })
