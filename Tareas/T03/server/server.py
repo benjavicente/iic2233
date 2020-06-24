@@ -152,10 +152,18 @@ class Server:
                     self.setup_game()
 
         # El jugador trata de mandar un chat
-        if data[0] == 'chat':
+        elif data[0] == 'chat':
             name = self.clients_names[id_]
             formated_mesaje = f'{name}: {data[6]}'
             self.send_all({
                 0: 'chat',
                 6: formated_mesaje
             })
+
+        # El jugador trata de robar
+        elif data[0] == 'draw_card':
+            pass
+
+        # El jugador trata de jugar una carta
+        elif data[0] == 'play_card':
+            pass

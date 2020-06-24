@@ -42,6 +42,7 @@ class InitialWindow(QMainWindow):
         self.name = QLineEdit(self.name_entry)
         self.name.setPlaceholderText('Ingresa un nombre')
         self.name.setObjectName('name')
+        self.name.returnPressed.connect(self.action_joining)
         entry_layout.addWidget(self.name)
         # Botón para unirse
         self.join = QPushButton(self.name_entry)
@@ -66,8 +67,8 @@ class InitialWindow(QMainWindow):
 
     def action_joining(self) -> None:
         '''Acción al entrar al servidor'''
-        # TODO verificación de usuario
         self.join.setDisabled(True)
+        self.name.setDisabled(True)
         self.signal_join.emit(self.name.text())
         self.setWindowTitle('Cargando')
 
@@ -76,6 +77,7 @@ class InitialWindow(QMainWindow):
         self.setWindowTitle('Ventana Inicial')
         QMessageBox.information(self, 'Error', error['display'])
         self.join.setDisabled(False)
+        self.name.setDisabled(False)
 
     def action_waiting(self, players: list) -> None:
         '''Acción que muestra la sala de espera'''
@@ -88,7 +90,6 @@ class InitialWindow(QMainWindow):
             for _ in range(len(players)):
                 self.players_layout.addWidget(QLabel(self.players_frame), alignment=Qt.AlignCenter)
         # Se añaden los nombres
-        print(players)
         for i, ply in enumerate(players):
             widget = self.players_layout.itemAt(i).widget()
             if ply:
@@ -100,6 +101,9 @@ class InitialWindow(QMainWindow):
             # https://stackoverflow.com/q/9066669
             self.style().polish(widget)  # Es raro como se debe cambiar el estilo...
 
+
+
+# TODO: pressEvent para las cartas, el cual emite el indice de esta
 
 class GameWindow(QMainWindow):
     '''Ventana principal dell juego'''
@@ -131,16 +135,14 @@ class GameWindow(QMainWindow):
     
     def add_chat_mesaje(self, mesaje: str) -> None:
         'Recibe un mensaje'
-        before = self.Chat.toMarkdown()
-        after = before + '\n' + mesaje
-        self.Chat.setMarkdown(after.strip())
+        new = self.Chat.toMarkdown() + '\n' + mesaje
+        self.Chat.setMarkdown(new.strip())
 
     def set_reverse_card(self, card_pixmap: object) -> None:
         'Establece el reverso de la carta'
-        pixmap = QPixmap()
-        pixmap.loadFromData(card_pixmap)
-        self.reverse_card = pixmap
-        self.CardDeck.setPixmap(pixmap)
+        self.reverse_card = QPixmap()
+        self.reverse_card.loadFromData(card_pixmap)
+        self.CardDeck.setPixmap(self.reverse_card)
 
     def setup_players(self, game_info: dict) -> None:
         'Prepara el interfaz de juego'
@@ -149,11 +151,12 @@ class GameWindow(QMainWindow):
             name_label = getattr(self, f'Player{i}Name', None)
             if i in game_info:
                 name_label.setText(game_info[i]['name'])
-            else:
-                name_label.clear()
 
     def add_card(self, c_color: str, c_type: str, c_pixmap: object) -> None:
         'Añade la carta al jugador. Sigue lo establecido en el Enunciado'
+        pass
+
+    def remove_card(self, index):
         pass
 
     def update_pool(self, c_color: str, c_type: str, c_pixmap: object) -> None:

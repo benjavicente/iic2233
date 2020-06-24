@@ -12,7 +12,7 @@ from backend.protocol import recv_data, send_data  # Tira error en el lint...
 class Client(QObject):
     'Cliente del servidor'
     signal_response = pyqtSignal(dict)
-    signal_connection_error = pyqtSignal()
+    signal_connection_error = pyqtSignal(str)
 
     def __init__(self, host, port):
         super().__init__()
@@ -41,7 +41,7 @@ class Client(QObject):
                 print(f'recibiendo {data[0]}')
                 self.signal_response.emit(data)
         except ConnectionError:
-            self.signal_connection_error.emit()
+            self.signal_connection_error.emit('Se ha desconectado el servidor')
         finally:
             self.socket.close()
 
