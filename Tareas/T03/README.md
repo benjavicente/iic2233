@@ -21,6 +21,10 @@
 Los archivos a ejecutar son para cliente y servidor son
 `main.py` en los directorios `client` y `server` respectivamente.
 
+Cree un archivo `run.cmd` para simplifica el abrir todas las consolas
+sin tener que repetir múltiples comandos (Windows). Abre el servidor
+y un número de clientes, cantidad que ser cambiada en el mismo archivo.
+
 
 ## Supuestos, aclaraciones y consideraciones :thinking:
 
