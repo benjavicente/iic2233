@@ -57,6 +57,11 @@ class Application(QApplication):
             self.initial_window.state_joining_failed(response[16])
         elif response[0] == 'players':
             self.initial_window.action_waiting(response[8])
+        elif response[0] == 'setup':
+            self.initial_window.close()
+            self.game_window.set_reverse_card(response[24])
+            self.game_window.setup_players(response[17])
+            self.game_window.show()
 
 
     def _join(self, name: str):

@@ -1,14 +1,19 @@
 'Módulo que posee la clase Server que administra el servidor'
 
 from socket import socket as Socket, AF_INET as IPv4, SOCK_STREAM as TCP
-from threading import Thread
+from threading import Thread, Lock
+from os import path
 
 from log import Log
 from protocol import recv_data, send_data
 from game import Game
 
+# TODO: revisar si se necesitan locks
+
 class Server:
     'El servidor del juego'
+    lock_edit_client = Lock()
+
     def __init__(self, host, port, **kwargs):
         self.host = host
         self.port = port
@@ -43,7 +48,8 @@ class Server:
             #* Se podria hacer un hash con el ip y la dirección del socket
             client, (_, direc) = self.socket.accept()  # ip, direc
             self.log('conectado con cliente', details=f'id del cliente: {direc}')
-            self.clients[direc] = client
+            with self.lock_edit_client:
+                self.clients[direc] = client
             thread = Thread(target=self.listen_active, daemon=True, args=(client, direc))
             thread.start()
 
@@ -59,9 +65,10 @@ class Server:
             self.log('Error de conexión', id_)
         finally:
             # Se elimina el cliente
-            self.game.remove_player(self.clients_names[id_])
-            del self.clients[id_]
-            del self.clients_names[id_]
+            with self.lock_edit_client:
+                self.game.remove_player(self.clients_names[id_])
+                del self.clients[id_]
+                del self.clients_names[id_]
             if not self.game.started:
                 self.send_all({
                     0: 'players',
@@ -84,11 +91,26 @@ class Server:
             if (not (exclude and id_ == exclude)) and (with_name and id_ in self.clients_names):
                 self.send(socket, id_, data)
 
-    def update_game(self):
+    def setup_game(self):
         'Actualiza la información del juego a todos los clientes'
         self.log('Actualizando juego')
-        for id_, socket in self.clients.items():
-            pass
+        for id_, name in self.clients_names.items():
+            socket = self.clients[id_]
+            game_data = self.game.set_up(name)
+            data = {
+                0: 'setup',
+                17: game_data,
+                24: self.get_card_pixmap('reverso')
+            }
+            self.send(socket, id_, data)
+
+    def get_card_pixmap(self, card_type):
+        'Obtiene el pixmap de la carta'
+        # Esta parte tiene que estar en español
+        if isinstance(card_type, tuple):
+            card_type = '_'.join(card_type)
+        with open(path.join('sprites', self.game.theme, card_type + '.png'), 'rb') as file:
+            return file.read()
 
     def manage_response(self, socket, id_: int, data: dict):
         'Maneja la respuesta del socket'
@@ -126,6 +148,6 @@ class Server:
                     8: self.game.get_player_names()
                 })
                 if self.game.started:
-                    self.update_game()
+                    self.setup_game()
 
         # El jugador trata de ...

@@ -1,7 +1,7 @@
 '''Ventanas del juego'''
 
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QCursor
+from PyQt5.QtCore import Qt, pyqtSignal, QSize
+from PyQt5.QtGui import QCursor, QPixmap
 from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QLineEdit, QMainWindow,
                              QPushButton, QVBoxLayout, QWidget, QMessageBox)
 from PyQt5.uic import loadUi
@@ -112,7 +112,32 @@ class GameWindow(QMainWindow):
     def __init__(self, ui_path):
         super().__init__()
         loadUi(ui_path, self)
+        self.card_size = QSize(105, 147)
+        self.reverse_card = None
         self._set_up()
 
     def _set_up(self):
         self.setWindowTitle('DCCuadrado')
+        self.CardPool.setFixedSize(self.card_size)
+        self.CardDeck.setFixedSize(self.card_size)
+        self.CardPool.setScaledContents(True)
+        self.CardDeck.setScaledContents(True)
+        self.ActionUNO.setCursor(QCursor(Qt.PointingHandCursor))
+
+    def set_reverse_card(self, card: object):
+        'Establece el reverso de la carta'
+        pixmap = QPixmap()
+        pixmap.loadFromData(card)
+        self.reverse_card = pixmap
+        self.CardPool.setPixmap(pixmap)
+
+    def setup_players(self, game_info: dict):
+        'Prepara el interfaz de juego'
+        self.ActivePlayer.setText(game_info['active_player'])
+        self.ActiveColor.setText(game_info['active_color'])
+        for i in map(str, range(4)):
+            name_label = getattr(self, f'Player{i}Name', None)
+            if i in game_info:
+                name_label.setText(game_info[i]['name'])
+            else:
+                name_label.clear()

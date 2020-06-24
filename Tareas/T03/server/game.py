@@ -23,6 +23,7 @@ class Game:
     def __init__(self, **kwards):
         # Parametros de configuración y preparación
         self.__players = []
+        self.theme = kwards['tema']
         self.__max_players = kwards['jugadores_partida']
         self.__game_config = {
             'int_cards': kwards['cartas_iniciales'],
@@ -73,8 +74,11 @@ class Game:
         if self.waiting_to == player_name:
             selected = self.waiting_to.cards[index]
 
-    def get_game_data(self, player_name: str) -> dict:
-        'Retorna toda la información que necesita el cliente para su interfaz'
+    def set_up(self, player_name: str) -> dict:
+        '''
+        Retorna toda la información que necesita el
+        cliente para iniciar su interfaz de juego
+        '''
         # TODO:  Tengo que buscar una manera de cumplir lo del enunciado
         # TODO:  (mandar cartas como tipo-numero-imagen) a la vez que mando
         # TODO:  toda la información del juego (jugador actual, cantidad
@@ -88,8 +92,8 @@ class Game:
         # ║ chat   0(2°)   uno! ║  el resto de los jugadores se envía la cantidad de cartas
         # ╚═════════════════════╝  - Se envía información adicional  (jugador y color actual)
         data = {
-            'color': self.pool[0],
-            'current': self.waiting_to.name
+            'active_color': self.pool[1],
+            'active_player': self.waiting_to.name
         }
         # Se busca el índice del jugador (n ->> n+1)
         index = 0
@@ -97,14 +101,17 @@ class Game:
             index += 1
         data['0'] = {
             'name': player_name,
-            'cards': '?'
+            'n_cards': len(self.__players[index].cards)
         }
         # Se van guardando los demás (n <<- n+1)
         remaining = self.__max_players - 1
         position = 3
         while remaining:
             index = (index - 1) % self.__max_players
-            data[str(position)] = len(self.__players[index].cards)
+            data[str(position)] = {
+                'name': self.__players[index].name,
+                'n_cards': len(self.__players[index].cards)
+            }
             position -= 1
             remaining -= 1
         pprint(data)
