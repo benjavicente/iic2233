@@ -35,9 +35,9 @@ class Game:
 
     def valid_name(self, name: str) -> True:
         'Ve si el nombre es valido'
-        if name in self.__players:
-            return False
-        return True
+        if name not in self.__players and name.isalnum():
+            return True
+        return False
 
     def add_player(self, name: str) -> None:
         'Añade un jugador en la sala de espera'
