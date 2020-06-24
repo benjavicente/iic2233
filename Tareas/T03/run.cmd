@@ -1,3 +1,5 @@
+@ECHO OFF
+
 SET ruta_servidor="server"
 SET ruta_clientes="client"
 SET cantidad_clientes=4
