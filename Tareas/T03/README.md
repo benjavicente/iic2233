@@ -23,7 +23,7 @@ Los archivos a ejecutar son para cliente y servidor son
 
 Cree un archivo `run.cmd` para simplifica el abrir todas las consolas
 sin tener que repetir múltiples comandos (Windows). Abre el servidor
-y un número de clientes, cantidad que ser cambiada en el mismo archivo.
+y un número de clientes, cantidad que puede ser cambiada en el mismo archivo.
 
 
 ## Supuestos, aclaraciones y consideraciones :thinking:
@@ -50,34 +50,56 @@ El cual se almacena como:
 `largo_objX` un `int = L` de 4 bytes y `obj_X` un objeto de L bytes.
 
 Los tipos de objetos (`str`, `list`, `dict`, `object`) están agrupados
-por ids en intervalos de 8.
+por ids en intervalos de 8 (a excepción de 3, establecido en el enunciado).
 
 | id | de                  | tipo objecto         | objeto   | uso
 | -: | :-----------------: |:-------------------: | :------: | :-  
 |  0 | :computer::penguin: | tipo de acción       | `str`    | siempre
-|  1 |           :penguin: | color de carta       | `str`    | al actualizar un mazo, al robar o actualizar el pozo
-|  3 |           :penguin: | tipo de carta        | `str`    | al actualizar un mazo, al robar o actualizar el pozo
+|  1 |           :penguin: | color de carta       | `str`    | al actualizar el mazo o el pozo $^1$
+|  2 |           :penguin: | tipo de carta        | `str`    | al actualizar el mazo o el pozo $^1$
+|  3 |           :penguin: | imagen de carta      | `object` | al actualizar el mazo o el pozo $^1$
 |  4 | :computer:          | nombre del jugador   | `str`    | al unirse
-|  5 | :computer:          | carta seleccionada   | `str`    | al elegir carta en el turno
+|  5 | :computer:          | carta seleccionada   | `str`    | en la sala de juego **(no implementado)**
 |  8 |           :penguin: | jugadores            | `list`   | al entrar un jugador, añadiéndolo en el cliente
 | 16 | :computer::penguin: | información de error | `dict`   | al no poderse realizar una acción
-| 24 |           :penguin: | imagen de carta      | `object` | al actualizar un mazo, al robar o actualizar el pozo
+| 17 | :computer:          | detalles jugadores   | `dict`   | al iniciar la sala de juego **(no implementado)**
+| 24 | :computer:          | reverso de la carta  | `object` | al iniciar la sala de juego **(no implementado)**
 
 Tanto en `str`,`list`, `dict` se usa `.decode('utf-8)`.
 Además en las `list` se usará `.split('\n')` y en los `dict` `json.load`.
 Pará `object` se usará `pickle.loads(content, encoding='utf-8')`.
 
+- \[1\]: Establecido en el enunciado
 
 ## Librerías :books:
 
 ### Librerías externas utilizadas :clipboard:
 
+<!-- TODO -->
+
 ### Librerías propias :pencil:
+
+<!-- TODO -->
 
 ## Código externo utilizado :package:
 
+<!-- TODO -->
+
 ## Características implementadas :wrench:
+
+<!-- TODO -->
+Listo:
+
+- Conexión servidor-clientes
+- Sala de entrada
+- Sala de espera
+
+En desarrollo:
+
+- Lógica del juego
+- Sala de juego
+- Envío de cartas
 
 ## Notas adicionales :moyai:
 
-Disfrute el programa juego :tada:
+Disfrute el ~~programa~~ juego :tada:

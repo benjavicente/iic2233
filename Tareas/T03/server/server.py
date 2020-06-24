@@ -40,9 +40,10 @@ class Server:
         'Escucha nuevas conexiones'
         while True:
             self.log('esperando conexión')
+            #* Se podria hacer un hash con el ip y la dirección del socket
             client, (_, direc) = self.socket.accept()  # ip, direc
             self.log('conectado con cliente', details=f'id del cliente: {direc}')
-            self.clients[direc] = {'socket': client}
+            self.clients[direc] = client
             thread = Thread(target=self.listen_active, daemon=True, args=(client, direc))
             thread.start()
 
@@ -52,7 +53,8 @@ class Server:
             while True:
                 data = recv_data(client_socket)
                 self.log('datos recibidos', id_, f'Acción a realizar: {data[0]}')
-                self.manage_response(client_socket, id_, data)
+                log_from = self.clients_names[id_] if id_ in self.clients_names else id_
+                self.manage_response(client_socket, log_from, data)
         except ConnectionError:
             self.log('Error de conexión', id_)
         finally:
@@ -61,25 +63,37 @@ class Server:
             del self.clients[id_]
             del self.clients_names[id_]
             if not self.game.started:
-                self.send_all({0: 'players', 8: self.game.get_player_names()})
+                self.send_all({
+                    0: 'players',
+                    8: self.game.get_player_names()
+                })
             client_socket.close()
 
     def send(self, client_socket, id_: int, data: dict):
         'Manda el diccionario data al socket'
         send_data(client_socket, data)
-        self.log('Se mandó información', id_, data[0])
+        log_from = self.clients_names[id_] if id_ in self.clients_names else id_
+        self.log('se mandó información', log_from, data[0])
 
     def send_all(self, data: dict, exclude=None, with_name: bool = True):
         '''
         Manda un json serializado a todos los jugadores
         Puede excluirse a un jugador
         '''
-        for id_, values in self.clients.items():
+        for id_, socket in self.clients.items():
             if (not (exclude and id_ == exclude)) and (with_name and id_ in self.clients_names):
-                self.send(values['socket'], id_, data)
+                self.send(socket, id_, data)
+
+    def update_game(self):
+        'Actualiza la información del juego a todos los clientes'
+        self.log('Actualizando juego')
+        for id_, socket in self.clients.items():
+            pass
 
     def manage_response(self, socket, id_: int, data: dict):
         'Maneja la respuesta del socket'
+
+        # El jugador trata de unirse
         if data[0] == 'join':
             name = data[4]
             # El jugador trató de unirse con el el juego en desarrollo
@@ -105,15 +119,13 @@ class Server:
                 # Se guarda el nombre del jugador
                 self.game.add_player(name)
                 self.clients_names[id_] = name
-                self.log(data[0], id_, f'se ha unido {name}')
+                self.log('nombre establecido', id_, f'Nuevo nombre: {name}')
                 # Se envían los jugadores a los unidos
                 self.send_all({
                     0: 'players',
                     8: self.game.get_player_names()
                 })
                 if self.game.started:
-                    pass
-                    # Se tiene que enviar un json con información
-                    # suficiente para que cada cliente pueda mostrar sus cartas
-                    # y los demás jugadores al rededor de él, siguiendo el orden
-                    # de los turnos
+                    self.update_game()
+
+        # El jugador trata de ...
