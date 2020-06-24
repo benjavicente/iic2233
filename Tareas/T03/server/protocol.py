@@ -79,4 +79,4 @@ def send_data(sender_socket: Socket, data: dict) -> None:
         # Envío de objeto
         serialized_data += serialized_obj
     # Se enviá al socket
-    sender_socket.send(serialized_data)
+    sender_socket.sendall(serialized_data)
