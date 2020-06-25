@@ -73,44 +73,30 @@ class Game:
         if self.waiting_to == player_name:
             selected = self.waiting_to.cards[index]
 
-    def set_up(self, player_name: str) -> dict:
-        '''
-        Retorna toda la información que necesita el
-        cliente para iniciar su interfaz de juego
-        '''
-        # TODO:  Tengo que buscar una manera de cumplir lo del enunciado
-        # TODO:  (mandar cartas como tipo-numero-imagen) a la vez que mando
-        # TODO:  toda la información del juego (jugador actual, cantidad
-        # TODO:  de cartas de jugadores, reverse de las carats, entre otros).
-        # TODO:  Se debe realizar el procedimiento del enunciado CADA VEZ.
+    def get_relative_players(self, player_name: str):
+        'Ordena los jugadores según la vista del interfaz'
         # ╔═════════════════════╗  - EL jugador `name` esta abajo
         # ║ dcc    2(3°)    act ║  - Los jugadores son sentados en sentido antihorario
         # ║                     ║  - Los jugadores son rellenados en sentido horario
-        # ║ 3(1°)   █ █   1(  ) ║  - El orden de jugadores es antihorario
+        # ║ 1(1°)   █ █   3(  ) ║  - El orden de jugadores es antihorario
         # ║                     ║  - Solo al jugador `name` se le envían las cartas, para
         # ║ chat   0(2°)   uno! ║  el resto de los jugadores se envía la cantidad de cartas
         # ╚═════════════════════╝  - Se envía información adicional  (jugador y color actual)
-        data = {
-            'active_color': self.pool[1],
-            'active_player': self.waiting_to.name
-        }
+        player_list = list()
         # Se busca el índice del jugador (n ->> n+1)
         index = 0
         while self.__players[index] != player_name:
             index += 1
-        data['0'] = {
-            'name': player_name,
-            'n_cards': len(self.__players[index].cards)
-        }
+        player_list.append(self.__players[index])
         # Se van guardando los demás (n <<- n+1)
-        remaining = self.__max_players - 1
         position = 3
-        while remaining:
+        for _ in range(self.__max_players - 1):
             index = (index - 1) % self.__max_players
-            data[str(position)] = {
-                'name': self.__players[index].name,
-                'n_cards': len(self.__players[index].cards)
-            }
+            player_list.append(self.__players[index])
             position -= 1
-            remaining -= 1
-        return data
+        return player_list
+
+    def set_up(self, player_name: str) -> dict:
+        'Añade los jugadores al interfaz, con los nombres en orden'
+        players = self.get_relative_players(player_name)
+        return {str(i): ply.name for i, ply in enumerate(players)}

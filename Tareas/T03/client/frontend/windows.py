@@ -20,7 +20,7 @@ class InitialWindow(QMainWindow):
         self._set_up()
 
     def _set_up(self) -> None:
-        '''Agrega los elementos gráficos a la ventana'''
+        'Agrega los elementos gráficos a la ventana'
         main = QWidget()
         self.setCentralWidget(main)
         layout = QVBoxLayout()
@@ -132,7 +132,7 @@ class GameWindow(QMainWindow):
         if mesaje:
             self.signal_chat.emit(mesaje)
             self.ChatInput.clear()
-    
+
     def add_chat_mesaje(self, mesaje: str) -> None:
         'Recibe un mensaje'
         new = self.Chat.toMarkdown() + '\n' + mesaje
@@ -146,11 +146,10 @@ class GameWindow(QMainWindow):
 
     def setup_players(self, game_info: dict) -> None:
         'Prepara el interfaz de juego'
-        self.ActivePlayer.setText(game_info['active_player'])
         for i in map(str, range(4)):
             name_label = getattr(self, f'Player{i}Name', None)
             if i in game_info:
-                name_label.setText(game_info[i]['name'])
+                name_label.setText(game_info[i])
 
     def add_card(self, c_color: str, c_type: str, c_pixmap: object) -> None:
         'Añade la carta al jugador. Sigue lo establecido en el Enunciado'

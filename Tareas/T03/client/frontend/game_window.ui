@@ -50,7 +50,7 @@
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QFrame" name="Player3Frame">
+     <widget class="QFrame" name="Player1Frame">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -59,9 +59,9 @@
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <layout class="QVBoxLayout" name="Player3Info">
+        <layout class="QVBoxLayout" name="Player1Info">
          <item>
-          <widget class="QLabel" name="Player3Name">
+          <widget class="QLabel" name="Player1Name">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -74,7 +74,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="Player3Photo">
+          <widget class="QLabel" name="Player1Photo">
            <property name="text">
             <string/>
            </property>
@@ -86,7 +86,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QFrame" name="Player3Cards">
+        <widget class="QFrame" name="Player1Cards">
          <property name="minimumSize">
           <size>
            <width>20</width>
@@ -106,7 +106,7 @@
      </widget>
     </item>
     <item row="1" column="2">
-     <widget class="QFrame" name="Player1Frame">
+     <widget class="QFrame" name="Player3Frame">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -115,7 +115,7 @@
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QFrame" name="Player1Cards">
+        <widget class="QFrame" name="Player3Cards">
          <property name="minimumSize">
           <size>
            <width>20</width>
@@ -132,9 +132,9 @@
         </widget>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="Player1Info">
+        <layout class="QVBoxLayout" name="Player3Info">
          <item>
-          <widget class="QLabel" name="Player1Name">
+          <widget class="QLabel" name="Player3Name">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -147,7 +147,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="Player1Photo">
+          <widget class="QLabel" name="Player3Photo">
            <property name="text">
             <string/>
            </property>

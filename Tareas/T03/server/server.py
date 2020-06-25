@@ -83,14 +83,15 @@ class Server:
         log_from = self.clients_names[id_] if id_ in self.clients_names else id_
         self.log('se mandó información', log_from, data[0])
 
-    def send_all(self, data: dict, exclude=None, with_name: bool = True):
+    def send_all(self, data: dict):
         '''
         Manda un json serializado a todos los jugadores
-        Puede excluirse a un jugador
+        que posean un nombre
         '''
-        for id_, socket in self.clients.items():
-            if (not (exclude and id_ == exclude)) and (with_name and id_ in self.clients_names):
-                self.send(socket, id_, data)
+        with self.lock_edit_client:
+            for id_, socket in self.clients.items():
+                if id_ in self.clients_names:
+                    self.send(socket, id_, data)
 
     def setup_game(self):
         'Actualiza la información del juego a todos los clientes'
@@ -141,7 +142,8 @@ class Server:
             else:
                 # Se guarda el nombre del jugador
                 self.game.add_player(name)
-                self.clients_names[id_] = name
+                with self.lock_edit_client:
+                    self.clients_names[id_] = name
                 self.log('nombre establecido', id_, f'Nuevo nombre: {name}')
                 # Se envían los jugadores a los unidos
                 self.send_all({
