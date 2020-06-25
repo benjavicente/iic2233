@@ -116,7 +116,7 @@ class GameWindow(QMainWindow):
     def __init__(self, ui_path):
         super().__init__()
         loadUi(ui_path, self)
-        self.card_size = QSize(105, 147)
+        self.card_size = QSize(80, 112)
         self.reverse_card = None
         self._set_up()
 
@@ -151,9 +151,15 @@ class GameWindow(QMainWindow):
             if i in game_info:
                 name_label.setText(game_info[i])
 
-    def add_card(self, c_color: str, c_type: str, c_pixmap: object) -> None:
+    def add_player_card(self, c_color: str, c_type: str, c_pixmap: object) -> None:
         'Añade la carta al jugador. Sigue lo establecido en el Enunciado'
-        pass
+        card = QLabel(self.Player0Cards)
+        pixmap = QPixmap()
+        pixmap.loadFromData(c_pixmap)
+        card.setPixmap(pixmap)
+        card.setFixedSize(self.card_size)
+        card.setScaledContents(True)
+        self.Player0Cards.layout().addWidget(card)
 
     def remove_card(self, index):
         pass

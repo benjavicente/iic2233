@@ -58,9 +58,11 @@ class Server:
         try:
             while True:
                 data = recv_data(client_socket)
+                if not data:
+                    raise ConnectionError
                 log_from = self.clients_names[id_] if id_ in self.clients_names else id_
                 self.log('datos recibidos', log_from, f'Acción a realizar: {data[0]}')
-                self.manage_response(client_socket, id_, data)
+                self.manage_response(id_, data)
         except ConnectionError:
             self.log('Error de conexión', id_)
         finally:
@@ -77,8 +79,9 @@ class Server:
                 })
             client_socket.close()
 
-    def send(self, client_socket, id_: int, data: dict):
+    def send(self, id_: int, data: dict):
         'Manda el diccionario data al socket'
+        client_socket = self.clients[id_]
         send_data(client_socket, data)
         log_from = self.clients_names[id_] if id_ in self.clients_names else id_
         self.log('se mandó información', log_from, data[0])
@@ -89,32 +92,45 @@ class Server:
         que posean un nombre
         '''
         with self.lock_edit_client:
-            for id_, socket in self.clients.items():
+            for id_ in self.clients:
                 if id_ in self.clients_names:
-                    self.send(socket, id_, data)
+                    self.send(id_, data)
 
     def setup_game(self):
         'Actualiza la información del juego a todos los clientes'
         self.log('Actualizando juego')
         for id_, name in self.clients_names.items():
-            socket = self.clients[id_]
-            game_data = self.game.set_up(name)
+            game_data = self.game.set_up_names(name)
             data = {
                 0: 'setup',
                 17: game_data,
-                24: self.get_card_pixmap('reverso')
+                24: self.get_card_pixmap(('reverso', ''))
             }
-            self.send(socket, id_, data)
+            self.send(id_, data)
+        for owner_id, card in self.game.cards_to_add():
+            for id_ in self.clients_names:
+                if owner_id == id_:
+                    data = {
+                        0: 'add_player_card',
+                        1: card[0],
+                        2: card[1],
+                        3: self.get_card_pixmap(card)
+                    }
+                    self.send(id_, data)
+                else:
+                    pass # Entregar carta dada vuelta
 
-    def get_card_pixmap(self, card_type):
+    def update_cards(self):
+        'Actualiza las cartas'
+        pass
+
+    def get_card_pixmap(self, card):
         'Obtiene el pixmap de la carta'
-        # Esta parte tiene que estar en español
-        if isinstance(card_type, tuple):
-            card_type = '_'.join(card_type)
+        card_type = '_'.join([n for n in filter(None, card)])
         with open(path.join('sprites', self.game.theme, card_type + '.png'), 'rb') as file:
             return file.read()
 
-    def manage_response(self, socket, id_: int, data: dict):
+    def manage_response(self, id_: int, data: dict):
         'Maneja la respuesta del socket'
 
         # El jugador trata de unirse
@@ -122,7 +138,7 @@ class Server:
             name = data[4]
             # El jugador trató de unirse con el el juego en desarrollo
             if self.game.started:
-                self.send(socket, id_, {
+                self.send(id_, {
                     0: 'join failed',
                     16: {
                         'why': 'game already started',
@@ -131,7 +147,7 @@ class Server:
                 })
             # El jugador se une con un nombre ya existente
             elif not self.game.valid_name(name):
-                self.send(socket, id_, {
+                self.send(id_, {
                     0: 'join failed',
                     16: {
                         'why': 'invalid name',
@@ -141,7 +157,7 @@ class Server:
             # En jugador pudo ingresar
             else:
                 # Se guarda el nombre del jugador
-                self.game.add_player(name)
+                self.game.add_player(name, id_)
                 with self.lock_edit_client:
                     self.clients_names[id_] = name
                 self.log('nombre establecido', id_, f'Nuevo nombre: {name}')

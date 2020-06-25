@@ -32,13 +32,14 @@ def recv_data(receiver_socket: Socket, chunk_size=128) -> dict:
             object_content += receiver_socket.recv(chunk)
             reamining_size -= chunk_size
         # Transformación de objetos
-        if   object_id < 0b001000:  # str
+        # TODO: ordenarlo?
+        if   object_id < 8 and not object_id == 3:  # str
             content = object_content.decode('utf-8')
-        elif object_id < 0b010000:  # list
+        elif object_id < 16 and not object_id == 3: # list
             content = object_content.decode('utf-8').split('\n')
-        elif object_id < 0b011000:  # dict
+        elif object_id < 24 and not object_id == 3: # dict
             content = _json_loads(object_content.decode('utf-8'))
-        elif object_id < 0b100000:  # bytearray
+        elif object_id < 32 or object_id == 3:      # bytearray
             content = object_content
         else:
             raise IndexError(f"Valor de id inválido ({object_id})")
@@ -56,6 +57,8 @@ def send_data(sender_socket: Socket, data: dict) -> None:
         raise TypeError("'sender_socket' no es un socket")
     if not isinstance(data, dict):
         raise TypeError("'data' no es un diccionario")
+    if 0 not in data:
+        raise KeyError(0, 'no se encuentra en data')
     serialized_data = bytearray()
     # Serialización la cantidad de objetos
     serialized_data += len(data).to_bytes(2, 'big')
@@ -63,13 +66,13 @@ def send_data(sender_socket: Socket, data: dict) -> None:
         # Serialización del ID
         serialized_data += id_.to_bytes(4, 'big')
         # Serialización de objectos
-        if   isinstance(obj, str):                 # id < 8
+        if   isinstance(obj, str):                 # id < 8 | id != 3
             serialized_obj = obj.encode('utf-8')
         elif isinstance(obj, list):                # id < 16
             serialized_obj = '\n'.join(obj).encode('utf-8')
         elif isinstance(obj, dict):                # id < 24
             serialized_obj = _json_dumps(obj).encode('utf-8')
-        elif isinstance(obj, (bytearray, bytes)):  # id < 36
+        elif isinstance(obj, (bytearray, bytes)):  # id < 36 | id == 3
             serialized_obj = obj
         else:
             raise TypeError(f'Tipo de objeto con id {id_} inváilido')

@@ -49,6 +49,7 @@ class Application(QApplication):
     def error(self, info: str):
         'Maneja un error de conexión'
         error_box = QMessageBox(QMessageBox.Critical, 'Error', info)
+        error_box.raise_()  #?
         error_box.exec()
         self.closeAllWindows()
 
@@ -63,8 +64,8 @@ class Application(QApplication):
             self.game_window.set_reverse_card(response[24])
             self.game_window.setup_players(response[17])
             self.game_window.show()
-        elif response[0] == 'add_card':
-            self.game_window.add_card(
+        elif response[0] == 'add_player_card':
+            self.game_window.add_player_card(
                 c_color=response[1],
                 c_type=response[2],
                 c_pixmap=response[3]

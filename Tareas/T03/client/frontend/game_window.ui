@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>638</width>
-    <height>512</height>
+    <width>820</width>
+    <height>677</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>DCCuadrado</string>
   </property>
   <widget class="QWidget" name="MainWidget">
-   <layout class="QGridLayout" name="gridLayout" rowstretch="1,1,1" columnstretch="1,1,1">
+   <layout class="QGridLayout" name="gridLayout" rowstretch="1,2,1" columnstretch="1,2,1">
     <property name="sizeConstraint">
      <enum>QLayout::SetDefaultConstraint</enum>
     </property>

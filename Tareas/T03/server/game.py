@@ -1,12 +1,13 @@
 '''Módulo que administra la lógica del juego'''
 
 from generador_de_mazos import sacar_cartas as get_cards
-
+from collections import deque
 
 class Player:
     'Jugador'
-    def __init__(self, name):
+    def __init__(self, name: str, id_: int):
         self.name = name
+        self.id = id_
         self.cards = []
 
     def __repr__(self):
@@ -32,6 +33,8 @@ class Game:
         self.started = False
         self.waiting_to = None
         self.pool = None
+        # Parámetros de flujo
+        self.__cards_to_add = deque()
 
     def valid_name(self, name: str) -> True:
         'Ve si el nombre es valido'
@@ -39,10 +42,10 @@ class Game:
             return True
         return False
 
-    def add_player(self, name: str) -> None:
+    def add_player(self, name: str, id_: int) -> None:
         'Añade un jugador en la sala de espera'
         if not self.started:
-            self.__players.append(Player(name))
+            self.__players.append(Player(name, id_))
             if len(self.__players) == self.__max_players:
                 self.start_game()
 
@@ -66,6 +69,9 @@ class Game:
         self.pool = get_cards(1)[0] # Como solo es una carta, se obtiene con [0]
         for player in self.__players:
             player.cards = get_cards(self.__game_config['int_cards'])
+        for i in range(len(player.cards)):
+            for player in self.__players:
+                self.__cards_to_add.append((player, player.cards[i]))
 
     def play(self, player_name: str, index: int) -> None:
         'El jugador juega la carta `index` de su mazo'
@@ -94,9 +100,22 @@ class Game:
             index = (index - 1) % self.__max_players
             player_list.append(self.__players[index])
             position -= 1
-        return player_list
+        return tuple(player_list)
 
-    def set_up(self, player_name: str) -> dict:
+    def set_up_names(self, player_name: str) -> dict:
         'Añade los jugadores al interfaz, con los nombres en orden'
         players = self.get_relative_players(player_name)
         return {str(i): ply.name for i, ply in enumerate(players)}
+
+    def set_up_cards(self) -> dict:
+        '''
+        Prepara las catas el inicio del juego
+        Entrega un diccionario con instrucciones para el servidor
+        '''
+        pass
+
+    def cards_to_add(self) -> dict:
+        while self.__cards_to_add:
+            player, card = self.__cards_to_add.popleft()
+            print(card)
+            yield player.id, card
