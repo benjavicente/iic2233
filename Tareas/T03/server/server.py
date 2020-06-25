@@ -107,6 +107,10 @@ class Server:
                 24: self.get_card_pixmap(('reverso', ''))
             }
             self.send(id_, data)
+        self.update_cards()
+
+    def update_cards(self):
+        'Actualiza las cartas'
         for owner_id, card in self.game.cards_to_add():
             for id_ in self.clients_names:
                 if owner_id == id_:
@@ -119,10 +123,6 @@ class Server:
                     self.send(id_, data)
                 else:
                     pass # Entregar carta dada vuelta
-
-    def update_cards(self):
-        'Actualiza las cartas'
-        pass
 
     def get_card_pixmap(self, card):
         'Obtiene el pixmap de la carta'

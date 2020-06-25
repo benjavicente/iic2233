@@ -117,5 +117,4 @@ class Game:
     def cards_to_add(self) -> dict:
         while self.__cards_to_add:
             player, card = self.__cards_to_add.popleft()
-            print(card)
             yield player.id, card
