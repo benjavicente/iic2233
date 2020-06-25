@@ -23,6 +23,9 @@ Tener una versión de PyQt5 menor a 5.14 causa un pequeño error.
 Los archivos a ejecutar son para cliente y servidor son
 `main.py` en los directorios `client` y `server` respectivamente.
 
+Hay que añadir la carpeta `sprites` y el módulo `generador_de_mazos.py`
+en la carpeta `server`.
+
 Cree un archivo `run.cmd` para simplifica el abrir todas las consolas
 sin tener que repetir múltiples comandos (Windows). Al ejecutar `run`
 se abre el servidor y un número de clientes, definido en el mismo
@@ -146,5 +149,7 @@ Posibles bonus:
 - Relámpago
 
 ## Notas adicionales :moyai:
+
+Hay un error al recibir objetos muy largos de un servidor externo.
 
 Disfrute el ~~programa~~ juego :tada:

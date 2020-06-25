@@ -1,5 +1,5 @@
 *.pdf
-sprites/
+server/sprites/
 generador_de_mazos.py
 __pycache__/
 .vscode/
