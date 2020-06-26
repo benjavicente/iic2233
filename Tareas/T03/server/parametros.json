@@ -4,5 +4,7 @@
     "jugadores_partida": 3,
     "maximo_cartas": 8,
     "cartas_iniciales": 5,
-    "tema": "simple"
+    "tema_inicial": "simple",
+    "penalización_uno_correcto": 4,
+    "penalización_uno_incorrecto": 4
 }

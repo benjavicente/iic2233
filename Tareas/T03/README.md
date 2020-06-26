@@ -87,6 +87,7 @@ Para ver donde se usa cada una se puede buscar ` {id_}: `.
 
 <!-- TODO -->
 - Los efectos de la primera carta del poso son omitidos.
+- Robar cartas **siempre es voluntario**. Si el jugador recibió una penalización por decir DCCuadrado, deberá robar un número de cartas de penalización.
 
 ## Librerías :books:
 

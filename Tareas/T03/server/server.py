@@ -193,17 +193,20 @@ class Server:
                 6: formated_mesaje
             })
 
-        # El jugador trata de robar
-        elif data[0] == 'draw_card':
-            pass
+        elif data[0] == 'uno':
+            name = self.clients_names[id_]
+            self.game.call_uno(name)
+            self.update_cards()
 
         # El jugador trata de jugar una carta
         elif data[0] == 'play_card':
             with self.lock_play:
                 name = self.clients_names[id_]
-                if self.game.play(name, int(data[5])):
+                index = int(data[5])
+                self.log('play card', name, f'played card of index {index}')
+                if self.game.play(name, index):
                     # El jugador pudo jugar una carta de su mano
-                    if int(data[5]) > 0:
+                    if index > 0:
                         self.send_all({
                             0: 'remove_card',
                             4: name,

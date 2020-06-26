@@ -195,6 +195,7 @@ class GameWindow(QMainWindow):
         self.CardDeck.setCursor(QCursor(Qt.OpenHandCursor))
         self.CardPool.setFixedSize(self.card_size)
         self.ActionUNO.setCursor(QCursor(Qt.PointingHandCursor))
+        self.ActionUNO.pressed.connect(self.signal_call)
         self.ChatInput.returnPressed.connect(self.send_chat)
 
     def send_chat(self) -> None:

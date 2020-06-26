@@ -35,6 +35,7 @@ class Application(QApplication):
 
         self.game_window.signal_chat.connect(self._send_chat)
         self.game_window.signal_play.connect(self._play_card)
+        self.game_window.signal_call.connect(self._call_uno)
 
     def run(self):
         'Corre la aplicación'
@@ -101,4 +102,10 @@ class Application(QApplication):
         self.client.send({
             0: 'play_card',
             5: str(index)
+        })
+
+    def _call_uno(self):
+        'El jugador llamó UNO'
+        self.client.send({
+            0: 'uno'
         })
