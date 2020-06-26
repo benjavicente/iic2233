@@ -138,7 +138,6 @@ class GameCard(QLabel):
     def mousePressEvent(self, event):
         'Maneja el click en la carta'
         if self.__accesible:
-            self.setDisabled(True)
             # Se tiene que encontrar el indice de la carta en el layout
             index = self.parentWidget().layout().indexOf(self)
             # Se emite la señal al servidor
@@ -220,9 +219,9 @@ class GameWindow(QMainWindow):
 
     def remove_card(self, name: str, index: int) -> None:
         'Remueve la carta con indice `index` del jugador con nombre `name`'
-        # https://doc.qt.io/qt-5/qlayout.html#takeAt
-        card = self._player_hands[name].layout().takeAt(int(index))
-        widget = card.widget()
+        # https://doc.qt.io/qt-5/qlayout.html#removeItem
+        # https://stackoverflow.com/q/43343773
+        layout = self._player_hands[name].layout()
+        widget = layout.itemAt(index).widget()
         widget.close()
-        del widget
-        del card
+        layout.removeItem(widget)

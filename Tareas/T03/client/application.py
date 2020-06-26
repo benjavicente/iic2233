@@ -80,7 +80,7 @@ class Application(QApplication):
                 c_pixmap=response[3]
             )
         elif response[0] == 'remove_card':
-            self.game_window.remove_card(response[4], response[5])
+            self.game_window.remove_card(response[4], int(response[5]))
         elif response[0] == 'chat':
             self.game_window.add_chat_mesaje(response[6])
 
