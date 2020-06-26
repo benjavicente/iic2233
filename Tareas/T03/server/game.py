@@ -78,8 +78,10 @@ class Game:
         'El jugador juega la carta `index` de su mazo. Retorna true si se pudo jugar'
         if self.waiting_to == player_name:  #* Aquí debe estar la condición del bonus
             selected = self.waiting_to.cards[index]
+            print(selected, player_name)
             if self.is_valid_card(selected):
                 # La carta es válida, se hacen cosas
+                self.waiting_to.cards.pop(index) # Se elimina la carta
                 self.pool = selected  # Se cambia la carta del pozo
                 self._player_rotation()  # Se cambia el jugador
                 return True

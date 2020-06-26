@@ -225,7 +225,6 @@ class GameWindow(QMainWindow):
         'Añade la carta al jugador. Sigue lo establecido en el Enunciado'
         card = GameCard(self.Player0Cards, self.card_size, c_pixmap, 0, self.signal_drop)
         self.Player0Cards.layout().addWidget(card)
-        self.ActiveColor.setText(c_color)
 
     def add_opponent_card(self, name: str) -> None:
         'Añade una carta al oponente'
@@ -239,9 +238,9 @@ class GameWindow(QMainWindow):
         # https://doc.qt.io/qt-5/qlayout.html#removeItem
         # https://stackoverflow.com/q/43343773
         layout = self._player_hands[name].layout()
-        widget = layout.itemAt(index).widget()
-        widget.close()
-        layout.removeWidget(widget)
+        item = layout.itemAt(index)
+        item.widget().close()
+        layout.removeItem(item)
 
 
 if __name__ == "__main__":
