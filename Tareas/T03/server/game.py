@@ -24,8 +24,8 @@ class Game:
         # Parametros de configuración y preparación
         self.__players = []
         self.theme = kwards['tema']
-        self.__max_players = kwards['jugadores_partida']
         self.__game_config = {
+            'players': kwards['jugadores_partida'],
             'int_cards': kwards['cartas_iniciales'],
             'max_cards': kwards['maximo_cartas']
         }
@@ -33,6 +33,7 @@ class Game:
         self.started = False
         self.waiting_to = None
         self.pool = None
+        self._clockwise = False
         # Parámetros de flujo
         self.__cards_to_add = deque()
 
@@ -46,7 +47,7 @@ class Game:
         'Añade un jugador en la sala de espera'
         if not self.started:
             self.__players.append(Player(name, id_))
-            if len(self.__players) == self.__max_players:
+            if len(self.__players) == self.__game_config['players']:
                 self.start_game()
 
     def remove_player(self, name: str) -> None:
@@ -59,7 +60,7 @@ class Game:
         'Retorna una lista de los nombres para la sala de espera'
         # Se extiende la lista para que se entrega una cantidad constante
         names = [player.name for player in self.__players]
-        names.extend(['' for _ in range(self.__max_players - len(self.__players))])
+        names.extend(['' for _ in range(self.__game_config['players'] - len(self.__players))])
         return names
 
     def start_game(self) -> None:
@@ -73,13 +74,17 @@ class Game:
             for player in self.__players:
                 self.__cards_to_add.append((player, player.cards[i]))
 
-    def play(self, player_name: str, index: int) -> None:
-        'El jugador juega la carta `index` de su mazo'
-        # TODO
-        if self.waiting_to == player_name:
+    def play(self, player_name: str, index: int) -> bool:
+        'El jugador juega la carta `index` de su mazo. Retorna true si se pudo jugar'
+        if self.waiting_to == player_name:  #* Aquí debe estar la condición del bonus
             selected = self.waiting_to.cards[index]
+            if self.is_valid_card(selected):
+                self.pool = selected
+                # La carta es válida, se hacen cosas
+                return True
+        return False
 
-    def get_relative_players(self, player_name: str):
+    def get_relative_players(self, player_name: str) -> str:
         'Ordena los jugadores según la vista del interfaz'
         # ╔═════════════════════╗  - EL jugador `name` esta abajo
         # ║ dcc    2(3°)    act ║  - Los jugadores son sentados en sentido antihorario
@@ -96,8 +101,8 @@ class Game:
         player_list.append(self.__players[index])
         # Se van guardando los demás (n <<- n+1)
         position = 3
-        for _ in range(self.__max_players - 1):
-            index = (index - 1) % self.__max_players
+        for _ in range(self.__game_config['players'] - 1):
+            index = (index - 1) % self.__game_config['players']
             player_list.append(self.__players[index])
             position -= 1
         return tuple(player_list)
@@ -113,6 +118,10 @@ class Game:
         Entrega un diccionario con instrucciones para el servidor
         '''
         pass
+
+    def is_valid_card(self, card: tuple):
+        'Ve si la carta seleccionada es válida'
+        return card[0] == self.pool[0] or card[1] == self.pool[1]
 
     def cards_to_add(self) -> dict:
         while self.__cards_to_add:

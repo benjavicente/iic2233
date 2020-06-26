@@ -37,6 +37,7 @@ class Application(QApplication):
         self.client.signal_connection_error.connect(self.error)
 
         self.game_window.signal_chat.connect(self._send_chat)
+        self.game_window.signal_drop.connect(self._drop_card)
 
     def run(self):
         'Corre la aplicación'
@@ -78,6 +79,8 @@ class Application(QApplication):
                 c_type=response[2],
                 c_pixmap=response[3]
             )
+        elif response[0] == 'remove_card':
+            self.game_window.remove_card(response[4], response[5])
         elif response[0] == 'chat':
             self.game_window.add_chat_mesaje(response[6])
 
@@ -93,4 +96,11 @@ class Application(QApplication):
         self.client.send({
             0: 'chat',
             6: mesaje
+        })
+
+    def _drop_card(self, index: int):
+        'El jugador juega una carta'
+        self.client.send({
+            0: 'play_card',
+            5: str(index)
         })

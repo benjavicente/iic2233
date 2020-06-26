@@ -13,6 +13,7 @@ from game import Game
 class Server:
     'El servidor del juego'
     lock_edit_client = Lock()
+    lock_play = Lock()
 
     def __init__(self, host, port, **kwargs):
         self.host = host
@@ -111,6 +112,7 @@ class Server:
 
     def update_cards(self):
         'Actualiza las cartas'
+        # Actualiza las cartas de los jugadores
         for owner, card in self.game.cards_to_add():
             for id_ in self.clients_names:
                 if self.clients_names[id_] == owner:
@@ -126,6 +128,15 @@ class Server:
                         4: owner
                     }
                 self.send(id_, data)
+        # Actualiza el pozo
+        card = self.game.pool
+        data = {
+            0: 'update_pool',
+            1: card[0],
+            2: card[1],
+            3: self.get_card_pixmap(card)
+        }
+        self.send_all(data)
 
     def get_card_pixmap(self, card):
         'Obtiene el pixmap de la carta'
@@ -187,4 +198,14 @@ class Server:
 
         # El jugador trata de jugar una carta
         elif data[0] == 'play_card':
-            pass
+            with self.lock_play:
+                name = self.clients_names[id_]
+                if self.game.play(name, int(data[5])):
+                    # El jugador pudo jugar
+                    self.send_all({
+                        0: 'remove_card',
+                        4: name,
+                        5: data[5]
+                    })
+                    # Se actualizan las cartas
+                    self.update_cards()

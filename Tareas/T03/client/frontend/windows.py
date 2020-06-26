@@ -11,6 +11,8 @@ class InitialWindow(QMainWindow):
     '''Ventana que se muestra al iniciar el programa'''
 
     signal_join = pyqtSignal(str)  # trata de unirse
+    # TODO: el chat también tiene que estar implementado aquí
+    # TODO: talvez sea menjor guardar todo en la aplicación?
 
     def __init__(self, pix_logo):
         super().__init__()
@@ -98,18 +100,19 @@ class InitialWindow(QMainWindow):
             else:
                 widget.setObjectName('EmptyPlayer')
                 widget.setText('~~~')
+            # Es raro como se debe cambiar el estilo...
             # https://stackoverflow.com/q/9066669
-            self.style().polish(widget)  # Es raro como se debe cambiar el estilo...
+            self.style().polish(widget)
 
 
 
 class GameCard(QLabel):
     'Carta del juego'
     __angle = {0: 0, 1: 90, 2: 180, 3: 270}
-    def __init__(self, parent, size: QSize, pixmap_data, position: int = 0):
+    def __init__(self, parent, size: QSize, pixmap_data, position: int = 0, click_signal=None):
         super().__init__(parent)
         # Guarda si es del jugador principal
-        self.__accesible = not position
+        self.__accesible = bool(click_signal)
         # Ve si inicia un nuevo pixmap o toma uno entregado
         if isinstance(pixmap_data, QPixmap):
             pixmap = pixmap_data
@@ -130,11 +133,16 @@ class GameCard(QLabel):
         # Configuración adicional si la carta es del jugador principal
         if self.__accesible:
             self.setCursor(QCursor(Qt.PointingHandCursor))
+            self.__click_signal = click_signal
 
     def mousePressEvent(self, event):
         'Maneja el click en la carta'
         if self.__accesible:
             self.setDisabled(True)
+            # Se tiene que encontrar el indice de la carta en el layout
+            index = self.parentWidget().layout().indexOf(self)
+            # Se emite la señal al servidor
+            self.__click_signal.emit(index)
 
 
 class GameWindow(QMainWindow):
@@ -190,26 +198,31 @@ class GameWindow(QMainWindow):
                 getattr(self, f'Player{i}Name').setText(game_info[i])
                 # Añade la referencia de la mano
                 self._player_hands[game_info[i]] = getattr(self, f'Player{i}Cards')
-        print("#", self._player_hands)
-
-    def add_player_card(self, c_color: str, c_type: str, c_pixmap: object) -> None:
-        'Añade la carta al jugador. Sigue lo establecido en el Enunciado'
-        card = GameCard(self.Player0Cards, self.card_size, c_pixmap)
-        self.Player0Cards.layout().addWidget(card)
-
-    def add_opponent_card(self, name: str):
-        'Añade una carta al oponente'
-        pos = list(self._player_hands).index(name) #* Esto es bien parche, pero funciona
-        card = GameCard(self._player_hands[name], self.card_size, self.reverse_card, pos)
-        self._player_hands[name].layout().addWidget(card)
-
-    def remove_card(self, index):
-        pass
 
     def update_pool(self, c_color: str, c_type: str, c_pixmap: object) -> None:
-        'Añade la carta al pozo. Sigue lo establecido en el Enunciado'
-        # No se para que será necesario que el cliente tenga el tipo...
-        self.ActiveColor.setText(c_color)
+        'Añade la carta del pozo. Sigue lo establecido en el Enunciado'
         pixmap = QPixmap()
         pixmap.loadFromData(c_pixmap)
         self.CardPool.setPixmap(pixmap)
+
+    def add_player_card(self, c_color: str, c_type: str, c_pixmap: object) -> None:
+        'Añade la carta al jugador. Sigue lo establecido en el Enunciado'
+        card = GameCard(self.Player0Cards, self.card_size, c_pixmap, 0, self.signal_drop)
+        self.Player0Cards.layout().addWidget(card)
+        self.ActiveColor.setText(c_color)
+
+    def add_opponent_card(self, name: str) -> None:
+        'Añade una carta al oponente'
+        #* Esto es bien parche, pero funciona para rotar las cartas
+        pos = list(self._player_hands).index(name)
+        card = GameCard(self._player_hands[name], self.card_size, self.reverse_card, pos)
+        self._player_hands[name].layout().addWidget(card)
+
+    def remove_card(self, name: str, index: int) -> None:
+        'Remueve la carta con indice `index` del jugador con nombre `name`'
+        # https://doc.qt.io/qt-5/qlayout.html#takeAt
+        card = self._player_hands[name].layout().takeAt(int(index))
+        widget = card.widget()
+        widget.close()
+        del widget
+        del card
