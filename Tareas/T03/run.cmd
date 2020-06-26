@@ -2,7 +2,7 @@
 
 SET ruta_servidor="server"
 SET ruta_clientes="client"
-SET cantidad_clientes=2
+SET cantidad_clientes=3
 
 FOR /L %%? IN (1, 1, %cantidad_clientes%) DO START CMD /k "TITLE cliente & CD %ruta_clientes% & main.py & EXIT"
 
