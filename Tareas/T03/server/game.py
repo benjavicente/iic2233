@@ -32,7 +32,7 @@ class Game:
         # Parámetros del juego
         self.started = False
         self.waiting_to = None
-        self.pool = None
+        self.pool = (None, None)
         self._clockwise = False
         self._plus_2 = False  # TODO: cambiar esto y ver sus condiciones
         # Parámetros de flujo
@@ -68,7 +68,8 @@ class Game:
         'Empieza el juego'
         self.started = True
         self.waiting_to = self.__players[0]
-        self.pool = get_cards(1)[0] # Como solo es una carta, se obtiene con [0]
+        while not self.pool[1]:
+            self.pool = get_cards(1)[0] # Como solo es una carta, se obtiene con [0]
         for player in self.__players:
             player.cards = get_cards(self.__game_config['int_cards'])
         for i in range(self.__game_config['int_cards']):
@@ -89,6 +90,14 @@ class Game:
         # TODO: cambio de color: el jugador cambia el color del poso
         #! robar tiene que ser voluntario
         if self.waiting_to == player_name:  #* Aquí debe estar la condición del bonus
+            # Roba
+            if index == -1:
+                new_card = get_cards(1)[0]
+                self.waiting_to.cards.extend(new_card)
+                self.__cards_to_add.append((self.waiting_to, new_card))
+                self._player_rotation()
+                return True
+            # Juega un carta
             selected = self.waiting_to.cards[index]
             if self.is_valid_card(selected):  # La carta es válida, se hacen cosas
                 # Se elimina la carta

@@ -125,7 +125,7 @@ class InitialWindow(QMainWindow):
 
 
 class GameCard(QLabel):
-    'Carta del juego'
+    'Carta del juego. Se le asigna un señal a emitir.'
     __angle = {0: 0, 1: 90, 2: 180, 3: 270}
     def __init__(self, parent, size: QSize, pixmap_data, position: int = 0, click_signal=None):
         super().__init__(parent)
@@ -162,13 +162,19 @@ class GameCard(QLabel):
             self.__click_signal.emit(index)
 
 
+class Deck(QLabel):
+    'QLabel que emite una señal propia al ser precionado'
+    clicked = pyqtSignal()
+    def mousePressEvent(self, event):
+        self.clicked.emit()
+
+
 class GameWindow(QMainWindow):
     '''Ventana principal dell juego'''
 
     signal_chat = pyqtSignal(str)  # manda un mensage
     signal_call = pyqtSignal()     # TODO llama DCCuadrádo
-    signal_draw = pyqtSignal()     # TODO roba una carta
-    signal_drop = pyqtSignal(int)  # id de la carta seleccionada
+    signal_play = pyqtSignal(int)  # id de la carta seleccionada
 
     def __init__(self, ui_path):
         super().__init__()
@@ -181,8 +187,13 @@ class GameWindow(QMainWindow):
 
     def _set_up(self) -> None:
         self.card_size = QSize(80, 112)
-        self.CardPool.setFixedSize(self.card_size)
+        self.CardDeck = Deck(self.Table)  # Se sobreescribe el widget
+        self.TableLayout.replaceWidget(self.TempCardDeck, self.CardDeck)
+        self.CardDeck.clicked.connect(lambda: self.signal_play.emit(-1))
+        self.CardDeck.setScaledContents(True)
         self.CardDeck.setFixedSize(self.card_size)
+        self.CardDeck.setCursor(QCursor(Qt.OpenHandCursor))
+        self.CardPool.setFixedSize(self.card_size)
         self.ActionUNO.setCursor(QCursor(Qt.PointingHandCursor))
         self.ChatInput.returnPressed.connect(self.send_chat)
 
@@ -223,7 +234,7 @@ class GameWindow(QMainWindow):
 
     def add_player_card(self, c_color: str, c_type: str, c_pixmap: object) -> None:
         'Añade la carta al jugador. Sigue lo establecido en el Enunciado'
-        card = GameCard(self.Player0Cards, self.card_size, c_pixmap, 0, self.signal_drop)
+        card = GameCard(self.Player0Cards, self.card_size, c_pixmap, 0, self.signal_play)
         self.Player0Cards.layout().addWidget(card)
 
     def add_opponent_card(self, name: str) -> None:
@@ -239,11 +250,12 @@ class GameWindow(QMainWindow):
         # https://stackoverflow.com/q/43343773
         layout = self._player_hands[name].layout()
         item = layout.itemAt(index)
-        item.widget().close()
         layout.removeItem(item)
+        item.widget().close()
 
 
 if __name__ == "__main__":
+    # Para probar el estilo de las ventanas
     from PyQt5.QtWidgets import QApplication
     from sys import argv
     from os.path import join

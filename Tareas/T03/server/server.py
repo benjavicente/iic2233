@@ -202,11 +202,12 @@ class Server:
             with self.lock_play:
                 name = self.clients_names[id_]
                 if self.game.play(name, int(data[5])):
-                    # El jugador pudo jugar
-                    self.send_all({
-                        0: 'remove_card',
-                        4: name,
-                        5: data[5]
-                    })
+                    # El jugador pudo jugar una carta de su mano
+                    if int(data[5]) > 0:
+                        self.send_all({
+                            0: 'remove_card',
+                            4: name,
+                            5: data[5]
+                        })
                     # Se actualizan las cartas
                     self.update_cards()

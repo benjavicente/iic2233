@@ -34,7 +34,7 @@ class Application(QApplication):
         self.client.signal_connection_error.connect(self.error)
 
         self.game_window.signal_chat.connect(self._send_chat)
-        self.game_window.signal_drop.connect(self._drop_card)
+        self.game_window.signal_play.connect(self._play_card)
 
     def run(self):
         'Corre la aplicación'
@@ -96,7 +96,7 @@ class Application(QApplication):
             6: mesaje
         })
 
-    def _drop_card(self, index: int):
+    def _play_card(self, index: int):
         'El jugador juega una carta'
         self.client.send({
             0: 'play_card',

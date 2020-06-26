@@ -261,11 +261,11 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <layout class="QHBoxLayout" name="TableLayout">
        <item>
         <widget class="QLabel" name="LeftArrow">
          <property name="text">
-          <string>Arror1</string>
+          <string/>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -275,7 +275,7 @@
        <item>
         <widget class="QLabel" name="CardPool">
          <property name="text">
-          <string>Pozo</string>
+          <string/>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -286,12 +286,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="CardDeck">
-         <property name="cursor">
-          <cursorShape>OpenHandCursor</cursorShape>
-         </property>
+        <widget class="QLabel" name="TempCardDeck">
          <property name="text">
-          <string>Mazo</string>
+          <string/>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -304,7 +301,7 @@
        <item>
         <widget class="QLabel" name="RightArrow">
          <property name="text">
-          <string>Arrow2</string>
+          <string/>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -463,7 +460,7 @@
        <item>
         <widget class="QLabel" name="ActivePlayer">
          <property name="text">
-          <string>Benjamín</string>
+          <string/>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -473,7 +470,7 @@
        <item>
         <widget class="QLabel" name="ActiveColor">
          <property name="text">
-          <string>Azul</string>
+          <string/>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -483,7 +480,7 @@
        <item>
         <widget class="QLabel" name="ActiveTime">
          <property name="text">
-          <string>0:24</string>
+          <string/>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
