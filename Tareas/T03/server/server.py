@@ -111,22 +111,25 @@ class Server:
 
     def update_cards(self):
         'Actualiza las cartas'
-        for owner_id, card in self.game.cards_to_add():
+        for owner, card in self.game.cards_to_add():
             for id_ in self.clients_names:
-                if owner_id == id_:
+                if self.clients_names[id_] == owner:
                     data = {
                         0: 'add_player_card',
                         1: card[0],
                         2: card[1],
                         3: self.get_card_pixmap(card)
                     }
-                    self.send(id_, data)
                 else:
-                    pass # Entregar carta dada vuelta
+                    data = {
+                        0: 'add_opponent_card',
+                        4: owner
+                    }
+                self.send(id_, data)
 
     def get_card_pixmap(self, card):
         'Obtiene el pixmap de la carta'
-        card_type = '_'.join([n for n in filter(None, card)])
+        card_type = '_'.join(filter(None, card))
         with open(path.join('sprites', self.game.theme, card_type + '.png'), 'rb') as file:
             return file.read()
 

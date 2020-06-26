@@ -1,7 +1,7 @@
 '''Ventanas del juego'''
 
 from PyQt5.QtCore import Qt, pyqtSignal, QSize
-from PyQt5.QtGui import QCursor, QPixmap
+from PyQt5.QtGui import QCursor, QPixmap, QTransform
 from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QLineEdit, QMainWindow,
                              QPushButton, QVBoxLayout, QWidget, QMessageBox)
 from PyQt5.uic import loadUi
@@ -103,28 +103,66 @@ class InitialWindow(QMainWindow):
 
 
 
-# TODO: pressEvent para las cartas, el cual emite el indice de esta
+class GameCard(QLabel):
+    'Carta del juego'
+    __angle = {0: 0, 1: 90, 2: 180, 3: 270}
+    def __init__(self, parent, size: QSize, pixmap_data, position: int = 0):
+        super().__init__(parent)
+        # Guarda si es del jugador principal
+        self.__accesible = not position
+        # Ve si inicia un nuevo pixmap o toma uno entregado
+        if isinstance(pixmap_data, QPixmap):
+            pixmap = pixmap_data
+        elif isinstance(pixmap_data, (bytearray, bytes)):
+            pixmap = QPixmap()
+            pixmap.loadFromData(pixmap_data)
+        # Rota el pixmap y lo añade
+        flip = QTransform()
+        flip.rotate(self.__angle[position])
+        self.setPixmap(pixmap.transformed(flip))
+        # Cambia el tamaño para que coincida con la rotación
+        self.setScaledContents(True)
+        if position % 2:
+            card_size = size.transposed()
+        else:
+            card_size = size
+        self.setFixedSize(card_size)
+        # Configuración adicional si la carta es del jugador principal
+        if self.__accesible:
+            self.setCursor(QCursor(Qt.PointingHandCursor))
+
+    def mousePressEvent(self, event):
+        'Maneja el click en la carta'
+        if self.__accesible:
+            self.setDisabled(True)
+
 
 class GameWindow(QMainWindow):
     '''Ventana principal dell juego'''
 
-    signal_chat = pyqtSignal(str)  # manda un mensage
-    signal_call = pyqtSignal()     # llama DCCuadrádo
-    signal_draw = pyqtSignal()     # roba una carta
-    signal_drop = pyqtSignal(int)  # id de la carta seleccionada
+    signal_chat = pyqtSignal(str)  # manda un mensage 
+    signal_call = pyqtSignal()     # TODO llama DCCuadrádo
+    signal_draw = pyqtSignal()     # TODO roba una carta
+    signal_drop = pyqtSignal(int)  # TODO id de la carta seleccionada
 
     def __init__(self, ui_path):
         super().__init__()
         loadUi(ui_path, self)
-        self.card_size = QSize(80, 112)
-        self.reverse_card = None
         self._set_up()
 
     def _set_up(self) -> None:
+        # UX / UI
+        self.card_size = QSize(80, 112)
         self.CardPool.setFixedSize(self.card_size)
         self.CardDeck.setFixedSize(self.card_size)
         self.ActionUNO.setCursor(QCursor(Qt.PointingHandCursor))
         self.ChatInput.returnPressed.connect(self.send_chat)
+
+        # Referencia de las manos de los jugadores
+        self._player_hands = dict()
+
+        # Referencia al reverso de la carta
+        self.reverse_card = None
 
     def send_chat(self) -> None:
         'Manda un mensaje al chat'
@@ -147,19 +185,23 @@ class GameWindow(QMainWindow):
     def setup_players(self, game_info: dict) -> None:
         'Prepara el interfaz de juego'
         for i in map(str, range(4)):
-            name_label = getattr(self, f'Player{i}Name', None)
             if i in game_info:
-                name_label.setText(game_info[i])
+                # Cambia el nombre del label
+                getattr(self, f'Player{i}Name').setText(game_info[i])
+                # Añade la referencia de la mano
+                self._player_hands[game_info[i]] = getattr(self, f'Player{i}Cards')
+        print("#", self._player_hands)
 
     def add_player_card(self, c_color: str, c_type: str, c_pixmap: object) -> None:
         'Añade la carta al jugador. Sigue lo establecido en el Enunciado'
-        card = QLabel(self.Player0Cards)
-        pixmap = QPixmap()
-        pixmap.loadFromData(c_pixmap)
-        card.setPixmap(pixmap)
-        card.setFixedSize(self.card_size)
-        card.setScaledContents(True)
+        card = GameCard(self.Player0Cards, self.card_size, c_pixmap)
         self.Player0Cards.layout().addWidget(card)
+
+    def add_opponent_card(self, name: str):
+        'Añade una carta al oponente'
+        pos = list(self._player_hands).index(name) #* Esto es bien parche, pero funciona
+        card = GameCard(self._player_hands[name], self.card_size, self.reverse_card, pos)
+        self._player_hands[name].layout().addWidget(card)
 
     def remove_card(self, index):
         pass

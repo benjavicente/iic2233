@@ -66,7 +66,7 @@ por ids en intervalos de 8 (a excepción de 3, establecido en el enunciado).
 |  1 |           :penguin: | color de carta       | `str`    | al actualizar el mazo o el pozo $^1$ **(no implementado)**
 |  2 |           :penguin: | tipo de carta        | `str`    | al actualizar el mazo o el pozo $^1$ **(no implementado)**
 |  3 |           :penguin: | imagen de carta      | `bytes`  | al actualizar el mazo o el pozo $^1$ **(no implementado)**
-|  4 | :computer:          | nombre del jugador   | `str`    | al unirse
+|  4 | :computer::penguin: | nombre del jugador   | `str`    | al unirse, al mandar una carta
 |  5 | :computer:          | carta seleccionada   | `str`    | en la sala de juego **(no implementado)**
 |  6 | :computer::penguin: | chat                 | `str`    | al enviar y recibir un chat
 |  8 |           :penguin: | jugadores            | `list`   | al entrar un jugador, añadiéndolo en el cliente

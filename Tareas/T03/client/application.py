@@ -70,6 +70,8 @@ class Application(QApplication):
                 c_type=response[2],
                 c_pixmap=response[3]
             )
+        elif response[0] == 'add_opponent_card':
+            self.game_window.add_opponent_card(response[4])
         elif response[0] == 'update_pool':
             self.game_window.update_pool(
                 c_color=response[1],

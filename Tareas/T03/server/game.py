@@ -69,7 +69,7 @@ class Game:
         self.pool = get_cards(1)[0] # Como solo es una carta, se obtiene con [0]
         for player in self.__players:
             player.cards = get_cards(self.__game_config['int_cards'])
-        for i in range(len(player.cards)):
+        for i in range(self.__game_config['int_cards']):
             for player in self.__players:
                 self.__cards_to_add.append((player, player.cards[i]))
 
@@ -117,4 +117,4 @@ class Game:
     def cards_to_add(self) -> dict:
         while self.__cards_to_add:
             player, card = self.__cards_to_add.popleft()
-            yield player.id, card
+            yield player.name, card
