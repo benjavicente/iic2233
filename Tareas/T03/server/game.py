@@ -79,8 +79,9 @@ class Game:
         if self.waiting_to == player_name:  #* Aquí debe estar la condición del bonus
             selected = self.waiting_to.cards[index]
             if self.is_valid_card(selected):
-                self.pool = selected
                 # La carta es válida, se hacen cosas
+                self.pool = selected  # Se cambia la carta del pozo
+                self._player_rotation()  # Se cambia el jugador
                 return True
         return False
 
@@ -127,3 +128,10 @@ class Game:
         while self.__cards_to_add:
             player, card = self.__cards_to_add.popleft()
             yield player.name, card
+    
+    def _player_rotation(self) -> None:
+        'Cambia de turno'
+        index = self.__players.index(self.waiting_to)
+        direction = 1 if self._clockwise else -1
+        new_index = (index + direction) % len(self.__players)
+        self.waiting_to = self.__players[new_index]
