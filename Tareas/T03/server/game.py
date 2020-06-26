@@ -1,7 +1,7 @@
 '''Módulo que administra la lógica del juego'''
 
-from generador_de_mazos import sacar_cartas as get_cards
 from collections import deque
+from generador_de_mazos import sacar_cartas as get_cards
 
 class Player:
     'Jugador'
@@ -34,6 +34,7 @@ class Game:
         self.waiting_to = None
         self.pool = None
         self._clockwise = False
+        self._plus_2 = False  # TODO: cambiar esto y ver sus condiciones
         # Parámetros de flujo
         self.__cards_to_add = deque()
 
@@ -75,15 +76,33 @@ class Game:
                 self.__cards_to_add.append((player, player.cards[i]))
 
     def play(self, player_name: str, index: int) -> bool:
-        'El jugador juega la carta `index` de su mazo. Retorna true si se pudo jugar'
+        '''
+        El jugador juega la carta `index` de su mazo.
+        Retorna true si se pudo jugar'.
+        Si el index es -1 se roba una carta (TODO).
+        '''
+        # TODO: podria añadir un kwarg que indique el color si es que se está cambiando
+        # -> REGLAS
+        # Una carta con igual color o número puede ser añadida al pozo
+        # TODO: +2: el siguiente jugador tiene que robar +2 o tirar un +2
+        # Cambio de sentido: cambia el sentido
+        # TODO: cambio de color: el jugador cambia el color del poso
+        #! robar tiene que ser voluntario
         if self.waiting_to == player_name:  #* Aquí debe estar la condición del bonus
             selected = self.waiting_to.cards[index]
-            print(selected, player_name)
-            if self.is_valid_card(selected):
-                # La carta es válida, se hacen cosas
-                self.waiting_to.cards.pop(index) # Se elimina la carta
-                self.pool = selected  # Se cambia la carta del pozo
-                self._player_rotation()  # Se cambia el jugador
+            if self.is_valid_card(selected):  # La carta es válida, se hacen cosas
+                # Se elimina la carta
+                self.waiting_to.cards.pop(index)
+                # Robar cartas
+                # Se cambia la carta del pozo
+                self.pool = selected  # TODO: falta ver la carta color
+                # Cambia el sentido
+                if selected[0] == 'sentido':
+                    self._clockwise = not self._clockwise
+                elif selected[0] == '+2':
+                    self._plus_2 = True
+                # Se cambia el jugador
+                self._player_rotation()
                 return True
         return False
 
@@ -127,13 +146,14 @@ class Game:
         return card[0] == self.pool[0] or card[1] == self.pool[1]
 
     def cards_to_add(self) -> dict:
+        'Generador de las cartas que se tienen que añadir en el interfaz'
         while self.__cards_to_add:
             player, card = self.__cards_to_add.popleft()
             yield player.name, card
-    
+
     def _player_rotation(self) -> None:
         'Cambia de turno'
         index = self.__players.index(self.waiting_to)
-        direction = 1 if self._clockwise else -1
+        direction = -1 if self._clockwise else 1
         new_index = (index + direction) % len(self.__players)
         self.waiting_to = self.__players[new_index]
