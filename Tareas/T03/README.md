@@ -7,6 +7,7 @@
 - [Ejecución :computer:](#Ejecuci%C3%B3n-%F0%9F%92%BB)
 - [Supuestos, aclaraciones y consideraciones :thinking:](#Supuestos-aclaraciones-y-consideraciones-%F0%9F%A4%94)
   - [Envío de información :satellite:](#Env%C3%ADo-de-informaci%C3%B3n-%F0%9F%93%A1)
+  - [El juego :black_joker:](#El-juego-%F0%9F%83%8F)
 - [Librerías :books:](#Librer%C3%ADas-%F0%9F%93%9A)
   - [Librerías externas utilizadas :clipboard:](#Librer%C3%ADas-externas-utilizadas-%F0%9F%93%8B)
   - [Librerías propias :pencil:](#Librer%C3%ADas-propias-%F0%9F%93%9D)
@@ -63,10 +64,10 @@ por ids en intervalos de 8 (a excepción de 3, establecido en el enunciado).
 | id | de                  | tipo objecto         | objeto   | uso
 | -: | :-----------------: |:-------------------: | :------: | :-  
 |  0 | :computer::penguin: | tipo de acción       | `str`    | siempre
-|  1 |           :penguin: | color de carta       | `str`    | al actualizar el mazo o el pozo $^1$ **(no implementado)**
-|  2 |           :penguin: | tipo de carta        | `str`    | al actualizar el mazo o el pozo $^1$ **(no implementado)**
-|  3 |           :penguin: | imagen de carta      | `bytes`  | al actualizar el mazo o el pozo $^1$ **(no implementado)**
-|  4 | :computer::penguin: | nombre del jugador   | `str`    | al unirse, al mandar una carta
+|  1 |           :penguin: | color de carta       | `str`    | al actualizar el mazo o el pozo $^1$
+|  2 |           :penguin: | tipo de carta        | `str`    | al actualizar el mazo o el pozo $^1$
+|  3 |           :penguin: | imagen de carta      | `bytes`  | al actualizar el mazo o el pozo $^1$
+|  4 | :computer::penguin: | nombre del jugador   | `str`    | al unirse, al mandar una carta a los jugadores
 |  5 | :computer::penguin: | carta seleccionada   | `str`    | para eliminar cartas
 |  6 | :computer::penguin: | chat                 | `str`    | al enviar y recibir un chat
 |  8 |           :penguin: | jugadores            | `list`   | al entrar un jugador, añadiéndolo en el cliente
@@ -74,12 +75,18 @@ por ids en intervalos de 8 (a excepción de 3, establecido en el enunciado).
 | 17 |           :penguin: | detalles jugadores   | `dict`   | al iniciar la sala de juego
 | 24 |           :penguin: | reverso de la carta  | `bytes`  | al iniciar la sala de juego
 
-Tanto en `str`,`list`, `dict` se usa `.decode('utf-8)`.
+\[1\]: Establecido en el enunciado
+
+Tanto en `str`,`list`, `dict` se usa `.decode('utf-8')`.
 Además en las `list` se usará `.split('\n')` y en los `dict` `json.load`.
 
 Para ver donde se usa cada una se puede buscar ` {id_}: `.
 
-- \[1\]: Establecido en el enunciado
+
+### El juego :black_joker:
+
+<!-- TODO -->
+- Los efectos de la primera carta del poso son omitidos.
 
 ## Librerías :books:
 
@@ -87,34 +94,30 @@ Para ver donde se usa cada una se puede buscar ` {id_}: `.
 
 ### Librerías externas utilizadas :clipboard:
 
-- `PyQt5`
+- **`PyQt5`**: interfaz gráfica (GUI)
 
-- `sys`
-- `socket`
-  - `socket as Socket`
-  - `AF_INET as IPv4`
-  - `SOCK_STREAM as TPC`
-- `threading`
-  - `Thread`
-  - `Lock`
-- `os`
-  - `path`
-- `json`
+- **`sys`**: para serrar el programa al cerrar el interfaz
+- **`socket`:** `socket`, `AF_INET`, `SOCK_STREAM `, creación de sockets
+- **`threading`:** `Thread`, `Lock`, para escuchar al socket
+- **`os`:** `path`, para unir los paths
+- **`json`:** para serializar y deserializar diccionarios
+
+- **`generador_de_mazos`:** genera las cartas
 
 ### Librerías propias :pencil:
 
-- `protocol`
+- **`protocol`:** Módulo que sigue el [protocolo definido](#Env%C3%ADo-de-informaci%C3%B3n-%F0%9F%93%A1) con sockets
 
-- `application`
-- frontend
-  - `windows`
-- backend
-  - `client`
-
-- `log`
-- `game`
-- `generador_de_mazos`
-- `server`
+- client
+  - **`application`:** Conecta el frontend (GUI) con el backend (socket)
+  - frontend:
+    - **`windows`:** Ventanas y objetos gráficos del interfaz
+  - backend
+    - **`client`:** Cliente que escucha y manda información al servidor
+- server
+  - **`log`:** Ordena la información del servidor en una tabla
+  - **`game`:** Lógica del juego
+  - **`server`:** Servidor del juego
 
 ## Código externo utilizado :package:
 
@@ -129,18 +132,18 @@ Listo:
 - Sala de entrada
 - Sala de espera
 - Lógica inicial del juego
+- Envío de cartas
+- Seleccionar cartas
 
 En desarrollo:
 
-- Lógica del juego
-- Envío de cartas
-- Seleccionar cartas
-- Conexión de botones (DCCuadrádo!)
-- Sala de espera
+- Lógica del juego (que hace cada carta, robar)
+- Conexión de botones (DCCuadrádo!, robar)
+- Sala de espera (Chat)
 
 Bonus:
 
-- Chat (con soporte _básico_ de **MarkDown**)
+- Chat (con soporte _básico_ de **MarkDown**) (Falta en la sala de espera)
 
 Posibles bonus:
 

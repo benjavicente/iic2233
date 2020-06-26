@@ -147,29 +147,26 @@ class GameCard(QLabel):
 class GameWindow(QMainWindow):
     '''Ventana principal dell juego'''
 
-    signal_chat = pyqtSignal(str)  # manda un mensage 
+    signal_chat = pyqtSignal(str)  # manda un mensage
     signal_call = pyqtSignal()     # TODO llama DCCuadrádo
     signal_draw = pyqtSignal()     # TODO roba una carta
-    signal_drop = pyqtSignal(int)  # TODO id de la carta seleccionada
+    signal_drop = pyqtSignal(int)  # id de la carta seleccionada
 
     def __init__(self, ui_path):
         super().__init__()
         loadUi(ui_path, self)
         self._set_up()
+        # Referencia de las manos de los jugadores
+        self._player_hands = dict()
+        # Referencia al reverso de la carta
+        self.reverse_card = None
 
     def _set_up(self) -> None:
-        # UX / UI
         self.card_size = QSize(80, 112)
         self.CardPool.setFixedSize(self.card_size)
         self.CardDeck.setFixedSize(self.card_size)
         self.ActionUNO.setCursor(QCursor(Qt.PointingHandCursor))
         self.ChatInput.returnPressed.connect(self.send_chat)
-
-        # Referencia de las manos de los jugadores
-        self._player_hands = dict()
-
-        # Referencia al reverso de la carta
-        self.reverse_card = None
 
     def send_chat(self) -> None:
         'Manda un mensaje al chat'
