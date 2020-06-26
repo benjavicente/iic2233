@@ -195,11 +195,13 @@ class GameWindow(QMainWindow):
                 # Añade la referencia de la mano
                 self._player_hands[game_info[i]] = getattr(self, f'Player{i}Cards')
 
-    def update_pool(self, c_color: str, c_type: str, c_pixmap: object) -> None:
+    def update_pool(self, c_color: str, c_type: str, c_pixmap: object, active_player: str) -> None:
         'Añade la carta del pozo. Sigue lo establecido en el Enunciado'
         pixmap = QPixmap()
         pixmap.loadFromData(c_pixmap)
         self.CardPool.setPixmap(pixmap)
+        self.ActiveColor.setText(c_color)
+        self.ActivePlayer.setText(active_player)
 
     def add_player_card(self, c_color: str, c_type: str, c_pixmap: object) -> None:
         'Añade la carta al jugador. Sigue lo establecido en el Enunciado'
@@ -221,4 +223,4 @@ class GameWindow(QMainWindow):
         layout = self._player_hands[name].layout()
         widget = layout.itemAt(index).widget()
         widget.close()
-        layout.removeItem(widget)
+        layout.removeWidget(widget)

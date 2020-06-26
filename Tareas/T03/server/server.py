@@ -128,13 +128,14 @@ class Server:
                         4: owner
                     }
                 self.send(id_, data)
-        # Actualiza el pozo
+        # Actualiza el pozo y el nombre del jugador
         card = self.game.pool
         data = {
             0: 'update_pool',
-            1: card[0],
-            2: card[1],
-            3: self.get_card_pixmap(card)
+            1: card[1],
+            2: card[0],
+            3: self.get_card_pixmap(card),
+            4: self.game.waiting_to.name
         }
         self.send_all(data)
 

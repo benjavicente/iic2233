@@ -77,7 +77,8 @@ class Application(QApplication):
             self.game_window.update_pool(
                 c_color=response[1],
                 c_type=response[2],
-                c_pixmap=response[3]
+                c_pixmap=response[3],
+                active_player=response[4]
             )
         elif response[0] == 'remove_card':
             self.game_window.remove_card(response[4], int(response[5]))
