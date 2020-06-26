@@ -1,10 +1,28 @@
+/* ---------------- */
 /* Pantalla inicial */
+/* ---------------- */
+
 #InitialWindow{
     background: black;
 }
 #JoinButton{
-    color: yellow;
+    color: rgb(253, 253, 175);
+    height: 30px;
+    padding: 0 5px;
     background: red;
+    font-size: 12px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+#JoinButton:hover{
+    background: rgb(255, 42, 42);
+}
+#Name{
+    font-size: 12px;
+    height: 30px;
+    padding-left: 5px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 #WaitLabel{
     color: white;
@@ -19,7 +37,10 @@
     font-size: 20px;
 }
 
+/* ------------------ */
 /* Pantalla del juego */
+/* ------------------ */
+
 #GameWindow{
     background: black;
 }
@@ -29,27 +50,68 @@
 #Player3Frame{
     background: rgb(105, 105, 105);
 }
+#Player0Name,
+#Player1Name,
+#Player2Name,
+#Player3Name{
+    color: white;
+    font-size: 20px;
+}
 #GameInfoFrame{
     background: rgb(37, 37, 37);
 }
-#CardDeck,
-#CardPool{
-    background: rgb(131, 131, 131);
+#GameInfoTitle,
+#ActivePlayer,
+#ActiveColor{
+    color: white;
+}
+#GameInfoTitle{
+    font-size: 30px;
+}
+#ActivePlayer,
+#ActiveColor{
+    font-size: 24px;
+}
+#ActionUNO{
+    height: 30px;
+    border-radius: 14px;
+    background: rgb(255, 0, 0);
+    color: rgb(255, 254, 221);
+    font-size: 16px;
+}
+#ActionUNO:hover{
+    background: rgb(255, 72, 72);
 }
 #Chat{
     color: rgb(182, 182, 182);
     background: transparent;
     border: 0;
+    font-size: 12px;
 }
-#Chat QScrollBar{
-    background: black;
+QScrollBar{
+    background: rgb(32, 32, 32);
     width: 10px;
     border: 0;
     margin: 0;
     border-radius: 5px;
 }
-#Chat QScrollBar::handle{
-    background: rgb(95, 95, 95);
+QScrollBar::handle{
+    background: rgb(117, 117, 117);
     color: red;
     border-radius: 5px;
+}
+QScrollBar::sub-page,
+QScrollBar::add-page,
+QScrollBar::add-line,
+QScrollBar::sub-line{
+    width: 0;
+    height: 0;
+    background: transparent;
+}
+#ChatInput{
+    font-size: 12px;
+    border-radius: 10%;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.329);
+    padding: 5px;
 }

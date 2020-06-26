@@ -1,9 +1,10 @@
 '''Ventanas del juego'''
 
-from PyQt5.QtCore import Qt, pyqtSignal, QSize
+from PyQt5.QtCore import QSize, Qt, pyqtSignal
 from PyQt5.QtGui import QCursor, QPixmap, QTransform
-from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QLineEdit, QMainWindow,
-                             QPushButton, QVBoxLayout, QWidget, QMessageBox)
+from PyQt5.QtWidgets import (QGridLayout, QHBoxLayout, QLabel, QLineEdit,
+                             QMainWindow, QMessageBox, QPushButton,
+                             QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
 from PyQt5.uic import loadUi
 
 
@@ -23,27 +24,39 @@ class InitialWindow(QMainWindow):
 
     def _set_up(self) -> None:
         'Agrega los elementos gráficos a la ventana'
+        # Widget principal y layout centrado
         main = QWidget()
         self.setCentralWidget(main)
-        layout = QVBoxLayout()
-        main.setLayout(layout)
+        self.setMaximumSize(500, 500)
+        middler_layout = QGridLayout()
+
+        expand = QSizePolicy.Expanding
+        middler_layout.addItem(QSpacerItem(0, 0, hPolicy=expand, vPolicy=expand), 1, 0)
+        middler_layout.addItem(QSpacerItem(0, 0, hPolicy=expand, vPolicy=expand), 1, 2)
+        middler_layout.addItem(QSpacerItem(0, 0, hPolicy=expand, vPolicy=expand), 0, 1)
+        middler_layout.addItem(QSpacerItem(0, 0, hPolicy=expand, vPolicy=expand), 2, 1)
+
+        # Contenedor principal
+        main_layout = QVBoxLayout()
+        middler_layout.addLayout(main_layout, 1, 1)
+        main.setLayout(middler_layout)
 
         #--> Ventana Inicial
         # Logo
-        height = 300
-        self.logo = QLabel(main)
-        self.logo.setFixedHeight(height)
-        self.logo.setPixmap(self.pix_logo.scaledToHeight(height))
-        layout.addWidget(self.logo, alignment=Qt.AlignCenter)
+        height = 200
+        logo = QLabel(main)
+        logo.setFixedHeight(height)
+        logo.setPixmap(self.pix_logo.scaledToHeight(height))
+        main_layout.addWidget(logo, alignment=Qt.AlignCenter)
         # Añade el campo de nombre
-        self.name_entry = QWidget()
+        self.name_entry = QWidget(main)
         entry_layout = QHBoxLayout()
         self.name_entry.setLayout(entry_layout)
-        layout.addWidget(self.name_entry)
+        main_layout.addWidget(self.name_entry)
         # Nombre
         self.name = QLineEdit(self.name_entry)
         self.name.setPlaceholderText('Ingresa un nombre')
-        self.name.setObjectName('name')
+        self.name.setObjectName('Name')
         self.name.returnPressed.connect(self.action_joining)
         entry_layout.addWidget(self.name)
         # Botón para unirse
@@ -55,17 +68,23 @@ class InitialWindow(QMainWindow):
         entry_layout.addWidget(self.join)
 
         #--> Sala de espera
+        self.wait_room = QWidget(main)
+        wait_room_layout = QGridLayout()
+        self.wait_room.setLayout(wait_room_layout)
+        main_layout.addWidget(self.wait_room)
         # Etiqueta
-        self.wait_label = QLabel('Jugadores conectados')
-        self.wait_label.setObjectName('WaitLabel')
-        layout.addWidget(self.wait_label, alignment=Qt.AlignCenter)
-        self.wait_label.hide()  # Se oculta hasta que sea necesario
+        wait_label = QLabel('Jugadores conectados', self.wait_room)
+        wait_label.setObjectName('WaitLabel')
+        wait_room_layout.addWidget(wait_label, 0, 0, alignment=Qt.AlignCenter)
         # Cuadro de jugadores en espera
-        self.players_frame = QWidget(self)
-        layout.addWidget(self.players_frame)
-        self.players_frame.hide()
+        players_frame = QWidget(self.wait_room)
         self.players_layout = QVBoxLayout()
-        self.players_frame.setLayout(self.players_layout)
+        players_frame.setLayout(self.players_layout)
+        wait_room_layout.addWidget(players_frame, 1, 0)
+        # Chat
+        # TODO: se tiene que agregar enb la columna de la derecha de wait_room_layout
+        # Se esconde lo anterior
+        self.wait_room.hide()
 
     def action_joining(self) -> None:
         '''Acción al entrar al servidor'''
@@ -85,12 +104,11 @@ class InitialWindow(QMainWindow):
         '''Acción que muestra la sala de espera'''
         self.setWindowTitle('Sala de espera')
         # Se crean los widgets
-        if self.wait_label.isHidden():
-            self.wait_label.show()
-            self.players_frame.show()
+        if self.wait_room.isHidden():
             self.name_entry.hide()
+            self.wait_room.show()
             for _ in range(len(players)):
-                self.players_layout.addWidget(QLabel(self.players_frame), alignment=Qt.AlignCenter)
+                self.players_layout.addWidget(QLabel(self.wait_room), alignment=Qt.AlignCenter)
         # Se añaden los nombres
         for i, ply in enumerate(players):
             widget = self.players_layout.itemAt(i).widget()
@@ -224,3 +242,17 @@ class GameWindow(QMainWindow):
         widget = layout.itemAt(index).widget()
         widget.close()
         layout.removeWidget(widget)
+
+
+if __name__ == "__main__":
+    from PyQt5.QtWidgets import QApplication
+    from sys import argv
+    from os.path import join
+    APP = QApplication(argv)
+    with open('theme.css') as file:
+        APP.setStyleSheet(file.read())
+    INITIAL_WINDOW = InitialWindow(QPixmap(join('sprites', 'logo')))
+    GAME_WINDOW = GameWindow('game_window.ui')
+    INITIAL_WINDOW.show()
+    GAME_WINDOW.show()
+    APP.exec_()

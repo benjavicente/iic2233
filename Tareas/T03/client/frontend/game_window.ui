@@ -39,6 +39,21 @@
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_5">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QPushButton" name="ActionUNO">
          <property name="text">
@@ -394,7 +409,7 @@
           <enum>Qt::RightToLeft</enum>
          </property>
          <property name="verticalScrollBarPolicy">
-          <enum>Qt::ScrollBarAlwaysOn</enum>
+          <enum>Qt::ScrollBarAsNeeded</enum>
          </property>
          <property name="horizontalScrollBarPolicy">
           <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -438,7 +453,7 @@
        <item>
         <widget class="QLabel" name="GameInfoTitle">
          <property name="text">
-          <string>Turtno de</string>
+          <string>Turno de</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>

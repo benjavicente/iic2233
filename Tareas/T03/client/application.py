@@ -16,11 +16,8 @@ class Application(QApplication):
         sys.__excepthook__ = lambda t, v, trace: print(t, v, trace, sep="\n")
         super().__init__(sys.argv)
 
-        # Pixelmaps #??
-        self.logo = QPixmap(path.join(*paths['logo']))
-
         # Crea las ventanas
-        self.initial_window = InitialWindow(self.logo)
+        self.initial_window = InitialWindow(QPixmap(path.join(*paths['logo'])))
         self.game_window = GameWindow(path.join(*paths['ui']))
 
         # Establece el estilo de la aplicación
