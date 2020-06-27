@@ -12,9 +12,7 @@ class InitialWindow(QMainWindow):
     '''Ventana que se muestra al iniciar el programa'''
 
     signal_join = pyqtSignal(str)  # trata de unirse
-    signal_chat = pyqtSignal(str)
-    # TODO: el chat también tiene que estar implementado aquí
-    # TODO: talvez sea menjor guardar todo en la aplicación?
+    signal_chat = pyqtSignal(str)  # manda un chat
 
     def __init__(self, pix_logo):
         super().__init__()
@@ -55,18 +53,18 @@ class InitialWindow(QMainWindow):
         self.name_entry.setLayout(entry_layout)
         main_layout.addWidget(self.name_entry)
         # Nombre
-        self.name = QLineEdit(self.name_entry)
-        self.name.setPlaceholderText('Ingresa un nombre')
-        self.name.setObjectName('Name')
-        self.name.returnPressed.connect(self.action_joining)
-        entry_layout.addWidget(self.name)
+        self.name_input = QLineEdit(self.name_entry)
+        self.name_input.setPlaceholderText('Ingresa un nombre')
+        self.name_input.setObjectName('name_input')
+        self.name_input.returnPressed.connect(self.action_joining)
+        entry_layout.addWidget(self.name_input)
         # Botón para unirse
-        self.join = QPushButton(self.name_entry)
-        self.join.setText('Entrar')
-        self.join.setObjectName('JoinButton')
-        self.join.setCursor(QCursor(Qt.PointingHandCursor))
-        self.join.clicked.connect(self.action_joining)
-        entry_layout.addWidget(self.join)
+        self.join_button = QPushButton(self.name_entry)
+        self.join_button.setText('Entrar')
+        self.join_button.setObjectName('join_button')
+        self.join_button.setCursor(QCursor(Qt.PointingHandCursor))
+        self.join_button.clicked.connect(self.action_joining)
+        entry_layout.addWidget(self.join_button)
 
         #--> Sala de espera
         self.wait_room = QWidget(main)
@@ -75,7 +73,7 @@ class InitialWindow(QMainWindow):
         main_layout.addWidget(self.wait_room)
         # Etiqueta
         wait_label = QLabel('Jugadores\nconectados', self.wait_room)
-        wait_label.setObjectName('WaitLabel')
+        wait_label.setObjectName('wait_label')
         wait_room_layout.addWidget(wait_label, 0, 0, alignment=Qt.AlignCenter)
         # Cuadro de jugadores en espera
         players_frame = QWidget(self.wait_room)
@@ -83,34 +81,34 @@ class InitialWindow(QMainWindow):
         players_frame.setLayout(self.players_layout)
         wait_room_layout.addWidget(players_frame, 1, 0)
         # Chat
-        self.Chat = QTextEdit(self.wait_room)
-        self.Chat.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.Chat.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.Chat.setPlaceholderText('Bienvenido! Se el primero en mandar un saludo!')
-        self.Chat.setObjectName('Chat')
-        self.Chat.setTextInteractionFlags(Qt.LinksAccessibleByMouse | Qt.TextSelectableByMouse)
-        wait_room_layout.addWidget(self.Chat, 0, 1, 1, 1)
-        # ChatInput
-        self.ChatInput = QLineEdit(self.wait_room)
-        self.ChatInput.setPlaceholderText('Enviar mensaje al chat')
-        self.ChatInput.returnPressed.connect(self.send_chat)
-        self.ChatInput.setObjectName('ChatInput')
-        wait_room_layout.addWidget(self.ChatInput, 2, 1)
+        self.chat_box = QTextEdit(self.wait_room)
+        self.chat_box.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.chat_box.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.chat_box.setPlaceholderText('Bienvenido! Se el primero en mandar un saludo!')
+        self.chat_box.setObjectName('chat_box')
+        self.chat_box.setTextInteractionFlags(Qt.LinksAccessibleByMouse | Qt.TextSelectableByMouse)
+        wait_room_layout.addWidget(self.chat_box, 0, 1, 1, 1)
+        # Chat input
+        self.chat_input = QLineEdit(self.wait_room)
+        self.chat_input.setPlaceholderText('Enviar mensaje al chat')
+        self.chat_input.returnPressed.connect(self.send_chat)
+        self.chat_input.setObjectName('chat_input')
+        wait_room_layout.addWidget(self.chat_input, 2, 1)
         # Se esconde lo anterior
         self.wait_room.hide()
 
     def action_joining(self) -> None:
         '''Acción al entrar al servidor'''
-        self.join.setDisabled(True)
-        self.name.setDisabled(True)
-        self.signal_join.emit(self.name.text())
+        self.join_button.setDisabled(True)
+        self.name_input.setDisabled(True)
+        self.signal_join.emit(self.name_input.text())
         self.setWindowTitle('Cargando')
 
     def state_joining_failed(self, error: dict) -> None:
         '''Estado que se muestra al fallar entrar al servidor'''
         self.setWindowTitle('Ventana Inicial')
         QMessageBox.information(self, 'Error', error['display'])
-        self.join.setDisabled(False)
+        self.join_button.setDisabled(False)
         self.name.setDisabled(False)
 
     def action_waiting(self, players: list) -> None:
@@ -126,10 +124,10 @@ class InitialWindow(QMainWindow):
         for i, ply in enumerate(players):
             widget = self.players_layout.itemAt(i).widget()
             if ply:
-                widget.setObjectName('WaitingPlayer')
+                widget.setObjectName('waiting_player')
                 widget.setText(ply)
             else:
-                widget.setObjectName('EmptyPlayer')
+                widget.setObjectName('empty_player')
                 widget.setText('~~~')
             # Es raro como se debe cambiar el estilo...
             # https://stackoverflow.com/q/9066669
@@ -137,14 +135,14 @@ class InitialWindow(QMainWindow):
 
     def send_chat(self) -> None:
         'Manda un mensaje al chat'
-        mesaje = self.ChatInput.text()
+        mesaje = self.chat_input.text()
         if mesaje:
             self.signal_chat.emit(mesaje)
-            self.ChatInput.clear()
+            self.chat_input.clear()
 
     def update_chat(self, chat: str) -> None:
         'Recibe un mensaje'
-        self.Chat.setMarkdown(chat)
+        self.chat_box.setMarkdown(chat)
 
     def reset(self):
         'Vuelve al estado inicial'
@@ -208,6 +206,7 @@ class WinPopUp(QMessageBox):
         'Añade al ganador'
         self.setText(f'Ha gandado {winner}. Felicitaciones!')
 
+
 class ColorPicker(QMessageBox):
     'PopUp que permite elegir colores'
     def __init__(self):
@@ -238,35 +237,35 @@ class GameWindow(QMainWindow):
         # Tamaño de las carats
         self.card_size = QSize(80, 112)
         # Se sobreescribe el widget
-        self.CardDeck = Deck(self.Table)
-        self.TableLayout.replaceWidget(self.TempCardDeck, self.CardDeck)
-        self.CardDeck.clicked.connect(lambda: self.signal_play.emit(-1))
-        self.CardDeck.setScaledContents(True)
-        self.CardDeck.setFixedSize(self.card_size)
-        self.CardDeck.setCursor(QCursor(Qt.OpenHandCursor))
-        self.CardPool.setFixedSize(self.card_size)
+        self.card_deck = Deck(self.Table)
+        self.table_layout.replaceWidget(self.TempCardDeck, self.card_deck)
+        self.card_deck.clicked.connect(lambda: self.signal_play.emit(-1))
+        self.card_deck.setScaledContents(True)
+        self.card_deck.setFixedSize(self.card_size)
+        self.card_deck.setCursor(QCursor(Qt.OpenHandCursor))
+        self.card_pool.setFixedSize(self.card_size)
         # Se prepara DCCuatro
-        self.ActionUNO.setCursor(QCursor(Qt.PointingHandCursor))
-        self.ActionUNO.pressed.connect(self.signal_call)
+        self.action_uno.setCursor(QCursor(Qt.PointingHandCursor))
+        self.action_uno.pressed.connect(self.signal_call)
         # Se conecta el chat
-        self.ChatInput.returnPressed.connect(self.send_chat)
+        self.chat_input.returnPressed.connect(self.send_chat)
 
     def send_chat(self) -> None:
         'Manda un mensaje al chat'
-        mesaje = self.ChatInput.text()
+        mesaje = self.chat_input.text()
         if mesaje:
             self.signal_chat.emit(mesaje)
-            self.ChatInput.clear()
+            self.chat_input.clear()
 
     def update_chat(self, chat: str) -> None:
         'Recibe un mensaje'
-        self.Chat.setMarkdown(chat)
+        self.chat_box.setMarkdown(chat)
 
     def set_reverse_card(self, card_pixmap: object) -> None:
         'Establece el reverso de la carta'
         self.reverse_card = QPixmap()
         self.reverse_card.loadFromData(card_pixmap)
-        self.CardDeck.setPixmap(self.reverse_card)
+        self.card_deck.setPixmap(self.reverse_card)
 
     def setup_players(self, game_info: dict) -> None:
         'Prepara el interfaz de juego'
@@ -281,12 +280,13 @@ class GameWindow(QMainWindow):
         'Añade la carta del pozo. Sigue lo establecido en el Enunciado'
         pixmap = QPixmap()
         pixmap.loadFromData(c_pixmap)
-        self.CardPool.setPixmap(pixmap)
-        self.ActiveColor.setText(c_color)
-        self.ActivePlayer.setText(active_player)
+        self.card_pool.setPixmap(pixmap)
+        self.active_color.setText(c_color)
+        self.active_player.setText(active_player)
 
     def add_player_card(self, c_color: str, c_type: str, c_pixmap: object) -> None:
         'Añade la carta al jugador. Sigue lo establecido en el Enunciado'
+        # Este es el único momento que uso atributos con camelCase, definidos en QtDesigner
         card = GameCard(self.Player0Cards, self.card_size, c_pixmap, 0, self.signal_play)
         self.Player0Cards.layout().addWidget(card)
 
@@ -310,13 +310,12 @@ class GameWindow(QMainWindow):
         'Para de mostrar las castas de un jugador que perdió'
         # self._player_hands[name].hide()
         layout = self._player_hands[name].layout()
-        for _ in range (layout.count()):
+        for _ in range(layout.count()):
             item = layout.itemAt(0)
             layout.removeItem(item)
             item.widget().deleteLater()
         mesage = QLabel(':(', self._player_hands[name])
         layout.addWidget(mesage)
-        # TODO: Debe añadirse un label de derrota
 
 
 if __name__ == "__main__":

@@ -55,7 +55,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QPushButton" name="ActionUNO">
+        <widget class="QPushButton" name="action_uno">
          <property name="text">
           <string>¡DCCuadrádo!</string>
          </property>
@@ -261,7 +261,7 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QHBoxLayout" name="TableLayout">
+      <layout class="QHBoxLayout" name="table_layout">
        <item>
         <widget class="QLabel" name="LeftArrow">
          <property name="text">
@@ -273,7 +273,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="CardPool">
+        <widget class="QLabel" name="card_pool">
          <property name="text">
           <string/>
          </property>
@@ -392,7 +392,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QTextEdit" name="Chat">
+        <widget class="QTextEdit" name="chat_box">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -423,7 +423,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="ChatInput">
+        <widget class="QLineEdit" name="chat_input">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -439,7 +439,7 @@
      </widget>
     </item>
     <item row="0" column="2">
-     <widget class="QFrame" name="GameInfoFrame">
+     <widget class="QFrame" name="game_info_frame">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -448,7 +448,7 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QLabel" name="GameInfoTitle">
+        <widget class="QLabel" name="game_info_title">
          <property name="text">
           <string>Turno de</string>
          </property>
@@ -458,7 +458,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="ActivePlayer">
+        <widget class="QLabel" name="active_player">
          <property name="text">
           <string/>
          </property>
@@ -468,7 +468,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="ActiveColor">
+        <widget class="QLabel" name="active_color">
          <property name="text">
           <string/>
          </property>
@@ -534,9 +534,9 @@
   </widget>
  </widget>
  <tabstops>
-  <tabstop>ChatInput</tabstop>
+  <tabstop>chat_input</tabstop>
   <tabstop>Player2Name</tabstop>
-  <tabstop>ActionUNO</tabstop>
+  <tabstop>action_uno</tabstop>
  </tabstops>
  <resources/>
  <connections/>

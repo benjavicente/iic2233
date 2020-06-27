@@ -5,7 +5,7 @@
 #InitialWindow{
     background: black;
 }
-#JoinButton{
+#join_button{
     color: rgb(253, 253, 175);
     height: 30px;
     padding: 0 5px;
@@ -14,25 +14,25 @@
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
 }
-#JoinButton:hover{
+#join_button:hover{
     background: rgb(255, 42, 42);
 }
-#Name{
+#name_input{
     font-size: 12px;
     height: 30px;
     padding-left: 5px;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
 }
-#WaitLabel{
+#wait_label{
     color: white;
     font-size: 30px;
 }
-#WaitingPlayer{
+#waiting_player{
     color: rgb(231, 231, 231);
     font-size: 20px;
 }
-#EmptyPlayer{
+#empty_player{
     color: rgb(121, 121, 121);
     font-size: 20px;
 }
@@ -57,32 +57,32 @@
     color: white;
     font-size: 20px;
 }
-#GameInfoFrame{
+#game_info_frame{
     background: rgb(37, 37, 37);
 }
-#GameInfoTitle,
-#ActivePlayer,
-#ActiveColor{
+#game_info_title,
+#active_player,
+#active_color{
     color: white;
 }
-#GameInfoTitle{
+#game_info_title{
     font-size: 30px;
 }
-#ActivePlayer,
-#ActiveColor{
+#active_player,
+#active_color{
     font-size: 24px;
 }
-#ActionUNO{
+#action_uno{
     height: 30px;
     border-radius: 14px;
     background: rgb(255, 0, 0);
     color: rgb(255, 254, 221);
     font-size: 16px;
 }
-#ActionUNO:hover{
+#action_uno:hover{
     background: rgb(255, 72, 72);
 }
-#Chat{
+#chat_box{
     color: rgb(182, 182, 182);
     background: transparent;
     border: 0;
@@ -108,7 +108,7 @@ QScrollBar::sub-line{
     height: 0;
     background: transparent;
 }
-#ChatInput{
+#chat_input{
     font-size: 12px;
     border-radius: 10%;
     color: white;
