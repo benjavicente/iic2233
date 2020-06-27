@@ -99,11 +99,11 @@ class Application(QApplication):
         elif response[0] == 'player_lose':
             self.game_window.player_lossed(response[4])
         elif response[0] == 'request_color':
-            color_index = ColorPicker().exec_()  # hmm
-            color = ('rojo', 'amarillo', 'verde', 'azul')[color_index]
+            colors = ('rojo', 'amarillo', 'verde', 'azul')
+            selected_index = ColorPicker(colors).exec()
             self.client.send({
                 0: 'color',
-                1: color
+                1: colors[selected_index]
             })
 
 

@@ -209,12 +209,14 @@ class WinPopUp(QMessageBox):
 
 class ColorPicker(QMessageBox):
     'PopUp que permite elegir colores'
-    def __init__(self):
+    color_map = {'rojo': 'red', 'verde': 'green', 'azul': 'blue', 'amarillo': 'yellow'}
+    def __init__(self, colors: tuple):
         super().__init__()
+        self.setWindowTitle('Selecciona')
         self.setText('Selecciona un color')
-        for color in ('rojo', 'amarillo', 'verde', 'azul'):
-            button = self.addButton(color, self.AcceptRole)
-            button.setObjectName(color)
+        for color in colors:
+            button = self.addButton('', QMessageBox.AcceptRole)
+            button.setStyleSheet(f'background: {self.color_map[color]}')
 
 
 class GameWindow(QMainWindow):
@@ -330,6 +332,7 @@ if __name__ == "__main__":
     # GAME_WINDOW = GameWindow('game_window.ui')
     # INITIAL_WINDOW.show()
     # GAME_WINDOW.show()
-    PICKER = ColorPicker()
-    print(PICKER.exec_())
+    PICKER = ColorPicker(('rojo', 'amarillo', 'verde', 'azul'))
+    PICKER.setStyle(APP.style())
+    print(PICKER.exec())
     # APP.exec_()
