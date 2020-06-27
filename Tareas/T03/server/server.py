@@ -231,6 +231,7 @@ class Server:
                             0: 'player_lose',
                             4: name
                         })
+                        return   # No se actualizan las cartas
                     elif return_code == 'draw':
                         pass
                     elif return_code == 'request_color':

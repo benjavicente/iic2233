@@ -28,8 +28,12 @@ class Application(QApplication):
         # Crea el cliente
         self.client = Client(kwargs['host'], kwargs['port'])
 
+        # Guarda el chat
+        self.chat = ''
+
         # Conecta las señales
         self.initial_window.signal_join.connect(self._join)
+        self.initial_window.signal_chat.connect(self._send_chat)
 
         self.client.signal_response.connect(self._manage_response)
         self.client.signal_connection_error.connect(self.error)
@@ -82,10 +86,14 @@ class Application(QApplication):
         elif response[0] == 'remove_card':
             self.game_window.remove_card(response[4], int(response[5]))
         elif response[0] == 'chat':
-            self.game_window.add_chat_mesaje(response[6])
+            self.chat += response[6] + '\n' * 2  # En markdown un cambio de linea son 2
+            self.initial_window.update_chat(self.chat)
+            self.game_window.update_chat(self.chat)
         elif response[0] == 'player_win':
             self.win_popup.set_winner(response[4])
             self.win_popup.exec_()
+            # El cliente tiene que reiniciarse
+            self.initial_window.reset()
             self.game_window.hide()
             self.initial_window.show()
         elif response[0] == 'player_lose':
