@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>DCCuadrado</string>
+   <string>DCCuatro</string>
   </property>
   <widget class="QWidget" name="MainWidget">
    <layout class="QGridLayout" name="gridLayout" rowstretch="1,2,1" columnstretch="1,3,1">

@@ -1,6 +1,6 @@
-# DCCuadrado :black_joker:
+# DCCuatro :black_joker:
 
-![DCCuadrado](.readme/logo.png)
+![DCCuatro](.readme/logo.png)
 
 <!-- La tabla de contenidos está hecha para VSCode -->
 - [Importante :heavy_exclamation_mark:](#Importante-%E2%9D%97%EF%B8%8F)
@@ -87,7 +87,7 @@ Para ver donde se usa cada una se puede buscar ` {id_}: `.
 
 <!-- TODO -->
 - Los efectos de la primera carta del poso son omitidos.
-- Robar cartas **siempre es voluntario**. Si el jugador recibió una penalización por decir DCCuadrado, deberá robar un número de cartas de penalización.
+- Robar cartas **siempre es voluntario**. Si el jugador recibió una penalización por decir DCCuatro, deberá robar un número de cartas de penalización.
 
 ## Librerías :books:
 
