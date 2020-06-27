@@ -64,7 +64,7 @@ por ids en intervalos de 8 (a excepción de 3, establecido en el enunciado).
 | id | de                  | tipo objecto         | objeto   | uso
 | -: | :-----------------: |:-------------------: | :------: | :-  
 |  0 | :computer::penguin: | tipo de acción       | `str`    | siempre
-|  1 |           :penguin: | color de carta       | `str`    | al actualizar el mazo o el pozo $^1$
+|  1 | :computer::penguin: | color de carta       | `str`    | al actualizar el mazo o el pozo $^1$ y pedir el color al cambiarlo
 |  2 |           :penguin: | tipo de carta        | `str`    | al actualizar el mazo o el pozo $^1$
 |  3 |           :penguin: | imagen de carta      | `bytes`  | al actualizar el mazo o el pozo $^1$
 |  4 | :computer::penguin: | nombre del jugador   | `str`    | al unirse, al mandar una carta a los jugadores

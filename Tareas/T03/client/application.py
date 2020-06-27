@@ -6,7 +6,7 @@ from os import path
 from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5.QtGui import QPixmap
 
-from frontend.windows import InitialWindow, GameWindow
+from frontend.windows import InitialWindow, GameWindow, WinPopUp, ColorPicker
 from backend.client import Client
 
 
@@ -19,6 +19,7 @@ class Application(QApplication):
         # Crea las ventanas
         self.initial_window = InitialWindow(QPixmap(path.join(*paths['logo'])))
         self.game_window = GameWindow(path.join(*paths['ui']))
+        self.win_popup = WinPopUp(path.join(*paths['victory']))
 
         # Establece el estilo de la aplicación
         with open(path.join(*paths['theme'])) as theme_file:
@@ -82,6 +83,21 @@ class Application(QApplication):
             self.game_window.remove_card(response[4], int(response[5]))
         elif response[0] == 'chat':
             self.game_window.add_chat_mesaje(response[6])
+        elif response[0] == 'player_win':
+            self.win_popup.set_winner(response[4])
+            self.win_popup.exec_()
+            self.game_window.hide()
+            self.initial_window.show()
+        elif response[0] == 'player_lose':
+            self.game_window.player_lossed(response[4])
+        elif response[0] == 'request_color':
+            color_index = ColorPicker().exec_()  # hmm
+            color = ('rojo', 'amarillo', 'verde', 'azul')[color_index]
+            self.client.send({
+                0: 'color',
+                1: color
+            })
+
 
     def _join(self, name: str):
         'Manda al servidor la solicitud para unirse'

@@ -4,6 +4,7 @@
     "paths": {
         "logo": ["frontend", "sprites", "logo.png"],
         "theme": ["frontend", "theme.css"],
-        "ui": ["frontend", "game_window.ui"]
+        "ui": ["frontend", "game_window.ui"],
+        "victory": ["frontend", "sprites", "victory.png"]
     }
 }

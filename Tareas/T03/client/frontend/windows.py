@@ -169,6 +169,27 @@ class Deck(QLabel):
         self.clicked.emit()
 
 
+class WinPopUp(QMessageBox):
+    'PopUp que se muestra al terminar el juego'
+    def __init__(self, pixmap_path):
+        super().__init__()
+        self.setIconPixmap(QPixmap(pixmap_path))
+        self.setWindowTitle('Tenemos ganador!')
+
+    def set_winner(self, winner: str):
+        'Añade al ganador'
+        self.setText(f'Ha gandado {winner}. Felicitaciones!')
+
+class ColorPicker(QMessageBox):
+    'PopUp que permite elegir colores'
+    def __init__(self):
+        super().__init__()
+        self.setText('Selecciona un color')
+        for color in ('rojo', 'amarillo', 'verde', 'azul'):
+            button = self.addButton(color, self.AcceptRole)
+            button.setObjectName(color)
+
+
 class GameWindow(QMainWindow):
     '''Ventana principal dell juego'''
 
@@ -254,6 +275,10 @@ class GameWindow(QMainWindow):
         layout.removeItem(item)
         item.widget().close()
 
+    def player_lossed(self, name: str):
+        'Para de mostrar las castas de un jugador que perdió'
+        self._player_hands[name].hide()
+
 
 if __name__ == "__main__":
     # Para probar el estilo de las ventanas
@@ -263,8 +288,10 @@ if __name__ == "__main__":
     APP = QApplication(argv)
     with open('theme.css') as file:
         APP.setStyleSheet(file.read())
-    INITIAL_WINDOW = InitialWindow(QPixmap(join('sprites', 'logo')))
-    GAME_WINDOW = GameWindow('game_window.ui')
-    INITIAL_WINDOW.show()
-    GAME_WINDOW.show()
-    APP.exec_()
+    # INITIAL_WINDOW = InitialWindow(QPixmap(join('sprites', 'logo')))
+    # GAME_WINDOW = GameWindow('game_window.ui')
+    # INITIAL_WINDOW.show()
+    # GAME_WINDOW.show()
+    PICKER = ColorPicker()
+    print(PICKER.exec_())
+    # APP.exec_()

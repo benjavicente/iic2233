@@ -73,7 +73,14 @@ class Server:
                 if id_ in self.clients_names:
                     self.game.remove_player(self.clients_names[id_])
                     del self.clients_names[id_]
-            if not self.game.started:
+            if self.game.started and id_ in self.clients_names:
+                name = self.clients_names[id_]
+                self.game.remove_player(name)
+                self.send_all({
+                    0: 'player_lose',
+                    4: name
+                })
+            elif id_ in self.clients_names:
                 self.send_all({
                     0: 'players',
                     8: self.game.get_player_names()
@@ -130,11 +137,15 @@ class Server:
                 self.send(id_, data)
         # Actualiza el pozo y el nombre del jugador
         card = self.game.pool
+        if not card[0]:
+            pixmap = self.get_card_pixmap(('color', ''))  # demasiado parchee ahh
+        else:
+            pixmap = self.get_card_pixmap(card)
         data = {
             0: 'update_pool',
             1: card[1],
             2: card[0],
-            3: self.get_card_pixmap(card),
+            3: pixmap,
             4: self.game.waiting_to.name
         }
         self.send_all(data)
@@ -193,6 +204,7 @@ class Server:
                 6: formated_mesaje
             })
 
+        # El jugador dice UNO
         elif data[0] == 'uno':
             with self.lock_play:
                 name = self.clients_names[id_]
@@ -205,13 +217,39 @@ class Server:
                 name = self.clients_names[id_]
                 index = int(data[5])
                 self.log('play card', name, f'played card of index {index}')
-                if self.game.play(name, index):
+                return_code = self.game.play(name, index)
+                if return_code:
                     # El jugador pudo jugar una carta de su mano
-                    if index > 0:
+                    if return_code == 'play':
                         self.send_all({
                             0: 'remove_card',
                             4: name,
                             5: data[5]
                         })
+                    elif return_code == 'lose':
+                        self.send_all({
+                            0: 'player_lose',
+                            4: name
+                        })
+                    elif return_code == 'draw':
+                        pass
+                    elif return_code == 'request_color':
+                        self.send(id_, {
+                            0: 'request_color'
+                        })
+                    elif return_code: # :(
+                        if return_code != 'win':
+                            name = return_code.strip()
+                        self.send_all({
+                            0: 'player_win',
+                            4: name
+                        })
+                        self.clients_names.clear()
                     # Se actualizan las cartas
                     self.update_cards()
+
+        # El jugador entrego un color pedido
+        elif data[0] == 'color':
+            with self.lock_play:
+                self.game.receive_color(data[1])
+                self.update_cards()

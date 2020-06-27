@@ -1,4 +1,4 @@
-'''Módulo que administra la lógica del juego'''
+'Módulo que administra la lógica del juego'
 
 from collections import deque
 from generador_de_mazos import sacar_cartas as get_cards
@@ -11,7 +11,7 @@ class Player:
         self.uno = False
         self.cards = []
         self.cards_to_steal = 0  # Esto debe cambiar a medida que se tomen ciertas acciones
-        self.style = None  # TODO
+        self.playing = True
 
     def __repr__(self):
         return f'<{self.name}>'
@@ -34,12 +34,17 @@ class Game:
             'penalty_correct': kwards['penalización_uno_correcto'],
             'penalty_incorrect': kwards['penalización_uno_incorrecto']
         }
+        self.set_game()
+
+    def set_game(self):
+        'Establece el juego con los parámetros iniciales'
         # Parámetros del juego
+        self.__players = []
         self.started = False
-        self.waiting_to = None
         self.pool = (None, None)
         self._clockwise = False
         self._plus_2_count = 0
+        self.__requesting_color = False
         # Parámetros de flujo
         self.__cards_to_add = deque()
 
@@ -61,6 +66,10 @@ class Game:
         if not self.started:
             if name in self.__players:
                 self.__players.remove(name)
+        else:
+            for player in filter(lambda p: p == name, self.__players):
+                player.playing = False
+
 
     def get_player_names(self) -> None:  # Property?
         'Retorna una lista de los nombres para la sala de espera'
@@ -81,29 +90,44 @@ class Game:
             for player in self.__players:
                 self.__cards_to_add.append((player, player.cards[i]))
 
-    def play(self, player_name: str, index: int) -> bool:
+    def play(self, player_name: str, index: int) -> str:
         '''
         El jugador juega la carta `index` de su mazo.
-        Retorna true si se pudo jugar'.
+        Retorna un string con lo que pasó en la jugada.
         Si el index es -1 se roba una carta.
-        '''
+        En el caso que un jugador ganó porque los demás quedaron con
+        muchas cartas, se retorna el nombre con un espacio al inicio.
+        '''  #* Esto es un desastre
         # -> REGLAS
         # Una carta con igual color o número puede ser añadida al pozo
         # +2: el siguiente jugador tiene que robar +2 o tirar un +2
         # Cambio de sentido: cambia el sentido
-        # TODO: cambio de color: el jugador cambia el color del poso
+        # Cambio de color: el jugador cambia el color del poso
         #! robar es voluntario
-        if self.waiting_to == player_name:  #* Aquí debe estar la condición del bonus
+        #* Aquí debe estar la condición del bonus
+        if self.waiting_to == player_name and not self.__requesting_color:
             # Roba
             if index == -1:
                 if self._plus_2_count:
-                    # Se añaden las cartas a robar si decidió robar
+                    # Se añaden las cartas a robar si decidió robar en (+2)
                     self.waiting_to.cards_to_steal = self._plus_2_count
                     self._plus_2_count = 0
                 # Obtiene la carta del mazo
                 new_card = get_cards(1)[0]
-                self.waiting_to.cards.extend(new_card)
+                self.waiting_to.cards.append(new_card)
                 self.__cards_to_add.append((self.waiting_to, new_card))
+                # Ver si el jugador perdió
+                if len(self.waiting_to.cards) > self.__game_config['max_cards']:
+                    self.waiting_to.playing = False
+                    self._player_rotation()
+                    #! chequear si queda solo un jugador
+                    remaining = list(filter(lambda p: p.playing, self.__players))
+                    if len(remaining) == 1:
+                        # Se añade el espacio para que sea imposible que el nombre
+                        # sea uno de los comandos que se mandan (demasiado parche)
+                        self.set_game()
+                        return ' ' + remaining[0].name
+                    return 'lose'
                 if self.waiting_to.cards_to_steal:
                     # No se avanza el juego, necesita robar más
                     self.waiting_to.cards_to_steal -= 1
@@ -112,9 +136,10 @@ class Game:
                         self._player_rotation()
                 else:
                     self._player_rotation()
-                return True
+                return 'draw'
             # Juega un carta
             selected = self.waiting_to.cards[index]
+            print(selected)
             if self.is_valid_card(selected) and not self.waiting_to.cards_to_steal:
                 # Se elimina la carta
                 self.waiting_to.cards.pop(index)
@@ -122,6 +147,10 @@ class Game:
                 self.waiting_to.uno = False
                 # Se cambia la carta del pozo
                 self.pool = selected
+                # Ve si es de cambio de color:
+                if selected[0] == 'color':
+                    self.__requesting_color = True
+                    return 'request_color'
                 # Ve si es cambio de sentido
                 if selected[0] == 'sentido':
                     self._clockwise = not self._clockwise
@@ -130,12 +159,20 @@ class Game:
                     self._plus_2_count += 2
                 # Se cambia el jugador
                 self._player_rotation()
-                return True
-        return False
+                # Ve si el jugador ganó
+                if not self.waiting_to.cards:
+                    self.set_game()
+                    return 'win'
+                return 'play'
+        return ''
 
-    def play_special(self,  player_name: str, index: int, color: str) -> bool:
-        'Similar a la función que `play`, pero cambia el color adecuadamente'
-        # TODO
+    def receive_color(self, color: str):
+        'Recibe el color pedido'
+        if self.__requesting_color:
+            self.pool = ('', color)
+            self._player_rotation()
+            self.__requesting_color = False
+
 
     def get_relative_players(self, player_name: str) -> str:
         'Ordena los jugadores según la vista del interfaz'
@@ -171,8 +208,9 @@ class Game:
         has_valid_type = card[0] == self.pool[0]
         played_plus_2_before = bool(self._plus_2_count)
         return (
-            (has_valid_color or has_valid_type)
-            and (not played_plus_2_before or card[0] == '+2')
+            ((has_valid_color or has_valid_type)
+             and (not played_plus_2_before or card[0] == '+2'))
+            or card[0] == 'color'
         )
 
     def cards_to_add(self) -> tuple:
@@ -182,11 +220,13 @@ class Game:
             yield player.name, card
 
     def _player_rotation(self) -> None:
-        'Cambia de turno'
-        index = self.__players.index(self.waiting_to)
-        direction = -1 if self._clockwise else 1
-        new_index = (index + direction) % len(self.__players)
-        self.waiting_to = self.__players[new_index]
+        'Cambia de turno' # Generador?
+        last_player = self.waiting_to
+        while not self.waiting_to.playing or last_player is self.waiting_to:
+            index = self.__players.index(self.waiting_to)
+            direction = -1 if self._clockwise else 1
+            new_index = (index + direction) % len(self.__players)
+            self.waiting_to = self.__players[new_index]
 
     def call_uno(self, player_name: str) -> None:
         'El jugador `name` llamó uno'
@@ -194,6 +234,8 @@ class Game:
         # Se verifica si existe un jugador con una carta
         for player in self.__players:
             if player == player_name:
+                if not player.playing:
+                    return  # El jugador no esta jugando...
                 # Si es que existe y es el mismo jugador, no se hace nada
                 player.uno = True
                 player_pointer = player
