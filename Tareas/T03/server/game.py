@@ -11,6 +11,7 @@ class Player:
         self.uno = False
         self.cards = []
         self.cards_to_steal = 0  # Esto debe cambiar a medida que se tomen ciertas acciones
+        self.style = None  # TODO
 
     def __repr__(self):
         return f'<{self.name}>'
@@ -25,7 +26,7 @@ class Game:
     def __init__(self, **kwards):
         # Parametros de configuración y preparación
         self.__players = []
-        self.theme = kwards['tema_inicial']
+        self.theme = kwards['tema_inicial']  #! Esto es por cada jugador
         self.__game_config = {
             'players': kwards['jugadores_partida'],
             'int_cards': kwards['cartas_iniciales'],
@@ -38,7 +39,7 @@ class Game:
         self.waiting_to = None
         self.pool = (None, None)
         self._clockwise = False
-        self._plus_2 = False  # TODO: cambiar esto y ver sus condiciones
+        self._plus_2_count = 0
         # Parámetros de flujo
         self.__cards_to_add = deque()
 
@@ -84,18 +85,22 @@ class Game:
         '''
         El jugador juega la carta `index` de su mazo.
         Retorna true si se pudo jugar'.
-        Si el index es -1 se roba una carta (TODO).
+        Si el index es -1 se roba una carta.
         '''
-        # TODO: podria añadir un kwarg que indique el color si es que se está cambiando
         # -> REGLAS
         # Una carta con igual color o número puede ser añadida al pozo
-        # TODO: +2: el siguiente jugador tiene que robar +2 o tirar un +2
+        # +2: el siguiente jugador tiene que robar +2 o tirar un +2
         # Cambio de sentido: cambia el sentido
         # TODO: cambio de color: el jugador cambia el color del poso
-        #! robar tiene que ser voluntario
+        #! robar es voluntario
         if self.waiting_to == player_name:  #* Aquí debe estar la condición del bonus
             # Roba
             if index == -1:
+                if self._plus_2_count:
+                    # Se añaden las cartas a robar si decidió robar
+                    self.waiting_to.cards_to_steal = self._plus_2_count
+                    self._plus_2_count = 0
+                # Obtiene la carta del mazo
                 new_card = get_cards(1)[0]
                 self.waiting_to.cards.extend(new_card)
                 self.__cards_to_add.append((self.waiting_to, new_card))
@@ -117,18 +122,19 @@ class Game:
                 self.waiting_to.uno = False
                 # Se cambia la carta del pozo
                 self.pool = selected
-                # Cambia el sentido
+                # Ve si es cambio de sentido
                 if selected[0] == 'sentido':
                     self._clockwise = not self._clockwise
-                elif selected[0] == '+2':
-                    self._plus_2 = True
+                # Ve si es +2
+                if selected[0] == '+2':
+                    self._plus_2_count += 2
                 # Se cambia el jugador
                 self._player_rotation()
                 return True
         return False
 
     def play_special(self,  player_name: str, index: int, color: str) -> bool:
-        '''Similar a la función que `play`, pero cambia el color adecuadamente'''
+        'Similar a la función que `play`, pero cambia el color adecuadamente'
         # TODO
 
     def get_relative_players(self, player_name: str) -> str:
@@ -161,7 +167,13 @@ class Game:
 
     def is_valid_card(self, card: tuple) -> bool:
         'Ve si la carta seleccionada es válida'
-        return card[0] == self.pool[0] or card[1] == self.pool[1]
+        has_valid_color = card[1] == self.pool[1]
+        has_valid_type = card[0] == self.pool[0]
+        played_plus_2_before = bool(self._plus_2_count)
+        return (
+            (has_valid_color or has_valid_type)
+            and (not played_plus_2_before or card[0] == '+2')
+        )
 
     def cards_to_add(self) -> tuple:
         'Generador de las cartas que se tienen que añadir en el interfaz'

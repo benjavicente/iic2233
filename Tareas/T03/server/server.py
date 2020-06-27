@@ -194,9 +194,10 @@ class Server:
             })
 
         elif data[0] == 'uno':
-            name = self.clients_names[id_]
-            self.game.call_uno(name)
-            self.update_cards()
+            with self.lock_play:
+                name = self.clients_names[id_]
+                self.game.call_uno(name)
+                self.update_cards()
 
         # El jugador trata de jugar una carta
         elif data[0] == 'play_card':

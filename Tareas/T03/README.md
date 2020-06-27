@@ -132,13 +132,13 @@ Listo:
 - Conexión servidor-clientes
 - Sala de entrada
 - Sala de espera
-- Lógica inicial del juego
+- Lógica del juego
 - Envío de cartas
 - Seleccionar cartas
 
 En desarrollo:
 
-- Lógica del juego (que hace cada carta, robar)
+- Carta de color
 - Conexión de botones (DCCuadrádo!, robar)
 - Sala de espera (Chat)
 
@@ -148,7 +148,6 @@ Bonus:
 
 Posibles bonus:
 
-- Selector de mazos
 - Tiempo límite
 - Relámpago
 
