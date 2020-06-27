@@ -8,7 +8,6 @@ from log import Log
 from protocol import recv_data, send_data
 from game import Game
 
-# TODO: revisar si se necesitan locks
 
 class Server:
     'El servidor del juego'
@@ -67,25 +66,29 @@ class Server:
         except ConnectionError:
             self.log('Error de conexión', id_)
         finally:
+            if id_ in self.clients_names:
+                name = self.clients_names[id_]
             # Se elimina el cliente
             with self.lock_edit_client:
                 del self.clients[id_]
                 if id_ in self.clients_names:
                     self.game.remove_player(self.clients_names[id_])
                     del self.clients_names[id_]
-            if self.game.started and id_ in self.clients_names:
-                name = self.clients_names[id_]
-                self.game.remove_player(name)
-                self.send_all({
-                    0: 'player_lose',
-                    4: name
-                })
-            elif id_ in self.clients_names:
-                self.send_all({
-                    0: 'players',
-                    8: self.game.get_player_names()
-                })
             client_socket.close()
+            # Se envía que se eliminó el cliente si es que tenia nombre
+            if name:
+                if self.game.started:
+                    self.game.remove_player(name)
+                    self.send_all({
+                        0: 'player_lose',
+                        4: name
+                    })
+                    self.update_cards()
+                else:
+                    self.send_all({
+                        0: 'players',
+                        8: self.game.get_player_names()
+                    })
 
     def send(self, id_: int, data: dict):
         'Manda el diccionario data al socket'
@@ -252,5 +255,10 @@ class Server:
         # El jugador entrego un color pedido
         elif data[0] == 'color':
             with self.lock_play:
-                self.game.receive_color(data[1])
+                index = self.game.receive_color(data[1])
+                self.send_all({
+                    0: 'remove_card',
+                    4: self.clients_names[id_],
+                    5: str(index)
+                })
                 self.update_cards()

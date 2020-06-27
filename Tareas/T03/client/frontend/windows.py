@@ -87,7 +87,7 @@ class InitialWindow(QMainWindow):
         self.chat_box.setPlaceholderText('Bienvenido! Se el primero en mandar un saludo!')
         self.chat_box.setObjectName('chat_box')
         self.chat_box.setTextInteractionFlags(Qt.LinksAccessibleByMouse | Qt.TextSelectableByMouse)
-        wait_room_layout.addWidget(self.chat_box, 0, 1, 1, 1)
+        wait_room_layout.addWidget(self.chat_box, 0, 1, 2, 1)
         # Chat input
         self.chat_input = QLineEdit(self.wait_room)
         self.chat_input.setPlaceholderText('Enviar mensaje al chat')
@@ -109,7 +109,7 @@ class InitialWindow(QMainWindow):
         self.setWindowTitle('Ventana Inicial')
         QMessageBox.information(self, 'Error', error['display'])
         self.join_button.setDisabled(False)
-        self.name.setDisabled(False)
+        self.name_input.setDisabled(False)
 
     def action_waiting(self, players: list) -> None:
         '''Acción que muestra la sala de espera'''
@@ -147,6 +147,8 @@ class InitialWindow(QMainWindow):
     def reset(self):
         'Vuelve al estado inicial'
         self.wait_room.hide()
+        self.join_button.setDisabled(False)
+        self.name_input.setDisabled(False)
         self.name_entry.show()
 
 

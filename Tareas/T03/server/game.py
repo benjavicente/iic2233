@@ -12,6 +12,7 @@ class Player:
         self.cards = []
         self.cards_to_steal = 0  # Esto debe cambiar a medida que se tomen ciertas acciones
         self.playing = True
+        self.color_change_index = 0
 
     def __repr__(self):
         return f'<{self.name}>'
@@ -68,6 +69,8 @@ class Game:
                 self.__players.remove(name)
         else:
             for player in filter(lambda p: p == name, self.__players):
+                if player is self.waiting_to:
+                    self._player_rotation()
                 player.playing = False
 
 
@@ -104,7 +107,10 @@ class Game:
         # Cambio de sentido: cambia el sentido
         # Cambio de color: el jugador cambia el color del poso
         #! robar es voluntario
-        #* Aquí debe estar la condición del bonus
+        # Se ve si el jugador ganó por falta de jugadores
+        if len(list(filter(lambda p: p.playing, self.__players))) <= 1:
+            return 'win'
+        # Se ven las condiciones de juego
         if self.waiting_to == player_name and not self.__requesting_color:
             # Roba
             if index == -1:
@@ -149,6 +155,7 @@ class Game:
                 self.pool = selected
                 # Ve si es de cambio de color:
                 if selected[0] == 'color':
+                    self.waiting_to.color_change_index = index
                     self.__requesting_color = True
                     return 'request_color'
                 # Ve si es cambio de sentido
@@ -157,21 +164,23 @@ class Game:
                 # Ve si es +2
                 if selected[0] == '+2':
                     self._plus_2_count += 2
-                # Se cambia el jugador
-                self._player_rotation()
                 # Ve si el jugador ganó
                 if not self.waiting_to.cards:
                     self.set_game()
                     return 'win'
+                # Se cambia el jugador
+                self._player_rotation()
                 return 'play'
         return ''
 
-    def receive_color(self, color: str):
+    def receive_color(self, color: str) -> int:
         'Recibe el color pedido'
         if self.__requesting_color:
             self.pool = ('', color)
-            self._player_rotation()
+            index = self.waiting_to.color_change_index
             self.__requesting_color = False
+            self._player_rotation()
+            return index
 
 
     def get_relative_players(self, player_name: str) -> str:

@@ -30,9 +30,8 @@ def recv_data(receiver_socket: Socket, chunk_size=128) -> dict:
         while reamining_size > 0:
             chunk = min(reamining_size, chunk_size)
             object_content += receiver_socket.recv(chunk)
-            reamining_size -= chunk_size
+            reamining_size = object_size - len(object_content)
         # Transformación de objetos
-        # TODO: ordenarlo?
         if   object_id < 8 and not object_id == 3:  # str
             content = object_content.decode('utf-8')
         elif object_id < 16 and not object_id == 3: # list
