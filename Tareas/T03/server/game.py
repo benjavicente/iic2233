@@ -219,7 +219,7 @@ class Game:
         return (
             ((has_valid_color or has_valid_type)
              and (not played_plus_2_before or card[0] == '+2'))
-            or card[0] == 'color'
+            or (card[0] == 'color' and not played_plus_2_before)
         )
 
     def cards_to_add(self) -> tuple:

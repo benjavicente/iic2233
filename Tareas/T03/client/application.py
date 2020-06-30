@@ -13,7 +13,6 @@ from backend.client import Client
 class Application(QApplication):
     'Aplicación del Cliente'
     def __init__(self, paths, **kwargs):
-        sys.__excepthook__ = lambda t, v, trace: print(t, v, trace, sep="\n")
         super().__init__(sys.argv)
 
         # Crea las ventanas
