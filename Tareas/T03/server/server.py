@@ -230,11 +230,14 @@ class Server:
                             5: data[5]
                         })
                     elif return_code == 'lose':
+                        # Se actualizan las cartas antes para evitar
+                        # añadirlas a un jugador que perdió
+                        self.update_cards()
                         self.send_all({
                             0: 'player_lose',
                             4: name
                         })
-                        return   # No se actualizan las cartas
+                        return
                     elif return_code == 'draw':
                         pass
                     elif return_code == 'request_color':
