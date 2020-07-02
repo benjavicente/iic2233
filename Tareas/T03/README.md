@@ -19,6 +19,8 @@
 
 Tener una versión de PyQt5 menor a 5.14 causa un pequeño error.
 
+Añadir los sprites y el módulo entregado.
+
 ## Ejecución :computer:
 
 Los archivos a ejecutar son para cliente y servidor son
@@ -85,7 +87,7 @@ Para ver donde se usa cada una se puede buscar ` {id_}: `.
 
 ### El juego :black_joker:
 
-- Los efectos de la primera carta del poso son omitidos.
+- Los efectos de la primera carta del poso son omitidos
 - Robar cartas **siempre es voluntario**. Si el jugador recibió una penalización por
 decir DCCuatro, deberá robar un número de cartas de penalización.
 - El servidor espera a señales de los clientes para avanzar el juego. Si jugadores
@@ -95,6 +97,17 @@ acción en el jugo, como robar o jugar una carta
 - Una carta es válida si tiene el mismo color o tipo, no se jugó una
 carta +2 en el turno anterior, y no se está jugando una carta de color.
 (Ver `game.py@is_valid_card`)
+- No implemente un mazo único por cada jugador. Hay un maso central en el que se puede robar
+
+### Sobre el interfaz :pushpin:
+
+- Se interactúa con el juego con clics
+- Los clientes mostraran una versión simplificada de los logs del servidor
+- El interfaz puede verse mal en espacios pequeños. Un nombre de
+jugador muy largo puede ocultar las cartas
+- Los campos de texto son ingresados apretando la tecla return (enter)
+- Un jugador puede gritar DCCuadrado cuando perdió, pero no tendrá efecto
+- El tamaño de las cartas puede ser cambiado en los parámetros del cliente
 
 ## Librerías :books:
 
@@ -103,13 +116,14 @@ carta +2 en el turno anterior, y no se está jugando una carta de color.
 
 - **`PyQt5`**: interfaz gráfica (GUI)
 
-- **`sys`**: para serrar el programa al cerrar el interfaz
+- **`sys`**: para cerrar el programa al cerrar el interfaz
 - **`socket`:** `socket`, `AF_INET`, `SOCK_STREAM` , creación de sockets
 - **`threading`:** `Thread`, `Lock`, para escuchar al socket
 - **`os`:** `path`, para unir los paths
 - **`json`:** para serializar y deserializar diccionarios
+- **`collections`**: uso de `deque` para la cola de cartas a enviar
 
-- **`generador_de_mazos`:** genera las cartas
+- **`generador_de_mazos`:** genera las cartas, entregado para la tarea
 
 ### Librerías propias :pencil:
 

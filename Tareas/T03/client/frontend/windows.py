@@ -228,9 +228,12 @@ class GameWindow(QMainWindow):
     signal_call = pyqtSignal()     # llama DCCuadrádo
     signal_play = pyqtSignal(int)  # id de la carta seleccionada
 
-    def __init__(self, ui_path):
+    def __init__(self, ui_path: str, card_size: tuple):
         super().__init__()
         loadUi(ui_path, self)
+        # Tamaño de las carats
+        self.card_size = QSize(*card_size)
+        # Set-up del ui y sus señales
         self._set_up()
         # Referencia de las manos de los jugadores
         self._player_hands = dict()
@@ -238,8 +241,6 @@ class GameWindow(QMainWindow):
         self.reverse_card = None
 
     def _set_up(self) -> None:
-        # Tamaño de las carats
-        self.card_size = QSize(80, 112)
         # Se sobreescribe el widget
         self.card_deck = Deck(self.Table)
         self.table_layout.replaceWidget(self.TempCardDeck, self.card_deck)

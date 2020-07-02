@@ -17,7 +17,7 @@ class Application(QApplication):
 
         # Crea las ventanas
         self.initial_window = InitialWindow(QPixmap(path.join(*paths['logo'])))
-        self.game_window = GameWindow(path.join(*paths['ui']))
+        self.game_window = GameWindow(path.join(*paths['ui']), kwargs['tam_cartas'])
         self.win_popup = WinPopUp(path.join(*paths['victory']))
 
         # Establece el estilo de la aplicación

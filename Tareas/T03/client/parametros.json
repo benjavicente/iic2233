@@ -1,6 +1,7 @@
 {
     "host": "localhost",
     "port": 45743,
+    "tam_cartas": [80, 112],
     "paths": {
         "logo": ["frontend", "sprites", "logo.png"],
         "theme": ["frontend", "theme.css"],

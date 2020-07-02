@@ -66,6 +66,7 @@ class Server:
         except ConnectionError:
             self.log('Error de conexión', id_)
         finally:
+            name = None
             if id_ in self.clients_names:
                 name = self.clients_names[id_]
             # Se elimina el cliente
@@ -247,6 +248,8 @@ class Server:
                     elif return_code: # :(
                         if return_code != 'win':
                             name = return_code.strip()
+                        # Se utiliza el nombre del jugador que ganó,
+                        # retornado por la función
                         self.send_all({
                             0: 'player_win',
                             4: name
