@@ -85,20 +85,26 @@ Para ver donde se usa cada una se puede buscar ` {id_}: `.
 
 ### El juego :black_joker:
 
-<!-- TODO -->
 - Los efectos de la primera carta del poso son omitidos.
-- Robar cartas **siempre es voluntario**. Si el jugador recibió una penalización por decir DCCuatro, deberá robar un número de cartas de penalización.
+- Robar cartas **siempre es voluntario**. Si el jugador recibió una penalización por
+decir DCCuatro, deberá robar un número de cartas de penalización.
+- El servidor espera a señales de los clientes para avanzar el juego. Si jugadores
+se desconectan repentinamente y queda uno solo, debería ser necesario realizar una
+acción en el jugo, como robar o jugar una carta
+- Robar se denota como jugar la carta de índice `-1`
+- Una carta es válida si tiene el mismo color o tipo, no se jugó una
+carta +2 en el turno anterior, y no se está jugando una carta de color.
+(Ver `game.py@is_valid_card`)
 
 ## Librerías :books:
 
-<!-- Falta una pequeña descripción -->
 
 ### Librerías externas utilizadas :clipboard:
 
 - **`PyQt5`**: interfaz gráfica (GUI)
 
 - **`sys`**: para serrar el programa al cerrar el interfaz
-- **`socket`:** `socket`, `AF_INET`, `SOCK_STREAM `, creación de sockets
+- **`socket`:** `socket`, `AF_INET`, `SOCK_STREAM` , creación de sockets
 - **`threading`:** `Thread`, `Lock`, para escuchar al socket
 - **`os`:** `path`, para unir los paths
 - **`json`:** para serializar y deserializar diccionarios
@@ -122,37 +128,47 @@ Para ver donde se usa cada una se puede buscar ` {id_}: `.
 
 ## Código externo utilizado :package:
 
-<!-- TODO -->
+Use pequeños trozos de código como:
+
+- `style().polish(widget)` en `windows.py@action_waiting`
+de [JasonGenX](https://stackoverflow.com/a/9067046)
+- una simplificación de la respuesta de
+[Akash D G](https://stackoverflow.com/a/43389466) para eliminar widgets
+en `windows.py@remove_card`
+
 
 ## Características implementadas :wrench:
 
-<!-- TODO -->
-Listo:
+Todo fue implementado :tada:
 
-- Conexión servidor-clientes
-- Sala de entrada
-- Sala de espera
-- Lógica del juego
-- Envío de cartas
-- Seleccionar cartas
+Partes de corrección de código:
 
-En desarrollo:
-
-- Carta de color
-- Conexión de botones (DCCuadrádo!, robar)
-- Sala de espera (Chat)
+- Uso de TPC / IP: `client.py:20` y `server.py:21`
+- Inicio de sockets: `client.py:28` y `server.py:33`
+- Sockets con threading: `client.py:30` y `server.py:53`
+- Separación cliente y servidor: directorio `server` y `client`
+- Responsabilidad del cliente: funciones desde `application.py:109`
+- Responsabilidad del servidor: función `server.py@manage_response` y
+módulo `game.py`
+- Uso de locks: `server.py@lock_edit_client` y `server.py@lock_play`
+para evitar añadir multiples jugadores o cambiar el juego a la vez respectivamente
+- Se utiliza el formato big y little endian: `protocol.py:24` y `protocol.py:66`
+para mandar y recibir el id y `protocol.py:26` y `protocol.py:79` para el tamaño,
+con big y little respectivamente
+- Implementación del protocolo: todo el módulo `protocol.py`
+- Separación front-end y back-end para el cliente: directorios `frontend`
+y `backend` con módulos que unidos en `application.py`
+- Jugar una carta: toda la función `game.py@play`
+- Uso del generador de mazos: al empezar en `game.py@start.game` y al
+robar `game.py:122`.
+- Uso de json: tanto en `main.py` del servidor como del cliente se abre
+el archivo y se pasan los parámetros a la entidad principal del programa.
 
 Bonus:
 
-- Chat (con soporte _básico_ de **MarkDown**) (Falta en la sala de espera)
+- Chat (con soporte _básico_ de **MarkDown**)
 
-Posibles bonus:
-
-- Tiempo límite
-- Relámpago
 
 ## Notas adicionales :moyai:
-
-Hay un error al recibir objetos muy largos de un servidor externo.
 
 Disfrute el ~~programa~~ juego :tada:

@@ -23,7 +23,7 @@ def recv_data(receiver_socket: Socket, chunk_size=128) -> dict:
         # ID del objeto
         object_id = int.from_bytes(receiver_socket.recv(4), 'big')
         # Largo del objeto
-        object_size = int.from_bytes(receiver_socket.recv(4), 'big')
+        object_size = int.from_bytes(receiver_socket.recv(4), 'little')
         # Objeto serializado cargado por chunks
         object_content = bytearray()
         reamining_size = object_size
@@ -76,7 +76,7 @@ def send_data(sender_socket: Socket, data: dict) -> None:
         else:
             raise TypeError(f'Tipo de objeto con id {id_} inváilido')
         # Serialización del tamaño de objetos
-        serialized_data += len(serialized_obj).to_bytes(4, 'big')
+        serialized_data += len(serialized_obj).to_bytes(4, 'little')
         # Envío de objeto
         serialized_data += serialized_obj
     # Se enviá al socket

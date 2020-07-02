@@ -3,6 +3,7 @@
 from collections import deque
 from generador_de_mazos import sacar_cartas as get_cards
 
+
 class Player:
     'Jugador'
     def __init__(self, name: str, id_: int):
@@ -10,7 +11,7 @@ class Player:
         self.id = id_
         self.uno = False
         self.cards = []
-        self.cards_to_steal = 0  # Esto debe cambiar a medida que se tomen ciertas acciones
+        self.cards_to_steal = 0
         self.playing = True
         self.color_change_index = 0
 
@@ -19,7 +20,6 @@ class Player:
 
     def __eq__(self, other_name):
         return self.name == other_name
-
 
 
 class Game:
@@ -85,7 +85,7 @@ class Game:
         'Empieza el juego'
         self.started = True
         self.waiting_to = self.__players[0]
-        while not self.pool[1]:
+        while not self.pool[1]:  # En el caso que es una carta Color
             self.pool = get_cards(1)[0] # Como solo es una carta, se obtiene con [0]
         for player in self.__players:
             player.cards = get_cards(self.__game_config['int_cards'])
@@ -145,7 +145,6 @@ class Game:
                 return 'draw'
             # Juega un carta
             selected = self.waiting_to.cards[index]
-            print(selected)
             if self.is_valid_card(selected) and not self.waiting_to.cards_to_steal:
                 # Se elimina la carta
                 self.waiting_to.cards.pop(index)
@@ -181,6 +180,7 @@ class Game:
             self.__requesting_color = False
             self._player_rotation()
             return index
+        return -1
 
 
     def get_relative_players(self, player_name: str) -> str:

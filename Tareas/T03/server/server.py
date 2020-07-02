@@ -124,6 +124,7 @@ class Server:
         'Actualiza las cartas'
         # Actualiza las cartas de los jugadores
         for owner, card in self.game.cards_to_add():
+            self.log('mandando carta', details=f'{card} de {owner}')
             for id_ in self.clients_names:
                 if self.clients_names[id_] == owner:
                     data = {
@@ -161,7 +162,6 @@ class Server:
 
     def manage_response(self, id_: int, data: dict):
         'Maneja la respuesta del socket'
-
         # El jugador trata de unirse
         if data[0] == 'join':
             name = data[4]
@@ -239,7 +239,7 @@ class Server:
                         })
                         return
                     elif return_code == 'draw':
-                        pass
+                        self.log('carta robada', name)
                     elif return_code == 'request_color':
                         self.send(id_, {
                             0: 'request_color'
@@ -259,6 +259,8 @@ class Server:
         elif data[0] == 'color':
             with self.lock_play:
                 index = self.game.receive_color(data[1])
+                if index == -1:
+                    return  # Error
                 self.send_all({
                     0: 'remove_card',
                     4: self.clients_names[id_],
