@@ -201,7 +201,8 @@ class WinPopUp(QMessageBox):
     'PopUp que se muestra al terminar el juego'
     def __init__(self, pixmap_path):
         super().__init__()
-        self.setIconPixmap(QPixmap(pixmap_path))
+        pixmap = QPixmap(pixmap_path)
+        self.setIconPixmap(pixmap.scaled(80, 80))
         self.setWindowTitle('Tenemos ganador!')
 
     def set_winner(self, winner: str):

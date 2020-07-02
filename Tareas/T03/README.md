@@ -108,6 +108,8 @@ jugador muy largo puede ocultar las cartas
 - Los campos de texto son ingresados apretando la tecla return (enter)
 - Un jugador puede gritar DCCuadrado cuando perdió, pero no tendrá efecto
 - El tamaño de las cartas puede ser cambiado en los parámetros del cliente
+- El mensaje cuando alguien gana muestra solo quien ganó. Al cerrarlo se vuelve
+al menu inicial, donde el jugador puede volver a jugar.
 
 ## Librerías :books:
 

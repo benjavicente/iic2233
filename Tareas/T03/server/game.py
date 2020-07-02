@@ -148,6 +148,10 @@ class Game:
             if self.is_valid_card(selected) and not self.waiting_to.cards_to_steal:
                 # Se elimina la carta
                 self.waiting_to.cards.pop(index)
+                # Ve si el jugador ganó
+                if not self.waiting_to.cards:
+                    self.set_game()
+                    return 'win'
                 # Se establece que el jugador no ha dicho uno
                 self.waiting_to.uno = False
                 # Se cambia la carta del pozo
@@ -163,10 +167,6 @@ class Game:
                 # Ve si es +2
                 if selected[0] == '+2':
                     self._plus_2_count += 2
-                # Ve si el jugador ganó
-                if not self.waiting_to.cards:
-                    self.set_game()
-                    return 'win'
                 # Se cambia el jugador
                 self._player_rotation()
                 return 'play'
