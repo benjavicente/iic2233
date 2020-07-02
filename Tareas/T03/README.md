@@ -102,6 +102,7 @@ carta +2 en el turno anterior, y no se está jugando una carta de color.
 ### Sobre el interfaz :pushpin:
 
 - Se interactúa con el juego con clics
+- Arriba a la izquierda se mostrará el color y el jugador actual
 - Los clientes mostraran una versión simplificada de los logs del servidor
 - El interfaz puede verse mal en espacios pequeños. Un nombre de
 jugador muy largo puede ocultar las cartas
@@ -110,6 +111,7 @@ jugador muy largo puede ocultar las cartas
 - El tamaño de las cartas puede ser cambiado en los parámetros del cliente
 - El mensaje cuando alguien gana muestra solo quien ganó. Al cerrarlo se vuelve
 al menu inicial, donde el jugador puede volver a jugar.
+- Cuando un jugador pierde o se pierde la conexión con el se mostrará un `:(`
 
 ## Librerías :books:
 
