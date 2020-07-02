@@ -255,6 +255,7 @@ class Server:
                             4: name
                         })
                         self.clients_names.clear()
+                        self.game.started = False
                     # Se actualizan las cartas
                     self.update_cards()
 
