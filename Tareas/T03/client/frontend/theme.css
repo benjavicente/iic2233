@@ -1,46 +1,25 @@
-/* ---------------- */
 /* Pantalla inicial */
-/* ---------------- */
-
 #InitialWindow{
     background: black;
 }
-#join_button{
-    color: rgb(253, 253, 175);
-    height: 30px;
-    padding: 0 5px;
+#JoinButton{
+    color: yellow;
     background: red;
-    font-size: 12px;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
 }
-#join_button:hover{
-    background: rgb(255, 42, 42);
-}
-#name_input{
-    font-size: 12px;
-    height: 30px;
-    padding-left: 5px;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-}
-#wait_label{
+#WaitLabel{
     color: white;
     font-size: 30px;
 }
-#waiting_player{
+#WaitingPlayer{
     color: rgb(231, 231, 231);
     font-size: 20px;
 }
-#empty_player{
+#EmptyPlayer{
     color: rgb(121, 121, 121);
     font-size: 20px;
 }
 
-/* ------------------ */
 /* Pantalla del juego */
-/* ------------------ */
-
 #GameWindow{
     background: black;
 }
@@ -50,68 +29,27 @@
 #Player3Frame{
     background: rgb(105, 105, 105);
 }
-#Player0Name,
-#Player1Name,
-#Player2Name,
-#Player3Name{
-    color: white;
-    font-size: 20px;
-}
-#game_info_frame{
+#GameInfoFrame{
     background: rgb(37, 37, 37);
 }
-#game_info_title,
-#active_player,
-#active_color{
-    color: white;
+#CardDeck,
+#CardPool{
+    background: rgb(131, 131, 131);
 }
-#game_info_title{
-    font-size: 30px;
-}
-#active_player,
-#active_color{
-    font-size: 24px;
-}
-#action_uno{
-    height: 30px;
-    border-radius: 14px;
-    background: rgb(255, 0, 0);
-    color: rgb(255, 254, 221);
-    font-size: 16px;
-}
-#action_uno:hover{
-    background: rgb(255, 72, 72);
-}
-#chat_box{
+#Chat{
     color: rgb(182, 182, 182);
     background: transparent;
     border: 0;
-    font-size: 12px;
 }
-QScrollBar{
-    background: rgb(32, 32, 32);
+#Chat QScrollBar{
+    background: black;
     width: 10px;
     border: 0;
     margin: 0;
     border-radius: 5px;
 }
-QScrollBar::handle{
-    background: rgb(117, 117, 117);
+#Chat QScrollBar::handle{
+    background: rgb(95, 95, 95);
     color: red;
     border-radius: 5px;
-}
-QScrollBar::sub-page,
-QScrollBar::add-page,
-QScrollBar::add-line,
-QScrollBar::sub-line{
-    width: 0;
-    height: 0;
-    background: transparent;
-}
-#chat_input{
-    font-size: 12px;
-    border-radius: 10%;
-    color: white;
-    background-color: rgba(255, 255, 255, 0.329);
-    padding: 5px;
 }
