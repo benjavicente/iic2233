@@ -26,7 +26,7 @@
 }
 #wait_label{
     color: white;
-    font-size: 30px;
+    font-size: 28px;
 }
 #waiting_player{
     color: rgb(231, 231, 231);
@@ -49,6 +49,23 @@
 #Player2Frame,
 #Player3Frame{
     background: rgb(105, 105, 105);
+    padding: 3px;
+}
+#Player0Frame,
+#Player1Frame{
+    border-top-right-radius: 10px;
+}
+#Player1Frame,
+#Player2Frame{
+    border-bottom-right-radius: 10px;
+}
+#Player2Frame,
+#Player3Frame{
+    border-bottom-left-radius: 10px;
+}
+#Player3Frame,
+#Player0Frame{
+    border-top-left-radius: 10px;
 }
 #Player0Name,
 #Player1Name,
@@ -58,6 +75,8 @@
     font-size: 20px;
 }
 #game_info_frame{
+    margin: 5px;
+    border-radius: 5px;
     background: rgb(37, 37, 37);
 }
 #game_info_title,
