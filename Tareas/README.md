@@ -28,6 +28,10 @@ al servir bocadillos. De pronto recordó el éxito de DCCriaturas Fantásticas g
 contactarte para pedirte ayuda. Tu misión es **crear un programa con PyQt5** que ayude a MiuEnzo y Mr.
 Bearmartínez a entregar el mejor servicio de café de la historia.
 
-## `T03`:
+## `T03`: DCCuatro :black_joker:
 
-<!-- TODO -->
+Se habían cumplido tres meses de distanciamiento social, y ya no sabías qué hacer en tu tiempo libre:
+habías agotado completamente el catálogo de Netfix, has jugado un centenar de partidas de Ludo e incluso
+ya te sabías el diccionario al derecho y al revés tras tantas horas de Scrabble online con tus amigos. Un
+día, la inspiración llegó a ti y tuviste la idea de, con tus nuevas habilidades de **networking y
+serialización,** crear el mejor juego de mesa que la humanidad hubiera visto. Su nombre será... DCCuatro.
