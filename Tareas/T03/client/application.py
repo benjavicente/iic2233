@@ -4,7 +4,7 @@ import sys
 from os import path
 
 from PyQt5.QtWidgets import QApplication, QMessageBox
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QIcon
 
 from frontend.windows import InitialWindow, GameWindow, WinPopUp, ColorPicker
 from backend.client import Client
@@ -23,6 +23,7 @@ class Application(QApplication):
         # Establece el estilo de la aplicación
         with open(path.join(*paths['theme'])) as theme_file:
             self.setStyleSheet(theme_file.read())
+        self.setWindowIcon(QIcon(path.join(*paths['mini_logo'])))
 
         # Crea el cliente
         self.client = Client(kwargs['host'], kwargs['port'])

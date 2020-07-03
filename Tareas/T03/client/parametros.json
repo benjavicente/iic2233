@@ -4,6 +4,7 @@
     "tam_cartas": [80, 112],
     "paths": {
         "logo": ["frontend", "sprites", "logo.png"],
+        "mini_logo": ["frontend", "sprites", "mini_logo.png"],
         "theme": ["frontend", "theme.css"],
         "ui": ["frontend", "game_window.ui"],
         "victory": ["frontend", "sprites", "victory.png"]
