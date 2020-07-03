@@ -8,6 +8,7 @@
 - [Supuestos, aclaraciones y consideraciones :thinking:](#Supuestos-aclaraciones-y-consideraciones-%F0%9F%A4%94)
   - [Envío de información :satellite:](#Env%C3%ADo-de-informaci%C3%B3n-%F0%9F%93%A1)
   - [El juego :black_joker:](#El-juego-%F0%9F%83%8F)
+  - [Sobre el interfaz :pushpin:](#Sobre-el-interfaz-%F0%9F%93%8C)
 - [Librerías :books:](#Librer%C3%ADas-%F0%9F%93%9A)
   - [Librerías externas utilizadas :clipboard:](#Librer%C3%ADas-externas-utilizadas-%F0%9F%93%8B)
   - [Librerías propias :pencil:](#Librer%C3%ADas-propias-%F0%9F%93%9D)
@@ -82,7 +83,7 @@ por ids en intervalos de 8 (a excepción de 3, establecido en el enunciado).
 Tanto en `str`,`list`, `dict` se usa `.decode('utf-8')`.
 Además en las `list` se usará `.split('\n')` y en los `dict` `json.load`.
 
-Para ver donde se usa cada una se puede buscar ` {id_}: `.
+Para ver donde se usa cada una se puede buscar ` {id_}: ` en el código.
 
 
 ### El juego :black_joker:
@@ -90,14 +91,16 @@ Para ver donde se usa cada una se puede buscar ` {id_}: `.
 - Los efectos de la primera carta del poso son omitidos
 - Robar cartas **siempre es voluntario**. Si el jugador recibió una penalización por
 decir DCCuatro, deberá robar un número de cartas de penalización.
-- El servidor espera a señales de los clientes para avanzar el juego. Si jugadores
+- El servidor espera a señales de los clientes para avanzar el juego. **Si jugadores
 se desconectan repentinamente y queda uno solo, debería ser necesario realizar una
-acción en el jugo, como robar o jugar una carta
+acción en el juego**, como robar o jugar una carta
 - Robar se denota como jugar la carta de índice `-1`
 - Una carta es válida si tiene el mismo color o tipo, no se jugó una
 carta +2 en el turno anterior, y no se está jugando una carta de color.
 (Ver `game.py@is_valid_card`)
-- No implemente un mazo único por cada jugador. Hay un maso central en el que se puede robar
+- No implemente un mazo único por cada jugador. Hay un **maso central en
+el que se puede robar**
+- Un jugador puede gritar DCCuadrado cuando perdió, pero no tendrá efecto
 
 ### Sobre el interfaz :pushpin:
 
@@ -107,11 +110,11 @@ carta +2 en el turno anterior, y no se está jugando una carta de color.
 - El interfaz puede verse mal en espacios pequeños. Un nombre de
 jugador muy largo puede ocultar las cartas
 - Los campos de texto son ingresados apretando la tecla return (enter)
-- Un jugador puede gritar DCCuadrado cuando perdió, pero no tendrá efecto
 - El tamaño de las cartas puede ser cambiado en los parámetros del cliente
-- El mensaje cuando alguien gana muestra solo quien ganó. Al cerrarlo se vuelve
-al menu inicial, donde el jugador puede volver a jugar.
-- Cuando un jugador pierde o se pierde la conexión con el se mostrará un `:(`
+- El mensaje cuando alguien gana **muestra solo quien ganó. Al cerrarlo se vuelve
+al menu inicial, donde el jugador puede volver a jugar**.
+- **Cuando un jugador pierde** o se pierde la conexión con el se **mostrará
+un `:(`** sobre donde se encontraban sus cartas
 
 ## Librerías :books:
 
@@ -134,7 +137,8 @@ al menu inicial, donde el jugador puede volver a jugar.
 - **`protocol`:** Módulo que sigue el [protocolo definido](#Env%C3%ADo-de-informaci%C3%B3n-%F0%9F%93%A1) con sockets
 
 - client
-  - **`application`:** Conecta el frontend (GUI) con el backend (socket)
+  - **`application`:** Conecta el frontend (GUI) con el backend (socket),
+                       creando la aplicación
   - frontend:
     - **`windows`:** Ventanas y objetos gráficos del interfaz
   - backend
@@ -146,7 +150,7 @@ al menu inicial, donde el jugador puede volver a jugar.
 
 ## Código externo utilizado :package:
 
-Use pequeños trozos de código como:
+Use pequeños trozos de código:
 
 - `style().polish(widget)` en `windows.py@action_waiting`
 de [JasonGenX](https://stackoverflow.com/a/9067046)
