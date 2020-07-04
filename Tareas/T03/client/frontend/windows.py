@@ -276,11 +276,14 @@ class GameWindow(QMainWindow):
     def setup_players(self, game_info: dict) -> None:
         'Prepara el interfaz de juego'
         for i in map(str, range(4)):
+            # Limpia el espacio de las cartas
+            hand = getattr(self, f'Player{i}Cards')
+            self.clear_hand(hand)
             if i in game_info:
                 # Cambia el nombre del label
                 getattr(self, f'Player{i}Name').setText(game_info[i])
                 # Añade la referencia de la mano
-                self._player_hands[game_info[i]] = getattr(self, f'Player{i}Cards')
+                self._player_hands[game_info[i]] = hand
 
     def update_pool(self, c_color: str, c_type: str, c_pixmap: object, active_player: str) -> None:
         'Añade la carta del pozo. Sigue lo establecido en el Enunciado'
@@ -314,29 +317,16 @@ class GameWindow(QMainWindow):
 
     def player_lossed(self, name: str):
         'Para de mostrar las castas de un jugador que perdió'
-        # self._player_hands[name].hide()
-        layout = self._player_hands[name].layout()
+        self.clear_hand(self._player_hands[name])
+        mesage = QLabel(':(', self._player_hands[name])
+        mesage.setObjectName('player_lossed')
+        mesage.setAlignment(Qt.AlignCenter)
+        self._player_hands[name].layout().addWidget(mesage)
+
+    def clear_hand(self, widget):
+        'Vacía la mano del jugador, dado por el widget entregado'
+        layout = widget.layout()
         for _ in range(layout.count()):
             item = layout.itemAt(0)
             layout.removeItem(item)
             item.widget().deleteLater()
-        mesage = QLabel(':(', self._player_hands[name])
-        layout.addWidget(mesage)
-
-
-if __name__ == "__main__":
-    # Para probar el estilo de las ventanas
-    from PyQt5.QtWidgets import QApplication
-    from sys import argv
-    from os.path import join
-    APP = QApplication(argv)
-    with open('theme.css') as file:
-        APP.setStyleSheet(file.read())
-    # INITIAL_WINDOW = InitialWindow(QPixmap(join('sprites', 'logo')))
-    # GAME_WINDOW = GameWindow('game_window.ui')
-    # INITIAL_WINDOW.show()
-    # GAME_WINDOW.show()
-    PICKER = ColorPicker(('rojo', 'amarillo', 'verde', 'azul'))
-    PICKER.setStyle(APP.style())
-    print(PICKER.exec())
-    # APP.exec_()

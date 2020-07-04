@@ -254,8 +254,10 @@ class Server:
                             0: 'player_win',
                             4: name
                         })
-                        self.clients_names.clear()
+                        with self.lock_edit_client:
+                            self.clients_names.clear()
                         self.game.started = False
+                        return
                     # Se actualizan las cartas
                     self.update_cards()
 
