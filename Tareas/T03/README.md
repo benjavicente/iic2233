@@ -43,7 +43,7 @@ cliente mostrará una alerta con un botón para salir en la misma posición.
 ### Envío de información :satellite:
 
 Al enviar información desde el servidor y hacia el servidor,
-se envía un `json` serializado con el siguiente formato:
+se envía un diccionario serializado con el siguiente formato:
 
 ```py
 n_obj + (id_obj1 + largo_obj1 + obj_1) + (id_obj2 + largo_obj2 + obj_2) + ...
