@@ -275,6 +275,7 @@ class GameWindow(QMainWindow):
 
     def setup_players(self, game_info: dict) -> None:
         'Prepara el interfaz de juego'
+        # self.setWindowTitle(game_info['0'])  # DEBUG
         for i in map(str, range(4)):
             # Limpia el espacio de las cartas
             hand = getattr(self, f'Player{i}Cards')

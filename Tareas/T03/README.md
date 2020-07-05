@@ -8,7 +8,7 @@
 - [Supuestos, aclaraciones y consideraciones :thinking:](#Supuestos-aclaraciones-y-consideraciones-%F0%9F%A4%94)
   - [Envío de información :satellite:](#Env%C3%ADo-de-informaci%C3%B3n-%F0%9F%93%A1)
   - [El juego :black_joker:](#El-juego-%F0%9F%83%8F)
-  - [Sobre el interfaz :pushpin:](#Sobre-el-interfaz-%F0%9F%93%8C)
+  - [Interfaz :pushpin:](#Interfaz-%F0%9F%93%8C)
 - [Librerías :books:](#Librer%C3%ADas-%F0%9F%93%9A)
   - [Librerías externas utilizadas :clipboard:](#Librer%C3%ADas-externas-utilizadas-%F0%9F%93%8B)
   - [Librerías propias :pencil:](#Librer%C3%ADas-propias-%F0%9F%93%9D)
@@ -20,7 +20,7 @@
 
 Tener una versión de PyQt5 menor a 5.14 causa un pequeño error.
 
-Añadir los sprites y el módulo entregado.
+Añadir los sprites y el módulo entregado a `server`.
 
 ## Ejecución :computer:
 
@@ -67,7 +67,7 @@ por ids en intervalos de 8 (a excepción de 3, establecido en el enunciado).
 | id | de                  | tipo objecto         | objeto   | uso
 | -: | :-----------------: |:-------------------: | :------: | :-  
 |  0 | :computer::penguin: | tipo de acción       | `str`    | siempre
-|  1 | :computer::penguin: | color de carta       | `str`    | al actualizar el mazo o el pozo $^1$ y pedir el color al cambiarlo
+|  1 | :computer::penguin: | color de carta       | `str`    | al actualizar el mazo o el pozo $^1$ y al elegir color
 |  2 |           :penguin: | tipo de carta        | `str`    | al actualizar el mazo o el pozo $^1$
 |  3 |           :penguin: | imagen de carta      | `bytes`  | al actualizar el mazo o el pozo $^1$
 |  4 | :computer::penguin: | nombre del jugador   | `str`    | al unirse, al mandar una carta a los jugadores
@@ -85,12 +85,14 @@ Además en las `list` se usará `.split('\n')` y en los `dict` `json.load`.
 
 Para ver donde se usa cada una se puede buscar ` {id_}: ` en el código.
 
+Todo esto es manejado por el módulo `protocol.py`, tanto en el cliente como
+sel servidor.
 
 ### El juego :black_joker:
 
 - Los efectos de la primera carta del poso son omitidos
 - Robar cartas **siempre es voluntario**. Si el jugador recibió una penalización por
-decir DCCuatro, deberá robar un número de cartas de penalización.
+decir DCCuatro, deberá robar un número de cartas de la penalización es su turno
 - El servidor espera a señales de los clientes para avanzar el juego. **Si jugadores
 se desconectan repentinamente y queda uno solo, debería ser necesario realizar una
 acción en el juego**, como robar o jugar una carta
@@ -102,7 +104,7 @@ carta +2 en el turno anterior, y no se está jugando una carta de color.
 el que se puede robar**
 - Un jugador puede gritar DCCuadrado cuando perdió, pero no tendrá efecto
 
-### Sobre el interfaz :pushpin:
+### Interfaz :pushpin:
 
 - Se interactúa con el juego con clics
 - Arriba a la izquierda se mostrará el color y el jugador actual
@@ -115,6 +117,7 @@ jugador muy largo puede ocultar las cartas
 al menu inicial, donde el jugador puede volver a jugar**.
 - **Cuando un jugador pierde** o se pierde la conexión con el se **mostrará
 un `:(`** sobre donde se encontraban sus cartas
+- No se avisa si otro jugador grito DCCuatro, ni tampoco a quien se penaliza
 
 ## Librerías :books:
 
@@ -134,7 +137,8 @@ un `:(`** sobre donde se encontraban sus cartas
 
 ### Librerías propias :pencil:
 
-- **`protocol`:** Módulo que sigue el [protocolo definido](#Env%C3%ADo-de-informaci%C3%B3n-%F0%9F%93%A1) con sockets
+- **`protocol`:** Módulo que sigue el
+[protocolo definido](#Env%C3%ADo-de-informaci%C3%B3n-%F0%9F%93%A1) con sockets
 
 - client
   - **`application`:** Conecta el frontend (GUI) con el backend (socket),
@@ -172,11 +176,11 @@ Partes de corrección de código:
 - Responsabilidad del cliente: funciones desde `application.py:109`
 - Responsabilidad del servidor: función `server.py@manage_response` y
 módulo `game.py`
-- Uso de locks: `server.py@lock_edit_client` y `server.py@lock_play`
-para evitar añadir multiples jugadores o cambiar el juego a la vez respectivamente
+- Uso de locks: `server.py@lock_edit_client` y `server.py@lock_play` para
+- evitar añadir multiples jugadores o cambiar el juego a la vez respectivamente
 - Se utiliza el formato big y little endian: `protocol.py:24` y `protocol.py:66`
-para mandar y recibir el id y `protocol.py:26` y `protocol.py:79` para el tamaño,
-con big y little respectivamente
+para mandar y recibir el id y `protocol.py:26` y `protocol.py:79` para recibir el
+tamaño, con big y little respectivamente
 - Implementación del protocolo: todo el módulo `protocol.py`
 - Separación front-end y back-end para el cliente: directorios `frontend`
 y `backend` con módulos que unidos en `application.py`
@@ -193,4 +197,18 @@ Bonus:
 
 ## Notas adicionales :moyai:
 
-Disfrute el ~~programa~~ juego :tada:
+El código de la lógica del servidor y del juego no está ordenado,
+pero hay comentarios que explican que se hace en cada paso.
+
+**Para la corrección** puede ser util añadir la linea
+
+```py
+self.setWindowTitle(game_info['0'])
+```
+
+al inicio del método `setup_players` de `GameWindow`,
+que se encuentra en la linea `276` del módulo `windows`.
+Cambiará el nombre de la ventana de DCCuatro al nombre
+del jugador que le corresponde al cliente de la ventana.
+
+**Disfrute el ~~programa~~ juego :tada:**
