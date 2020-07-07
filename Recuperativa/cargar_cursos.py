@@ -18,7 +18,9 @@ def cargar_cursos(semestre: str):
     with open(path.join('datos', semestre + '.json'), encoding='utf-8') as file:
         courses = json.load(file)
     for course in courses.values():
-        course['Prerrequisitos'] = list(filter(None, course['Prerrequisitos'].split(';')))
+        course['Prerrequisitos'] = list(filter(
+            lambda c: c[:3] == 'IIC', course['Prerrequisitos'].split(';')
+        ))
         for secc in course['Secciones'].values():
             secc['Modulos'] = traducir_modulos(secc['Modulos'])
     return courses
